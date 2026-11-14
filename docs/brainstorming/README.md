@@ -4,7 +4,11 @@ Aquí guardamos el resumen de lo que vamos hablando con Claude, para que todo el
 
 | Archivo | Qué contiene |
 |---|---|
-| [idea.md](idea.md) | **La idea actual, a fondo.** Cómo funciona paso a paso, qué hemos descartado dentro de ella y qué falta decidir. Base para el MVP |
+| [embudo.md](embudo.md) | **Referencia vigente (14 nov).** Lo que ve el cliente, paso a paso, con el método de venta de cada etapa. La app es el paso previo a la reunión con el asesor |
+| [version-unica.md](version-unica.md) | Síntesis del 14 nov: decisiones, métodos de venta y líneas rojas |
+| [sesgos-por-pantalla.md](sesgos-por-pantalla.md) | Qué sesgo se usa en cada pantalla y cuáles no se usan |
+| [veredicto-plan-pareja.md](veredicto-plan-pareja.md) | Revisión del plan por parejas con el caso Weah y la versión reducida |
+| [idea.md](idea.md) | La idea del viernes 13 (caso Michael). Superada por embudo.md. Cómo funciona paso a paso, qué hemos descartado dentro de ella y qué falta decidir. Base para el MVP |
 | [estado-actual.md](estado-actual.md) | **Empieza por aquí.** Dónde estamos, qué ideas hay sobre la mesa y qué falta decidir |
 | [decisiones.md](decisiones.md) | Lo que ya está decidido y lo que se ha descartado, con fecha y motivo |
 | [notas-del-jurado.md](notas-del-jurado.md) | Cada idea puntuada con la rúbrica del reto y sus puntos de fuga |
