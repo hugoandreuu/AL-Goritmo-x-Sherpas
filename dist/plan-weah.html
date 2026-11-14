@@ -1190,7 +1190,7 @@ input[type=range].untouched::-moz-range-thumb { opacity: 0; }
       <h3>Datos a revisar</h3><ul><li>El efectivo de sobra (${M(F.cash.aboveAll)}) no cuenta el coche (${D(F.goals.car.date)}) ni la casa (${D(F.goals.home.date)}).</li><li>Seguro de vida objetivo: el plan da ${M(F.life.targetA)} y ${M(F.life.targetB)}.</li><li>Los gastos declarados parecen bajos: confirmar antes de fijar cuotas.</li></ul>
       <label class="row small" style="margin:10px 0"><input type="checkbox" data-act="sharestyle" ${S.shareStyle ? 'checked' : ''} style="width:22px;height:22px"> Compartir cómo preferimos ver el plan</label>
       ${S.shareStyle ? `<p class="small muted">Prefieren verlo ${pref}.</p>` : ''}
-      <div class="row"><button class="btn soft" data-act="ics">Añadir al calendario</button><button class="btn soft" data-act="copy">Copiar resumen</button><button class="btn soft" data-act="print">Imprimir</button></div></div>`;
+      <div class="row">${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="ics">Añadir al calendario</button>'}<button class="btn soft" data-act="copy">Copiar resumen</button>${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="print">Imprimir</button>'}</div></div>`;
   }
 
   // ------------------------------------------------------------------ hojas (modales)
