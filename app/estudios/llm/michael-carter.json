@@ -1,0 +1,66 @@
+{
+ "modelo": "gpt-5-mini",
+ "fecha": "2026-11-14",
+ "datos": "mcp",
+ "respuesta": {
+  "lectura": "Le importa poder comprar la casa sin quedarse sin colchón y, al mismo tiempo, no recortar su jubilación. Lo que más le moverá es ver cuántos meses de gastos cubre su efectivo. También reaccionará fuerte al dato sobre hasta cuándo duran sus ahorros.",
+  "orden": [
+   "colchon",
+   "jubilacion",
+   "nota",
+   "tarjeta_interes"
+  ],
+  "porque_orden": "Primero la liquidez y la casa, luego la jubilación; cerramos con la nota y una buena noticia de la tarjeta",
+  "frases": [
+   "Tener el dinero para la casa",
+   "No quedarme corto para jubilarme",
+   "Saber si voy por buen camino",
+   "Pagar menos en la tarjeta"
+  ],
+  "ganancias": [
+   "Dormiría más tranquilo por las mañanas",
+   "Podría planear mi retiro con calma",
+   "Vería sentido a lo que ahorro",
+   "Tendría más margen mensual"
+  ],
+  "abiertas": [
+   "¿Podemos comprar la casa y mantener el colchón?",
+   "¿Qué tendría que cambiar para que me lleguen los ahorros?",
+   "¿Cuánto costaría subir el seguro o añadir un umbrella?"
+  ],
+  "preguntas": {
+   "colchon": {
+    "q": "Si mañana te quedaras sin ingresos, ¿cuántos meses de gastos crees que cubre tu efectivo?",
+    "cerca": "Tenías una idea parecida",
+    "mas": "Son {dif} meses más que dijiste ({tu})",
+    "menos": "Menos de lo que pensabas: {dif} meses menos ({tu})",
+    "siente": "Michael, tu efectivo cubre **3,2 meses** de gastos básicos. La reserva recomendada es entre 5 y 6 meses; si apartas los objetivos a corto plazo, los meses cubiertos pasan a **0**.",
+    "salida": "Ver con el asesor cómo encajar la casa y el colchón"
+   },
+   "jubilacion": {
+    "q": "¿Te llega para jubilarte a los 58 y vivir de ello?",
+    "cerca": "Tu intuición estaba cerca",
+    "mas": "Es {dif} mejor de lo que pensabas ({tu})",
+    "menos": "Es peor de lo que pensabas: {dif} ({tu})",
+    "siente": "Michael, según el plan tus ahorros se acaban a los **85 años** cuando tu objetivo es jubilarte a los 58. Los ingresos garantizados cubren el 34% del gasto previsto.",
+    "salida": "Sacar menos de tus ahorros al jubilarte"
+   },
+   "nota": {
+    "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?",
+    "cerca": "No estabas lejos",
+    "mas": "Son {dif} puntos más de lo que dijiste ({tu})",
+    "menos": "Son {dif} puntos menos de lo que dijiste ({tu})",
+    "siente": "Tu nota hoy es **26 de 100**, Michael. Eso resume que la secuencia del dinero —casa, colchón, ahorro— necesita ordenarse.",
+    "salida": "Subir la parte de tus inversiones que busca crecer"
+   },
+   "tarjeta_interes": {
+    "q": "Pagas 200 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?",
+    "cerca": "Lo tenías claro",
+    "mas": "Se van {dif} $ más en intereses de lo que dijiste ({tu})",
+    "menos": "Menos intereses de lo que pensabas: {dif} $ ({tu})",
+    "siente": "De tus 200 $ al mes, **58 $** se van en intereses. Esa porción frena la reducción del saldo y el alivio mensual.",
+    "salida": "Hablar con el asesor para priorizar pagos y ver opciones"
+   }
+  }
+ }
+}

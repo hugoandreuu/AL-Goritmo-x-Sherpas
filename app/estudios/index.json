@@ -1,0 +1,34 @@
+[
+ {
+  "slug": "daniel-emily-johnson",
+  "titulo": "Daniel y Emily Johnson",
+  "apellido": "Johnson",
+  "nota": 52,
+  "datos": "mcp",
+  "textos": "llm:gpt-5-mini"
+ },
+ {
+  "slug": "michael-carter",
+  "titulo": "Michael Carter",
+  "apellido": "Carter",
+  "nota": 26,
+  "datos": "mcp",
+  "textos": "llm:gpt-5-mini"
+ },
+ {
+  "slug": "samantha-lewis",
+  "titulo": "Samantha Lewis",
+  "apellido": "Lewis",
+  "nota": 82,
+  "datos": "mcp",
+  "textos": "llm:gpt-5-mini"
+ },
+ {
+  "slug": "timothy-melanie-weah",
+  "titulo": "Timothy y Melanie Weah",
+  "apellido": "Weah",
+  "nota": 60,
+  "datos": "mcp",
+  "textos": "llm:gpt-5-mini"
+ }
+]

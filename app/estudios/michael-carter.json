@@ -1,0 +1,574 @@
+{
+ "slug": "michael-carter",
+ "fam": {
+  "titulo": "Michael Carter",
+  "apellido": "Carter",
+  "pl": false,
+  "adultos": [
+   {
+    "nombre": "Michael",
+    "edad": 37,
+    "jubila": 58,
+    "riesgo": "Growth"
+   }
+  ],
+  "hijos": []
+ },
+ "hoyAnio": 2026,
+ "nota": {
+  "hoy": 26,
+  "max": 62,
+  "banda": "crítica",
+  "color": "red"
+ },
+ "areas": [
+  {
+   "nombre": "Ahorro",
+   "icon": "coins",
+   "nota": 0,
+   "puntos": "0/25"
+  },
+  {
+   "nombre": "Deudas",
+   "icon": "card",
+   "nota": 78,
+   "puntos": "8/10"
+  },
+  {
+   "nombre": "Inversiones",
+   "icon": "chart",
+   "nota": 42,
+   "puntos": "11/25"
+  },
+  {
+   "nombre": "Colchón",
+   "icon": "shield",
+   "nota": 22,
+   "puntos": "4/20"
+  },
+  {
+   "nombre": "Seguros",
+   "icon": "heart",
+   "nota": 18,
+   "puntos": "4/20"
+  }
+ ],
+ "frases": [
+  "Tener el dinero para la casa",
+  "No quedarme corto para jubilarme",
+  "Saber si voy por buen camino",
+  "Pagar menos en la tarjeta"
+ ],
+ "ganancias": [
+  [
+   "moon",
+   "Dormiría más tranquilo por las mañanas"
+  ],
+  [
+   "home",
+   "Podría planear mi retiro con calma"
+  ],
+  [
+   "check",
+   "Vería sentido a lo que ahorro"
+  ],
+  [
+   "flag",
+   "Tendría más margen mensual"
+  ]
+ ],
+ "pasos": [
+  {
+   "key": "umbrella",
+   "icon": "shield",
+   "quien": "asesor",
+   "titulo": "Seguro extra de responsabilidad civil",
+   "tituloPro": "Seguro umbrella de 1 M$",
+   "porque": "Es un seguro de responsabilidad civil por encima del de casa y coche. El plan pide 1 M$; hoy no tienes.",
+   "n": 1,
+   "nota": 31,
+   "esfuerzo": "bajo",
+   "abre": false,
+   "plan": {
+    "title": "Add umbrella cover",
+    "action": "Add $1M of umbrella to raise the liability shield"
+   }
+  },
+  {
+   "key": "withdraw",
+   "icon": "sun",
+   "quien": "asesor",
+   "titulo": "Sacar menos de tus ahorros al jubilarte",
+   "porque": "El plan lo cifra en sacar 10.300 $ al año (el 6 %) para que los ahorros duren.",
+   "n": 2,
+   "nota": 62,
+   "esfuerzo": "alto",
+   "abre": false,
+   "plan": {
+    "title": "Lower the withdrawal rate",
+    "action": "Cutting withdrawals to $10,300/year (6.0%) reaches the sustainable band"
+   }
+  },
+  {
+   "key": "growth",
+   "icon": "chart",
+   "quien": "asesor",
+   "titulo": "Subir la parte de tus inversiones que busca crecer",
+   "porque": "El plan propone pasar del 74 % al 88 % en inversiones de crecimiento.",
+   "n": 3,
+   "nota": 31,
+   "esfuerzo": "alto",
+   "abre": false,
+   "plan": {
+    "title": "Raise growth allocation toward glide",
+    "action": "Move the invested mix from 74% to 88% growth (glide 98%) for the next horizon-fit band — about $19,900 of the invested book"
+   }
+  }
+ ],
+ "combos": {},
+ "primer": null,
+ "linea": [
+  {
+   "c": "now",
+   "icon": "flag",
+   "anio": 2026,
+   "cuando": "Hoy",
+   "t": "Nota 26"
+  },
+  {
+   "c": "step",
+   "key": "umbrella",
+   "icon": "shield",
+   "anio": 2026,
+   "cuando": "Paso 1",
+   "t": "Seguro extra de responsabilidad civil",
+   "quien": "asesor"
+  },
+  {
+   "c": "step",
+   "key": "withdraw",
+   "icon": "sun",
+   "anio": 2026,
+   "cuando": "Paso 2",
+   "t": "Sacar menos de tus ahorros al jubilarte",
+   "quien": "asesor"
+  },
+  {
+   "c": "step",
+   "key": "growth",
+   "icon": "chart",
+   "anio": 2026,
+   "cuando": "Paso 3",
+   "t": "Subir la parte de tus inversiones que busca crecer",
+   "quien": "asesor"
+  },
+  {
+   "c": "goal",
+   "icon": "home",
+   "anio": 2027,
+   "cuando": "2027",
+   "t": "La casa",
+   "s": "550.000 $"
+  },
+  {
+   "c": "goal",
+   "key": null,
+   "icon": "card",
+   "anio": 2028,
+   "cuando": "2028",
+   "t": "Se acaba la tarjeta",
+   "s": ""
+  },
+  {
+   "c": "end",
+   "icon": "sun",
+   "anio": 2047,
+   "cuando": "2047",
+   "t": "Jubilación",
+   "s": ""
+  },
+  {
+   "c": "warn",
+   "icon": "clock",
+   "anio": 2075,
+   "cuando": "2075",
+   "t": "Aquí se acaban los ahorros",
+   "s": "A los 85 años, según tu plan"
+  }
+ ],
+ "abiertas": [
+  {
+   "id": "oq1",
+   "q": "¿Podemos comprar la casa y mantener el colchón?"
+  },
+  {
+   "id": "oq2",
+   "q": "¿Qué tendría que cambiar para que me lleguen los ahorros?"
+  }
+ ],
+ "dudas": [
+  {
+   "id": "casa",
+   "label": "Casa",
+   "icon": "home",
+   "items": [
+    {
+     "q": "¿Cuándo está prevista y por cuánto?",
+     "a": "Tu plan cuenta con una casa de <b>550.000 $</b> en <b>enero de 2027</b>.",
+     "covered": "yes",
+     "id": "casa-1"
+    },
+    {
+     "q": "¿Cabe con todo lo demás?",
+     "a": "Es la pregunta que el plan deja para hablar: depende de qué pasos se hagan antes.",
+     "covered": "no",
+     "id": "casa-2"
+    }
+   ]
+  },
+  {
+   "id": "imprevistos",
+   "label": "Imprevistos",
+   "icon": "shield",
+   "items": [
+    {
+     "q": "¿Cuánto aguanto sin ingresos?",
+     "a": "Tu efectivo cubre <b>3,2 meses</b> de gastos básicos. El plan recomienda entre 5 y 6.",
+     "covered": "yes",
+     "id": "imprevistos-1"
+    },
+    {
+     "q": "¿Y si pierdo el trabajo?",
+     "a": "El plan no trae ese escenario calculado.",
+     "covered": "no",
+     "id": "imprevistos-2"
+    }
+   ]
+  },
+  {
+   "id": "tarjeta",
+   "label": "Tarjeta",
+   "icon": "card",
+   "items": [
+    {
+     "q": "¿Cuánto cuesta cada mes?",
+     "a": "De los <b>200 $</b> que pagas al mes, <b>58 $</b> son intereses. A este ritmo se acaba en <b>julio de 2028</b>.",
+     "covered": "yes",
+     "id": "tarjeta-1"
+    },
+    {
+     "q": "¿Y si la pago entera de golpe?",
+     "a": "El plan no trae esa cuenta hecha.",
+     "covered": "no",
+     "id": "tarjeta-2"
+    }
+   ]
+  },
+  {
+   "id": "seguros",
+   "label": "Seguros",
+   "icon": "heart",
+   "items": [
+    {
+     "q": "¿Cuánto seguro de vida recomienda el plan?",
+     "a": "Como mínimo <b>900.000 $</b>. Hoy tienes <b>180.000 $</b>.",
+     "covered": "yes",
+     "id": "seguros-1"
+    },
+    {
+     "q": "¿Cuánto costaría al mes?",
+     "a": "El plan no trae precios. Los presupuestos los trae tu asesor.",
+     "covered": "no",
+     "id": "seguros-2"
+    }
+   ]
+  },
+  {
+   "id": "jubilacion",
+   "label": "Jubilación",
+   "icon": "sun",
+   "items": [
+    {
+     "q": "¿Me llega?",
+     "a": "Con el plan de hoy, los ahorros se acaban a los <b>85 años</b>.",
+     "covered": "yes",
+     "id": "jubilacion-1"
+    },
+    {
+     "q": "¿Y si me jubilo antes?",
+     "a": "El plan solo está calculado con las edades de hoy.",
+     "covered": "no",
+     "id": "jubilacion-2"
+    }
+   ]
+  },
+  {
+   "id": "otra",
+   "label": "Otra cosa",
+   "icon": "help",
+   "items": []
+  }
+ ],
+ "lectura": "Le importa poder comprar la casa sin quedarse sin colchón y, al mismo tiempo, no recortar su jubilación. Lo que más le moverá es ver cuántos meses de gastos cubre su efectivo. También reaccionará fuerte al dato sobre hasta cuándo duran sus ahorros.",
+ "porqueOrden": "Primero la liquidez y la casa, luego la jubilación; cerramos con la nota y una buena noticia de la tarjeta",
+ "preguntas": [
+  {
+   "id": "colchon",
+   "tema": "colchon",
+   "tono": "malo",
+   "tipo": "num",
+   "icon": "shield",
+   "min": 0,
+   "max": 24,
+   "step": 1,
+   "sufijo": " meses",
+   "real": 3.2,
+   "cerca": 1,
+   "q": "Si mañana te quedaras sin ingresos, ¿cuántos meses de gastos crees que cubre tu efectivo?",
+   "sub": "Lo que hay en cuentas, sin tocar inversiones.",
+   "plan": "3,2 meses",
+   "unidad": "de gastos básicos",
+   "mid": true,
+   "vis": {
+    "t": "meses",
+    "tiene": 3.2,
+    "min": 5,
+    "max": 6,
+    "tras": 0
+   },
+   "titulares": {
+    "cerca": "Lo tenías claro. Mira lo que recomienda el plan.",
+    "mas": "Algo más de lo que pensabas, pero no llega a lo recomendado.",
+    "menos": "Menos de lo que pensabas."
+   },
+   "siente": "Michael, tu efectivo cubre <b>3,2 meses</b> de gastos básicos. La reserva recomendada es entre 5 y 6 meses; si apartas los objetivos a corto plazo, los meses cubiertos pasan a <b>0</b>.",
+   "salida": "Tu plan propone acercar ese colchón a lo recomendado. El cómo se ve con tu asesor.",
+   "freno": {
+    "kick": "El colchón",
+    "h2": "Tu efectivo cubre 3,2 meses. El plan recomienda de 5 a 6."
+   },
+   "filas": [
+    [
+     "Efectivo accesible",
+     "30.000 $"
+    ],
+    [
+     "Meses cubiertos",
+     "3,2"
+    ],
+    [
+     "Reserva recomendada",
+     "46.530 $ a 55.836 $"
+    ]
+   ],
+   "pro": "Liquidez accesible: 30.000 $, 3,2 meses de gastos esenciales. Reserva objetivo: 46.530 $ a 55.836 $.",
+   "origen": "key_metrics.facts.cash",
+   "creian": "Meses que cubre el efectivo",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  },
+  {
+   "id": "jubilacion",
+   "tema": "jubilacion",
+   "tono": "malo",
+   "tipo": "opciones",
+   "icon": "sun",
+   "opciones": [
+    "Sí, con margen",
+    "Justo justo",
+    "No llega",
+    "Ni idea"
+   ],
+   "rangos": [
+    3,
+    2,
+    1,
+    null
+   ],
+   "real": 2,
+   "cerca": [
+    2
+   ],
+   "q": "¿Te llega para jubilarte a los 58 y vivir de ello?",
+   "sub": "",
+   "plan": "hasta los 85",
+   "unidad": "te duran los ahorros",
+   "mid": true,
+   "vis": {
+    "t": "tramo",
+    "de": 58,
+    "corte": 85,
+    "hasta": 90,
+    "ok": false
+   },
+   "titulares": {
+    "cerca": "Lo veías venir. Mira hasta dónde llega.",
+    "mas": "El plan dice que no llega.",
+    "menos": "El plan dice otra cosa."
+   },
+   "siente": "Michael, según el plan tus ahorros se acaban a los <b>85 años</b> cuando tu objetivo es jubilarte a los 58. Los ingresos garantizados cubren el 34% del gasto previsto.",
+   "salida": "Tu plan trae un paso para esto, y solo con él la nota pasa de 26 a 62.",
+   "calc": null,
+   "freno": {
+    "kick": "La jubilación",
+    "h2": "Los ahorros se acaban a los 85. El plan llega hasta los 90."
+   },
+   "filas": [
+    [
+     "Edad de jubilación",
+     "58"
+    ],
+    [
+     "Los ahorros se acaban a los",
+     "85"
+    ],
+    [
+     "Gasto cubierto por ingresos",
+     "34 %"
+    ]
+   ],
+   "pro": "Ingresos sobre necesidad anual en jubilación: 34 %. Agotamiento de activos líquidos a los 85.",
+   "origen": "key_metrics.facts.retirement",
+   "creian": "Jubilación",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  },
+  {
+   "id": "nota",
+   "tema": "nota",
+   "tono": "malo",
+   "tipo": "num",
+   "icon": "chart",
+   "min": 0,
+   "max": 100,
+   "step": 1,
+   "sufijo": "",
+   "real": 26,
+   "cerca": 5,
+   "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?",
+   "sub": "A ojo. Aquí nadie examina a nadie.",
+   "plan": "26",
+   "unidad": "de 100, hoy",
+   "vis": {
+    "t": "ring",
+    "hoy": 26,
+    "max": 62
+   },
+   "titulares": {
+    "cerca": "Lo tenías claro.",
+    "mas": "Mejor de lo que pensabas.",
+    "menos": "Más baja de lo que pensabas."
+   },
+   "siente": "Lo que más tira hacia abajo: <b>Ahorro</b> (0 de 100). Lo que mejor tienes: <b>Deudas</b> (78 de 100).",
+   "salida": "Con los pasos de tu plan llega a 62.",
+   "filas": [
+    [
+     "Ahorro",
+     "0 de 100"
+    ],
+    [
+     "Deudas",
+     "78 de 100"
+    ],
+    [
+     "Inversiones",
+     "42 de 100"
+    ],
+    [
+     "Colchón",
+     "22 de 100"
+    ],
+    [
+     "Seguros",
+     "18 de 100"
+    ]
+   ],
+   "origen": "score.published_score · score.pillars",
+   "creian": "Nota de salud financiera",
+   "escritas": [
+    "q"
+   ]
+  },
+  {
+   "id": "tarjeta_interes",
+   "tema": "tarjeta",
+   "tono": "bueno",
+   "tipo": "importe",
+   "icon": "card",
+   "min": 0,
+   "max": 200,
+   "step": 5,
+   "real": 58,
+   "cerca": 0.2,
+   "q": "Pagas 200 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?",
+   "sub": "Lo que no baja la deuda.",
+   "plan": "58 $",
+   "unidad": "de cada 200 $, en intereses",
+   "vis": {
+    "t": "coins",
+    "n": 3,
+    "a": "intereses",
+    "b": "baja la deuda"
+   },
+   "titulares": {
+    "cerca": "Eso es. Aquí la deuda sí baja.",
+    "mas": "Algo más de lo que pensabas, pero la deuda baja.",
+    "menos": "Menos de lo que temías."
+   },
+   "siente": "De tus 200 $ al mes, <b>58 $</b> se van en intereses. Esa porción frena la reducción del saldo y el alivio mensual.",
+   "salida": "Tu plan dice que sigas pagándola: va por buen camino.",
+   "calc": "58 $ de 200 $, redondeado a décimas",
+   "freno": {
+    "kick": "La tarjeta",
+    "h2": "58 $ de cada 200 $ se van en intereses."
+   },
+   "filas": [
+    [
+     "Saldo de la tarjeta",
+     "3.500 $"
+    ],
+    [
+     "Interés",
+     "20 %"
+    ],
+    [
+     "Pagas al mes",
+     "200 $"
+    ],
+    [
+     "De eso, intereses",
+     "58 $"
+    ],
+    [
+     "Fin previsto",
+     "julio de 2028"
+    ]
+   ],
+   "pro": "Deuda revolving de 3.500 $ al 20 % TAE. De la cuota de 200 $, 58 $ son intereses. Fin previsto: julio de 2028.",
+   "origen": "profile.liabilities · key_metrics.debtManagement.creditCardDebt",
+   "creian": "Intereses de la tarjeta al mes",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  }
+ ],
+ "frenos": [
+  "colchon",
+  "jubilacion"
+ ],
+ "sinUsar": [],
+ "generado": {
+  "fecha": "2026-11-14",
+  "datos": "mcp",
+  "textos": "llm:gpt-5-mini",
+  "avisos": [
+   "nota.siente: descartado por jerga o rayas"
+  ],
+  "llmFecha": "2026-11-14"
+ }
+}
