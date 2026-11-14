@@ -820,7 +820,7 @@
       render();
     } catch (err) {
       console.error(err);
-      app.innerHTML = `<div class="narrow card"><h2>No hemos podido cargar vuestro plan.</h2><p>Abrid la web con un servidor local (ver README) o usad la versión de un solo archivo.</p><button class="btn" onclick="location.reload()">Reintentar</button></div>`;
+      app.innerHTML = `<div class="narrow card"><h2>No hemos podido cargar vuestro plan.</h2><p>Arrancad la web con <code>npm start</code> desde la raíz del repo, o abrid <code>dist/plan-weah.html</code> (se genera con <code>npm run build</code>).</p><button class="btn" onclick="location.reload()">Reintentar</button></div>`;
     }
   }
   window.addEventListener('resize', () => document.querySelectorAll('.lbl-short').forEach(el => { el.style.display = window.innerWidth <= 560 ? 'inline' : 'none'; }));

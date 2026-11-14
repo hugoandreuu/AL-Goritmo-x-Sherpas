@@ -4,22 +4,13 @@ Web estática que cuenta el plan de Timothy y Melanie Weah según cómo quiere e
 
 ## Arrancar
 
-Opción 1, sin instalar nada: abrir `dist/plan-weah.html` con doble clic. Lleva los JSON dentro.
-
-Opción 2, desde el código (para desarrollar):
-
-```bash
-python3 -m http.server 8000      # desde la raíz del repo
-# abrir http://localhost:8000/app/
-```
-
-Después de cambiar algo en `app/`, regenerar el archivo único con `python3 tools/build-single.py`.
+Desde la raíz del repo: `npm start` y abrir http://localhost:8000. Para la versión de un solo archivo: `npm run build` y abrir `dist/plan-weah.html`. Más detalle en el [README principal](../README.md).
 
 Atajos: `?reset` empieza de cero; `?demo=plan&f=image&d=why&t=calm` abre la presentación directamente (`f` = numbers|image|story, `d` = quick|why, `t` = calm|full).
 
 ## Flujo
 
-1. **Portada:** "Vuestro plan en 5 minutos".
+1. **Portada:** "Bienvenidos a vuestro plan a futuro" y el botón "Ver vuestro plan en 5 minutos".
 2. **Adivinar (5 preguntas):** coste anual de la tarjeta, año en que se acaba, lo que da el efectivo, qué cubre el seguro de vida y si llegan a la jubilación. Cada respuesta se compara con la cifra del plan.
 3. **Embudo de personalización**, intercalado en el flujo (3 ajustes, nunca se muestran etiquetas tipo "sois X"):
    - **Formato:** tras la primera cifra se enseña la misma en números, imagen e historia, y eligen la que les queda más clara.
@@ -49,6 +40,6 @@ Atajos: `?reset` empieza de cero; `?demo=plan&f=image&d=why&t=calm` abre la pres
 - `app/content.js`: textos y respuestas a dudas típicas.
 - `app/charts.js`: gráficos SVG hechos a mano.
 - `app/app.js`: flujo, estado (localStorage) y presentación.
-- `tools/build-single.py`: genera `dist/plan-weah.html`.
+- `../scripts/build.mjs`: genera `dist/plan-weah.html` y la web de Pages.
 
 Dependencias: ninguna. Las fuentes Inter y Poppins se cargan de Google Fonts; sin conexión se usa la fuente del sistema.
