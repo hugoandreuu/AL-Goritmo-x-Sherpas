@@ -6,23 +6,34 @@ Web estática que cuenta el plan de Timothy y Melanie Weah según cómo quiere e
 
 Desde la raíz del repo: `npm start` y abrir http://localhost:8000. Para la versión de un solo archivo: `npm run build` y abrir `dist/plan-weah.html`. Más detalle en el [README principal](../README.md).
 
-Atajos: `?reset` empieza de cero; `?demo=plan&f=image&d=why&t=calm&l=pro` abre la presentación directamente (`f` = numbers|image|story, `d` = quick|why, `t` = calm|full, `l` = new|pro).
+Atajos: `?reset` empieza de cero; `?demo=story` abre el recorrido guiado y `?demo=plan&f=image&d=why&t=calm&l=pro` el plan completo (`f` = numbers|image|story, `d` = quick|why, `t` = calm|full, `l` = new|pro).
 
 ## Flujo
 
-1. **Portada:** "Bienvenidos a vuestro plan a futuro". Dice qué va a pasar (primero preguntamos, después enseñamos, al final deciden) y que el asesor verá las respuestas.
-2. **Quién sois:** quién mira el plan, qué les importa más y **cómo se manejan con las finanzas** ("Somos nuevos en esto" o "Sabemos de finanzas").
-3. **Adivinar (5 preguntas):** coste anual de la tarjeta, año en que se acaba, lo que da el efectivo, qué cubre el seguro de vida y si llegan a la jubilación. Cada respuesta se compara con la cifra del plan. La seguridad ("Seguro / Lo dudo / Ni idea") es opcional.
-4. **Embudo de personalización**, intercalado (nunca se muestran etiquetas tipo "sois X"): formato (números, imagen, historia), evitar o afrontar, conclusión o porqué. Todo se cambia en "Cómo lo veis".
-5. **Beneficio:** "Si esto estuviera resuelto, ¿qué cambiaría en casa?". La frase vuelve en el cierre y en la hoja del asesor.
-6. **El plan:**
-   - Cabecera con el anillo de la nota. Sube solo cuando aceptan pasos (60, 62, 73, 78; todas las combinaciones salen del plan).
-   - **Hoja de ruta:** los 3 pasos en un camino, con "¿Os convence?" (Sí / Tengo dudas / No), y al final a dónde lleva el plan (coche, casa, universidad, jubilación).
-   - Al aceptar el paso de la tarjeta se abre un **calendario** para ponerle día y hora, con "cómo se hace" y recordatorio (.ics).
-   - **Siguiente paso:** la reunión con el asesor, con el mismo calendario. Barra fija abajo con "Pedir reunión".
-   - **Una semana después (vista previa):** se pide el saldo de la tarjeta. Con 11.200 $ o menos, la nota pasa a 62; si no, "¿Qué os frena?" y se apunta para el asesor.
-   - **Más sobre vuestro plan:** lo que creían, lo que hacen bien, lo que frena y lo que viene después, plegado en el móvil.
-7. **Hoja para el asesor:** qué les importa, qué cambiaría en casa, su nivel, pasos aceptados, primer paso con fecha, dudas abiertas y resueltas.
+1. **Portada:** dice qué va a pasar (primero preguntamos, después enseñamos, al final deciden) y que el asesor verá las respuestas.
+2. **Quién sois:** quién mira el plan, qué les importa más y cómo se manejan con las finanzas ("Somos nuevos en esto" o "Sabemos de finanzas").
+3. **Adivinar (5 preguntas) y sentir el dato.** Cada respuesta abre un camino según lo cerca que estuvo. La revelación enseña, por este orden: lo que decían frente a lo que dice el plan, un titular que depende de la distancia ("Son 2.040 $ más al año de lo que pensabais"), **una imagen que traduce el dato a su vida**, una frase, la salida que propone el plan y una reacción de un toque ("No lo sabíamos", "Nos preocupa", "Queremos arreglarlo"). El detalle con tablas queda plegado.
+
+   | Pregunta | Imagen |
+   |---|---|
+   | Coste anual de la tarjeta | 10 monedas: 9 de cada 10 $ del pago son intereses |
+   | Cuándo se acaba | Liam y Josh hoy y en 2039 (19 y 16 años) |
+   | Qué da el efectivo | Un dólar que entra frente a más de 21 que se lleva la tarjeta |
+   | Seguro de vida | 12 años contados con la edad de Liam, 2 cubiertos |
+   | Jubilación | Medidor al 93 %, en verde: se acaba con una buena noticia |
+
+4. **Formato:** tras la primera cifra eligen verla en imagen, historia o números. Ese interruptor sigue visible en el recorrido.
+5. **Beneficio:** "Si esto estuviera resuelto, ¿qué cambiaría en casa?".
+6. **El plan, en un recorrido guiado de 7 pantallas** (una idea por pantalla, barra de avance arriba, un botón abajo):
+   1. Vuestra foto de hoy: la nota y cinco fichas, tres en verde y dos frenos.
+   2. Freno 1, la tarjeta.
+   3. Freno 2, proteger a Liam y Josh.
+   4. La salida: tres interruptores. Al marcar pasos el anillo sube (60, 62, 73, 78). Sin la tarjeta no se mueve.
+   5. La imagen completa: de hoy a la jubilación en una línea, con los pasos y las metas.
+   6. El primer paso: saldo antes y después, y el calendario para ponerle día y hora.
+   7. Lo que queda, con el asesor: tres preguntas que la app no decide y el calendario de la reunión. "Ahora no. Avisadme dentro de una semana" siempre visible.
+7. **El plan completo** (botón "Ver el plan completo"): hoja de ruta con "¿Os convence?", dudas, "una semana después" y lo demás plegado.
+8. **Hoja para el asesor:** qué les importa, qué cambiaría en casa, cómo reaccionaron a cada dato, su nivel, pasos aceptados, primer paso con fecha, dudas abiertas y resueltas.
 
 ## Dos niveles
 
