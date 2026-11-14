@@ -1,0 +1,11 @@
+{
+  "name": "al-goritmo-x-sherpas",
+  "private": true,
+  "description": "Vuestro plan en 5 minutos: el plan de la familia Weah contado según cómo quiere entenderlo cada persona.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs"
+  }
+}
