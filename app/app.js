@@ -36,7 +36,8 @@
     stage: 'home', qi: 0, who: null, phrase: null,
     a: {}, // respuestas del quiz
     sig: { whyOpens: 0, times: [], skippedLife: false, noIdea: 0 },
-    prefs: { format: null, depth: null, tone: null },
+    prefs: { format: null, depth: null, tone: null, level: null },
+    gain: null, payDate: null, week: null, fold: {},
     steps: { card: null, life: null, umbrella: null },
     doubts: [], // {id, topic, q, a, covered, status}
     shareStyle: true, booking: null, cardFmt: {},
@@ -51,7 +52,9 @@
   const topActions = document.getElementById('top-actions');
 
   // ------------------------------------------------------------------ quiz: definición
-  const QUIZ = ['who', 'card', 'format', 'year', 'cash', 'life', 'feel', 'retire', 'depth'];
+  const QUIZ = ['who', 'card', 'format', 'year', 'cash', 'life', 'feel', 'retire', 'gain', 'depth'];
+  const GAIN_OPTS = [['moon', 'Dormiríamos más tranquilos'], ['home', 'Podríamos pensar en la casa'], ['chat', 'Dejaríamos de discutir por dinero'], ['heart', 'Sabríamos que los niños están cubiertos']];
+  const PRO = () => S.prefs.level === 'pro';
   const CONF = [['sure', 'Seguro'], ['doubt', 'Lo dudo'], ['none', 'Ni idea']];
   const CASH_OPTS = ['Casi nada', 'Unos cientos de dólares', 'Unos miles de dólares', 'Más de 5.000 $'];
   const LIFE_OPTS = ['Casi nada', 'Unos meses de gastos', 'Un par de años de gastos', 'Más de diez años de gastos'];
@@ -82,6 +85,11 @@
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    home: '<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/>',
+    car: '<path d="M5 16V11l2-5h10l2 5v5M3 16h18M7 16v2M17 16v2M5 11h14"/>',
+    cap: '<path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11.5V16c2 2 10 2 12 0v-4.5"/>',
+    seed: '<path d="M12 21v-9"/><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6zM12 15c0-3-2-5-6-5 0 3 2 5 6 5z"/>',
+    chart: '<path d="M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6"/>',
   };
   const ic = (n, sz = 20) => `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICP[n] || ''}</svg>`;
   const optBody = (icon, text, sub) => `<span class="ic">${ic(icon)}</span><span class="tx"><b style="font-weight:600">${text}</b>${sub ? `<span class="muted small" style="display:block">${sub}</span>` : ''}</span>`;
@@ -92,7 +100,7 @@
     return `<div class="progress" aria-label="Paso ${i + 1} de ${n}"><div class="bar"><i style="width:${(i / n) * 100}%"></i></div><span class="tiny">~${left} min</span></div>`;
   }
 
-  const confChips = (key) => `<p class="muted small" style="margin:14px 0 6px">¿Qué tan seguros estáis?</p>
+  const confChips = (key) => `<p class="muted small" style="margin:14px 0 6px">¿Qué tan seguros estáis? <span class="tiny">(opcional)</span></p>
     <div class="chips" role="group" aria-label="Seguridad">${CONF.map(([v, l]) => `<button class="chip" data-act="conf" data-k="${key}" data-v="${v}" aria-pressed="${(S.a[key] || {}).conf === v}">${l}</button>`).join('')}</div>`;
 
   const dock = (label, enabled, act = 'next') => `<div class="dock"><button class="btn block" data-act="${act}" ${enabled ? '' : 'disabled'}>${label}</button></div>`;
@@ -115,9 +123,11 @@
       ? `<div class="card soft" style="margin:12px 0 0;padding:14px"><b>Por qué</b><p style="margin:.3em 0 0">${x.why}</p></div>`
       : `<details class="why" data-why><summary>¿Por qué?</summary><p>${x.why}</p></details>`) : '';
     const alt = opts.noAlt ? '' : `<button class="link small" data-act="altfmt" data-id="${x.id}">Ver de otra forma</button>`;
+    const pro = PRO() && x.pro ? `<div class="protech"><span class="tag navy">Para quien sabe de finanzas</span><p>${x.pro}</p></div>` : '';
+    const origin = `<div class="origin">${ic(x.calc ? 'chart' : 'check', 14)}<span>${x.calc ? 'Cuenta nuestra con cifras de vuestro plan: ' + x.calc : 'Cifra de vuestro plan'}</span></div>`;
     return `<div class="card ${opts.cls || ''}">${x.kicker ? `<div class="kicker">${x.kicker}</div>` : ''}
-      ${x.headline ? `<h3>${x.headline}</h3>` : ''}${body}${why}
-      ${alt}${!calm && x.src ? `<div class="src">Del plan: ${esc(x.src)}</div>` : ''}${opts.extra || ''}</div>`;
+      ${x.headline ? `<h3>${x.headline}</h3>` : ''}${body}${pro}${why}
+      ${alt}${origin}${PRO() && x.src ? `<div class="src">Origen en el plan: ${esc(x.src)}</div>` : ''}${opts.extra || ''}</div>`;
   }
 
   // ------------------------------------------------------------------ datos de cada tarjeta
@@ -131,6 +141,8 @@
       story: `Cada mes pagáis <strong>${M(F.card.payMonth)}</strong> a la tarjeta. Unos <strong>${M(F.card.interestMonth)}</strong> se van en intereses antes de tocar la deuda. En un año, son <strong>${M(F.card.costYear)}</strong>.`,
       why: `${P(F.card.apr)} × ${M(F.card.balance)} = ${M(F.card.costYear)} al año. De los ${M(F.card.payMonth)} mensuales, unos ${M(F.card.interestMonth)} son intereses, así que la deuda apenas baja.`,
       src: 'profile.liabilities[0] · creditCardDebt.ccPaymentEqualToInterestRate',
+      calc: `${P(F.card.apr)} × ${M(F.card.balance)}`,
+      pro: `Deuda revolving de ${M(F.card.balance)} al ${P(F.card.apr)} TAE. De la cuota de ${M(F.card.payMonth)}, ${M(F.card.interestMonth)} son intereses. Este saldo activa un tope en la nota${F.score.caps[0] ? ' (' + F.score.caps[0].score_capped_at + ')' : ''}.`,
     }),
     cardYear: () => ({
       id: 'cardYear', kicker: 'La tarjeta', headline: 'A este ritmo, la tarjeta se acaba en…',
@@ -141,6 +153,7 @@
       story: `Si seguís pagando <strong>${M(F.card.payMonth)}</strong> al mes, la tarjeta se acaba en <strong>${D(F.card.payoff)}</strong>. Para entonces, ${F.education.starts[0] ? F.education.starts[0].name + ' ya estará empezando la universidad' : 'habrán pasado muchos años'}.`,
       why: `Casi todo el pago se lo llevan los intereses (${M(F.card.interestMonth)} de ${M(F.card.payMonth)}), así que el saldo baja muy despacio.`,
       src: 'creditCardDebt.ccPayoffDate',
+      pro: `Amortización con cuota fija de ${M(F.card.payMonth)} al ${P(F.card.apr)}: casi toda la cuota son intereses (${M(F.card.interestMonth)}), así que el principal apenas baja hasta el final. Fin previsto: ${D(F.card.payoff)}.`,
     }),
     cash: () => ({
       id: 'cash', kicker: 'El efectivo', headline: `Lo que os dan ${M(F.cash.balance)} en la cuenta, al año`,
@@ -151,6 +164,8 @@
       story: `Vuestro efectivo da unos <strong>${M(F.cash.yieldYear)}</strong> al año. A la vez, la tarjeta se lleva <strong>${M(F.card.costYear)}</strong>. Dinero parado y deuda cara al mismo tiempo.`,
       why: `${P(F.cash.rate, 1)} × ${M(F.cash.balance)} ≈ ${M(F.cash.yieldYear)} al año. El plan ve ${M(F.cash.aboveAll)} por encima de la reserva y de las vacaciones.`,
       src: 'investment-analysis · cashNeeds.currentCashBalance',
+      calc: `${P(F.cash.rate, 1)} × ${M(F.cash.balance)}`,
+      pro: `Liquidez al ${P(F.cash.rate, 1)} frente a deuda al ${P(F.card.apr)}. Exceso de efectivo tras la reserva y las metas a corto plazo: ${M(F.cash.aboveAll)}. Ese exceso no descuenta el coche ni la casa.`,
     }),
     life: () => ({
       id: 'life', kicker: 'Proteger a ' + F.kids.map(k => k.name).join(' y '), headline: 'Si a uno de los dos le pasara algo, el seguro cubriría…',
@@ -160,6 +175,8 @@
       story: `Hoy, entre los dos, tenéis <strong>${M(F.life.now)}</strong> de seguro de vida. Eso pagaría unos <strong>${Math.round(F.life.yearsNow)} años</strong> de los gastos de casa. Para que ${F.kids.map(k => k.name).join(' y ')} estén cubiertos, el plan recomienda unos <strong>${Math.round(F.life.yearsMin)}</strong>.`,
       why: `Lo asegurado entre los dos (${M(F.life.now)}) entre lo que gasta vuestro hogar al año (${M(F.life.expYear)}). El mínimo recomendado suma ${M(F.life.min)}.`,
       src: 'protection.lifeInsurance · ratios.investableAssetLevel.annualExpenses',
+      calc: 'capital asegurado ÷ gastos del hogar al año',
+      pro: `Capital asegurado: ${F.a.name} ${M(F.life.nowA)}, ${F.b.name} ${M(F.life.nowB)}. Mínimo recomendado: ${M(F.life.minA)} y ${M(F.life.minB)}.${F.life.gapA != null ? ` Déficit: ${M(F.life.gapA)} y ${M(F.life.gapB)}.` : ''} Con hijos a cargo, activa otro tope en la nota${F.score.caps[1] ? ' (' + F.score.caps[1].score_capped_at + ')' : ''}.`,
     }),
     retire: () => ({
       id: 'retire', kicker: 'Jubilación', headline: `¿Llegáis a jubilaros a los ${F.a.retire} y ${F.b.retire}? Sí.`,
@@ -170,6 +187,7 @@
       story: `Buena noticia: vuestra jubilación está bien encaminada. Los ingresos cubren el <strong>${P(F.retirement.coverPct)}</strong> de lo que necesitaréis cada año, y al final del plan aún quedan <strong>${M(F.retirement.leftAtEnd)}</strong>.`,
       why: `Ahorráis el ${P(F.retirement.savingsRate, 1)} de lo que ganáis y aprovecháis toda la aportación de vuestras empresas (${M(F.retirement.matchA)} y ${M(F.retirement.matchB)} al año).`,
       src: 'facts.retirement · ratios.savingsLevel',
+      pro: `Ingresos sobre necesidad anual: ${P(F.retirement.coverPct)}. Remanente al final del plan: ${M(F.retirement.leftAtEnd)} en dólares de hoy. Tasa de ahorro: ${P(F.retirement.savingsRate, 1)}, con la aportación de empresa aprovechada entera.`,
     }),
     cushion: () => ({
       id: 'cushion', kicker: 'Colchón', headline: 'Vuestro colchón para imprevistos',
@@ -179,6 +197,7 @@
       story: `Si uno de los dos se quedara sin trabajo, tenéis efectivo para unos <strong>${F.cash.months} meses</strong>. El plan recomienda 8 a 9: aquí vais sobrados.`,
       why: `El plan ve ${M(F.cash.aboveAll)} por encima de la reserva y de las vacaciones de ${M(F.goals.vacation)}. Ojo: esa cuenta no incluye el coche ni la casa.`,
       src: 'facts.cash',
+      pro: `Liquidez accesible: ${M(F.cash.accessible)}, ${F.cash.months} meses de gastos esenciales. Reserva objetivo: ${M(F.cash.reserveMin)} a ${M(F.cash.reserveMax)}.`,
     }),
     saving: () => ({
       id: 'saving', kicker: 'Ahorro', headline: 'Ahorráis más de lo habitual',
@@ -199,6 +218,7 @@
         story: `Vuestra nota es <strong>${F.score.now}</strong>. No es por falta de ahorro: es porque la tarjeta y el seguro de vida le ponen un techo. Si quitáis esos dos frenos y añadís el umbrella, el plan la lleva a <strong>${pts[3].value}</strong>.`,
         why: `El plan pone topes a la nota: ${F.score.caps.map(c => `${c.reason === 'High revolving balance with high APR' ? 'deuda de tarjeta con interés alto' : 'seguro de vida bajo con hijos'} (tope ${c.score_capped_at})`).join(' y ')}. Por eso el orden importa: sin la tarjeta, el seguro solo no mueve la nota.`,
         src: 'score.pillars · score.caps_applied · score.top_moves · score.combined_moves',
+        pro: `Combinaciones que trae el plan: solo tarjeta ${Fmt.scoreFor(F, ['card'])}; solo seguro de vida ${Fmt.scoreFor(F, ['life'])}; solo umbrella ${Fmt.scoreFor(F, ['umbrella'])}; tarjeta y vida ${Fmt.scoreFor(F, ['card', 'life'])}; vida y umbrella ${Fmt.scoreFor(F, ['life', 'umbrella'])}; los tres ${Fmt.scoreFor(F, ['card', 'life', 'umbrella'])}. La tarjeta es la que abre el resto.`,
       };
     },
   };
@@ -251,6 +271,7 @@
     const p = S.prefs;
     const lines = [
       'Leyendo vuestras 5 respuestas',
+      PRO() ? 'Añadiendo el detalle técnico' : 'Quitando los tecnicismos',
       `Contándolo ${p.format === 'image' ? 'con imágenes' : p.format === 'story' ? 'como una historia' : 'en números'}`,
       p.depth === 'why' ? 'Añadiendo el porqué de cada paso' : 'Poniendo primero las conclusiones',
       'Ordenando los pasos que propone vuestro plan',
@@ -279,8 +300,13 @@
         <div class="chips">${[['juntos', 'Los dos juntos'], ['a', F.a.name], ['b', F.b.name]].map(([v, l]) => `<button class="chip" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${l}</button>`).join('')}</div>
         <h2 class="q" style="margin-top:28px">En una línea, ¿qué os importa más?</h2>
         ${Content.PHRASES.map((p, i) => `<button class="opt" data-act="phrase" data-v="${esc(p)}" aria-pressed="${S.phrase === p}">${optBody(['heart', 'moon', 'card', 'sun'][i], esc(p))}</button>`).join('')}
-        <p class="tiny">No hay respuestas buenas ni malas. Lo usamos para contaros el plan con vuestras palabras.</p>
-        ${dock('Empezar', S.who && S.phrase)}`;
+        <h2 class="q" style="margin-top:24px">¿Cómo os manejáis con las finanzas?</h2>
+        <div class="seg2" role="group" aria-label="Nivel">
+          <button class="segb" data-act="level" data-v="new" aria-pressed="${S.prefs.level === 'new'}">${ic('seed', 22)}<b>Somos nuevos en esto</b><span>Sin tecnicismos y paso a paso</span></button>
+          <button class="segb" data-act="level" data-v="pro" aria-pressed="${S.prefs.level === 'pro'}">${ic('chart', 22)}<b>Sabemos de finanzas</b><span>Con el detalle técnico a la vista</span></button>
+        </div>
+        <p class="tiny">No hay respuestas buenas ni malas. Lo usamos para contaros el plan a vuestra manera. Se puede cambiar después.</p>
+        ${dock('Empezar', S.who && S.phrase && S.prefs.level)}`;
     }
 
     if (step === 'card') {
@@ -291,7 +317,7 @@
           <div class="amount"><div class="val ${a.value == null ? 'empty' : ''}" id="amt">${a.value == null ? 'Mueve la barra' : M(a.value)}</div>
           <input type="range" min="0" max="10000" step="100" value="${a.value ?? 5000}" class="${a.value == null ? 'untouched' : ''}" data-act="range" data-k="cardCost" aria-label="Coste anual de la tarjeta">
           <div class="spread tiny"><span>0 $</span><span>10.000 $</span></div></div>
-          ${confChips('cardCost')}${dock('Ver cuánto es', a.value != null && a.conf, 'reveal')}`;
+          ${confChips('cardCost')}${dock('Ver cuánto es', a.value != null, 'reveal')}`;
       } else {
         const err = Math.abs(a.value - F.card.costYear) / F.card.costYear;
         const dist = err <= 0.2 ? 'close' : err <= 0.5 ? 'mid' : 'far';
@@ -318,7 +344,7 @@
           <div class="chips" style="margin:14px 0">${[2020, 2030, 2040, 2050].map(d => `<button class="chip" data-act="decade" data-v="${d}" aria-pressed="${y != null && Math.floor(y / 10) * 10 === d}">${d}s</button>`).join('')}</div>
           <div class="stepper"><button data-act="yr" data-v="-1" aria-label="Un año menos" ${y == null ? 'disabled' : ''}>−</button><div class="yearval">${y ?? '—'}</div><button data-act="yr" data-v="1" aria-label="Un año más" ${y == null ? 'disabled' : ''}>+</button></div>
           ${y == null ? '<p class="tiny" style="text-align:center">Elegid una década y ajustad el año.</p>' : ''}
-          ${confChips('cardYear')}${dock('Ver la fecha', y != null && a.conf, 'reveal')}`;
+          ${confChips('cardYear')}${dock('Ver la fecha', y != null, 'reveal')}`;
       } else {
         const diff = Math.abs(a.value - +F.card.payoff.slice(0, 4));
         const dist = diff <= 2 ? 'close' : diff <= 6 ? 'mid' : 'far';
@@ -331,7 +357,7 @@
       if (!a.revealed) {
         h += `<div class="qnum"><i>3</i> de 5</div><h2 class="q">Tenéis ${M(F.cash.balance)} en la cuenta. ¿Cuánto os dan al año?</h2>
           ${CASH_OPTS.map((o, i) => `<button class="opt" data-act="opt" data-k="cash" data-v="${i}" aria-pressed="${a.value === i}">${optBody(['zero', 'coin', 'coins', 'stack'][i], o)}</button>`).join('')}
-          ${confChips('cash')}${dock('Ver la respuesta', a.value != null && a.conf, 'reveal')}`;
+          ${confChips('cash')}${dock('Ver la respuesta', a.value != null, 'reveal')}`;
       } else {
         h += `<div class="revealbox ${JUST ? 'seq' : ''}"><p style="margin:0"><span class="guessline">Vuestra respuesta: <b>${CASH_OPTS[a.value]}</b></span></p><div>${fact(X.cash())}</div><h2 class="reveal-head">${a.value === 0 ? 'Eso es: casi nada.' : 'Menos de lo que parece.'}</h2></div>${dock('Seguir', true)}`;
       }
@@ -347,7 +373,7 @@
       } else if (!a.revealed) {
         h += `<div class="qnum"><i>4</i> de 5</div><h2 class="q">Si a uno de vosotros le pasara algo, ¿qué tendrían ${F.kids.map(k => `${k.name} (${k.age})`).join(' y ')} asegurado?</h2>
           ${LIFE_OPTS.map((o, i) => `<button class="opt" data-act="opt" data-k="life" data-v="${i}" aria-pressed="${a.value === i}">${optBody(['zero', 'clock', 'cal', 'shield'][i], o)}</button>`).join('')}
-          ${confChips('life')}${dock('Ver la respuesta', a.value != null && a.conf, 'reveal')}`;
+          ${confChips('life')}${dock('Ver la respuesta', a.value != null, 'reveal')}`;
       } else {
         h += `<div class="revealbox ${JUST ? 'seq' : ''}"><p style="margin:0"><span class="guessline">Vuestra respuesta: <b>${LIFE_OPTS[a.value]}</b></span></p><div>${fact(X.life())}</div><h2 class="reveal-head">${a.value === 2 ? 'Habéis estado cerca.' : 'Aquí el plan sorprende, no vosotros.'}</h2></div>${dock('Seguir', true)}`;
       }
@@ -366,10 +392,17 @@
       if (!a.revealed) {
         h += `<div class="qnum"><i>5</i> de 5</div><h2 class="q">¿Llegáis a jubilaros cuando queréis, ${F.a.name} a los ${F.a.retire} y ${F.b.name} a los ${F.b.retire}?</h2>
           ${RETIRE_OPTS.map((o, i) => `<button class="opt" data-act="opt" data-k="retire" data-v="${i}" aria-pressed="${a.value === i}">${optBody(['sun', 'scale', 'x', 'help'][i], o)}</button>`).join('')}
-          ${confChips('retire')}${dock('Ver la respuesta', a.value != null && a.conf, 'reveal')}`;
+          ${confChips('retire')}${dock('Ver la respuesta', a.value != null, 'reveal')}`;
       } else {
         h += `<div class="revealbox ${JUST ? 'seq' : ''}"><p style="margin:0"><span class="guessline">Vuestra respuesta: <b>${RETIRE_OPTS[a.value]}</b></span></p><div>${fact(X.retire())}</div><h2 class="reveal-head">${a.value === 0 ? 'Eso es.' : 'Mejor de lo que pensabais.'}</h2></div>${dock('Seguir', true)}`;
       }
+    }
+
+    if (step === 'gain') {
+      h += `<h2 class="q">Si esto estuviera resuelto, ¿qué cambiaría en casa?</h2>
+        <p class="muted">Elegid la que más se parezca a lo vuestro.</p>
+        ${GAIN_OPTS.map(([i, t]) => `<button class="opt" data-act="gain" data-v="${esc(t)}" aria-pressed="${S.gain === t}">${optBody(i, esc(t))}</button>`).join('')}
+        ${dock('Seguir', S.gain)}`;
     }
 
     if (step === 'depth') {
@@ -404,7 +437,7 @@
       x: X.life,
     },
     {
-      key: 'umbrella', title: `Contratar un seguro umbrella de ${M(F.umbrella.rec)}`, when: 'Este trimestre',
+      key: 'umbrella', title: PRO() ? `Contratar un seguro umbrella de ${M(F.umbrella.rec)}` : `Contratar un seguro extra de responsabilidad civil de ${M(F.umbrella.rec)}`, when: 'Este trimestre',
       effort: Content.EFFORT[F.score.moves[2].effort], score: Fmt.scoreFor(F, ['card', 'life', 'umbrella']),
       quick: `Con los tres pasos, la nota llega a ${Fmt.scoreFor(F, ['card', 'life', 'umbrella'])}.`,
       why: `Es un seguro de responsabilidad civil por encima del de casa y coche. Una demanda grande podría alcanzar vuestro patrimonio (${M(F.umbrella.netWorthExposed)}). Hoy no tenéis.`,
@@ -435,18 +468,27 @@
     const v = S.steps[st.key];
     const depth = S.prefs.depth, calm = S.prefs.tone === 'calm';
     const myDoubts = S.doubts.filter(d => d.topic === st.key);
-    return `<div class="card step" id="step-${st.key}">
-      <div class="row" style="align-items:flex-start;flex-wrap:nowrap"><span class="num">${i + 1}</span>
-        <div style="flex:1"><div class="kicker" style="margin:0">${st.when} · esfuerzo ${st.effort}</div><h3 style="margin:2px 0 6px">${st.title}</h3></div>
-        <span class="tag acc" title="Nota tras este paso, en este orden">Nota ${st.score}</span></div>
+    let after = '';
+    if (st.key === 'card' && v === 'yes') {
+      after = S.payDate
+        ? `<div class="datechip"><span class="dc-ic">${ic('cal', 22)}</span><div><small>Lo hacéis el</small><b>${esc(S.payDate.label)}</b></div><button class="link small" data-act="cal" data-k="pay">Cambiar</button></div>
+           <details class="why"><summary>Cómo se hace, en tres pasos</summary><ol class="how"><li>Entrad en la app de vuestro banco.</li><li>Pagad ${M(F.firstStep.amount)} a la tarjeta ${esc(F.card.issuer || '')} desde vuestra cuenta de efectivo.</li><li>Comprobad que el saldo de la tarjeta queda en ${M(F.firstStep.remaining)}.</li></ol>${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="ics" data-k="pay">Añadir al calendario</button>'}</details>`
+        : `<button class="btn block" style="margin-top:12px" data-act="cal" data-k="pay">${ic('cal')} Elegir día y hora</button>`;
+    } else if (v === 'yes') {
+      after = `<div class="datechip soft"><span class="dc-ic">${ic('chat', 22)}</span><div><small>Este paso se hace con vuestro asesor</small><b>Os trae presupuestos a la reunión</b></div></div>`;
+    }
+    return `<div class="rstep ${v === 'yes' ? 'done' : ''}" id="step-${st.key}"><span class="rdot">${v === 'yes' ? ic('check', 18) : i + 1}</span>
+     <div class="card step">
+      <div class="spread" style="align-items:flex-start"><div class="kicker" style="margin:0">${st.when} · esfuerzo ${st.effort}</div><span class="tag acc" title="Nota tras este paso, en este orden">Nota ${st.score}</span></div>
+      <h3 style="margin:6px 0">${st.title}</h3>
       <p>${st.quick}</p>
       ${depth === 'why' ? `<div class="card soft" style="padding:14px;margin:0"><b>Por qué</b><p style="margin:.3em 0 0">${st.why}</p></div>` : `<details class="why"><summary>¿Por qué?</summary><p>${st.why}</p></details>`}
-      ${st.key === 'umbrella' ? `<p class="tiny">Umbrella: seguro extra de responsabilidad civil por encima del de casa y coche, para demandas grandes.</p>` : ''}
       <p style="margin:14px 0 0;font-weight:600">¿Os convence?</p>
       <div class="vote">${[['yes', 'Sí'], ['doubt', 'Tengo dudas'], ['no', 'No']].map(([k, l]) => `<button class="chip" data-act="vote" data-s="${st.key}" data-v="${k}" aria-pressed="${v === k}">${l}</button>`).join('')}</div>
+      ${after}
       ${myDoubts.length ? `<div style="margin-top:10px">${myDoubts.map(doubtLine).join('')}</div>` : ''}
       ${!calm && st.x ? `<details class="why"><summary>Ver la cifra</summary>${fact(st.x(), { noAlt: false })}</details>` : ''}
-    </div>`;
+     </div></div>`;
   }
 
   function doubtLine(d) {
@@ -464,6 +506,56 @@
     return rows;
   }
 
+  // Anillo de la nota. Naranja: nota con los pasos aceptados. Azul claro: hasta dónde llega con los tres.
+  let LAST_SCORE = null;
+  function ring(now, max) {
+    const r = 50, c = 2 * Math.PI * r, from = LAST_SCORE == null ? now : LAST_SCORE;
+    return `<div class="ring" role="img" aria-label="Nota ${now} de 100"><svg viewBox="0 0 120 120" width="132" height="132">
+      <circle cx="60" cy="60" r="${r}" class="rg-bg"/>
+      <circle cx="60" cy="60" r="${r}" class="rg-max" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - max / 100)}"/>
+      <circle cx="60" cy="60" r="${r}" class="rg-now" id="rg-now" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - from / 100)}" data-to="${c * (1 - now / 100)}"/>
+      </svg><div class="rg-num"><b id="rg-val" data-from="${from}" data-to="${now}">${from}</b><span>de 100</span></div></div>`;
+  }
+  function animateRing() {
+    const arc = document.getElementById('rg-now'), val = document.getElementById('rg-val'); if (!arc) return;
+    const from = +val.dataset.from, to = +val.dataset.to; LAST_SCORE = to;
+    if (from === to || REDUCED()) { arc.setAttribute('stroke-dashoffset', arc.dataset.to); val.textContent = to; return; }
+    requestAnimationFrame(() => requestAnimationFrame(() => { arc.style.strokeDashoffset = arc.dataset.to; }));
+    const t0 = performance.now(), tick = now => { const k = Math.min(1, (now - t0) / 900); val.textContent = Math.round(from + (to - from) * k); if (k < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+    val.parentNode.parentNode.classList.add('bump');
+  }
+
+  function fold(id, n, title, sub, body, openDefault) {
+    const open = S.fold[id] != null ? S.fold[id] : openDefault;
+    return `<details class="fold" id="s-${id}" data-fold="${id}" ${open ? 'open' : ''}><summary><b class="n">${n}</b><span class="ft"><strong>${title}</strong><small>${sub}</small></span><i class="chev">${ic('arrow', 18)}</i></summary><div class="foldbody">${body}</div></details>`;
+  }
+
+  function goalsStrip() {
+    const g = [];
+    if (F.goals.car) g.push(['car', 'Coche', F.goals.car.date.slice(0, 4)]);
+    if (F.goals.home) g.push(['home', 'Casa', F.goals.home.date.slice(0, 4)]);
+    if (F.education.starts[0]) g.push(['cap', 'Universidad de ' + F.education.starts[0].name, F.education.starts[0].date.slice(0, 4)]);
+    if (F.retirement.year) g.push(['sun', 'Jubilación', F.retirement.year]);
+    return `<div class="rstep goal"><span class="rdot">${ic('flag', 16)}</span><div class="goals"><div class="kicker" style="margin:0 0 8px">A dónde lleva vuestro plan</div>
+      <div class="goalrow">${g.map(x => `<div class="goalc"><span>${ic(x[0], 20)}</span><b>${x[2]}</b><small>${x[1]}</small></div>`).join('')}</div></div></div>`;
+  }
+
+  function bookedCard() {
+    const b = S.booking, d = fromIso(b.iso.slice(0, 10), b.time);
+    return `<div class="booked"><div class="tile"><small>${d.toLocaleDateString('es-ES', { month: 'short' }).replace('.', '')}</small><b>${d.getDate()}</b><span>${d.toLocaleDateString('es-ES', { weekday: 'short' }).replace('.', '')}</span></div>
+      <div><span class="tag good">Reunión pedida</span><h3 style="margin:6px 0 2px">${d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} · ${b.mins} minutos</h3>
+      <p class="small muted" style="margin:0">Por videollamada. Vuestro asesor llega con vuestras respuestas y dudas leídas: no tenéis que preparar nada.</p></div></div>
+      <div class="row" style="margin-top:12px">${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="ics" data-k="meet">Añadir al calendario</button>'}<button class="link" data-act="book">Cambiar el día</button></div>`;
+  }
+
+  function weekCard() {
+    const w = S.week; if (!w) return '';
+    return w.done
+      ? `<div class="card win"><span class="tag good">Una semana después</span><h3 style="margin-top:8px">Habéis pasado de ${F.score.now} a ${Fmt.scoreFor(F, ['card'])} vosotros solos.</h3><p style="margin:0">Los dos pasos que quedan son seguros, y esos se miran con vuestro asesor.</p></div>`
+      : `<div class="card"><span class="tag warn">Una semana después</span><h3 style="margin-top:8px">Justo para esto está vuestro asesor.</h3><p style="margin:0">Nos habéis dicho: «${esc(w.reason)}». Lo hemos apuntado para la reunión.</p></div>`;
+  }
+
   function renderPlan() {
     const calm = S.prefs.tone === 'calm';
     const ns = nextStep(), c = counts();
@@ -472,58 +564,62 @@
     const accepted = acceptedKeys();
     const scoreNow = Fmt.scoreFor(F, accepted);
     const scoreMax = Fmt.scoreFor(F, ['card', 'life', 'umbrella']);
+    const openAll = window.innerWidth >= 1000;
+    const kids = F.kids.map(k => k.name).join(' y ');
+    const stuck = accepted.length && !accepted.includes('card');
 
     let main = `<section class="planhero"><div class="kicker" style="margin:0">Plan de la familia ${F.family} · ${F.a.name} y ${F.b.name}</div>
       <h1>«${esc(S.phrase || 'Vuestro plan')}»</h1>
-      <p class="muted" style="margin:0">Esto es lo que propone vuestro plan, contado como lo habéis elegido. ${calm ? 'Una cosa cada vez.' : 'Con todas las cifras y de dónde salen.'}</p>
-      <div class="stats"><div><b>${F.score.now} → ${scoreMax}</b><span>nota hoy y con el plan</span></div><div><b>${P(F.retirement.coverPct)}</b><span>jubilación cubierta</span></div><div><b>${accepted.length}/3</b><span>pasos aceptados</span></div></div>
-      <button class="btn ghost panel-mobile-toggle" style="background:#fff" data-act="panel">Ver vuestros datos en gráficos</button></section>`;
+      <div class="heroscore">${ring(scoreNow, scoreMax)}
+        <div><b class="hs-t">${accepted.length ? 'Vuestra nota con lo que habéis aceptado' : 'Vuestra nota de salud financiera, hoy'}</b>
+        <p class="muted small" style="margin:.3em 0 0">Con los tres pasos de vuestro plan llega a <b>${scoreMax}</b>. ${stuck ? 'Sin el paso de la tarjeta no se mueve: es la que pone el techo.' : `Lleváis ${accepted.length} de 3.`}</p></div></div>
+      <button class="btn ghost panel-mobile-toggle" style="background:#fff" data-act="panel">${ic('chart')} Ver vuestros datos en gráficos</button></section>`;
 
-    if (rows.length) {
-      main += `<div class="section" id="s-creiais"><div class="kicker"><b>1</b>Lo que creíais y lo que dice el plan</div>
-        <div class="card">${calm ? `<p>Creíais <b>${rows[0][1]}</b>; el plan dice</p><div class="big mid">${rows[0][2]}</div>${rows.length > 1 ? `<details class="why"><summary>Ver las otras ${rows.length - 1}</summary>${tbl(rows.slice(1))}</details>` : ''}` : tbl(rows)}</div></div>`;
-    }
+    main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>Vuestra hoja de ruta</div>
+      <p class="muted" style="margin-top:-2px">Tres pasos, en este orden. Decid en cada uno si os convence.</p>
+      <div class="road"><div class="rstep start"><span class="rdot">${ic('flag', 16)}</span><div class="startc"><b>Hoy · nota ${F.score.now}</b><small>La tarjeta y el seguro de vida le ponen techo</small></div></div>
+      ${steps.map(stepCard).join('')}${goalsStrip()}</div></div>`;
 
-    const good = [X.retire(), X.saving(), X.cushion()];
-    main += `<div class="section" id="s-bien"><div class="kicker"><b>2</b>Lo que ya hacéis bien</div>
-      ${fact(good[0])}${calm ? `<details class="why card"><summary>Dos cosas más que hacéis bien</summary>${fact(good[1])}${fact(good[2])}</details>` : fact(good[1]) + fact(good[2])}</div>`;
-
-    main += `<div class="section" id="s-frena"><div class="kicker"><b>3</b>Lo que frena vuestro plan</div>${fact(X.score())}
-      ${calm ? '' : fact(X.cash())}</div>`;
-
-    main += `<div class="section" id="s-pasos"><div class="kicker"><b>4</b>Los pasos que propone vuestro plan</div>
-      <div class="card soft"><div class="spread"><b>Vuestra nota con los pasos aceptados</b><b style="font-family:var(--head);font-size:24px">${scoreNow}</b></div>
-        <div class="scorebar"><span class="tiny">0</span><div class="track"><div class="fill" style="width:${scoreNow}%"></div></div><span class="tiny">100</span></div>
-        <p class="tiny" style="margin:.4em 0 0">Con los tres pasos, ${scoreMax}. Las notas salen del plan: el orden importa porque la tarjeta y el seguro ponen techo.</p></div>
-      ${steps.map(stepCard).join('')}</div>`;
-
-    main += `<div class="section" id="s-despues"><div class="kicker"><b>5</b>Lo que viene después</div>
-      <div class="card"><h3>La universidad de ${F.kids.map(k => k.name).join(' y ')}</h3>
-        <p>${S.prefs.format === 'story' ? `Todavía no hay nada ahorrado para la universidad. ${F.education.starts.map(s => `${s.name} empieza en ${D(s.date)}`).join(' y ')}. El plan propone guardar unos <b>${M(F.education.extraYear)}</b> más el primer año.` : `Faltan <b>${M(F.education.gap)}</b>. El plan propone unos <b>${M(F.education.extraYear)}</b> más al año (el primer año; luego sube).`}</p>
-        <button class="link small" data-act="doubts" data-t="education">Tengo dudas sobre esto</button></div>
-      <div class="card"><h3>Cuánto riesgo queréis</h3>
-        <p>El <b>${P(F.portfolio.equityNow)}</b> de lo invertido está en acciones; el objetivo ${F.portfolio.targetProfile} es ${P(F.portfolio.equityTarget)}. ${F.a.name} se declaró ${F.a.risk} y ${F.b.name} ${F.b.risk}: el plan propone hablarlo juntos.</p>
-        ${calm ? '' : `<p class="small muted">Tecnología: ${P(F.portfolio.tech)} de las acciones. Fondo apalancado UPRO: ${M(F.portfolio.upro)}.</p>`}
-        <button class="link small" data-act="doubts" data-t="portfolio">Tengo dudas sobre esto</button></div>
-      <div class="card"><h3>El coche y la casa</h3>
-        <p>El plan incluye un coche de ${M(F.goals.car.amount)} en ${D(F.goals.car.date)} y una casa de ${M(F.goals.home.amount)} en ${D(F.goals.home.date)}.</p>
-        <button class="link small" data-act="doubts" data-t="goals">Tengo dudas sobre esto</button></div></div>`;
-
-    main += `<div class="section" id="s-cierre"><div class="kicker"><b>6</b>Vuestro siguiente paso</div>
-      <div class="card"><div class="meter">
+    main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>Vuestro siguiente paso</div>
+      <div class="card close"><div class="meter">
         <div><b>${c.yes}/3</b><span class="tiny">pasos aceptados</span></div>
         <div><b>${c.resolved}</b><span class="tiny">dudas resueltas</span></div>
         <div><b>${c.open}</b><span class="tiny">para la reunión</span></div></div>
-        <h2 style="margin-top:18px">${ns.title}</h2><p>${ns.text}</p>
-        <p class="muted small">Proponemos una reunión de <b>${ns.mins} minutos</b> en los próximos <b>${ns.days} días laborables</b>.${c.pending ? ` Aún no habéis contestado ${c.pending === 1 ? '1 paso' : c.pending + ' pasos'}.` : ''}${ns.lvl !== 'go' && c.open ? ' Si resolvéis aquí alguna duda con «¿Y si…?», la reunión se acorta.' : ''}</p>
-        <button class="btn block" data-act="book">${c.yes ? 'Queremos empezar con este plan' : 'Queremos hablarlo con el asesor'}</button>
+        ${S.gain ? `<p class="quote">Nos dijisteis que, con esto resuelto, <b>«${esc(S.gain.charAt(0).toLowerCase() + S.gain.slice(1))}»</b>.</p>` : ''}
+        ${S.booking ? bookedCard() : `<h2 style="margin-top:14px">${ns.title}</h2><p>${ns.text}</p>
+        <ul class="ticks"><li>${ic('check', 16)}Salís con el orden de vuestros pasos y respuesta a vuestras dudas</li><li>${ic('check', 16)}${ns.mins} minutos por videollamada</li><li>${ic('check', 16)}No hay que preparar nada: ya tiene lo que habéis contestado</li></ul>
+        <button class="btn block big-cta" data-act="book">${ic('cal')} ${c.yes ? 'Elegir día con vuestro asesor' : 'Hablarlo con vuestro asesor'}</button>
+        <p class="tiny" style="text-align:center;margin:.6em 0 0">Sin compromiso. Decidís vosotros.</p>`}
         <button class="link" style="width:100%" data-act="whatif">Antes, tengo otra pregunta</button></div>
-      ${S.booking ? advisorSheet() : ''}</div>`;
+      ${weekCard()}
+      ${(S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>Ved cómo comprobamos que el primer paso está hecho</small></span>${ic('arrow', 18)}</button>` : ''}
+      ${S.booking ? fold('hoja', ic('list', 16), 'Lo que recibe vuestro asesor', 'La hoja con vuestras respuestas y dudas', advisorSheet(), false) : ''}</div>`;
+
+    main += `<div class="section"><div class="kicker"><b>3</b>Más sobre vuestro plan</div>`;
+    if (rows.length) main += fold('creiais', ic('eye', 16), 'Lo que creíais y lo que dice el plan', `${rows.length} respuestas comparadas`, `<div class="card">${tbl(rows)}</div>`, openAll);
+    const good = [X.retire(), X.saving(), X.cushion()];
+    main += fold('bien', ic('sun', 16), 'Lo que ya hacéis bien', `Jubilación cubierta al ${P(F.retirement.coverPct)}, buen ahorro y colchón`, fact(good[0]) + fact(good[1]) + fact(good[2]), openAll);
+    main += fold('frena', ic('lock', 16), 'Lo que frena vuestro plan', 'La tarjeta y el seguro de vida ponen techo a la nota', fact(X.score()) + (calm ? '' : fact(X.cash())), openAll);
+    main += fold('despues', ic('flag', 16), 'Lo que viene después', `La universidad de ${kids}, el riesgo, el coche y la casa`,
+      `<div class="card"><h3>La universidad de ${kids}</h3>
+        <p>${S.prefs.format === 'story' ? `Todavía no hay nada ahorrado para la universidad. ${F.education.starts.map(s => `${s.name} empieza en ${D(s.date)}`).join(' y ')}. El plan propone guardar unos <b>${M(F.education.extraYear)}</b> más el primer año.` : `Faltan <b>${M(F.education.gap)}</b>. El plan propone unos <b>${M(F.education.extraYear)}</b> más al año (el primer año; luego sube).`}</p>
+        <button class="link small" data-act="doubts" data-t="education">Tengo dudas sobre esto</button></div>
+      <div class="card"><h3>Cuánto riesgo queréis</h3>
+        <p>${PRO() ? `El <b>${P(F.portfolio.equityNow)}</b> de lo invertido está en renta variable; el objetivo ${F.portfolio.targetProfile} es ${P(F.portfolio.equityTarget)}.` : `De cada 100 $ invertidos, <b>${Math.round(F.portfolio.equityNow * 100)}</b> están en acciones. El plan propone ${Math.round(F.portfolio.equityTarget * 100)}.`} ${F.a.name} se declaró ${F.a.risk} y ${F.b.name} ${F.b.risk}: el plan propone hablarlo juntos.</p>
+        ${PRO() ? `<p class="small muted">Tecnología: ${P(F.portfolio.tech)} de las acciones. Fondo apalancado UPRO: ${M(F.portfolio.upro)}.</p>` : ''}
+        <button class="link small" data-act="doubts" data-t="portfolio">Tengo dudas sobre esto</button></div>
+      <div class="card"><h3>El coche y la casa</h3>
+        <p>El plan incluye un coche de ${M(F.goals.car.amount)} en ${D(F.goals.car.date)} y una casa de ${M(F.goals.home.amount)} en ${D(F.goals.home.date)}. Cómo encajan con todo lo demás es justo lo que se ve con vuestro asesor.</p>
+        <button class="link small" data-act="doubts" data-t="goals">Tengo dudas sobre esto</button></div>`, openAll);
+    main += `</div>`;
 
     main += `<p class="foot">Esto os ayuda a entender el plan de vuestro asesor. No es consejo nuevo ni lo cambia. Antes de mover dinero, hablad con vuestro asesor. Caso de ejemplo del reto; las cifras salen del plan (JSON del caso).</p>`;
 
     app.innerHTML = `<div class="plan-grid"><div>${main}</div><aside class="panel ${S.panelOpen ? '' : 'collapsed'}" id="panel" aria-label="Panel de datos">${panel()}</aside></div>
-      <button class="btn fab" data-act="whatif">¿Y si…?</button>`;
+      <div class="cta-bar"><div class="cta-in"><button class="btn ghost" data-act="whatif">¿Y si…?</button>${S.booking
+        ? `<button class="btn soft grow" data-act="gocierre">${ic('check', 18)} Reunión: ${esc(S.booking.short)}</button>`
+        : `<button class="btn grow" data-act="book">${ic('cal', 18)} Pedir reunión</button>`}</div></div>`;
+    animateRing();
   }
 
   const tbl = rows => `<table class="nums"><tr><td class="tiny">Tema</td><td class="tiny" style="text-align:left">Creíais</td><td class="tiny">El plan</td></tr>${rows.map(r => `<tr><td>${r[0]}</td><td style="text-align:left;font-weight:400">${esc(r[1])}</td><td>${r[2]}</td></tr>`).join('')}</table>`;
@@ -566,6 +662,9 @@
       <p class="small"><b>${b.label}</b> · ${b.mins} min · Familia ${F.family}${S.who === 'juntos' ? ` (${F.a.name} y ${F.b.name})` : S.who ? ` (${S.who === 'a' ? F.a.name : F.b.name})` : ''}</p>
       <p class="tiny">Prototipo: no se envía nada. En producción, esta hoja le llega al asesor al confirmar.</p>
       <h3 style="margin-top:14px">Lo que más les importa</h3><p>«${esc(S.phrase)}»</p>
+      ${S.gain ? `<h3>Qué cambiaría en casa, con sus palabras</h3><p>«${esc(S.gain)}»</p>` : ''}
+      <h3>Cómo se manejan con las finanzas</h3><p>${PRO() ? 'Saben de finanzas: se les puede hablar en términos técnicos.' : 'Son nuevos en esto: mejor sin tecnicismos.'}</p>
+      ${S.payDate ? `<h3>Primer paso con fecha</h3><p>Pagar ${M(F.firstStep.amount)} de la tarjeta: ${esc(S.payDate.label)}.${S.week ? (S.week.done ? ` A la semana lo habían hecho (saldo ${M(S.week.balance)}).` : ` A la semana no lo habían hecho: «${esc(S.week.reason)}».`) : ''}</p>` : ''}
       <h3>Pasos aceptados (${acc.length}/3)</h3><ul>${acc.map(t => `<li>${t}</li>`).join('') || '<li class="muted">Ninguno todavía</li>'}</ul>
       ${dud.length ? `<h3>Con dudas</h3><ul>${dud.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
       ${no.length ? `<h3>No les convence</h3><ul>${no.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
@@ -575,7 +674,7 @@
       <h3>Datos a revisar</h3><ul><li>El efectivo de sobra (${M(F.cash.aboveAll)}) no cuenta el coche (${D(F.goals.car.date)}) ni la casa (${D(F.goals.home.date)}).</li><li>Seguro de vida objetivo: el plan da ${M(F.life.targetA)} y ${M(F.life.targetB)}.</li><li>Los gastos declarados parecen bajos: confirmar antes de fijar cuotas.</li></ul>
       <label class="row small" style="margin:10px 0"><input type="checkbox" data-act="sharestyle" ${S.shareStyle ? 'checked' : ''} style="width:22px;height:22px"> Compartir cómo preferimos ver el plan</label>
       ${S.shareStyle ? `<p class="small muted">Prefieren verlo ${pref}.</p>` : ''}
-      <div class="row">${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="ics">Añadir al calendario</button>'}<button class="btn soft" data-act="copy">Copiar resumen</button>${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="print">Imprimir</button>'}</div></div>`;
+      <div class="row"><button class="btn soft" data-act="copy">Copiar resumen</button>${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="print">Imprimir</button>'}</div></div>`;
   }
 
   // ------------------------------------------------------------------ hojas (modales)
@@ -630,32 +729,76 @@
     const p = S.prefs;
     const grp = (k, opts) => `<div class="chips" style="margin-bottom:16px">${opts.map(([v, l]) => `<button class="chip" data-act="setpref" data-k="${k}" data-v="${v}" aria-pressed="${p[k] === v}">${l}</button>`).join('')}</div>`;
     sheet(`<h2>Cómo veis el plan</h2><p class="muted small">Lo elegisteis al principio. Cambiadlo cuando queráis.</p>
+      <h3>Nivel</h3>${grp('level', [['new', 'Somos nuevos en esto'], ['pro', 'Sabemos de finanzas']])}
       <h3>Forma</h3>${grp('format', [['numbers', 'Números'], ['image', 'Imagen'], ['story', 'Historia']])}
       <h3>Explicación</h3>${grp('depth', [['quick', 'Conclusión primero'], ['why', 'Con el porqué']])}
       <h3>Detalle</h3>${grp('tone', [['calm', 'Lo justo'], ['full', 'Todo']])}
       <button class="link" data-act="restart">Volver a empezar desde cero</button>`);
   }
 
-  function slots(days) {
-    const out = []; const d = new Date(); d.setHours(0, 0, 0, 0);
-    let added = 0;
-    while (added < days) {
-      d.setDate(d.getDate() + 1);
-      if (d.getDay() === 0 || d.getDay() === 6) continue;
-      added++;
-      for (const [h, m] of [[9, 30], [13, 0], [18, 30]]) { const s = new Date(d); s.setHours(h, m); out.push(s); }
+  // Calendario para elegir día y hora: 'pay' (primer paso) o 'meet' (reunión con el asesor).
+  let CAL = null;
+  const CAL_TIMES = { pay: ['08:00', '13:30', '19:00', '21:30'], meet: ['09:30', '13:00', '18:30'] };
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const fromIso = (day, time) => { const [y, m, d] = day.split('-').map(Number), [h, mi] = time.split(':').map(Number); return new Date(y, m - 1, d, h, mi); };
+  const fmtLong = dt => { const t = dt.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }); return t.charAt(0).toUpperCase() + t.slice(1) + ' · ' + dt.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }); };
+  const fmtSlot = s => s.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + s.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  function calDays(kind) {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const start = new Date(today); start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+    const limit = Math.min(nextStep().days, 10); let work = 0; const out = [];
+    for (let i = 0; i < 21; i++) {
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      const wk = d.getDay() === 0 || d.getDay() === 6; let ok = d > today;
+      if (kind === 'meet') { if (wk) ok = false; else if (ok) { work++; if (work > limit) ok = false; } }
+      else if (i > 20) ok = false;
+      out.push({ d, iso: iso(d), ok, today: +d === +today });
     }
     return out;
   }
-  const fmtSlot = s => s.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + s.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  function calSheet(kind, keepSel) {
+    const days = calDays(kind), ns = nextStep(), c = counts();
+    if (!keepSel || !CAL || CAL.kind !== kind) {
+      const prev = kind === 'pay' ? S.payDate : S.booking;
+      let day = null, time = kind === 'pay' ? '19:00' : '18:30';
+      if (prev && days.some(x => x.ok && x.iso === prev.iso.slice(0, 10))) { day = prev.iso.slice(0, 10); time = prev.time || time; }
+      if (!day) { const pick = kind === 'pay' ? days.find(x => x.ok && x.d.getDay() === 1) : null; day = (pick || days.find(x => x.ok)).iso; }
+      CAL = { kind, day, time };
+    }
+    const sel = fromIso(CAL.day, CAL.time);
+    const months = [...new Set(days.map(x => x.d.toLocaleDateString('es-ES', { month: 'long' })))];
+    const head = kind === 'pay'
+      ? `<div class="kicker">Vuestro primer paso</div><h2>¿Qué día pagáis los ${M(F.firstStep.amount)} de la tarjeta?</h2><p class="muted small">Son diez minutos desde la app del banco. Con día y hora es mucho más fácil que se haga.</p>`
+      : `<div class="kicker">Reunión con vuestro asesor · ${ns.mins} min</div><h2>${c.yes ? 'Elegid el día para empezar' : 'Elegid el día para hablarlo'}</h2><p class="muted small">${ns.text}</p>`;
+    sheet(`${head}
+      <div class="cal"><div class="cal-head"><b>${months.join(' y ').replace(/^./, c => c.toUpperCase())} de ${days[20].d.getFullYear()}</b>${kind === 'meet' ? '<span class="tiny">Días con hueco, en azul</span>' : ''}</div>
+        <div class="cal-grid">${['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(l => `<span class="dow">${l}</span>`).join('')}
+        ${days.map(x => `<button class="day ${x.today ? 'today' : ''}" data-act="calday" data-v="${x.iso}" aria-pressed="${x.iso === CAL.day}" ${x.ok ? '' : 'disabled'} aria-label="${x.d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}">${x.d.getDate()}</button>`).join('')}</div></div>
+      <div class="times">${CAL_TIMES[kind].map(t => `<button class="chip" data-act="caltime" data-v="${t}" aria-pressed="${t === CAL.time}">${t}</button>`).join('')}</div>
+      <div class="cal-sum"><span class="dc-ic">${ic(kind === 'pay' ? 'card' : 'chat', 22)}</span><div><small>${kind === 'pay' ? 'Lo hacéis el' : 'Vuestra reunión'}</small><b>${fmtLong(sel)}</b></div></div>
+      <button class="btn block" data-act="calok">${kind === 'pay' ? 'Apuntar este día' : 'Pedir esta reunión'}</button>
+      <p class="tiny" style="margin-top:10px;text-align:center">${kind === 'pay' ? 'Nada mueve dinero desde aquí: el pago lo hacéis vosotros.' : 'Al confirmar, vuestro asesor recibe vuestros pasos y vuestras dudas. En este prototipo no se envía nada.'}</p>`);
+  }
+  const bookSheet = () => calSheet('meet');
 
-  function bookSheet() {
-    const ns = nextStep(), c = counts();
-    const list = slots(Math.min(ns.days, 5)).slice(0, 12);
-    sheet(`<h2>${c.yes ? 'Empezar con vuestro plan' : 'Reunión con vuestro asesor'}</h2>
-      <p>${ns.text}</p><p class="muted small">Reunión de <b>${ns.mins} minutos</b>, por videollamada. Elegid un hueco:</p>
-      <div class="slots">${list.map(s => `<button class="chip" data-act="slot" data-v="${s.toISOString()}" data-mins="${ns.mins}">${fmtSlot(s)}</button>`).join('')}</div>
-      <p class="tiny" style="margin-top:12px">Al confirmar, vuestro asesor recibe los pasos aceptados y vuestras dudas. En este prototipo no se envía nada.</p>`);
+  // Una semana después: se pide el saldo, no un "ya lo hice".
+  const WEEK_REASONS = ['Tenemos dudas', 'No sabemos cómo hacerlo', 'Ahora no es prioridad', 'No lo vemos igual los dos'];
+  function weekSheet() {
+    sheet(`<div class="kicker">Una semana después · vista previa</div><h2>¿Cuál es el saldo de vuestra tarjeta ahora?</h2>
+      <p class="muted small">Esto os llegaría a los siete días. Miradlo en la app de vuestro banco y escribidlo aquí.</p>
+      <div class="moneyin"><input id="bal" type="number" inputmode="numeric" min="0" step="100" placeholder="0" aria-label="Saldo de la tarjeta"><span>$</span></div>
+      <div class="chips" style="margin:10px 0 16px"><button class="chip" data-act="weekfill" data-v="${F.firstStep.remaining}">${M(F.firstStep.remaining)}</button><button class="chip" data-act="weekfill" data-v="${F.card.balance}">${M(F.card.balance)}, sigue igual</button></div>
+      <button class="btn block" data-act="weekok">Comprobar</button>`);
+  }
+  function weekDone(balance) {
+    S.week = { done: true, balance }; S.steps.card = 'yes'; keep();
+    sheet(`<div class="celebrate"><div class="burst">${ic('check', 40)}</div><div class="kicker">Paso 1 hecho</div><h2>De ${F.score.now} a ${Fmt.scoreFor(F, ['card'])}, vosotros solos.</h2>
+      <p>Vuestra tarjeta ha bajado a ${M(balance)}. Los dos pasos que quedan son seguros, y esos se miran con vuestro asesor.</p></div>
+      ${S.booking ? '<button class="btn block" data-act="close">Seguir</button>' : '<button class="btn block" data-act="book">Pedir reunión</button><button class="link" style="width:100%" data-act="close">Ahora no</button>'}`);
+  }
+  function weekStuck(balance) {
+    sheet(`<div class="kicker">Una semana después</div><h2>¿Qué os frena?</h2><p class="muted small">No pasa nada. Decidnos qué ha pasado y se lo contamos a vuestro asesor.</p>
+      ${WEEK_REASONS.map(r => `<button class="opt" data-act="weekwhy" data-b="${balance}" data-v="${esc(r)}">${esc(r)}</button>`).join('')}`);
   }
 
   // ------------------------------------------------------------------ barra superior y portada
@@ -676,9 +819,9 @@
       <div style="display:grid;gap:22px;min-width:0">
         <span class="eyebrow-pill"><span class="av"><span style="background:var(--accent)">${F.a.name[0]}</span><span style="background:var(--sky);color:var(--navy)">${F.b.name[0]}</span></span>${F.a.name} y ${F.b.name} ${F.family}</span>
         <h1>Bienvenidos a vuestro <em>plan a futuro</em></h1>
-        <p class="lead">Vuestro asesor ha preparado un plan para vosotros y para ${kids}. Antes de enseñároslo, un pequeño juego: ¿cuánto sabéis ya de vuestro dinero?</p>
+        <p class="lead">Vuestro asesor ha preparado un plan para vosotros y para ${kids}. Primero os preguntamos, después os lo enseñamos. Al final decidís si queréis verlo con él.</p>
         <button class="megacta" data-act="start"><span><b>${S.qi > 0 ? 'Seguir donde lo dejasteis' : 'Ver vuestro plan en 5 minutos'}</b><small>5 preguntas rápidas · sin registros</small></span><span class="go">${ic('arrow', 26)}</span></button>
-        <div class="trust"><span>${ic('clock', 16)}5 minutos</span><span>${ic('lock', 16)}Sin cuentas ni datos nuevos</span><span>${ic('check', 16)}Cifras de vuestro plan</span></div>
+        <div class="trust"><span>${ic('clock', 16)}5 minutos</span><span>${ic('lock', 16)}Sin cuentas ni datos nuevos</span><span>${ic('check', 16)}Cifras de vuestro plan</span><span>${ic('eye', 16)}Vuestro asesor verá lo que contestéis para preparar la reunión</span></div>
         <button class="link" style="text-align:left;width:fit-content;padding-left:0" data-act="skip">Prefiero ir directamente al plan</button>
       </div>
       <div class="teaser" aria-hidden="true"><div class="blob"></div>
@@ -711,7 +854,11 @@
   // ------------------------------------------------------------------ eventos
   function markTime() { S.sig.times.push(Date.now() - qStart); }
 
-  document.addEventListener('toggle', e => { if (e.target.matches && e.target.matches('details[data-why]') && e.target.open) { S.sig.whyOpens++; save(); } }, true);
+  document.addEventListener('toggle', e => {
+    if (!e.target.matches) return;
+    if (e.target.matches('details[data-why]') && e.target.open) { S.sig.whyOpens++; save(); }
+    if (e.target.matches('details[data-fold]')) { S.fold[e.target.dataset.fold] = e.target.open; save(); }
+  }, true);
 
   document.addEventListener('input', e => {
     const t = e.target;
@@ -719,7 +866,7 @@
       t.classList.remove('untouched');
       S.a[t.dataset.k] = Object.assign(S.a[t.dataset.k] || {}, { value: +t.value });
       const v = document.getElementById('amt'); v.textContent = M(+t.value); v.classList.remove('empty');
-      const btn = document.querySelector('[data-act="reveal"]'); if (btn) btn.disabled = !(S.a[t.dataset.k].conf);
+      const btn = document.querySelector('[data-act="reveal"]'); if (btn) btn.disabled = false;
       save();
     }
   });
@@ -740,9 +887,11 @@
       case 'start': S.stage = 'quiz'; render(); break;
       case 'skip':
         S.stage = 'plan';
-        S.prefs.format = S.prefs.format || 'numbers'; S.prefs.depth = S.prefs.depth || 'quick'; S.prefs.tone = S.prefs.tone || 'full';
+        S.prefs.format = S.prefs.format || 'numbers'; S.prefs.depth = S.prefs.depth || 'quick'; S.prefs.tone = S.prefs.tone || 'full'; S.prefs.level = S.prefs.level || 'new';
         render(); window.scrollTo(0, 0); break;
       case 'who': S.who = v; render(); break;
+      case 'level': S.prefs.level = v; render(); break;
+      case 'gain': S.gain = v; render(); break;
       case 'phrase': S.phrase = v; render(); break;
       case 'conf': {
         const k = b.dataset.k; S.a[k] = Object.assign(S.a[k] || {}, { conf: v }); if (v === 'none') S.sig.noIdea++;
@@ -766,8 +915,12 @@
       case 'toplan': markTime(); preparePlan(); break;
       case 'altfmt': { const id = b.dataset.id; const order = ['numbers', 'image', 'story']; const cur = S.cardFmt[id] || S.prefs.format || 'numbers'; S.cardFmt[id] = order[(order.indexOf(cur) + 1) % 3]; const y = window.scrollY; render(); window.scrollTo(0, y); break; }
       case 'vote': {
-        const s = b.dataset.s; S.steps[s] = v; const y = window.scrollY; render(); window.scrollTo(0, y);
-        if (v === 'doubt') whatIfSheet(s); if (v === 'no') noSheet(s);
+        const s = b.dataset.s, before = Fmt.scoreFor(F, acceptedKeys());
+        S.steps[s] = S.steps[s] === v ? null : v; const y = window.scrollY; render(); window.scrollTo(0, y);
+        const after = Fmt.scoreFor(F, acceptedKeys());
+        if (S.steps[s] === 'doubt') whatIfSheet(s); else if (S.steps[s] === 'no') noSheet(s);
+        else if (S.steps[s] === 'yes' && s === 'card' && !S.payDate) calSheet('pay');
+        else if (S.steps[s] === 'yes') toast(after > before ? `Vuestra nota sube de ${before} a ${after}` : 'Apuntado. La nota sube cuando entra el paso de la tarjeta');
         break;
       }
       case 'noreason': S.doubts.push({ id: 'no-' + b.dataset.s + '-' + Date.now(), topic: b.dataset.s, q: `No: ${v}`, covered: 'no', status: 'open' }); closeSheet(); keep(); toast('Apuntado para la reunión'); break;
@@ -783,8 +936,22 @@
       case 'setpref': S.prefs[b.dataset.k] = v; S.cardFmt = {}; keep(); settingsSheet(); break;
       case 'panel': S.panelOpen = !S.panelOpen; render(); if (S.panelOpen) document.getElementById('panel').scrollIntoView({ behavior: 'smooth' }); break;
       case 'book': if (S.stage !== 'plan') { S.stage = 'plan'; S.prefs.format = S.prefs.format || 'numbers'; S.prefs.depth = S.prefs.depth || 'quick'; S.prefs.tone = S.prefs.tone || 'calm'; render(); } bookSheet(); break;
-      case 'slot': { const s = new Date(v); S.booking = { iso: v, label: fmtSlot(s), mins: +b.dataset.mins }; closeSheet(); render(); document.getElementById('hoja').scrollIntoView({ behavior: 'smooth' }); break; }
-      case 'ics': downloadIcs(); break;
+      case 'cal': calSheet(b.dataset.k); break;
+      case 'calday': CAL.day = v; calSheet(CAL.kind, true); break;
+      case 'caltime': CAL.time = v; calSheet(CAL.kind, true); break;
+      case 'calok': {
+        const dt = fromIso(CAL.day, CAL.time), kind = CAL.kind;
+        if (kind === 'pay') { S.payDate = { iso: CAL.day, time: CAL.time, label: fmtLong(dt) }; closeSheet(); keep(); toast(`Apuntado. Con ese paso, vuestra nota pasa a ${Fmt.scoreFor(F, ['card'])}`); }
+        else { S.booking = { iso: CAL.day, time: CAL.time, label: fmtSlot(dt), short: fmtSlot(dt), mins: nextStep().mins }; closeSheet(); render(); document.getElementById('s-cierre').scrollIntoView({ behavior: 'smooth' }); toast('Reunión pedida'); }
+        break;
+      }
+      case 'gocierre': document.getElementById('s-cierre').scrollIntoView({ behavior: 'smooth' }); break;
+      case 'week': weekSheet(); break;
+      case 'weekfill': document.getElementById('bal').value = v; break;
+      case 'weekok': { const n = parseFloat(document.getElementById('bal').value); if (isNaN(n)) return; if (n <= F.firstStep.remaining) weekDone(n); else weekStuck(n); break; }
+      case 'weekwhy': S.week = { done: false, balance: +b.dataset.b, reason: v }; S.doubts.push({ id: 'week-' + Date.now(), topic: 'card', q: `A la semana no habían pagado: ${v}`, covered: 'no', status: 'open' }); keep();
+        sheet(`<div class="kicker">Apuntado</div><h2>Justo para esto está vuestro asesor.</h2><p>Le llega lo que nos habéis dicho, para que la reunión empiece por ahí.</p>${S.booking ? '<button class="btn block" data-act="close">Seguir</button>' : '<button class="btn block" data-act="book">Pedir reunión</button><button class="link" style="width:100%" data-act="close">Ahora no</button>'}`); break;
+      case 'ics': downloadIcs(b.dataset.k || 'meet'); break;
       case 'copy': copySummary(); break;
       case 'print': window.print(); break;
       case 'restart': try { localStorage.removeItem(KEY); } catch (er) { /* nada */ } S = fresh(); closeSheet(); render(); break;
@@ -793,18 +960,18 @@
 
   function keep() { const y = window.scrollY; render(); window.scrollTo(0, y); }
 
-  function downloadIcs() {
-    const b = S.booking; if (!b) return;
-    const s = new Date(b.iso), e = new Date(s.getTime() + b.mins * 60000);
+  function downloadIcs(kind) {
+    const pay = kind === 'pay', b = pay ? S.payDate : S.booking; if (!b) return;
+    const s = fromIso(b.iso.slice(0, 10), b.time), e = new Date(s.getTime() + (pay ? 15 : b.mins) * 60000);
     const z = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
     const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//plan-weah//es', 'BEGIN:VEVENT', 'UID:' + Date.now() + '@plan-weah', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(s), 'DTEND:' + z(e),
-      'SUMMARY:Reunión con vuestro asesor: empezar el plan', 'DESCRIPTION:' + summaryText().replace(/\n/g, '\\n'), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'reunion-plan.ics'; a.click();
+      'SUMMARY:' + (pay ? `Pagar ${M(F.firstStep.amount)} de la tarjeta` : 'Reunión con vuestro asesor: empezar el plan'), 'DESCRIPTION:' + (pay ? `Primer paso de vuestro plan. Después, el saldo de la tarjeta queda en ${M(F.firstStep.remaining)}.` : summaryText().replace(/\n/g, '\\n')), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = pay ? 'primer-paso.ics' : 'reunion-plan.ics'; a.click();
   }
   function summaryText() {
     const acc = STEPS().filter(s => S.steps[s.key] === 'yes').map(s => '- ' + s.title);
     const open = S.doubts.filter(d => d.status === 'open').map(d => '- ' + d.q);
-    return `Familia ${F.family}. Reunión: ${S.booking ? S.booking.label + ' (' + S.booking.mins + ' min)' : 'sin fecha'}\nLo que más importa: ${S.phrase || ''}\nPasos aceptados:\n${acc.join('\n') || '- ninguno'}\nDudas para la reunión:\n${open.join('\n') || '- ninguna'}`;
+    return `Familia ${F.family}. Reunión: ${S.booking ? S.booking.label + ' (' + S.booking.mins + ' min)' : 'sin fecha'}\nLo que más importa: ${S.phrase || ''}\nQué cambiaría en casa: ${S.gain || ''}\nNivel: ${PRO() ? 'saben de finanzas' : 'nuevos en esto'}${S.payDate ? '\nPrimer paso con fecha: ' + S.payDate.label : ''}\nPasos aceptados:\n${acc.join('\n') || '- ninguno'}\nDudas para la reunión:\n${open.join('\n') || '- ninguna'}`;
   }
   function copySummary() { const t = summaryText(); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Resumen copiado'), () => toast('No se ha podido copiar')); }
 
@@ -816,7 +983,7 @@
       Charts.initTips();
       const q = new URLSearchParams(location.search);
       if (q.has('reset')) { S = fresh(); }
-      if (q.get('demo') === 'plan') { S.stage = 'plan'; S.prefs = { format: q.get('f') || 'image', depth: q.get('d') || 'quick', tone: q.get('t') || 'full' }; S.phrase = S.phrase || Content.PHRASES[0]; }
+      if (q.get('demo') === 'plan') { S.stage = 'plan'; S.prefs = { format: q.get('f') || 'image', depth: q.get('d') || 'quick', tone: q.get('t') || 'full', level: q.get('l') === 'pro' ? 'pro' : 'new' }; S.phrase = S.phrase || Content.PHRASES[0]; }
       render();
     } catch (err) {
       console.error(err);
