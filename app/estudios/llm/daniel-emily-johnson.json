@@ -1,0 +1,65 @@
+{
+ "modelo": "gpt-5-mini",
+ "fecha": "2026-11-14",
+ "datos": "mcp",
+ "respuesta": {
+  "lectura": "A Daniel y Emily les mueve ante todo proteger a los niños y tener colchón líquido. Les preocupa cuánto cubren los seguros y cuánto aguanta su efectivo antes de tocarlo.",
+  "orden": [
+   "vida",
+   "colchon",
+   "tarjeta_interes",
+   "jubilacion"
+  ],
+  "porque_orden": "Empezamos por la protección, luego la liquidez, el coste de la deuda y cerramos con la noticia sobre la jubilación.",
+  "frases": [
+   "Nos importa proteger a Oliver y a Sophia",
+   "Queremos tener efectivo para imprevistos",
+   "Nos molesta pagar tanto en intereses",
+   "Que lleguemos tranquilos a la jubilación"
+  ],
+  "ganancias": [
+   "Dormiríamos más tranquilos por la noche",
+   "Tendríamos margen para un imprevisto",
+   "Pagaríamos menos en intereses",
+   "Podríamos disfrutar la jubilación"
+  ],
+  "abiertas": [
+   "¿Y si uno de los dos cambia de trabajo, qué pasa con los seguros?",
+   "¿Y si priorizamos seguro de vida frente a ahorrar más?"
+  ],
+  "preguntas": {
+   "vida": {
+    "q": "Si a uno de los dos le pasara algo, ¿cuántos años de gastos de casa tendrían cubiertos Oliver (11) y Sophia (9)?",
+    "cerca": "Lo habíais calculado bien",
+    "mas": "Son {dif} años más de lo que dijisteis",
+    "menos": "Menos años de los que pensabais",
+    "siente": "Hoy tenéis cubiertos unos **3 años** de gastos de casa. Con eso, Oliver, con 11 años, estaría protegido hasta los 14; a Sophia le quedaría parte de su infancia cubierta.",
+    "salida": "Subir el seguro de vida"
+   },
+   "colchon": {
+    "q": "Si mañana os quedarais sin ingresos, ¿cuántos meses de gastos básicos cubre vuestro efectivo?",
+    "cerca": "Lo sospechabais",
+    "mas": "Son {dif} meses más que dijisteis",
+    "menos": "Menos meses de lo que pensabais",
+    "siente": "El efectivo accesible solo cubre **1,4 meses** de gastos básicos. Con esa cifra, una parada de ingresos os dejaría expuestos y complicaría la vacación prevista.",
+    "salida": "Seguro extra de responsabilidad civil"
+   },
+   "tarjeta_interes": {
+    "q": "Pagáis 450 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?",
+    "cerca": "Lo notabais en los pagos",
+    "mas": "Son {dif} $ más al mes de lo que dijisteis",
+    "menos": "Menos de lo que imaginabais",
+    "siente": "De los 450 $ que pagáis cada mes, **374 $** van a intereses. Así la deuda apenas baja y el coste del crédito pesa mucho en vuestra liquidez.",
+    "salida": "Seguro extra de responsabilidad civil"
+   },
+   "jubilacion": {
+    "q": "¿Os llega para jubilaros a los 62 y 60 y vivir de ello?",
+    "cerca": "Lo teníais claro",
+    "mas": "Mejor de lo que pensabais: {dif}",
+    "menos": "Peor de lo que pensabais: {dif}",
+    "siente": "Sí: la proyección llega y al final quedan **260.272 $**. Eso os da un pequeño colchón para imprevistos y algo de tranquilidad en la jubilación.",
+    "salida": "Subir el seguro de vida"
+   }
+  }
+ }
+}

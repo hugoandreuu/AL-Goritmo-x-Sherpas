@@ -1,0 +1,690 @@
+{
+ "slug": "timothy-melanie-weah",
+ "fam": {
+  "titulo": "Timothy y Melanie Weah",
+  "apellido": "Weah",
+  "pl": true,
+  "adultos": [
+   {
+    "nombre": "Timothy",
+    "edad": 40,
+    "jubila": 62,
+    "riesgo": "Growth"
+   },
+   {
+    "nombre": "Melanie",
+    "edad": 38,
+    "jubila": 60,
+    "riesgo": "Moderate"
+   }
+  ],
+  "hijos": [
+   {
+    "nombre": "Liam",
+    "edad": 6
+   },
+   {
+    "nombre": "Josh",
+    "edad": 3
+   }
+  ]
+ },
+ "hoyAnio": 2026,
+ "nota": {
+  "hoy": 60,
+  "max": 78,
+  "banda": "estable",
+  "color": "yellow"
+ },
+ "areas": [
+  {
+   "nombre": "Ahorro",
+   "icon": "coins",
+   "nota": 86,
+   "puntos": "26/30"
+  },
+  {
+   "nombre": "Deudas",
+   "icon": "card",
+   "nota": 58,
+   "puntos": "12/20"
+  },
+  {
+   "nombre": "Inversiones",
+   "icon": "chart",
+   "nota": 56,
+   "puntos": "8/15"
+  },
+  {
+   "nombre": "Colchón",
+   "icon": "shield",
+   "nota": 100,
+   "puntos": "15/15"
+  },
+  {
+   "nombre": "Seguros",
+   "icon": "heart",
+   "nota": 37,
+   "puntos": "7/20"
+  }
+ ],
+ "frases": [
+  "Me preocupa que el dinero vaya en intereses",
+  "Quiero que Liam y Josh estén cubiertos",
+  "Que tengamos margen para comprar casa y coche",
+  "Que el colchón nos deje tranquilos"
+ ],
+ "ganancias": [
+  [
+   "moon",
+   "Dormiríamos sin mirar el teléfono"
+  ],
+  [
+   "home",
+   "Tendríamos tranquilidad para planear"
+  ],
+  [
+   "chat",
+   "Ahorraríamos con más claridad cada mes"
+  ],
+  [
+   "heart",
+   "Podríamos decidir sin prisa el siguiente paso"
+  ]
+ ],
+ "pasos": [
+  {
+   "key": "card",
+   "icon": "card",
+   "quien": "familia",
+   "titulo": "Pagar 6.800 $ de la tarjeta",
+   "porque": "Es vuestra deuda más cara: al 18 %. Después del pago quedan 11.200 $.",
+   "n": 1,
+   "nota": 62,
+   "esfuerzo": "medio",
+   "abre": true,
+   "plan": {
+    "title": "Pay down revolving card",
+    "action": "Pay $6,800 on the 18% card from cash to remove high revolving exposure and clear the gate"
+   }
+  },
+  {
+   "key": "life",
+   "icon": "heart",
+   "quien": "asesor",
+   "titulo": "Subir el seguro de vida",
+   "porque": "El plan pide añadir 235.000 $ de seguro de vida.",
+   "n": 2,
+   "nota": 60,
+   "esfuerzo": "bajo",
+   "abre": true,
+   "plan": {
+    "title": "Add life cover",
+    "action": "Add $235,000 of life cover to raise the mortality ratio and clear the gate"
+   }
+  },
+  {
+   "key": "umbrella",
+   "icon": "shield",
+   "quien": "asesor",
+   "titulo": "Seguro extra de responsabilidad civil",
+   "tituloPro": "Seguro umbrella de 1 M$",
+   "porque": "Es un seguro de responsabilidad civil por encima del de casa y coche. El plan pide 1 M$; hoy no tenéis.",
+   "n": 3,
+   "nota": 60,
+   "esfuerzo": "bajo",
+   "abre": false,
+   "plan": {
+    "title": "Add umbrella cover",
+    "action": "Add $1M of umbrella to raise the liability shield"
+   }
+  }
+ ],
+ "combos": {
+  "card|life|umbrella": 78,
+  "card|life": 73,
+  "card|umbrella": 62,
+  "life|umbrella": 60
+ },
+ "primer": {
+  "key": "card",
+  "titulo": "Pagar 6.800 $ de la tarjeta",
+  "h2": "Pagar 6.800 $ de la tarjeta. Diez minutos.",
+  "hoy": 18000,
+  "hoyTxt": "18.000 $",
+  "despues": 11200,
+  "despuesTxt": "11.200 $",
+  "importeTxt": "6.800 $",
+  "nota": 62,
+  "urgencia": "Cada mes que pasa son <b>270 $</b> en intereses.",
+  "como": [
+   "Entrad en la app de vuestro banco.",
+   "Pagad 6.800 $ a la tarjeta desde vuestra cuenta.",
+   "Comprobad que el saldo de la tarjeta queda en 11.200 $."
+  ],
+  "semana": {
+   "q": "¿Cuál es el saldo de vuestra tarjeta ahora?"
+  }
+ },
+ "linea": [
+  {
+   "c": "now",
+   "icon": "flag",
+   "anio": 2026,
+   "cuando": "Hoy",
+   "t": "Nota 60"
+  },
+  {
+   "c": "step",
+   "key": "card",
+   "icon": "card",
+   "anio": 2026,
+   "cuando": "Paso 1",
+   "t": "Pagar 6.800 $ de la tarjeta",
+   "quien": "familia"
+  },
+  {
+   "c": "step",
+   "key": "life",
+   "icon": "heart",
+   "anio": 2026,
+   "cuando": "Paso 2",
+   "t": "Subir el seguro de vida",
+   "quien": "asesor"
+  },
+  {
+   "c": "step",
+   "key": "umbrella",
+   "icon": "shield",
+   "anio": 2026,
+   "cuando": "Paso 3",
+   "t": "Seguro extra de responsabilidad civil",
+   "quien": "asesor"
+  },
+  {
+   "c": "goal",
+   "icon": "car",
+   "anio": 2028,
+   "cuando": "2028",
+   "t": "El coche",
+   "s": "45.000 $"
+  },
+  {
+   "c": "goal",
+   "icon": "home",
+   "anio": 2030,
+   "cuando": "2030",
+   "t": "La casa",
+   "s": "600.000 $"
+  },
+  {
+   "c": "goal",
+   "icon": "cap",
+   "anio": 2038,
+   "cuando": "2038",
+   "t": "Universidad de Liam",
+   "s": ""
+  },
+  {
+   "c": "warn",
+   "key": "card",
+   "icon": "card",
+   "anio": 2039,
+   "cuando": "2039",
+   "t": "Sin cambios, la tarjeta dura hasta aquí",
+   "s": "Liam, 19 · Josh, 16"
+  },
+  {
+   "c": "goal",
+   "icon": "cap",
+   "anio": 2041,
+   "cuando": "2041",
+   "t": "Universidad de Josh",
+   "s": ""
+  },
+  {
+   "c": "end",
+   "icon": "sun",
+   "anio": 2048,
+   "cuando": "2048",
+   "t": "Jubilación",
+   "s": "Los ahorros llegan hasta el final"
+  }
+ ],
+ "abiertas": [
+  {
+   "id": "oq1",
+   "q": "Si pagamos parte de la tarjeta hoy, ¿cómo cambia el plan?"
+  },
+  {
+   "id": "oq2",
+   "q": "¿Cuánta vida necesitamos contratar exactamente para estar tranquilos?"
+  },
+  {
+   "id": "oq3",
+   "q": "¿En qué orden deberíamos usar el efectivo sobrante?"
+  }
+ ],
+ "dudas": [
+  {
+   "id": "coche",
+   "label": "Coche",
+   "icon": "car",
+   "items": [
+    {
+     "q": "¿Cuándo está previsto y por cuánto?",
+     "a": "Vuestro plan cuenta con un coche de <b>45.000 $</b> en <b>julio de 2028</b>.",
+     "covered": "yes",
+     "id": "coche-1"
+    },
+    {
+     "q": "¿Y si lo compramos antes o más caro?",
+     "a": "El plan solo tiene hecha la cuenta con esa fecha y ese importe. Cambiarlos mueve todo lo demás.",
+     "covered": "no",
+     "id": "coche-2"
+    }
+   ]
+  },
+  {
+   "id": "casa",
+   "label": "Casa",
+   "icon": "home",
+   "items": [
+    {
+     "q": "¿Cuándo está prevista y por cuánto?",
+     "a": "Vuestro plan cuenta con una casa de <b>600.000 $</b> en <b>enero de 2030</b>.",
+     "covered": "yes",
+     "id": "casa-1"
+    },
+    {
+     "q": "¿Cabe con todo lo demás?",
+     "a": "Es la pregunta que el plan deja para hablar: depende de qué pasos se hagan antes.",
+     "covered": "no",
+     "id": "casa-2"
+    }
+   ]
+  },
+  {
+   "id": "imprevistos",
+   "label": "Imprevistos",
+   "icon": "shield",
+   "items": [
+    {
+     "q": "¿Cuánto aguantamos sin ingresos?",
+     "a": "Vuestro efectivo cubre <b>16 meses</b> de gastos básicos. El plan recomienda entre 8 y 9.",
+     "covered": "yes",
+     "id": "imprevistos-1"
+    },
+    {
+     "q": "¿Y si uno de los dos pierde el trabajo?",
+     "a": "El plan no trae ese escenario calculado.",
+     "covered": "no",
+     "id": "imprevistos-2"
+    }
+   ]
+  },
+  {
+   "id": "tarjeta",
+   "label": "Tarjeta",
+   "icon": "card",
+   "items": [
+    {
+     "q": "¿Cuánto cuesta cada mes?",
+     "a": "De los <b>300 $</b> que pagáis al mes, <b>270 $</b> son intereses. A este ritmo se acaba en <b>septiembre de 2039</b>.",
+     "covered": "yes",
+     "id": "tarjeta-1"
+    },
+    {
+     "q": "¿Y si la pagamos entera de golpe?",
+     "a": "El plan propone pagar 6.800 $. Pagarla entera no está calculado.",
+     "covered": "no",
+     "id": "tarjeta-2"
+    }
+   ]
+  },
+  {
+   "id": "seguros",
+   "label": "Seguros",
+   "icon": "heart",
+   "items": [
+    {
+     "q": "¿Cuánto seguro de vida recomienda el plan?",
+     "a": "Como mínimo <b>1,35 M$</b> entre los dos. Hoy tenéis <b>250.000 $</b>.",
+     "covered": "yes",
+     "id": "seguros-1"
+    },
+    {
+     "q": "¿Cuánto costaría al mes?",
+     "a": "El plan no trae precios. Los presupuestos los trae vuestro asesor.",
+     "covered": "no",
+     "id": "seguros-2"
+    }
+   ]
+  },
+  {
+   "id": "hijos",
+   "label": "Hijos",
+   "icon": "cap",
+   "items": [
+    {
+     "q": "¿Cuánto falta para la universidad?",
+     "a": "Al plan le faltan <b>113.509 $</b> para la universidad de Liam y Josh, en un solo pago y en dólares de hoy.",
+     "covered": "yes",
+     "id": "hijos-1"
+    },
+    {
+     "q": "¿De dónde sale ese dinero?",
+     "a": "El plan lo deja abierto: compite con los demás objetivos.",
+     "covered": "no",
+     "id": "hijos-2"
+    }
+   ]
+  },
+  {
+   "id": "jubilacion",
+   "label": "Jubilación",
+   "icon": "sun",
+   "items": [
+    {
+     "q": "¿Nos llega?",
+     "a": "Sí. Al final del plan quedan <b>2,37 M$</b>.",
+     "covered": "yes",
+     "id": "jubilacion-1"
+    },
+    {
+     "q": "¿Y si nos jubilamos antes?",
+     "a": "El plan solo está calculado con las edades de hoy.",
+     "covered": "no",
+     "id": "jubilacion-2"
+    }
+   ]
+  },
+  {
+   "id": "otra",
+   "label": "Otra cosa",
+   "icon": "help",
+   "items": []
+  }
+ ],
+ "lectura": "Les importa proteger a los niños y decidir qué hacer con el efectivo sobrante. Ver cuánto del pago de la tarjeta son intereses les moverá más que otros datos.",
+ "porqueOrden": "Primero el coste invisible que sangra la liquidez, luego la protección de la familia, la nota global y acabamos con la buena noticia del colchón.",
+ "preguntas": [
+  {
+   "id": "tarjeta_interes",
+   "tema": "tarjeta",
+   "tono": "malo",
+   "tipo": "importe",
+   "icon": "card",
+   "min": 0,
+   "max": 300,
+   "step": 10,
+   "real": 270,
+   "cerca": 0.2,
+   "q": "Pagáis 300 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?",
+   "sub": "Lo que no baja la deuda.",
+   "plan": "270 $",
+   "unidad": "de cada 300 $, en intereses",
+   "vis": {
+    "t": "coins",
+    "n": 9,
+    "a": "intereses",
+    "b": "baja la deuda"
+   },
+   "titulares": {
+    "cerca": "Lo teníais claro. Mirad a dónde se va.",
+    "mas": "Son {dif} más al mes de lo que pensabais.",
+    "menos": "Menos de lo que temíais. Aun así, mirad a dónde se va."
+   },
+   "siente": "De cada <b>300 $</b> que pagáis, <b>270 $</b> son intereses. Eso significa que vuestro pago apenas reduce la deuda y mantiene la carga mensual alta.",
+   "salida": "La salida está en vuestro plan: pagar 6.800 $ de la tarjeta.",
+   "calc": "270 $ de 300 $, redondeado a décimas",
+   "freno": {
+    "kick": "La tarjeta",
+    "h2": "270 $ de cada 300 $ se van en intereses."
+   },
+   "filas": [
+    [
+     "Saldo de la tarjeta",
+     "18.000 $"
+    ],
+    [
+     "Interés",
+     "18 %"
+    ],
+    [
+     "Pagáis al mes",
+     "300 $"
+    ],
+    [
+     "De eso, intereses",
+     "270 $"
+    ],
+    [
+     "Fin previsto",
+     "septiembre de 2039"
+    ]
+   ],
+   "pro": "Deuda revolving de 18.000 $ al 18 % TAE. De la cuota de 300 $, 270 $ son intereses. Fin previsto: septiembre de 2039.",
+   "origen": "profile.liabilities · key_metrics.debtManagement.creditCardDebt",
+   "creian": "Intereses de la tarjeta al mes",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  },
+  {
+   "id": "vida",
+   "tema": "vida",
+   "tono": "malo",
+   "tipo": "opciones",
+   "icon": "heart",
+   "permiso": true,
+   "opciones": [
+    "Menos de un año",
+    "Entre 1 y 3 años",
+    "Entre 4 y 9 años",
+    "Diez años o más"
+   ],
+   "rangos": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "real": 1,
+   "cerca": [
+    1
+   ],
+   "q": "Si a uno de los dos le pasara algo, ¿cuántos años de gastos de casa tendrían cubiertos Liam (6) y Josh (3)?",
+   "sub": "",
+   "plan": "unos 2 años",
+   "unidad": "de gastos de casa",
+   "mid": true,
+   "vis": {
+    "t": "yrs",
+    "on": 2,
+    "total": 12,
+    "base": 6,
+    "leg": "edad de Liam"
+   },
+   "titulares": {
+    "cerca": "Habéis estado cerca. Mirad hasta dónde llega.",
+    "mas": "Algo más, pero lejos de lo que hace falta.",
+    "menos": "Mucho menos de lo que pensabais."
+   },
+   "siente": "Hoy tenéis <b>250.000 $</b> en seguro de vida, que equivale a <b>unos 2 años</b> de gastos de casa para Liam y Josh; con esa cobertura Liam estaría protegido hasta alrededor de los 8 años.",
+   "salida": "Tiene arreglo y se ve con vuestro asesor: él trae los presupuestos.",
+   "calc": "seguro de vida de hoy ÷ gastos de casa al año",
+   "freno": {
+    "kick": "Proteger a Liam y Josh",
+    "h2": "Hoy el seguro cubriría unos 2 años. Hacen falta unos 12."
+   },
+   "filas": [
+    [
+     "Seguro de Timothy",
+     "140.000 $"
+    ],
+    [
+     "Mínimo para Timothy",
+     "750.000 $"
+    ],
+    [
+     "Seguro de Melanie",
+     "110.000 $"
+    ],
+    [
+     "Mínimo para Melanie",
+     "600.000 $"
+    ],
+    [
+     "Gastos de casa al año",
+     "112.774 $"
+    ]
+   ],
+   "pro": "Capital asegurado: Timothy 140.000 $ y Melanie 110.000 $. Mínimo recomendado: 750.000 $ y 600.000 $.",
+   "origen": "key_metrics.protection.lifeInsurance · ratios.investableAssetLevel.annualExpenses",
+   "creian": "Años cubiertos por el seguro de vida",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  },
+  {
+   "id": "nota",
+   "tema": "nota",
+   "tono": "malo",
+   "tipo": "num",
+   "icon": "chart",
+   "min": 0,
+   "max": 100,
+   "step": 1,
+   "sufijo": "",
+   "real": 60,
+   "cerca": 5,
+   "q": "Del 0 al 100, ¿qué nota de salud financiera creéis que os pone vuestro plan?",
+   "sub": "A ojo. Aquí nadie examina a nadie.",
+   "plan": "60",
+   "unidad": "de 100, hoy",
+   "vis": {
+    "t": "ring",
+    "hoy": 60,
+    "max": 78
+   },
+   "titulares": {
+    "cerca": "Lo teníais claro.",
+    "mas": "Mejor de lo que pensabais.",
+    "menos": "Más baja de lo que pensabais."
+   },
+   "siente": "La nota general del plan es <b>60</b> de 100. Refleja puntos fuertes como el colchón y debilidades claras en seguros.",
+   "salida": "Con los pasos de vuestro plan llega a 78.",
+   "filas": [
+    [
+     "Ahorro",
+     "86 de 100"
+    ],
+    [
+     "Deudas",
+     "58 de 100"
+    ],
+    [
+     "Inversiones",
+     "56 de 100"
+    ],
+    [
+     "Colchón",
+     "100 de 100"
+    ],
+    [
+     "Seguros",
+     "37 de 100"
+    ]
+   ],
+   "origen": "score.published_score · score.pillars",
+   "creian": "Nota de salud financiera",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  },
+  {
+   "id": "colchon",
+   "tema": "colchon",
+   "tono": "bueno",
+   "tipo": "num",
+   "icon": "shield",
+   "min": 0,
+   "max": 24,
+   "step": 1,
+   "sufijo": " meses",
+   "real": 16,
+   "cerca": 1,
+   "q": "Si mañana os quedarais sin ingresos, ¿cuántos meses de gastos básicos cubre vuestro efectivo?",
+   "sub": "Lo que hay en cuentas, sin tocar inversiones.",
+   "plan": "16 meses",
+   "unidad": "de gastos básicos",
+   "mid": true,
+   "vis": {
+    "t": "meses",
+    "tiene": 16,
+    "min": 8,
+    "max": 9,
+    "tras": null
+   },
+   "titulares": {
+    "cerca": "Eso es. Aquí vais bien.",
+    "mas": "Más de lo que pensabais.",
+    "menos": "Algo menos de lo que pensabais, pero dentro de lo recomendado."
+   },
+   "siente": "Vuestro efectivo cubre <b>16 meses</b> de gastos básicos. Eso os da margen para decidir sin prisa y usar parte del sobrante en otras prioridades.",
+   "salida": "Con parte de ese efectivo es con lo que vuestro plan propone pagar la tarjeta.",
+   "freno": {
+    "kick": "El colchón",
+    "h2": "Vuestro efectivo cubre 16 meses. El plan recomienda de 8 a 9."
+   },
+   "filas": [
+    [
+     "Efectivo accesible",
+     "150.800 $"
+    ],
+    [
+     "Meses cubiertos",
+     "16"
+    ],
+    [
+     "Reserva recomendada",
+     "75.180 $ a 84.578 $"
+    ]
+   ],
+   "pro": "Liquidez accesible: 150.800 $, 16 meses de gastos esenciales. Reserva objetivo: 75.180 $ a 84.578 $.",
+   "origen": "key_metrics.facts.cash",
+   "creian": "Meses que cubre el efectivo",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  }
+ ],
+ "frenos": [
+  "tarjeta_interes",
+  "vida"
+ ],
+ "sinUsar": [
+  {
+   "id": "tarjeta_fin",
+   "creian": "Año en que se acaba la tarjeta",
+   "plan": "septiembre de 2039 pagando 300 $ al mes"
+  },
+  {
+   "id": "jubilacion",
+   "creian": "Jubilación",
+   "plan": "Sí, llega y al final del plan quedan 2,37 M$"
+  }
+ ],
+ "generado": {
+  "fecha": "2026-11-14",
+  "datos": "mcp",
+  "textos": "llm:gpt-5-mini",
+  "avisos": [],
+  "llmFecha": "2026-11-14"
+ }
+}

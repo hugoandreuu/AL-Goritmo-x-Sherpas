@@ -1,0 +1,573 @@
+{
+ "slug": "samantha-lewis",
+ "fam": {
+  "titulo": "Samantha Lewis",
+  "apellido": "Lewis",
+  "pl": false,
+  "adultos": [
+   {
+    "nombre": "Samantha",
+    "edad": 47,
+    "jubila": 65,
+    "riesgo": "Growth"
+   }
+  ],
+  "hijos": [
+   {
+    "nombre": "Ethan",
+    "edad": 18
+   },
+   {
+    "nombre": "Ava",
+    "edad": 16
+   }
+  ]
+ },
+ "hoyAnio": 2026,
+ "nota": {
+  "hoy": 82,
+  "max": 84,
+  "banda": "fuerte",
+  "color": "green"
+ },
+ "areas": [
+  {
+   "nombre": "Ahorro",
+   "icon": "coins",
+   "nota": 75,
+   "puntos": "22/30"
+  },
+  {
+   "nombre": "Deudas",
+   "icon": "card",
+   "nota": 100,
+   "puntos": "20/20"
+  },
+  {
+   "nombre": "Inversiones",
+   "icon": "chart",
+   "nota": 66,
+   "puntos": "10/15"
+  },
+  {
+   "nombre": "Colchón",
+   "icon": "shield",
+   "nota": 100,
+   "puntos": "15/15"
+  },
+  {
+   "nombre": "Seguros",
+   "icon": "heart",
+   "nota": 71,
+   "puntos": "14/20"
+  }
+ ],
+ "frases": [
+  "Que Ethan y Ava estén cubiertos",
+  "Tener suficiente para jubilarme",
+  "No quedarme sin efectivo",
+  "Que no dependa de un solo fondo"
+ ],
+ "ganancias": [
+  [
+   "moon",
+   "Dormiría sin miedo al dinero futuro"
+  ],
+  [
+   "home",
+   "Podría planear viajes sin agobios"
+  ],
+  [
+   "check",
+   "Pagaría la universidad sin tensiones"
+  ],
+  [
+   "heart",
+   "Revisaría inversiones con calma"
+  ]
+ ],
+ "pasos": [
+  {
+   "key": "cover",
+   "icon": "home",
+   "quien": "asesor",
+   "titulo": "Asegurar tu casa",
+   "porque": "Hoy la casa no tiene seguro de hogar en el plan.",
+   "n": 1,
+   "nota": 84,
+   "esfuerzo": "medio",
+   "abre": false,
+   "plan": {
+    "title": "Close a coverage gap",
+    "action": "Add homeowners insurance on Primary home so coverage integrity clears that gap"
+   }
+  },
+  {
+   "key": "conc",
+   "icon": "stack",
+   "quien": "asesor",
+   "titulo": "Repartir mejor tus inversiones",
+   "porque": "Hoy el 39 % está en un solo fondo (VTI). El plan propone bajarlo al 25 %.",
+   "n": 2,
+   "nota": 83,
+   "esfuerzo": "alto",
+   "abre": false,
+   "plan": {
+    "title": "Reduce single-name concentration",
+    "action": "Bring VTI from 39% to 25% of investable for the next concentration band — about $58,300 of that line"
+   }
+  },
+  {
+   "key": "growth",
+   "icon": "chart",
+   "quien": "asesor",
+   "titulo": "Bajar un poco el riesgo de tus inversiones",
+   "porque": "El plan propone pasar del 85 % al 80 % en inversiones de crecimiento.",
+   "n": 3,
+   "nota": 83,
+   "esfuerzo": "alto",
+   "abre": false,
+   "plan": {
+    "title": "Reduce growth allocation toward glide",
+    "action": "Move the invested mix from 85% to 80% growth (glide 80%) for the next horizon-fit band — about $17,100 of the invested book"
+   }
+  }
+ ],
+ "combos": {},
+ "primer": null,
+ "linea": [
+  {
+   "c": "now",
+   "icon": "flag",
+   "anio": 2026,
+   "cuando": "Hoy",
+   "t": "Nota 82"
+  },
+  {
+   "c": "step",
+   "key": "cover",
+   "icon": "home",
+   "anio": 2026,
+   "cuando": "Paso 1",
+   "t": "Asegurar tu casa",
+   "quien": "asesor"
+  },
+  {
+   "c": "step",
+   "key": "conc",
+   "icon": "stack",
+   "anio": 2026,
+   "cuando": "Paso 2",
+   "t": "Repartir mejor tus inversiones",
+   "quien": "asesor"
+  },
+  {
+   "c": "step",
+   "key": "growth",
+   "icon": "chart",
+   "anio": 2026,
+   "cuando": "Paso 3",
+   "t": "Bajar un poco el riesgo de tus inversiones",
+   "quien": "asesor"
+  },
+  {
+   "c": "goal",
+   "icon": "cap",
+   "anio": 2028,
+   "cuando": "2028",
+   "t": "Universidad de Ava",
+   "s": ""
+  },
+  {
+   "c": "goal",
+   "icon": "home",
+   "anio": 2030,
+   "cuando": "2030",
+   "t": "La casa",
+   "s": "500.000 $"
+  },
+  {
+   "c": "end",
+   "icon": "sun",
+   "anio": 2044,
+   "cuando": "2044",
+   "t": "Jubilación",
+   "s": ""
+  },
+  {
+   "c": "warn",
+   "icon": "clock",
+   "anio": 2053,
+   "cuando": "2053",
+   "t": "Aquí se acaban los ahorros",
+   "s": "A los 73 años, según tu plan"
+  }
+ ],
+ "abiertas": [
+  {
+   "id": "oq1",
+   "q": "¿Cómo priorizamos retiro o universidad?"
+  },
+  {
+   "id": "oq2",
+   "q": "¿Podemos reducir mi concentración sin perder rendimiento?"
+  },
+  {
+   "id": "oq3",
+   "q": "¿Qué tendría que ver contigo en la reunión?"
+  }
+ ],
+ "dudas": [
+  {
+   "id": "casa",
+   "label": "Casa",
+   "icon": "home",
+   "items": [
+    {
+     "q": "¿Cuándo está prevista y por cuánto?",
+     "a": "Tu plan cuenta con una casa de <b>500.000 $</b> en <b>enero de 2030</b>.",
+     "covered": "yes",
+     "id": "casa-1"
+    },
+    {
+     "q": "¿Cabe con todo lo demás?",
+     "a": "Es la pregunta que el plan deja para hablar: depende de qué pasos se hagan antes.",
+     "covered": "no",
+     "id": "casa-2"
+    }
+   ]
+  },
+  {
+   "id": "imprevistos",
+   "label": "Imprevistos",
+   "icon": "shield",
+   "items": [
+    {
+     "q": "¿Cuánto aguanto sin ingresos?",
+     "a": "Tu efectivo cubre <b>7,9 meses</b> de gastos básicos. El plan recomienda entre 5 y 6.",
+     "covered": "yes",
+     "id": "imprevistos-1"
+    },
+    {
+     "q": "¿Y si pierdo el trabajo?",
+     "a": "El plan no trae ese escenario calculado.",
+     "covered": "no",
+     "id": "imprevistos-2"
+    }
+   ]
+  },
+  {
+   "id": "seguros",
+   "label": "Seguros",
+   "icon": "heart",
+   "items": [
+    {
+     "q": "¿Cuánto seguro de vida recomienda el plan?",
+     "a": "Como mínimo <b>1,25 M$</b>. Hoy tienes <b>2 M$</b>.",
+     "covered": "yes",
+     "id": "seguros-1"
+    },
+    {
+     "q": "¿Cuánto costaría al mes?",
+     "a": "El plan no trae precios. Los presupuestos los trae tu asesor.",
+     "covered": "no",
+     "id": "seguros-2"
+    }
+   ]
+  },
+  {
+   "id": "hijos",
+   "label": "Hijos",
+   "icon": "cap",
+   "items": [
+    {
+     "q": "¿Cuánto falta para la universidad?",
+     "a": "Al plan le faltan <b>98.838 $</b> para la universidad de Ethan y Ava, en un solo pago y en dólares de hoy.",
+     "covered": "yes",
+     "id": "hijos-1"
+    },
+    {
+     "q": "¿De dónde sale ese dinero?",
+     "a": "El plan lo deja abierto: compite con los demás objetivos.",
+     "covered": "no",
+     "id": "hijos-2"
+    }
+   ]
+  },
+  {
+   "id": "jubilacion",
+   "label": "Jubilación",
+   "icon": "sun",
+   "items": [
+    {
+     "q": "¿Me llega?",
+     "a": "Con el plan de hoy, los ahorros se acaban a los <b>73 años</b>.",
+     "covered": "yes",
+     "id": "jubilacion-1"
+    },
+    {
+     "q": "¿Y si me jubilo antes?",
+     "a": "El plan solo está calculado con las edades de hoy.",
+     "covered": "no",
+     "id": "jubilacion-2"
+    }
+   ]
+  },
+  {
+   "id": "otra",
+   "label": "Otra cosa",
+   "icon": "help",
+   "items": []
+  }
+ ],
+ "lectura": "Samantha prioriza proteger a Ethan y Ava y asegurarse de tener tranquilidad a largo plazo. Lo que más le moverá es saber hasta cuándo le duran los ahorros. También le interesará la concentración de sus inversiones y confirmar que su colchón es suficiente.",
+ "porqueOrden": "Primero toca lo más crítico (la jubilación), luego la inversión concreta que le preocupa, después una buena noticia sobre su colchón y al final el resultado global.",
+ "preguntas": [
+  {
+   "id": "jubilacion",
+   "tema": "jubilacion",
+   "tono": "malo",
+   "tipo": "opciones",
+   "icon": "sun",
+   "opciones": [
+    "Sí, con margen",
+    "Justo justo",
+    "No llega",
+    "Ni idea"
+   ],
+   "rangos": [
+    3,
+    2,
+    1,
+    null
+   ],
+   "real": 2,
+   "cerca": [
+    2
+   ],
+   "q": "¿Te llega para jubilarte a los 65 y vivir de ello?",
+   "sub": "",
+   "plan": "hasta los 73",
+   "unidad": "te duran los ahorros",
+   "mid": true,
+   "vis": {
+    "t": "tramo",
+    "de": 65,
+    "corte": 73,
+    "hasta": 90,
+    "ok": false
+   },
+   "titulares": {
+    "cerca": "Lo veías venir. Mira hasta dónde llega.",
+    "mas": "El plan dice que no llega.",
+    "menos": "El plan dice otra cosa."
+   },
+   "siente": "Con este plan, tus ahorros acaban a <b>73 años</b>. Eso deja parte de tus gastos de jubilación sin cubrir más adelante.",
+   "salida": "Es de lo primero que se ve con tu asesor: cuánto ahorrar y cuándo jubilarte.",
+   "calc": null,
+   "freno": {
+    "kick": "La jubilación",
+    "h2": "Los ahorros se acaban a los 73. El plan llega hasta los 90."
+   },
+   "filas": [
+    [
+     "Edad de jubilación",
+     "65"
+    ],
+    [
+     "Los ahorros se acaban a los",
+     "73"
+    ],
+    [
+     "Gasto cubierto por ingresos",
+     "25 %"
+    ]
+   ],
+   "pro": "Ingresos sobre necesidad anual en jubilación: 25 %. Agotamiento de activos líquidos a los 73.",
+   "origen": "key_metrics.facts.retirement",
+   "creian": "Jubilación",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  },
+  {
+   "id": "concentracion",
+   "tema": "inversion",
+   "tono": "malo",
+   "tipo": "num",
+   "icon": "stack",
+   "min": 0,
+   "max": 100,
+   "step": 1,
+   "sufijo": " %",
+   "real": 39,
+   "cerca": 5,
+   "q": "De todo lo que tienes invertido, ¿qué parte está en un solo fondo?",
+   "sub": "El más grande de todos.",
+   "plan": "39 %",
+   "unidad": "en un solo fondo (VTI)",
+   "vis": {
+    "t": "barra",
+    "hoy": 39,
+    "meta": 25,
+    "l1": "Hoy",
+    "l2": "Lo que propone el plan"
+   },
+   "titulares": {
+    "cerca": "Lo tenías claro.",
+    "mas": "Más de lo que pensabas.",
+    "menos": "Menos de lo que pensabas. Aun así, el plan lo ve alto."
+   },
+   "siente": "Hoy tienes <b>39 %</b> de lo invertido en un solo fondo, VTI. El plan propone dejarlo en <b>25 %</b>, para no depender tanto de una sola posición y dar más equilibrio a tu cartera.",
+   "salida": "Qué vender y cuándo se ve con tu asesor.",
+   "freno": {
+    "kick": "Las inversiones",
+    "h2": "El 39 % de lo invertido está en un solo fondo."
+   },
+   "filas": [
+    [
+     "Fondo VTI, hoy",
+     "39 %"
+    ],
+    [
+     "Propuesta del plan",
+     "25 %"
+    ]
+   ],
+   "pro": "Concentración en VTI: 39 % de lo invertible; el plan apunta al 25 %.",
+   "origen": "score.top_moves",
+   "creian": "Parte invertida en un solo fondo",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  },
+  {
+   "id": "colchon",
+   "tema": "colchon",
+   "tono": "bueno",
+   "tipo": "num",
+   "icon": "shield",
+   "min": 0,
+   "max": 24,
+   "step": 1,
+   "sufijo": " meses",
+   "real": 7.9,
+   "cerca": 1,
+   "q": "Si mañana te quedaras sin ingresos, ¿cuántos meses de gastos básicos cubre tu efectivo?",
+   "sub": "Lo que hay en cuentas, sin tocar inversiones.",
+   "plan": "7,9 meses",
+   "unidad": "de gastos básicos",
+   "mid": true,
+   "vis": {
+    "t": "meses",
+    "tiene": 7.9,
+    "min": 5,
+    "max": 6,
+    "tras": null
+   },
+   "titulares": {
+    "cerca": "Eso es. Aquí vas bien.",
+    "mas": "Más de lo que pensabas.",
+    "menos": "Algo menos de lo que pensabas, pero dentro de lo recomendado."
+   },
+   "siente": "Tu efectivo cubre <b>7,9 meses</b> de gastos básicos, por encima de la reserva recomendada. Eso te da margen para afrontar los pagos de Ethan y los imprevistos sin agobios inmediatos.",
+   "salida": "Este punto ya está. No hay que tocarlo.",
+   "freno": {
+    "kick": "El colchón",
+    "h2": "Tu efectivo cubre 7,9 meses. El plan recomienda de 5 a 6."
+   },
+   "filas": [
+    [
+     "Efectivo accesible",
+     "80.000 $"
+    ],
+    [
+     "Meses cubiertos",
+     "7,9"
+    ],
+    [
+     "Reserva recomendada",
+     "50.625 $ a 60.750 $"
+    ]
+   ],
+   "pro": "Liquidez accesible: 80.000 $, 7,9 meses de gastos esenciales. Reserva objetivo: 50.625 $ a 60.750 $.",
+   "origen": "key_metrics.facts.cash",
+   "creian": "Meses que cubre el efectivo",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  },
+  {
+   "id": "nota",
+   "tema": "nota",
+   "tono": "bueno",
+   "tipo": "num",
+   "icon": "chart",
+   "min": 0,
+   "max": 100,
+   "step": 1,
+   "sufijo": "",
+   "real": 82,
+   "cerca": 5,
+   "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?",
+   "sub": "A ojo. Aquí nadie examina a nadie.",
+   "plan": "82",
+   "unidad": "de 100, hoy",
+   "vis": {
+    "t": "ring",
+    "hoy": 82,
+    "max": 84
+   },
+   "titulares": {
+    "cerca": "Lo tenías claro.",
+    "mas": "Mejor de lo que pensabas.",
+    "menos": "Más baja de lo que pensabas."
+   },
+   "siente": "Tu plan tiene una salud de <b>82 de 100</b> hoy. Con los pasos del plan la nota puede subir y dar más certidumbre sobre cómo afrontar retiro y estudios de los niños.",
+   "salida": "Con los pasos de tu plan llega a 84.",
+   "filas": [
+    [
+     "Ahorro",
+     "75 de 100"
+    ],
+    [
+     "Deudas",
+     "100 de 100"
+    ],
+    [
+     "Inversiones",
+     "66 de 100"
+    ],
+    [
+     "Colchón",
+     "100 de 100"
+    ],
+    [
+     "Seguros",
+     "71 de 100"
+    ]
+   ],
+   "origen": "score.published_score · score.pillars",
+   "creian": "Nota de salud financiera",
+   "escritas": [
+    "q",
+    "siente"
+   ]
+  }
+ ],
+ "frenos": [
+  "jubilacion",
+  "concentracion"
+ ],
+ "sinUsar": [],
+ "generado": {
+  "fecha": "2026-11-14",
+  "datos": "mcp",
+  "textos": "llm:gpt-5-mini",
+  "avisos": [],
+  "llmFecha": "2026-11-14"
+ }
+}
