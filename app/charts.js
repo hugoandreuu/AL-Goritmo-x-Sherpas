@@ -117,7 +117,7 @@
     const w = 340, h = 180, pb = 34, pt = 18, gap = 14;
     const max = Math.max(...groups.map(g => people.reduce((s, p) => s + (g.by[p] || 0), 0)));
     const bw = (w - gap * (groups.length - 1)) / groups.length;
-    const colors = ['var(--s1)', 'var(--s2)'];
+    const colors = ['var(--s1)', 'var(--s4)'];
     const bars = groups.map((g, i) => {
       let y = h - pb, out = '';
       people.forEach((p, k) => {
