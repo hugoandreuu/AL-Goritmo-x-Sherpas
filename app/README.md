@@ -21,11 +21,24 @@ Las pocas cuentas propias (por ejemplo, años de gastos que cubre el seguro) las
 
 ## Flujo
 
-1. **Portada.** Nombre de la familia y selector de caso de ejemplo.
-2. **Quién mira, qué importa y nivel.** "Somos nuevos" o "Sabemos de finanzas" (añade el bloque técnico y el origen de cada cifra).
-3. **Adivinar y ver.** De 3 a 5 preguntas, las que el estudio trae para ese caso. Tras contestar: "decíais / el plan dice", un titular distinto si acertó, si el dato es mayor o si es menor, una imagen, la frase para sentirlo, la salida y una reacción de un toque.
+1. **Portada.** El saludo con los nombres de la familia y el botón Empezar. Al pulsarlo, la pantalla se barre y sale una frase puente ("Antes de ir a los detalles, veamos cuánto conocéis vuestra situación"). El selector de caso de ejemplo queda plegado debajo.
+2. **Quién mira, qué importa y nivel.** Una pregunta por pantalla; al tocar una respuesta se pasa a la siguiente. "Sabemos de finanzas" añade el bloque técnico y el origen de cada cifra.
+3. **Adivinar y ver.** De 3 a 5 preguntas, las que el estudio trae para ese caso. Cada pregunta aparece sola en el centro, sube y deja sitio a la respuesta: filas para elegir o un número grande con deslizador. Al pulsar "Ver lo que dice vuestro plan" la pantalla pasa a oscuro, cae una gota que abre ondas y el dato llega por partes: la caja con la cifra del plan contando desde 0, la regla con la distancia entre lo que dijeron y el plan, el titular letra a letra (distinto si acertó, si el dato es mayor o si es menor), una imagen, la frase para sentirlo y una reacción de un toque. "Podemos ayudaros con esto" enseña a qué paso del plan lleva ese dato. Un toque en la pantalla salta cualquier animación.
 4. **Recorrido.** La foto (nota y sus cinco áreas), los dos frenos, los pasos con interruptores y la nota que da el plan, la línea de hoy a la jubilación, el primer paso con calendario (solo si el primer paso del plan lo puede hacer la familia sola) y la reunión.
 5. **Plan completo.** Hoja de ruta con "¿Os convence?", reunión, lo que creían frente al plan y la hoja para el asesor.
+
+## Diseño
+
+Las reglas están al principio de `styles.css` y son pocas, para que cualquier pantalla nueva salga igual:
+
+- **Claro cuando contesta la familia, oscuro cuando habla el plan.** Portada, dato revelado y recorrido van sobre el marino de Sherpas; preguntas, plan completo y hojas, sobre blanco. El cambio de claro a oscuro al revelar es el único efecto grande de la app.
+- **Una sola tipografía**, Archivo: estrecha y pesada en titulares y cifras, normal para leer. Las cifras del plan son lo más grande de cada pantalla.
+- **Un botón principal por pantalla, siempre abajo.** Arriba solo hay volver, por dónde vas y el menú.
+- **Una pregunta por pantalla** y respuestas en filas grandes.
+- **El movimiento cuenta la historia y no adorna**: pensar, responder, esperar el dato y verlo llegar. Se ve siempre, aunque el sistema pida reducir movimiento, porque es parte de la demo, y un toque lo salta.
+- **Color con significado**: azul de Sherpas para actuar, rojo y verde para mala y buena noticia (los del propio plan), ámbar para la nota y la jubilación. Sin sombras, sin degradados, dos radios.
+
+De dónde sale cada regla: Revolut (cifra grande con números tabulares, botones en píldora sobre superficies planas, héroe oscuro y contenido claro), Noom (una pregunta por pantalla, avisar antes de la pregunta delicada, el botón dice lo que pasa), Cash App (una cifra y una acción), Klarna y Wise (la deuda y los pasos como una línea con fechas) y Robinhood como aviso (nada de confeti ni celebraciones que empujen).
 
 ## Preguntar al asesor
 
