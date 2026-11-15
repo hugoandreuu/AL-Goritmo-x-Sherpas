@@ -19,7 +19,7 @@
   const fresh = () => ({
     stage: 'home', qi: 0, who: null, phrase: null, a: {}, prefs: { level: null },
     gain: null, payDate: null, week: null, fold: {}, react: {}, slide: 0, openQ: null, later: false,
-    steps: {}, doubts: [], booking: null, cat: null, help: {},
+    steps: {}, doubts: [], booking: null, cat: null, help: {}, notes: {}, match: [],
   });
   let S = fresh();
   const save = () => { try { localStorage.setItem(KEY(), JSON.stringify(S)); } catch (e) { /* sin almacenamiento */ } };
@@ -38,12 +38,14 @@
   async function abrirCaso(slug, limpio) {
     if (!CASOS[slug]) CASOS[slug] = await fetch('estudios/' + slug + '.json').then(r => { if (!r.ok) throw new Error(slug); return r.json(); });
     E = CASOS[slug];
+    E.preguntas = E.preguntas.map(aBarra);
     QMAP = Object.fromEntries(E.preguntas.map(q => [q.id, q]));
-    QUIZ = [...(E.fam.pl ? ['who'] : []), 'phrase', 'level', ...E.preguntas.map(q => q.id), 'gain'];
+    buildQuiz([]);
     SLIDES = ['foto', ...E.frenos.map(id => 'f:' + id), 'pasos', 'camino', E.primer ? 'primer' : null, 'reunion'].filter(Boolean);
     S = fresh();
     if (!limpio) { try { const raw = localStorage.getItem(KEY()); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) { /* nada */ } }
     if (!E.fam.pl) S.who = 'a';
+    buildQuiz(S.match || []);
     try { localStorage.setItem('plan-v2-caso', slug); } catch (e) { /* nada */ }
     LAST_SCORE = null;
     document.querySelector('.brand').innerHTML = `<span class="logo" aria-hidden="true"></span>Plan ${esc(E.fam.apellido)} <small>· prototipo</small>`;
@@ -186,9 +188,12 @@
       <div class="rv-prec" data-st="type"><small class="rv-band">${esc(BANDA[b]())}</small><h2 class="rv-type" data-text="${esc(tit)}">${esc(tit)}</h2></div>
       <div class="rv-vis" data-st="vis">${vis(q)}</div>
       ${q.siente ? `<p class="rv-feel" data-st="fade">${q.siente}</p>` : ''}
-      ${bad ? `<div class="rv-react" data-st="fade"><small>¿Cómo ${w('os', 'te')} deja esto?</small><div class="react3">${REACT.map(([v, l, i]) => `<button data-act="react" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}">${ic(i, 18)}<span>${l()}</span></button>`).join('')}</div></div>` : ''}
+      <div class="rv-note" data-st="fade"><label for="note">¿Qué ${w('os pasa', 'te pasa')} por la cabeza al ver esto?</label>
+        <textarea id="note" class="free" rows="2" maxlength="200" data-k="${q.id}" placeholder="${w('Escribidlo como os salga', 'Escríbelo como te salga')}">${esc((S.notes || {})[q.id] || '')}</textarea>
+        <div class="sugg">${REACT.map(([v, l, i]) => `<button class="chip sm" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}">${l()}</button>`).join('')}</div>
+        ${(S.notes || {})[q.id] ? `<p class="saved">${ic('check', 15)}Guardado en el cuaderno de ${w('vuestro', 'tu')} asesor</p>` : `<button class="btn soft savebtn" data-act="note" data-k="${q.id}" disabled>Guardar para ${w('vuestro', 'tu')} asesor</button>`}</div>
       ${help ? `<div class="rv-exit" id="rv-exit"><span class="dc-ic">${ic(bad ? 'arrow' : 'check', 20)}</span><span>${esc(q.salida)}</span></div>` : ''}
-      <div class="rv-foot" data-st="fade"><details class="why rv-more"><summary>Ver el detalle</summary><div class="card">${rowsTbl(q.filas)}${proBlock(q)}</div></details>${origen(q)}</div>
+      <div class="rv-foot" data-st="fade"><details class="why rv-more"><summary>Ver las cifras de ${w('vuestro', 'tu')} informe</summary><div class="card">${rowsTbl(q.filas)}${proBlock(q)}</div></details>${origen(q)}</div>
       <div class="rv-dock" data-st="dock">${help ? dock('Seguir', true) : `<div class="dock"><button class="btn block" data-act="help" data-k="${q.id}">Podemos ${w('ayudaros', 'ayudarte')} con esto</button><button class="link block" data-act="next">Seguir</button></div>`}</div>
     </div>`;
   }
@@ -202,23 +207,27 @@
   }
   function playReveal(q) {
     PEND = q.id; render();
+    if (window.Fondo) { Fondo.focus(true); setTimeout(() => { const l = app.querySelector('.lake'); if (l && PEND === q.id) { const r = l.getBoundingClientRect(); Fondo.ripple(r.left + r.width / 2, r.top + r.height / 2); } }, 680); }
     REVEAL_T = setTimeout(() => endSuspense(q.id), 2300);
   }
   function endSuspense(id) {
     clearTimeout(REVEAL_T);
     if (PEND !== id) return;
     PEND = null; JUST = true; render(); JUST = false; runSeq();
+    if (window.Fondo) { const q = QMAP[id]; Fondo.focus(false); Fondo.mood(q && q.tono === 'malo' ? -0.9 : 0.8); }
   }
 
   // Secuencia de la revelación. Un toque fuera de los botones la lleva al final.
-  let SEQ = [], SEQ_ID = 0;
+  let SEQ = [], SEQ_ID = 0, SEQ_USER = false;
+  ['wheel', 'touchstart', 'keydown'].forEach(ev => addEventListener(ev, () => { if (SEQ.length) SEQ_USER = true; }, { passive: true }));
   function runSeq() {
     const root = app.querySelector('.rv2.play'); if (!root) return;
     SEQ_ID++;
     const at = (ms, f) => SEQ.push(setTimeout(f, ms));
+    SEQ_USER = false;
     const show = el => {
       el.classList.add('on');
-      if (el.dataset.st === 'dock') return;
+      if (el.dataset.st === 'dock' || SEQ_USER) return; // si la persona ya se mueve por la pantalla, no la arrastramos
       const r = el.getBoundingClientRect(), room = window.innerHeight - 110;
       if (r.bottom > room) window.scrollBy({ top: Math.min(r.bottom - room, r.top - 70), behavior: 'smooth' });
     };
@@ -283,6 +292,59 @@
     setTimeout(go, 450 + lis.length * 600 + 450);
   }
 
+
+  // --- B. Quiz abierto: primero sus palabras, después las preguntas del plan que tocan eso.
+  function buildQuiz(match) {
+    const ids = E.preguntas.map(q => q.id), first = ids.filter(id => match.includes(id));
+    QUIZ = [...(E.fam.pl ? ['who'] : []), 'phrase', 'level', ...first, ...ids.filter(id => !first.includes(id)), 'gain'];
+  }
+  const sinTilde = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  function temasDe(txt) {
+    const t = sinTilde(txt || ''), kids = E.fam.hijos.map(k => sinTilde(k.nombre)).join('|');
+    const T = { tarjeta: /tarjet|deud|interes|credit|debemos|debo|pagar/, vida: new RegExp(`nin|hij|peque|famil|segur|falt|morir|proteg|pasar algo${kids ? '|' + kids : ''}`),
+      jubilacion: /jubil|retir|vejez|pension|mayores/, colchon: /paro|trabaj|emergen|imprevist|colchon|despid|ingres|sueldo/, nota: /futur|salud|general|tranquil|bien/, inversion: /invers|fondo|bolsa|accion/ };
+    return E.preguntas.filter(q => T[q.tema] && T[q.tema].test(t)).map(q => q.id);
+  }
+  // Toda apuesta con la barra: las preguntas de opciones pasan a una edad, con cifras que ya trae el estudio.
+  function aBarra(q) {
+    if (q.tipo !== 'opciones') return q;
+    const v = q.vis || {}, k0 = E.fam.hijos[0];
+    if (q.id === 'vida' && v.t === 'yrs') {
+      const base = v.base, quien = w('a uno de los dos le', 'te');
+      return base != null && k0
+        ? Object.assign({}, q, { tipo: 'num', min: base, max: base + 20, step: 1, sufijo: ' años', real: base + v.on, cerca: 1, mid: false,
+          q: `Si ${quien} pasara algo, ¿hasta qué edad de ${k0.nombre} cubriría el seguro los gastos de casa?`, sub: `${k0.nombre} tiene hoy ${base} años.`,
+          plan: `${base + v.on} años`, unidad: `de ${k0.nombre}: hasta ahí llega el seguro`, calc: (q.calc ? q.calc + '; ' : '') + `edad de ${k0.nombre} hoy + años cubiertos` })
+        : Object.assign({}, q, { tipo: 'num', min: 0, max: 20, step: 1, sufijo: ' años', real: v.on, cerca: 1, mid: false,
+          q: `Si ${quien} pasara algo, ¿cuántos años de gastos de casa cubriría el seguro?`, plan: `${v.on} años`, unidad: 'de gastos de casa' });
+    }
+    if (q.id === 'jubilacion' && v.t === 'tramo' && !v.ok && v.corte) {
+      return Object.assign({}, q, { tipo: 'num', min: v.de, max: Math.max(v.hasta || 95, v.corte + 5), step: 1, sufijo: ' años', real: v.corte, cerca: 2, mid: false,
+        q: `Si ${w('os jubiláis', 'te jubilas')} a los ${v.de}, ¿hasta qué edad ${w('os duran', 'te duran')} los ahorros?`, sub: '',
+        plan: `${v.corte} años`, unidad: `hasta ahí ${w('os', 'te')} duran los ahorros`,
+        titulares: { cerca: w('Lo veíais venir. Mirad hasta dónde llega.', 'Lo veías venir. Mira hasta dónde llega.'), mas: w('Os duran algo más de lo que pensabais, pero no hasta el final.', 'Te duran algo más de lo que pensabas, pero no hasta el final.'), menos: w('Se acaban antes de lo que pensabais.', 'Se acaban antes de lo que pensabas.') } });
+    }
+    return q;
+  }
+  // «Os escuchamos»: la frase vuela al cuaderno del asesor.
+  function fly(from, txt) {
+    const nb = document.getElementById('nb'); if (!from || !nb || !txt) return;
+    const a = from.getBoundingClientRect(), b = nb.getBoundingClientRect(), el = document.createElement('div');
+    el.className = 'fly'; el.textContent = txt.length > 60 ? txt.slice(0, 58) + '…' : txt;
+    el.style.left = a.left + 'px'; el.style.top = a.top + 'px'; el.style.width = Math.min(a.width, 320) + 'px';
+    document.body.appendChild(el);
+    const dx = b.left + b.width / 2 - (a.left + Math.min(a.width, 320) / 2), dy = b.top + b.height / 2 - (a.top + 20);
+    const an = el.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${dx * .5}px, ${dy * .45}px) scale(.6)`, opacity: .9, offset: .55 }, { transform: `translate(${dx}px, ${dy}px) scale(.12)`, opacity: 0 }], { duration: 850, easing: 'cubic-bezier(.4,0,.2,1)' });
+    an.onfinish = () => { el.remove(); const n = document.getElementById('nb'); if (n) { n.classList.remove('got'); void n.offsetWidth; n.classList.add('got'); } };
+  }
+  const nbCount = () => (S.phrase ? 1 : 0) + Object.keys(S.notes || {}).length;
+  function nbSheet() {
+    const items = [S.phrase ? [w('Lo que os ronda la cabeza', 'Lo que te ronda la cabeza'), S.phrase] : null, ...E.preguntas.filter(q => S.notes[q.id]).map(q => [q.creian, S.notes[q.id]])].filter(Boolean);
+    sheet(`<div class="kicker">Cuaderno para ${w('vuestro', 'tu')} asesor</div><h2>Lo que ${w('habéis', 'has')} dicho, tal cual</h2>
+      ${items.length ? `<ul class="nb-list">${items.map(([t, x]) => `<li><small>${esc(t)}</small><span>«${esc(x)}»</span></li>`).join('')}</ul>` : `<p class="muted">Todavía nada. Lo que ${w('escribáis', 'escribas')} se guarda aquí.</p>`}
+      <p class="tiny">${w('Vuestro', 'Tu')} asesor lo leerá antes de la reunión.</p><button class="btn block" data-act="close">Cerrar</button>`);
+  }
+
   // --- B. Cada pregunta: aparece sola en el centro, respira y sube para dejar sitio al widget.
   let INTRO = null, INTRO_T = null, ADV_T = null, BUCKET = null;
   const showV = (q, v) => q.tipo === 'importe' ? M(v) : q.tipo === 'anio' ? String(v) : dec(v, 1) + (q.sufijo || '');
@@ -331,8 +393,11 @@
       head = `<h2 class="q">¿Quién mira el plan?</h2>`;
       body = [['juntos', 'Los dos juntos', 'heart'], ['a', ad[0].nombre, 'eye'], ['b', ad[1].nombre, 'eye']].map(([v, l, i], k) => `<button class="opt" style="--i:${k}" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${optBody(i, esc(l))}</button>`).join('');
     } else if (step === 'phrase') {
-      head = `<h2 class="q">En una línea, ¿qué ${w('os', 'te')} importa más?</h2>`;
-      body = E.frases.map((p, i) => `<button class="opt" style="--i:${i}" data-act="phrase" data-v="${esc(p)}" aria-pressed="${S.phrase === p}">${optBody(['heart', 'moon', 'card', 'sun'][i % 4], esc(p))}</button>`).join('');
+      head = `<h2 class="q">¿Qué es lo que más ${w('os ronda', 'te ronda')} la cabeza con el dinero?</h2><p class="muted">Con ${w('vuestras', 'tus')} palabras. También ${w('podéis', 'puedes')} dictarlo con el micrófono del teclado.</p>`;
+      body = `<textarea id="worry" class="free" rows="3" maxlength="240" data-act="free-in" placeholder="${esc(E.fam.hijos.length ? `Por ejemplo: que a ${E.fam.hijos.map(k => k.nombre).join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilo a la jubilación')}">${esc(S.phrase || '')}</textarea>
+        <p class="tiny sugg-t">O ${w('empezad', 'empieza')} con una de estas y ${w('cambiadla', 'cámbiala')} a ${w('vuestro', 'tu')} gusto:</p>
+        <div class="sugg">${E.frases.map((p, i) => `<button class="chip sm" style="--i:${i}" data-act="sugg" data-v="${esc(p)}">${esc(p)}</button>`).join('')}</div>`;
+      dk = `<div class="dock"><button class="btn block" data-act="worry" ${S.phrase ? '' : 'disabled'}>Seguir</button><button class="link block skipw" data-act="worry" data-v="skip">${w('Preferimos', 'Prefiero')} no escribir</button></div>`;
     } else if (step === 'level') {
       head = `<h2 class="q">¿Cómo ${w('os manejáis', 'te manejas')} con las finanzas?</h2><p class="muted">No hay respuestas buenas ni malas. Se puede cambiar después.</p>`;
       body = `<div class="seg2" role="group" aria-label="Nivel">
@@ -347,7 +412,8 @@
       body = `<button class="btn block" data-act="perm" data-v="now">Lo vemos ahora</button><button class="link block" style="width:100%" data-act="perm" data-v="later">Saltar por ahora</button>`;
     } else {
       const n = E.preguntas.indexOf(q) + 1, N = E.preguntas.length, has = a.value != null;
-      head = `<div class="qnum"><i>${n}</i> de ${N}</div><h2 class="q">${esc(q.q)}</h2>${q.sub ? `<p class="muted">${esc(q.sub)}</p>` : ''}`;
+      const men = (S.match || []).includes(q.id) ? `<span class="porque">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
+      head = `<div class="qnum"><i>${n}</i> de ${N}${men}</div><h2 class="q">${esc(q.q)}</h2>${q.sub ? `<p class="muted">${esc(q.sub)}</p>` : ''}`;
       if (q.tipo === 'opciones') {
         const icons = OPT_ICONS[q.tema] || ['zero', 'clock', 'cal', 'shield'];
         body = q.opciones.map((o, i) => `<button class="opt" style="--i:${i}" data-act="opt" data-k="${q.id}" data-v="${i}" aria-pressed="${a.value === i}">${optBody(icons[i % icons.length], esc(o))}</button>`).join('');
@@ -355,9 +421,9 @@
       body += `<div class="confw ${has ? '' : 'hid'}">${confChips(q.id)}</div>`;
       dk = dock(q.tipo === 'anio' ? 'Ver la fecha' : q.tipo === 'opciones' ? 'Ver la respuesta' : 'Ver el dato', has, 'reveal');
     }
+    if (window.Fondo) { Fondo.mood(0); Fondo.focus(false); }
     app.innerHTML = `<div class="narrow"><div class="qstage ${intro ? 'intro' : ''}">${progress()}<div class="qhead">${head}</div><div class="qbody">${body}</div>${dk}</div></div>`;
-    window.scrollTo(0, 0);
-    if (intro) introQ();
+    if (intro) { window.scrollTo(0, 0); introQ(); }
   }
 
   // ------------------------------------------------------------------ anillo de la nota
@@ -721,7 +787,7 @@
   function renderTop() {
     const talk = `<button class="pill talk" data-act="talk"><span class="lbl-long">Hablarlo con una persona</span><span class="lbl-short" aria-hidden="true">Asesor</span></button>`;
     if (S.stage === 'plan' || S.stage === 'story') topActions.innerHTML = `${S.stage === 'plan' ? '<button class="pill" data-act="story">Resumen</button>' : ''}<button class="pill" data-act="settings" aria-label="Ajustes"><span aria-hidden="true">⚙</span> <span class="lbl-long">Ajustes</span></button>${talk}`;
-    else if (S.stage === 'quiz') topActions.innerHTML = `<button class="pill" data-act="skip">Saltar al plan</button>${talk}`;
+    else if (S.stage === 'quiz') topActions.innerHTML = `<button class="pill nb" id="nb" data-act="nb" aria-label="Cuaderno para ${w('vuestro', 'tu')} asesor">${ic('pen', 16)}<b>${nbCount()}</b></button><button class="pill" data-act="skip">Saltar</button>${talk}`;
     else topActions.innerHTML = '';
     document.querySelectorAll('.lbl-short').forEach(el => { el.style.display = window.innerWidth <= 560 ? 'inline' : 'none'; });
   }
@@ -757,6 +823,7 @@
 
   function render() {
     renderTop();
+    if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz');
     if (S.stage === 'home') renderHome();
     else if (S.stage === 'quiz') renderQuiz();
     else if (S.stage === 'story') renderStory();
@@ -773,6 +840,12 @@
   document.addEventListener('input', e => {
     const t = e.target;
     if (t.id === 'free') { DRAFT = t.value; return; }
+    if (t.id === 'worry' || t.id === 'note') {
+      if (window.Fondo) Fondo.pulse();
+      const bt = t.id === 'worry' ? app.querySelector('[data-act="worry"]:not([data-v])') : app.querySelector('.savebtn');
+      if (bt) bt.disabled = !t.value.trim();
+      return;
+    }
     if (t.dataset.act === 'range') {
       const q = QMAP[t.dataset.k];
       t.classList.remove('untouched');
@@ -821,7 +894,27 @@
       case 'yr': { const a = S.a[k], q = QMAP[k]; a.value = Math.max(q.min, Math.min(q.max, a.value + +v)); render(); break; }
       case 'opt': S.a[k] = Object.assign(S.a[k] || {}, { value: +v }); render(); break;
       case 'perm': { const id = QUIZ[S.qi]; if (v === 'later') { S.a[id] = { permission: 'later' }; go(); } else { S.a[id] = Object.assign(S.a[id] || {}, { permission: 'now' }); render(); } break; }
-      case 'reveal': { const q = QMAP[QUIZ[S.qi]]; S.a[q.id].revealed = true; const st = app.querySelector('.qstage'); if (st) st.classList.add('fade-out'); setTimeout(() => playReveal(q), 300); break; }
+      case 'reveal': {
+        const q = QMAP[QUIZ[S.qi]]; S.a[q.id].revealed = true;
+        if (document.startViewTransition) { document.startViewTransition(() => playReveal(q)); break; }
+        const st = app.querySelector('.qstage'); if (st) st.classList.add('fade-out'); setTimeout(() => playReveal(q), 300); break;
+      }
+      case 'sugg': { const t = document.getElementById('worry'); t.value = v; t.focus(); const bt = app.querySelector('[data-act="worry"]:not([data-v])'); if (bt) bt.disabled = false; if (window.Fondo) Fondo.pulse(); break; }
+      case 'worry': {
+        const t = document.getElementById('worry'), txt = v === 'skip' ? '' : (t ? t.value.trim() : '');
+        S.phrase = txt; S.match = temasDe(txt); buildQuiz(S.match);
+        S.doubts = S.doubts.filter(d => d.id !== 'nota-ronda');
+        if (txt) { S.doubts.push({ id: 'nota-ronda', topic: 'otra', q: `Lo que ${w('les', 'le')} ronda la cabeza: «${txt}»`, covered: 'no', status: 'open' }); renderTop(); fly(t, txt); }
+        save(); setTimeout(nextQ, txt ? 450 : 0); break;
+      }
+      case 'nsugg': { const t = document.getElementById('note'), l = (REACT.find(r => r[0] === v) || [0, () => ''])[1](); S.react[k] = v; t.value = t.value.trim() ? t.value.trim().replace(/[.\s]*$/, '. ') + l : l; t.dispatchEvent(new Event('input', { bubbles: true })); save(); break; }
+      case 'note': {
+        const t = document.getElementById('note'), txt = t.value.trim(); if (!txt) break;
+        S.notes[k] = txt; S.doubts = S.doubts.filter(d => d.id !== 'nota-' + k);
+        S.doubts.push({ id: 'nota-' + k, topic: 'otra', q: `${QMAP[k].creian}: «${txt}»`, covered: 'no', status: 'open' });
+        renderTop(); fly(t, txt); setTimeout(keep, 500); break;
+      }
+      case 'nb': nbSheet(); break;
       case 'next': go(); break;
       case 'toplan': preparePlan(); break;
       case 'nextslide': S.slide = Math.min(S.slide + 1, SLIDES.length - 1); STORY_DIR = 'fwd'; render(); window.scrollTo(0, 0); break;

@@ -353,12 +353,20 @@
      "30.000 $"
     ],
     [
-     "Meses cubiertos",
+     "Gastos básicos al mes",
+     "9.306 $"
+    ],
+    [
+     "Meses que cubre hoy",
      "3,2"
     ],
     [
-     "Reserva recomendada",
+     "Reserva que recomienda el plan",
      "46.530 $ a 55.836 $"
+    ],
+    [
+     "Meses tras apartar los gastos ya previstos",
+     "0"
     ]
    ],
    "pro": "Liquidez accesible: 30.000 $, 3,2 meses de gastos esenciales. Reserva objetivo: 46.530 $ a 55.836 $.",
@@ -421,12 +429,28 @@
      "58"
     ],
     [
-     "Los ahorros se acaban a los",
-     "85"
+     "Gasto al año en la jubilación",
+     "89.649 $"
     ],
     [
-     "Gasto cubierto por ingresos",
+     "Ingresos garantizados al año (pensiones y rentas)",
+     "30.036 $"
+    ],
+    [
+     "Parte del gasto que cubren los ingresos",
      "34 %"
+    ],
+    [
+     "Lo que sale de los ahorros cada año",
+     "59.613 $"
+    ],
+    [
+     "Los ahorros se acaban a los",
+     "85 años"
+    ],
+    [
+     "El plan llega hasta los",
+     "90 años"
     ]
    ],
    "pro": "Ingresos sobre necesidad anual en jubilación: 34 %. Agotamiento de activos líquidos a los 85.",
@@ -468,23 +492,31 @@
    "filas": [
     [
      "Ahorro",
-     "0 de 100"
+     "0/25 puntos"
     ],
     [
      "Deudas",
-     "78 de 100"
+     "8/10 puntos"
     ],
     [
      "Inversiones",
-     "42 de 100"
+     "11/25 puntos"
     ],
     [
      "Colchón",
-     "22 de 100"
+     "4/20 puntos"
     ],
     [
      "Seguros",
-     "18 de 100"
+     "4/20 puntos"
+    ],
+    [
+     "Primer paso del plan",
+     "Seguro extra de responsabilidad civil: la nota pasa a 31"
+    ],
+    [
+     "Máximo con todos los pasos",
+     "62 de 100"
     ]
    ],
    "origen": "score.published_score · score.pillars",
@@ -532,7 +564,7 @@
      "3.500 $"
     ],
     [
-     "Interés",
+     "Interés anual",
      "20 %"
     ],
     [
@@ -540,12 +572,36 @@
      "200 $"
     ],
     [
-     "De eso, intereses",
+     "De eso, intereses al mes",
      "58 $"
     ],
     [
-     "Fin previsto",
+     "Intereses en un año (cuenta nuestra)",
+     "700 $"
+    ],
+    [
+     "Pago al mes que recomienda el plan",
+     "93 $ a 130 $"
+    ],
+    [
+     "Fin previsto a este ritmo",
      "julio de 2028"
+    ],
+    [
+     "Préstamo de estudios",
+     "10.000 $ al 5,8 %"
+    ],
+    [
+     "Préstamo del coche",
+     "15.000 $ al 5 %"
+    ],
+    [
+     "Pagos de deudas al mes, en total",
+     "950 $"
+    ],
+    [
+     "Parte de los ingresos que va a deudas",
+     "25 %"
     ]
    ],
    "pro": "Deuda revolving de 3.500 $ al 20 % TAE. De la cuota de 200 $, 58 $ son intereses. Fin previsto: julio de 2028.",
