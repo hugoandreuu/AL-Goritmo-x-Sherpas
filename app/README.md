@@ -37,6 +37,7 @@ El juego toma la mecánica del Impostor: un solo móvil, cada uno contesta en se
 2. **Ronda del riesgo.** Con la peor caída real de sus inversiones en 3 años (`investment-analysis`), cada uno dice qué haría, qué cree que haría el otro y quién marcó el perfil más atrevido en el plan.
 3. **Desenmascarar.** Se dan la vuelta las cartas: perfil que marcó cada uno en el plan frente a lo que haría en el juego. Si se separan 1,5 escalones o más, sale el sello de "Impostor".
 4. **Mapa de pareja.** Aciertos sobre el otro (de 4), escala de riesgo con el plan y el juego, y salida al plan o a pedir reunión. Todo pasa a la hoja del asesor.
+5. **Quiz abierto juntos.** «Seguir con vuestro plan» lleva a la pareja al quiz abierto (su frase, las preguntas que tocan eso y sus revelaciones) y de ahí al plan. Si ya lo habían hecho, va directo al plan.
 
 Todo sale del estudio: `pareja.perfiles` (perfil de riesgo de cada uno) y `pareja.caida` (peor caída en 3 años y días hasta recuperarse).
 

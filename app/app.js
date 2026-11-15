@@ -102,9 +102,6 @@
     const i = S.qi, n = QUIZ.length;
     return `<div class="progress thin" aria-label="Paso ${i + 1} de ${n}"><div class="bar"><i style="width:${(i / n) * 100}%"></i></div></div>`;
   }
-  const CONF = [['sure', w0 => 'Seguro'], ['doubt', () => 'Lo dudo'], ['none', () => 'Ni idea']];
-  const confChips = key => `<p class="muted small" style="margin:14px 0 6px">¿Qué tan ${w('seguros estáis', 'claro lo tienes')}? <span class="tiny">(opcional)</span></p>
-    <div class="chips" role="group" aria-label="Seguridad">${CONF.map(([v, l]) => `<button class="chip" data-act="conf" data-k="${key}" data-v="${v}" aria-pressed="${(S.a[key] || {}).conf === v}">${l()}</button>`).join('')}</div>`;
   const dock = (label, enabled, act = 'next') => `<div class="dock"><button class="btn block" data-act="${act}" ${enabled ? '' : 'disabled'}>${label}</button></div>`;
 
   const fmtGuess = (q, v) => q.tipo === 'importe' ? M(v) : q.tipo === 'opciones' ? q.opciones[v] : q.tipo === 'anio' ? String(v) : dec(v, 1) + (q.sufijo || '');
@@ -140,14 +137,14 @@
       <div class="coin-leg"><span><i class="lg keep"></i>Cubierto hoy</span><span><i class="lg off"></i>Lo que recomienda el plan · ${esc(v.leg)}</span></div>`,
     meses: v => {
       const n = Math.min(18, Math.max(v.max, Math.ceil(v.tiene)));
-      return `<div class="meses" style="--n:${Math.min(n, 9)}">${Array.from({ length: n }, (_, i) => `<i class="${i + 1 <= Math.floor(v.tiene) ? 'on' : i < v.tiene ? 'half' : ''} ${i + 1 >= v.min && i + 1 <= v.max ? 'rec' : ''}" style="--d:${i * 50}ms">${i + 1}</i>`).join('')}</div>
+      return `<div class="meses" style="--n:${Math.min(n, 9)}">${Array.from({ length: n }, (_, i) => `<i class="${i + 1 <= Math.floor(v.tiene) ? 'on' : i < v.tiene ? 'half' : ''} ${i + 1 >= v.min && i + 1 <= v.max ? 'rec' : ''}" style="--d:${i * 50}ms;--h:${Math.round((v.tiene - i) * 100)}%">${i + 1}</i>`).join('')}</div>
       <div class="coin-leg"><span><i class="lg keep"></i>Lo que cubre hoy</span><span><i class="lg rec"></i>Lo que recomienda el plan: ${v.min} a ${v.max} meses</span></div>
       ${v.tras != null ? `<div class="mark">${ic('clock', 16)}<span>Apartando lo ya comprometido a corto plazo: <b>${dec(v.tras, 1)} meses</b>.</span></div>` : ''}`;
     },
     tramo: v => {
       const span = v.hasta - v.de, pct = v.ok ? 100 : Math.max(6, Math.min(94, (v.corte - v.de) / span * 100));
       return `<div class="tramo ${v.ok ? 'ok' : ''}"><div class="tm-bar"><i class="tm-on" style="width:${pct}%"></i>${v.ok ? '' : `<i class="tm-off" style="left:${pct}%"></i><b class="tm-cut" style="left:${pct}%">${v.corte}</b>`}</div>
-        <div class="tm-ax"><span><b>${v.de}</b>${w('Os jubiláis', 'Te jubilas')}</span><span><b>${v.hasta}</b>Hasta donde llega el plan</span></div></div>
+        <div class="tm-ax"><span><b>${v.de}</b>${w('Os jubiláis', 'Te jubilas')}</span><span>${v.hasta != null ? `<b>${v.hasta}</b>` : ''}Hasta donde llega el plan</span></div></div>
         <div class="coin-leg"><span><i class="lg keep"></i>Con ahorros</span>${v.ok ? '' : '<span><i class="lg gone"></i>Sin ahorros</span>'}</div>`;
     },
     barra: v => `<div class="barras"><div class="br"><small>${esc(v.l1)}</small><div class="br-b"><i class="bad" style="width:${v.hoy}%"></i></div><b>${v.hoy} %</b></div>
@@ -418,7 +415,6 @@
         const icons = OPT_ICONS[q.tema] || ['zero', 'clock', 'cal', 'shield'];
         body = q.opciones.map((o, i) => `<button class="opt" style="--i:${i}" data-act="opt" data-k="${q.id}" data-v="${i}" aria-pressed="${a.value === i}">${optBody(icons[i % icons.length], esc(o))}</button>`).join('');
       } else body = numWidget(q, a);
-      body += `<div class="confw ${has ? '' : 'hid'}">${confChips(q.id)}</div>`;
       dk = dock(q.tipo === 'anio' ? 'Ver la fecha' : q.tipo === 'opciones' ? 'Ver la respuesta' : 'Ver el dato', has, 'reveal');
     }
     if (window.Fondo) { Fondo.mood(0); Fondo.focus(false); }
@@ -916,7 +912,7 @@
         <p class="tiny"><span class="pj-key fill"></span> lo que marcó en el plan &nbsp; <span class="pj-key ring"></span> lo que haría en el juego</p></div>
       <div class="pj-cta">
         <p>${dif ? `En el plan, ${esc(pa.nombre)} es <b>${esc(low1(pa.etiqueta))}</b> y ${esc(pb.nombre)}, <b>${esc(low1(pb.etiqueta))}</b>. ` : ''}Cuánto riesgo queréis <b>como familia</b> se decide juntos, y para eso está ${w('vuestro', 'tu')} asesor. Le llegará este mapa.</p>
-        <button class="btn block" data-act="pjplan">Ver ${w('vuestro', 'tu')} plan ${ic('arrow', 18)}</button>
+        <button class="btn block" data-act="pjplan">${E.preguntas.some(q => (S.a[q.id] || {}).revealed) ? `Ver ${w('vuestro', 'tu')} plan` : 'Seguir con vuestro plan'} ${ic('arrow', 18)}</button>
         <button class="btn ghost block" data-act="book">${ic('cal', 18)} Pedir reunión con el asesor</button>
         <button class="link block" data-act="pjagain">Volver a jugar</button>
       </div></div>`;
@@ -993,7 +989,7 @@
 
   function render() {
     renderTop();
-    if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz');
+    if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz' || S.stage === 'pareja');
     if (S.stage === 'home') renderHome();
     else if (S.stage === 'quiz') renderQuiz();
     else if (S.stage === 'pareja') renderPareja();
@@ -1031,7 +1027,6 @@
       S.a[q.id] = Object.assign(S.a[q.id] || {}, { value: +t.value });
       const v = document.getElementById('amt'); v.textContent = showV(q, +t.value); v.classList.remove('empty');
       app.querySelectorAll('.nw-hint, .nw-tip').forEach(x => x.remove());
-      const cw = app.querySelector('.confw'); if (cw) cw.classList.remove('hid');
       const btn = document.querySelector('[data-act="reveal"]'); if (btn) btn.disabled = false;
       const bk = Math.floor((+t.value - q.min) / ((q.max - q.min) || 1) * 12);
       if (BUCKET !== null && bk !== BUCKET) { try { if (navigator.vibrate) navigator.vibrate(4); } catch (er) { /* sin vibración */ } }
@@ -1066,7 +1061,12 @@
         break;
       case 'pjgo': pjGo(); break;
       case 'pjpick': { const kind = k, x = b.dataset.x; S.pj[kind][x] = v; render(); clearTimeout(ADV_T); ADV_T = setTimeout(pjGo, 320); break; }
-      case 'pjplan': S.prefs.level = S.prefs.level || 'new'; preparePlan(); break;
+      case 'pjplan': {
+        // Tras el juego, la pareja sigue por el quiz abierto (frase, revelaciones y cuaderno) salvo que ya lo hiciera.
+        if (E.preguntas.some(q => (S.a[q.id] || {}).revealed)) { S.prefs.level = S.prefs.level || 'new'; preparePlan(); break; }
+        S.who = 'juntos'; S.qi = Math.max(0, QUIZ.indexOf('phrase'));
+        swipe(() => { S.stage = 'quiz'; render(); window.scrollTo(0, 0); }); break;
+      }
       case 'pjagain': S.pj = pjFresh(); render(); window.scrollTo(0, 0); break;
       case 'help': S.help[k] = true; keep(); { const ex = document.getElementById('rv-exit'); if (ex) ex.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break;
       case 'skip': toPlan(); render(); window.scrollTo(0, 0); break;
@@ -1076,7 +1076,6 @@
       case 'phrase': S.phrase = v; render(); advance(); break;
       case 'gain': S.gain = v; render(); break;
       case 'react': S.react[k] = v; keep(); break;
-      case 'conf': S.a[k] = Object.assign(S.a[k] || {}, { conf: v }); render(); break;
       case 'decade': { const a = S.a[k] = S.a[k] || {}; a.value = Math.max(QMAP[k].min, +v + 5); render(); break; }
       case 'yr': { const a = S.a[k], q = QMAP[k]; a.value = Math.max(q.min, Math.min(q.max, a.value + +v)); render(); break; }
       case 'opt': S.a[k] = Object.assign(S.a[k] || {}, { value: +v }); render(); break;
