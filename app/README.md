@@ -29,14 +29,15 @@ Las pocas cuentas propias (por ejemplo, años de gastos que cubre el seguro) las
 
 ## Modo pareja: «Vuestro dinero, visto por los dos»
 
-Si el plan es de dos adultos, la portada pregunta **¿Quién va a ver el plan?**: *Los dos juntos* (modo pareja) o *Uno de los dos* (el cuestionario de siempre). El modo pareja pregunta además el nivel (nuevos o saben de finanzas), que cambia cómo se cuenta, no las cifras.
+Si el plan es de dos adultos, la portada pregunta **¿Quién va a ver el plan?**: *Los dos juntos* (modo pareja) o *Uno de los dos* (el cuestionario de siempre). En la entrada del modo pareja se elige el nivel (nuevos o saben de finanzas), que cambia cómo se cuenta, no las cifras.
 
-Funciona como el perfil de riesgo de pareja de los asesores: cada uno contesta en privado en el mismo móvil y después se comparan las respuestas entre sí y con el plan. No hay ganadores ni "impostores": el objetivo es que la pareja se conozca mejor con el dinero.
+Funciona como el perfil de riesgo de pareja de los asesores: cada uno contesta en privado en el mismo móvil y se compara en cuanto termina cada parte. No hay ganadores ni "impostores": el objetivo es que la pareja se conozca mejor con el dinero. Son 14 pantallas y la primera comparación llega en la quinta. Cuando contesta uno, el fondo toma su color (azul o teja); cuando lo veis juntos, vuelve a neutro.
 
-1. **Vuestro dinero.** Los dos estiman la misma cifra del plan (intereses de la tarjeta, o la primera pregunta numérica). Se ven las dos marcas y la del plan.
-2. **Vuestro riesgo.** Con la peor caída real de sus inversiones en 3 años (`investment-analysis`), cada uno dice qué haría, qué haría el otro y quién indicó más riesgo en el plan.
-3. **Lo que indicasteis en el plan.** Perfil de cada uno frente a lo que haría ante una caída: "encaja", "más prudente" o "más arriesgado que su perfil".
-4. **Lo que habéis descubierto.** Aciertos sobre el otro, escala de riesgo, en qué coincidís y temas para el asesor. Esos temas se apuntan solos como preguntas para la reunión y todo pasa a la hoja del asesor.
+1. **Vuestro dinero** (en privado). Los dos estiman la misma cifra del plan (intereses de la tarjeta, o la primera pregunta numérica). Se ven las dos marcas y la del plan.
+2. **Vuestro riesgo** (en privado). Con la peor caída real de sus inversiones en 3 años (`investment-analysis`), cada uno dice en la misma tarjeta qué haría y qué haría el otro. La comparación enseña también el perfil que indicó cada uno en el plan: "encaja", "más prudente" o "más arriesgado que su perfil".
+3. **Vuestros hijos** (juntos, como momento final). Hasta qué edad del hijo mayor cubriría el seguro de vida los gastos de casa. Sale de la pregunta `vida` del estudio pasada a edad con `aBarra`. Se revela por partes (lo que decíais, el plan, los años) y sin meter miedo: acaba en lo que recomienda el plan (`vis.total`, la cobertura mínima recomendada en años de gastos).
+4. **Vuestra nota** (juntos). Adivinan del 0 al 100 la nota de salud financiera del plan.
+5. **Lo que habéis descubierto.** Arriba, el anillo de la nota con la marca de lo que dijeron (y la nota con el primer paso y con el plan). Debajo, el primer paso con fecha: el del plan si la familia lo puede hacer sola (`primer`) o, si no, la reunión con el asesor. Ahí eligen para qué lo hacen (frases del estudio), confirman la fecha los dos y la llevan al calendario del móvil: un `.ics` con alarma, su frase en el título y un enlace de vuelta; el del pago trae una segunda cita a la semana cuyo enlace (`?semana=1`) abre la comprobación del saldo. Tras apuntar el pago, en el mismo bloque se elige la reunión. Al volver con `?semana=1` se ve la frase que eligieron. Al final, cada tema con lo que propone el plan: su paso (`pasos`) o lo que dice la línea del plan. Lo que no coincide se apunta solo como pregunta para la reunión y pasa a la hoja del asesor, con su frase.
 
 Datos del estudio: `pareja.perfiles` (perfil de riesgo de cada uno) y `pareja.caida` (peor caída en 3 años y días hasta recuperarse).
 
