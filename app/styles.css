@@ -121,7 +121,6 @@ input[type=range].untouched::-moz-range-thumb { opacity: 0; }
 .yearval { font-family: var(--head); font-size: 40px; font-weight: 700; min-width: 120px; text-align: center; }
 .reveal { animation: pop .45s ease-out; }
 @keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .reveal { animation: none; } .bar > i { transition: none; } }
 .pick3 { display: grid; gap: 12px; }
 @media (min-width: 760px) { .pick3 { grid-template-columns: repeat(3, 1fr); } }
 .pick3 .opt { min-height: 100%; margin: 0; }
@@ -299,9 +298,6 @@ input[type=range] { accent-color: var(--accent); }
 .meter div { background: var(--accent-soft); }
 .meter b { color: var(--accent); }
 
-@media (prefers-reduced-motion: reduce) {
-  .qwrap, .seq > *, .seq .viz rect, .seq .viz circle, .suspense, .tcard, .megacta::after, .blurnum, .suspense .orb, .suspense .orb::before, .suspense .orb::after { animation: none !important; }
-}
 
 .revealbox { display: flex; flex-direction: column; gap: 12px; }
 .revealbox > p { order: 0; } .revealbox > h2 { order: 1; margin: 0; } .revealbox > div { order: 2; }
@@ -415,7 +411,6 @@ ul.ticks li { display: flex; gap: 8px; align-items: flex-start; } ul.ticks svg {
 .moneyin span { font: 700 26px var(--head); color: var(--ink-3); }
 .celebrate { text-align: center; padding: 8px 0 4px; }
 .burst { width: 84px; height: 84px; border-radius: 50%; background: var(--good); color: #fff; display: grid; place-items: center; margin: 0 auto 14px; box-shadow: 0 0 0 10px var(--good-soft), 0 0 0 22px rgba(19,115,54,.06); animation: bump .7s var(--ease); }
-@media (prefers-reduced-motion: reduce) { .ring.bump, .rstep.done .rdot, .burst { animation: none; } .rg-now { transition: none; } }
 @media print { .cta-bar { display: none !important; } }
 
 /* ===================== Revelación: sentir el dato ===================== */
@@ -557,7 +552,6 @@ i.gone { background: var(--bad); box-shadow: inset 0 -3px 0 rgba(0,0,0,.14); }
 .oq[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); font-weight: 600; }
 .oq[aria-pressed="true"] i { background: var(--accent); color: #fff; }
 .oq[aria-pressed="false"] span { text-decoration: line-through; }
-@media (prefers-reduced-motion: reduce) { .slide, .seq .coins i.gone, .seq .dots i, .seq .age.lg, .seq .yrs i { animation: none !important; } }
 /* la comparación va apilada: cabe cualquier cifra en el móvil */
 .rv-vs { grid-template-columns: 1fr; gap: 8px; padding: 12px; }
 .rv-vs .vs-ar { display: none; }
@@ -668,4 +662,3 @@ i.gone { background: var(--bad); box-shadow: inset 0 -3px 0 rgba(0,0,0,.14); }
 .caso[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 .demo-casos { max-width: 640px; margin: 8px auto 0; padding: 14px; border-radius: 20px; background: var(--surface-2); }
 @media (min-width: 700px) { .casos { grid-template-columns: repeat(4, 1fr); } }
-@media (prefers-reduced-motion: reduce) { .tl-spine, .tr, .tr.now .tr-d, .ar-b i, .seq .meses i, .seq .tm-on, .planresp { animation: none !important; } }
