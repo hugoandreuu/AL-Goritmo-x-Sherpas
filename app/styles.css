@@ -923,28 +923,58 @@ i.gone { background: var(--bad); box-shadow: inset 0 -3px 0 rgba(0,0,0,.14); }
 .pj-key { display: inline-block; width: 11px; height: 11px; border-radius: 50%; vertical-align: -1px; margin-right: 3px; }
 .pj-key.fill { background: var(--ink-2); } .pj-key.ring { border: 2.5px solid var(--ink-2); width: 15px; height: 15px; vertical-align: -3px; }
 
-/* lo que indicasteis en el plan */
-.pj-pcards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
-.pj-pcard { border-radius: 18px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); padding: 16px 12px 14px; display: grid; justify-items: center; text-align: center; gap: 4px; animation: pjUp .45s var(--ease) both; animation-delay: calc(var(--k) * .2s + .1s); }
-.pj-pcard.a { border-top: 4px solid var(--pa); } .pj-pcard.b { border-top: 4px solid var(--pb); }
-.pj-pcard h3 { margin: 4px 0 2px; }
-.pj-pcard p { margin: 0; display: grid; line-height: 1.2; }
-.pj-pcard p small { font-size: 11.5px; color: var(--ink-3); margin-top: 6px; }
-.pj-pcard p b { font-size: 15px; }
-.pj-chip { display: inline-flex; align-items: center; gap: 4px; margin-top: 10px; font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 999px; line-height: 1.25; }
+.pj-chip { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 999px; line-height: 1.25; }
 .pj-chip.ok { color: var(--good); background: var(--good-soft); }
 .pj-chip.prudente, .pj-chip.arriesgado { color: var(--amber); background: var(--amber-soft); }
-.pj-verdict { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 14px; animation: pjUp .4s var(--ease) .6s both; }
-.pj-verdict p { margin: 0 0 8px; }
-.pj-votes { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-size: 14.5px; }
-.pj-votes li { display: flex; align-items: center; gap: 8px; }
-.pj-votes .pj-av { width: 24px; height: 24px; font-size: 12px; box-shadow: none; }
-.pj-votes .ok { color: var(--good); display: inline-flex; } .pj-votes .ko { color: var(--amber); display: inline-flex; }
+.pj-inplan { margin: 8px 0 0; font-size: 14px; font-weight: 600; display: grid; line-height: 1.25; }
+.pj-inplan small { font-size: 12px; font-weight: 400; color: var(--ink-3); margin: 0; }
+
+/* respuesta de riesgo: lo que harías tú y lo que haría el otro en la misma tarjeta */
+.pj-lead { font-size: 16.5px; margin: 0 0 6px; }
+.pj-sub { font-size: 17px; margin: 14px 0 8px; }
+.pj-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.pj-tile { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 8px 10px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--surface); font: 600 14.5px/1.2 var(--font); color: var(--ink); text-align: left; cursor: pointer; transition: border-color .15s, background .15s, transform .15s; animation: pjUp .35s var(--ease) both; animation-delay: calc(var(--i) * 50ms); }
+.pj-tile svg { flex: none; color: var(--ink-3); }
+.pj-tile:active { transform: scale(.97); }
+.pj-tile.a[aria-pressed="true"] { border-color: var(--pa); background: var(--pa-soft); } .pj-tile.a[aria-pressed="true"] svg { color: var(--pa); }
+.pj-tile.b[aria-pressed="true"] { border-color: var(--pb); background: var(--pb-soft); } .pj-tile.b[aria-pressed="true"] svg { color: var(--pb); }
+.pj-turn.duo .pj-card { border-left: 4px solid var(--plan); }
+.pj-qsub { margin: -6px 0 10px; }
+.pj-says.one { grid-template-columns: 1fr; }
+.pj-says.one > div { background: var(--bg-2); grid-template-columns: auto 1fr; align-items: center; column-gap: 10px; }
+.pj-says.one small { margin: 0; } .pj-says.one b { grid-column: 2; }
+.pj-says.one .pj-duo { grid-row: span 2; }
+.pj-vis { margin: 10px 0 4px; }
+.pj-lvl { margin: 14px 0 0; display: grid; gap: 8px; }
+.pj-lvl small { color: var(--ink-3); font-size: 13px; }
+.pj-lvl .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pj-lvl .chip { min-height: 40px; padding: 6px 14px; font-size: 14.5px; }
+.pj-lvl .chip[aria-pressed="true"] { background: var(--plan); border-color: var(--plan); color: #fff; }
+
+/* final: cada tema con lo que propone el plan, y el primer paso con fecha */
+.pj-topic { border-radius: 18px; border: 1px solid var(--line); background: var(--surface); padding: 14px 16px; margin: 0 0 10px; animation: pjUp .4s var(--ease) both; }
+.pj-topic:nth-of-type(2) { animation-delay: .1s; } .pj-topic:nth-of-type(3) { animation-delay: .2s; }
+.pj-tp-h { display: flex; align-items: center; gap: 8px; color: var(--plan); font-size: 14px; }
+.pj-found { margin: 6px 0 10px; font-size: 15.5px; line-height: 1.4; }
+.pj-prop { display: grid; gap: 2px; background: var(--bg-2); border-radius: 12px; padding: 10px 12px; }
+.pj-prop small { font-size: 12px; color: var(--ink-3); }
+.pj-prop b { font-size: 15.5px; color: var(--plan); }
+.pj-prop span { font-size: 14px; color: var(--ink-2); line-height: 1.35; }
+.pj-dated { border-radius: 18px; background: var(--plan); color: #fff; padding: 16px; margin: 14px 0 10px; display: grid; gap: 6px; animation: pjUp .4s var(--ease) .3s both; }
+.pj-dated > small { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; opacity: .8; }
+.pj-dated h3 { color: #fff; margin: 0; font-size: 20px; }
+.pj-dated p { margin: 0 0 6px; color: rgba(255,255,255,.85); }
+.pj-dated .btn.soft { background: #fff; color: var(--plan); }
+.pj-dated .datechip { background: rgba(255,255,255,.1); border-color: transparent; color: #fff; }
+.pj-dated .datechip small { color: rgba(255,255,255,.75); } .pj-dated .datechip .link { color: #fff; }
+.pj-dated .weeklink { background: rgba(255,255,255,.08); color: #fff; border-color: transparent; }
+.pj-dated .weeklink small { color: rgba(255,255,255,.75); } .pj-dated .weeklink b { color: #fff; } .pj-dated .weeklink { margin: 0; }
+.pj-noted { display: flex; align-items: center; gap: 6px; margin: 4px 0 12px; }
 
 /* resumen */
 .pj-mapcard { text-align: left; margin: 14px 0; padding: 16px; }
 .pj-mapcard h3 { margin-bottom: 0; }
-.pj-mapcard .pj-scale { height: 136px; margin-top: 26px; }
+.pj-mapcard .pj-scale { height: 120px; margin-top: 18px; }
 .pj-list { border-radius: 16px; padding: 14px 16px; margin: 0 0 12px; text-align: left; }
 .pj-list h3 { display: flex; align-items: center; gap: 8px; font-size: 16px; margin-bottom: 6px; }
 .pj-list ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 15px; }
