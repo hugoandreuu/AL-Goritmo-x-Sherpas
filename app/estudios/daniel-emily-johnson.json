@@ -329,6 +329,34 @@
    "items": []
   }
  ],
+ "pareja": {
+  "perfiles": [
+   {
+    "nombre": "Daniel",
+    "riesgo": "Growth",
+    "nivel": 4,
+    "etiqueta": "Dinámico"
+   },
+   {
+    "nombre": "Emily",
+    "riesgo": "Moderate",
+    "nivel": 3,
+    "etiqueta": "Equilibrado"
+   }
+  ],
+  "caida": {
+   "pct": 0.0997,
+   "txt": "10 %",
+   "dias": 61
+  },
+  "escala": [
+   "Muy prudente",
+   "Prudente",
+   "Equilibrado",
+   "Dinámico",
+   "Atrevido"
+  ]
+ },
  "lectura": "A Daniel y Emily les mueve ante todo proteger a los niños y tener colchón líquido. Les preocupa cuánto cubren los seguros y cuánto aguanta su efectivo antes de tocarlo.",
  "porqueOrden": "Empezamos por la protección, luego la liquidez, el coste de la deuda y cerramos con la noticia sobre la jubilación.",
  "preguntas": [
@@ -687,12 +715,13 @@
   }
  ],
  "generado": {
-  "fecha": "2026-11-14",
-  "datos": "mcp",
+  "fecha": "2026-11-15",
+  "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [
    "tarjeta_interes.siente: descartado por jerga o rayas"
   ],
-  "llmFecha": "2026-11-14"
+  "llmFecha": "2026-11-14",
+  "datosLlm": "mcp"
  }
 }

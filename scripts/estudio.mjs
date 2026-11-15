@@ -106,14 +106,16 @@ async function parteMcp(mcp, caseId) {
   }
   if (!entera(fh)) throw new Error('el MCP no ha devuelto el plan completo');
   const persona = await mcp.call('get_case', { caseId, part: 'persona' });
-  return { fh, persona: typeof persona === 'string' ? persona : (persona && (persona.text || persona.markdown)) || JSON.stringify(persona) };
+  let ia = null; // análisis de inversiones: solo hace falta para el modo pareja (perfil de riesgo y caídas)
+  try { ia = await mcp.call('get_case', { caseId, part: 'investment-analysis' }); if (!ia || typeof ia !== 'object' || !ia.key_metrics) ia = null; } catch { ia = null; }
+  return { fh, ia, persona: typeof persona === 'string' ? persona : (persona && (persona.text || persona.markdown)) || JSON.stringify(persona) };
 }
 
 function parteArchivo(slug) {
   const dir = path.join(ROOT, 'cases', slug);
   const fh = JSON.parse(fs.readFileSync(path.join(dir, 'financial-health.json'), 'utf8'));
-  const pf = path.join(dir, 'persona.md');
-  return { fh, persona: fs.existsSync(pf) ? fs.readFileSync(pf, 'utf8') : '' };
+  const pf = path.join(dir, 'persona.md'), pi = path.join(dir, 'investment-analysis.json');
+  return { fh, ia: fs.existsSync(pi) ? JSON.parse(fs.readFileSync(pi, 'utf8')) : null, persona: fs.existsSync(pf) ? fs.readFileSync(pf, 'utf8') : '' };
 }
 
 // ------------------------------------------------------------------ 2. cifras: lo que dice el plan
@@ -606,6 +608,17 @@ async function escribirConLlm(E, persona, fh) {
 }
 
 // ------------------------------------------------------------------ salida
+// ------------------------------------------------------------------ modo pareja: perfiles de riesgo y la peor caída real
+// Escala de perfiles de Sherpas (allocationBenchmarkAnalysis: Income 1 … Aggressive 5).
+const PERFIL = { Income: [1, 'Muy prudente'], Conservative: [2, 'Prudente'], Moderate: [3, 'Equilibrado'], Growth: [4, 'Dinámico'], Aggressive: [5, 'Atrevido'] };
+function leerPareja(E, ia) {
+  if (!E.fam.pl) return null;
+  const perfiles = E.fam.adultos.map(a => ({ nombre: a.nombre, riesgo: a.riesgo, nivel: (PERFIL[a.riesgo] || [])[0] || null, etiqueta: (PERFIL[a.riesgo] || [])[1] || a.riesgo }));
+  const h = get(ia, 'key_metrics.performanceAnalysis.household') || {};
+  const caida = h.maxDrawdown3y != null ? { pct: Math.abs(h.maxDrawdown3y), txt: P(Math.abs(h.maxDrawdown3y), 1), dias: h.maxDrawdownRecoveryDays ?? null } : null;
+  return { perfiles, caida, escala: Object.values(PERFIL).map(x => x[1]) };
+}
+
 function cerrar(E) {
   const porId = Object.fromEntries(E.catalogo.map(q => [q.id, q]));
   E.preguntas = E.orden.map(id => porId[id]).filter(Boolean);
@@ -670,6 +683,7 @@ async function main() {
       if (get(local, 'score.published_score') !== get(d.fh, 'score.published_score')) g.avisos.push('La nota del MCP no coincide con la del archivo local.');
     }
     const E = leer(d.fh);
+    E.pareja = leerPareja(E, d.ia);
     let crudo = null;
     if (!sinLlm) {
       try {
