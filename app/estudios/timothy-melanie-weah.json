@@ -476,7 +476,7 @@
      "18.000 $"
     ],
     [
-     "Interés",
+     "Interés anual",
      "18 %"
     ],
     [
@@ -484,12 +484,40 @@
      "300 $"
     ],
     [
-     "De eso, intereses",
+     "De eso, intereses al mes",
      "270 $"
     ],
     [
-     "Fin previsto",
+     "Intereses en un año (cuenta nuestra)",
+     "3.240 $"
+    ],
+    [
+     "Pago al mes que recomienda el plan",
+     "457 $ a 651 $"
+    ],
+    [
+     "Fin previsto a este ritmo",
      "septiembre de 2039"
+    ],
+    [
+     "Préstamo de estudios",
+     "15.000 $ al 5,5 %"
+    ],
+    [
+     "Hipoteca",
+     "50.000 $ al 6 %"
+    ],
+    [
+     "Préstamo del coche",
+     "10.000 $ al 4,5 %"
+    ],
+    [
+     "Pagos de deudas al mes, en total",
+     "2.960 $"
+    ],
+    [
+     "Parte de los ingresos que va a deudas",
+     "15 %"
     ]
    ],
    "pro": "Deuda revolving de 18.000 $ al 18 % TAE. De la cuota de 300 $, 270 $ son intereses. Fin previsto: septiembre de 2039.",
@@ -549,24 +577,44 @@
    },
    "filas": [
     [
-     "Seguro de Timothy",
+     "Seguro de Timothy hoy",
      "140.000 $"
     ],
     [
-     "Mínimo para Timothy",
-     "750.000 $"
+     "Recomendado para Timothy",
+     "750.000 $ a 1,5 M$"
     ],
     [
-     "Seguro de Melanie",
+     "Le falta como mínimo",
+     "610.000 $"
+    ],
+    [
+     "Ingresos de Timothy que protege",
+     "150.000 $ al año"
+    ],
+    [
+     "Seguro de Melanie hoy",
      "110.000 $"
     ],
     [
-     "Mínimo para Melanie",
-     "600.000 $"
+     "Recomendado para Melanie",
+     "600.000 $ a 1,2 M$"
+    ],
+    [
+     "Le falta como mínimo",
+     "490.000 $"
+    ],
+    [
+     "Ingresos de Melanie que protege",
+     "120.000 $ al año"
     ],
     [
      "Gastos de casa al año",
      "112.774 $"
+    ],
+    [
+     "Dependen de esos ingresos",
+     "Liam (6) y Josh (3)"
     ]
    ],
    "pro": "Capital asegurado: Timothy 140.000 $ y Melanie 110.000 $. Mínimo recomendado: 750.000 $ y 600.000 $.",
@@ -608,23 +656,39 @@
    "filas": [
     [
      "Ahorro",
-     "86 de 100"
+     "26/30 puntos"
     ],
     [
      "Deudas",
-     "58 de 100"
+     "12/20 puntos"
     ],
     [
      "Inversiones",
-     "56 de 100"
+     "8/15 puntos"
     ],
     [
      "Colchón",
-     "100 de 100"
+     "15/15 puntos"
     ],
     [
      "Seguros",
-     "37 de 100"
+     "7/20 puntos"
+    ],
+    [
+     "Lo que pone techo a la nota",
+     "la deuda de tarjeta, con interés alto: como mucho 60"
+    ],
+    [
+     "Lo que pone techo a la nota",
+     "poco seguro de vida con hijos a cargo: como mucho 62"
+    ],
+    [
+     "Primer paso del plan",
+     "Pagar 6.800 $ de la tarjeta: la nota pasa a 62"
+    ],
+    [
+     "Máximo con todos los pasos",
+     "78 de 100"
     ]
    ],
    "origen": "score.published_score · score.pillars",
@@ -675,12 +739,24 @@
      "150.800 $"
     ],
     [
-     "Meses cubiertos",
+     "Gastos básicos al mes",
+     "9.398 $"
+    ],
+    [
+     "Meses que cubre hoy",
      "16"
     ],
     [
-     "Reserva recomendada",
+     "Reserva que recomienda el plan",
      "75.180 $ a 84.578 $"
+    ],
+    [
+     "Meses tras apartar los gastos ya previstos",
+     "15,4"
+    ],
+    [
+     "Lo que sobra tras la reserva y esos gastos",
+     "60.223 $"
     ]
    ],
    "pro": "Liquidez accesible: 150.800 $, 16 meses de gastos esenciales. Reserva objetivo: 75.180 $ a 84.578 $.",

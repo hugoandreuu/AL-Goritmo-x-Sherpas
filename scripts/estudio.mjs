@@ -294,7 +294,7 @@ function leer(fh) {
   }
 
   const R = F.retirement || {}, agota = R.savingsRunOut, queda = R.savingsLeftAtPlanEnd;
-  const edadJ = ad.map(a => a.retirement_age), finEdad = fin.age_client;
+  const edadJ = ad.map(a => a.retirement_age), finEdad = fin.age_client ?? fin.age_co_client ?? (ad[0] ? ad[0].age + yearly.length - 1 : null);
   if (agota || queda) {
     const corte = agota ? +(agota.label.match(/age (\d+)/) || [])[1] : null;
     const pasoRet = pasos.find(p => p.key === 'withdraw');
@@ -314,7 +314,7 @@ function leer(fh) {
       salida: agota ? (pasoRet ? `${t('Vuestro', 'Tu')} plan trae un paso para esto, y solo con él la nota pasa de ${nota} a ${pasoRet.nota}.` : `Es de lo primero que se ve con ${t('vuestro', 'tu')} asesor: cuánto ahorrar y cuándo ${t('jubilaros', 'jubilarte')}.`) : `Aquí no hay que correr. Lo que frena ${t('vuestro', 'tu')} plan está en otra parte.`,
       calc: null,
       hechos: [`Edad de jubilación: ${lista(edadJ.map(String))}`, `El plan llega hasta los ${finEdad} años`, agota ? `Los ahorros se acaban a los ${corte} años` : `Ahorros que quedan al final del plan: ${M(queda.value)}`, cuota ? `Parte del gasto de jubilación que cubren los ingresos: ${String(cuota).replace('%', ' %')}` : null, pasoRet ? `Paso del plan: ${pasoRet.titulo} (nota ${pasoRet.nota})` : null].filter(Boolean),
-      freno: { kick: 'La jubilación', h2: `Los ahorros se acaban a los ${corte}. El plan llega hasta los ${finEdad}.` },
+      freno: { kick: 'La jubilación', h2: agota ? `Los ahorros se acaban a los ${corte}. El plan llega hasta los ${finEdad}.` : `${t('Llegáis', 'Llegas')}: al final del plan quedan ${M(queda.value)}.` },
       filas: [['Edad de jubilación', lista(edadJ.map(String))], agota ? ['Los ahorros se acaban a los', String(corte)] : ['Queda al final del plan', M(queda.value)]].concat(cuota ? [['Gasto cubierto por ingresos', String(cuota).replace('%', ' %')]] : []),
       pro: `${cuota ? `Ingresos sobre necesidad anual en jubilación: ${String(cuota).replace('%', ' %')}. ` : ''}${agota ? `Agotamiento de activos líquidos a los ${corte}.` : `Remanente al final del plan: ${M(queda.value)} en dólares de hoy.`}`,
       origen: 'key_metrics.facts.retirement', creian: 'Jubilación',
@@ -406,6 +406,49 @@ function leer(fh) {
 
   const frases = [ki.length ? `Que a ${kidsTxt} no ${ki.length > 1 ? 'les' : 'le'} falte de nada` : 'No tener que preocuparme por el dinero', 'Dormir sin pensar en el dinero', tarjeta ? 'Dejar de pagar intereses' : 'Que mi dinero trabaje bien', 'Llegar bien a la jubilación'];
   const ganancias = [['moon', t('Dormiríamos más tranquilos', 'Dormiría mejor')], [casa ? 'home' : 'sun', casa ? t('Podríamos pensar en la casa', 'Podría pensar en la casa') : t('Podríamos pensar en lo siguiente', 'Podría pensar en lo siguiente')], pl ? ['chat', 'Dejaríamos de discutir por dinero'] : ['check', 'Dejaría de darle vueltas'], ki.length ? ['heart', `Sabría${pl ? 'mos' : ''} que ${kidsTxt} ${ki.length > 1 ? 'están cubiertos' : 'está cubierto'}`] : ['flag', 'Sabría por dónde empezar']];
+
+  // ---- «Ver el detalle»: las cifras del informe que explican cada pregunta. Rótulos en español
+  // escritos por código; valores leídos del plan. Las pocas cuentas propias se marcan con «(cuenta nuestra)».
+  const R2 = F.retirement || {}, C2 = F.cash || {}, ef = get(fh, 'key_metrics.protection.emergencyFund.cashAndExpensesOverview') || {};
+  const deudas = (get(fh, 'profile.liabilities') || []).filter(l => l.balance > 0);
+  const dti = get(fh, 'key_metrics.ratios.debtToIncome') || {}, caps = get(fh, 'score.caps_applied') || [], pil = get(fh, 'score.pillars') || [];
+  const val = x => (x && typeof x === 'object' ? x.value : x);
+  const TIPO = ty => /CREDIT_CARD/.test(ty) ? 'Otra tarjeta' : /MORTGAGE/.test(ty) ? 'Hipoteca' : /STUDENT/.test(ty) ? 'Préstamo de estudios' : /AUTO/.test(ty) ? 'Préstamo del coche' : /PERSONAL/.test(ty) ? 'Préstamo personal' : 'Otra deuda';
+  const CAP = { 'High revolving balance with high APR': 'la deuda de tarjeta, con interés alto', 'Mortality coverage ratio below threshold with dependents': 'poco seguro de vida con hijos a cargo' };
+  const DET = {
+    nota: () => [
+      ...pil.map(x => [(AREAS[x.pillar] || [x.pillar])[0], x.points_shown_in_app ? `${x.points_shown_in_app} puntos` : `${x.score} de 100`]),
+      ...caps.filter(c => CAP[c.reason]).map(c => ['Lo que pone techo a la nota', `${CAP[c.reason]}: como mucho ${c.score_capped_at}`]),
+      ...(pasos[0] ? [['Primer paso del plan', `${pasos[0].titulo}: la nota pasa a ${pasos[0].nota}`]] : []),
+      ['Máximo con todos los pasos', `${notaMax} de 100`]],
+    tarjeta: () => {
+      if (!tarjeta) return null;
+      const pago = tarjeta.monthly_payment || cc.ccMonthlyPayment, int = cc.ccPaymentEqualToInterestRate;
+      return [['Saldo de la tarjeta', M(tarjeta.balance)], ['Interés anual', P(tarjeta.interest_rate)], [`${t('Pagáis', 'Pagas')} al mes`, M(pago)],
+        int ? ['De eso, intereses al mes', M(int)] : null, int ? ['Intereses en un año (cuenta nuestra)', M(Math.round(int * 12))] : null,
+        cc.minCcPaymentNormal && cc.maxCcPaymentNormal ? ['Pago al mes que recomienda el plan', `${M(Math.round(cc.minCcPaymentNormal))} a ${M(Math.round(cc.maxCcPaymentNormal))}`] : null,
+        cc.ccPayoffDate ? ['Fin previsto a este ritmo', fecha(cc.ccPayoffDate)] : null,
+        ...deudas.filter(l => l !== tarjeta).map(l => [TIPO(l.type), `${M(l.balance)}${l.interest_rate ? ` al ${P(l.interest_rate, 1)}` : ''}`]),
+        dti.monthlyDebtPayments ? ['Pagos de deudas al mes, en total', M(dti.monthlyDebtPayments)] : null,
+        dti.ratio != null ? ['Parte de los ingresos que va a deudas', P(dti.ratio)] : null].filter(Boolean);
+    },
+    vida: () => [...ad.flatMap((a, i) => {
+      const hoy = i ? lb.lifeInsuranceAmountCoClient : lb.lifeInsuranceAmountClient, mn = i ? lr.coClientMinRecommendedCoverage : lr.clientMinRecommendedCoverage, mx = i ? lr.coClientMaxRecommendedCoverage : lr.clientMaxRecommendedCoverage;
+      const ing = get(fh, `key_metrics.protection.lifeInsurance.clientDemographics.${i ? 'coClientIncomeAtRisk' : 'clientIncomeAtRisk'}`);
+      return [[`Seguro de ${a.first_name} hoy`, M(hoy || 0)], mn ? [`Recomendado para ${a.first_name}`, mx ? `${M(mn)} a ${M(mx)}` : `desde ${M(mn)}`] : null, mn && hoy < mn ? [`Le falta como mínimo`, M(mn - (hoy || 0))] : null, ing ? [`Ingresos de ${a.first_name} que protege`, `${M(ing)} al año`] : null].filter(Boolean);
+    }), gastos ? ['Gastos de casa al año', M(gastos)] : null, ki.length ? ['Dependen de esos ingresos', lista(ki.map(k => `${k.first_name} (${k.age})`))] : null].filter(Boolean),
+    colchon: () => [['Efectivo accesible', M(val(C2.accessibleCash))], ef.monthlyExpenses ? ['Gastos básicos al mes', M(ef.monthlyExpenses)] : null, ['Meses que cubre hoy', dec(val(C2.monthsCovered), 1)],
+      C2.emergencyReserve ? ['Reserva que recomienda el plan', `${M(C2.emergencyReserve.min)} a ${M(C2.emergencyReserve.max)}`] : null,
+      val(C2.monthsCoveredAfterNearTermGoals) != null ? ['Meses tras apartar los gastos ya previstos', dec(val(C2.monthsCoveredAfterNearTermGoals), 1)] : null,
+      val(C2.cashAboveTotalNeeded) > 0 ? ['Lo que sobra tras la reserva y esos gastos', M(val(C2.cashAboveTotalNeeded))] : null].filter(Boolean),
+    jubilacion: () => [['Edad de jubilación', lista(edadJ.map(String))], val(R2.spendingNeed) ? ['Gasto al año en la jubilación', M(Math.round(val(R2.spendingNeed)))] : null,
+      val(R2.guaranteedIncome) ? ['Ingresos garantizados al año (pensiones y rentas)', M(Math.round(val(R2.guaranteedIncome)))] : null,
+      val(R2.incomeShareOfNeed) ? ['Parte del gasto que cubren los ingresos', String(val(R2.incomeShareOfNeed)).replace('%', ' %')] : null,
+      val(R2.spendingGap) ? ['Lo que sale de los ahorros cada año', M(Math.round(val(R2.spendingGap)))] : null,
+      R2.savingsRunOut ? ['Los ahorros se acaban a los', `${(R2.savingsRunOut.label.match(/age (\d+)/) || [])[1]} años`] : val(R2.savingsLeftAtPlanEnd) ? ['Ahorros que quedan al final del plan', M(val(R2.savingsLeftAtPlanEnd))] : null,
+      finEdad ? ['El plan llega hasta los', `${finEdad} años`] : null].filter(Boolean),
+  };
+  for (const q of Q) { const f = DET[q.tema] && DET[q.tema](); if (f && f.length) q.filas = f; }
 
   return {
     slug,

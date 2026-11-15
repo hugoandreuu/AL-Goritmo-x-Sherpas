@@ -963,3 +963,57 @@ i.gone { background: var(--bad); box-shadow: inset 0 -3px 0 rgba(0,0,0,.14); }
 
 .pj-pass .pj-av.xl { background: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,.25), 0 14px 36px rgba(0,0,0,.18); }
 .pj-pass .pj-av.xl.a { color: var(--pa); } .pj-pass .pj-av.xl.b { color: var(--pb); }
+/* ==================================================================
+   Quiz abierto + fondo morado (rama quiz-abierto)
+   ================================================================== */
+#fondo { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; opacity: 0; transition: opacity .9s var(--soft); pointer-events: none; }
+body.fondo-on { background: transparent; }
+body.fondo-on #fondo { opacity: 1; }
+body.nogl.fondo-on { background: radial-gradient(60% 50% at 10% 5%, #e4dcff 0%, transparent 70%), radial-gradient(50% 45% at 95% 20%, #d9ccff 0%, transparent 70%), radial-gradient(55% 45% at 80% 100%, #f5d9fb 0%, transparent 70%), #f8f6ff fixed; }
+body.fondo-on .top { background: rgba(250,248,255,.72); }
+body.fondo-on .dock { background: none; isolation: isolate; }
+body.fondo-on .dock .link { background: rgba(255,255,255,.72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-radius: 14px; margin-top: 8px; }
+body.gl .lake .rip { display: none; }
+
+/* Texto libre */
+.free { width: 100%; font: 400 18px/1.45 var(--font); color: var(--ink); padding: 14px 16px; border-radius: 18px; border: 1.5px solid var(--line); background: rgba(255,255,255,.92); resize: none; outline: none; transition: border-color .2s, box-shadow .3s var(--soft); }
+.free:focus { border-color: #8b6cff; box-shadow: 0 0 0 4px rgba(139,108,255,.16), 0 10px 30px rgba(110,80,240,.14); }
+.free::placeholder { color: var(--ink-3); }
+.sugg { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip.sm { min-height: 38px; padding: 6px 14px; font-size: 14.5px; background: rgba(255,255,255,.85); }
+.qstage.intro .sugg .chip { transition: opacity .45s var(--soft), transform .45s var(--soft), background .15s; transition-delay: calc(.35s + var(--i, 0) * 70ms), calc(.35s + var(--i, 0) * 70ms), 0s; }
+.qstage.think .sugg .chip { opacity: 0; transform: translateY(8px); }
+.sugg-t { margin: 14px 0 0; }
+.skipw { width: 100%; text-align: center; color: var(--ink-3); font-weight: 500; }
+.qstage .dock .btn[data-act="worry"]:disabled { opacity: .35; transform: none; pointer-events: none; }
+.porque { display: inline-flex; align-items: center; gap: 5px; margin-left: 10px; padding: 3px 10px; border-radius: 99px; background: rgba(139,108,255,.14); color: #6a4ce0; font-size: 11.5px; letter-spacing: .02em; text-transform: none; font-weight: 600; }
+
+/* Reacción abierta tras el dato */
+.rv-note { display: grid; gap: 8px; padding: 16px; border-radius: 20px; background: rgba(255,255,255,.88); border: 1px solid var(--line); }
+.rv-note label { font-weight: 600; }
+.rv-note .sugg { margin-top: 0; }
+.savebtn { justify-self: start; min-height: 44px; font-size: 15px; transition: opacity .3s; }
+.savebtn:disabled { opacity: 0; pointer-events: none; height: 0; min-height: 0; padding: 0; overflow: hidden; }
+.saved { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 14px; color: var(--good); font-weight: 600; animation: hin .5s var(--soft) both; }
+
+/* Cuaderno del asesor */
+.pill.nb { display: inline-flex; align-items: center; gap: 6px; color: #6a4ce0; position: relative; }
+.pill.nb b { font-variant-numeric: tabular-nums; }
+.pill.nb.got::after { content: ""; position: absolute; inset: -3px; border-radius: 99px; border: 2px solid #8b6cff; animation: gotRing .7s var(--soft) both; pointer-events: none; }
+@keyframes gotRing { from { opacity: .9; transform: scale(.9); } to { opacity: 0; transform: scale(1.25); } }
+.fly { position: fixed; z-index: 60; padding: 10px 14px; border-radius: 14px; background: #fff; color: #4b33b8; font-weight: 600; font-size: 15px; box-shadow: 0 10px 30px rgba(110,80,240,.25); pointer-events: none; transform-origin: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nb-list { list-style: none; padding: 0; margin: 10px 0 14px; display: grid; gap: 10px; }
+.nb-list li { display: grid; gap: 2px; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); }
+.nb-list small { color: var(--ink-3); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+
+/* El número viaja de la barra a la carga (View Transitions) */
+.nw-val { view-transition-name: guess; }
+.lake-w .rv-guess b { view-transition-name: guess; display: inline-block; }
+::view-transition-group(guess) { animation-duration: .65s; animation-timing-function: cubic-bezier(.22,1,.36,1); }
+::view-transition-old(root) { animation: .28s ease-in both vtOut; }
+::view-transition-new(root) { animation: .4s cubic-bezier(.22,1,.36,1) .12s both vtIn; }
+@keyframes vtOut { to { opacity: 0; } }
+@keyframes vtIn { from { opacity: 0; } }
+.hello h1 .h-b { background: linear-gradient(90deg, var(--accent), #8b5cf6 70%); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: .06em; }
+body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
+.chip.sm[aria-pressed="true"] { background: #6a4ce0; border-color: #6a4ce0; color: #fff; }

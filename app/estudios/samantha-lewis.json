@@ -376,12 +376,28 @@
      "65"
     ],
     [
-     "Los ahorros se acaban a los",
-     "73"
+     "Gasto al año en la jubilación",
+     "153.672 $"
     ],
     [
-     "Gasto cubierto por ingresos",
+     "Ingresos garantizados al año (pensiones y rentas)",
+     "38.336 $"
+    ],
+    [
+     "Parte del gasto que cubren los ingresos",
      "25 %"
+    ],
+    [
+     "Lo que sale de los ahorros cada año",
+     "115.335 $"
+    ],
+    [
+     "Los ahorros se acaban a los",
+     "73 años"
+    ],
+    [
+     "El plan llega hasta los",
+     "90 años"
     ]
    ],
    "pro": "Ingresos sobre necesidad anual en jubilación: 25 %. Agotamiento de activos líquidos a los 73.",
@@ -485,12 +501,24 @@
      "80.000 $"
     ],
     [
-     "Meses cubiertos",
+     "Gastos básicos al mes",
+     "10.125 $"
+    ],
+    [
+     "Meses que cubre hoy",
      "7,9"
     ],
     [
-     "Reserva recomendada",
+     "Reserva que recomienda el plan",
      "50.625 $ a 60.750 $"
+    ],
+    [
+     "Meses tras apartar los gastos ya previstos",
+     "6,1"
+    ],
+    [
+     "Lo que sobra tras la reserva y esos gastos",
+     "750 $"
     ]
    ],
    "pro": "Liquidez accesible: 80.000 $, 7,9 meses de gastos esenciales. Reserva objetivo: 50.625 $ a 60.750 $.",
@@ -532,23 +560,31 @@
    "filas": [
     [
      "Ahorro",
-     "75 de 100"
+     "22/30 puntos"
     ],
     [
      "Deudas",
-     "100 de 100"
+     "20/20 puntos"
     ],
     [
      "Inversiones",
-     "66 de 100"
+     "10/15 puntos"
     ],
     [
      "Colchón",
-     "100 de 100"
+     "15/15 puntos"
     ],
     [
      "Seguros",
-     "71 de 100"
+     "14/20 puntos"
+    ],
+    [
+     "Primer paso del plan",
+     "Asegurar tu casa: la nota pasa a 84"
+    ],
+    [
+     "Máximo con todos los pasos",
+     "84 de 100"
     ]
    ],
    "origen": "score.published_score · score.pillars",
