@@ -26,7 +26,8 @@
   const app = document.getElementById('app');
   const topActions = document.getElementById('top-actions');
   const PRO = () => S.prefs.level === 'pro';
-  const REDUCED = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Las animaciones se ven siempre, aunque el sistema pida reducir movimiento: son parte de la demo.
+  const REDUCED = () => false;
   const paso = k => E.pasos.find(p => p.key === k);
   const pTitulo = p => (PRO() && p.tituloPro) || p.titulo;
 
