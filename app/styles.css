@@ -986,6 +986,27 @@ body[data-pj] .dock { background: none; }
 .pj-salud small { display: block; font-size: 12.5px; color: var(--ink-3); }
 .pj-salud > div > b { font-size: 18px; color: var(--plan); }
 .pj-salud p { margin: 2px 0 0; }
+.pj-ringw { position: relative; flex: none; }
+.pj-guess { position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #fff; border: 3px solid var(--plan); transform: rotate(var(--a)) translateY(-38px); animation: pjFade .4s var(--ease) 1.1s both; }
+.pj-said { margin: 2px 0 0; font-size: 14px; line-height: 1.35; }
+.pj-said .pj-key { margin-right: 4px; }
+.pj-key.guess { background: #fff; border: 3px solid var(--plan); width: 13px; height: 13px; }
+.pj-h3 { font-size: 17px; margin: 18px 0 10px; }
+.pj-why { display: grid; gap: 6px; margin: 4px 0 6px; }
+.pj-why > small { font-size: 13px; color: rgba(255,255,255,.75); }
+.pj-whyc { display: flex; flex-wrap: wrap; gap: 6px; }
+.pj-whyc .chip { min-height: 36px; padding: 6px 12px; font-size: 14px; background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.25); color: #fff; text-align: left; }
+.pj-quote { margin: 0; font-size: 16px; font-style: italic; color: #fff; }
+.pj-quote .link { display: inline; width: auto; min-height: 0; padding: 0; color: #fff; opacity: .8; font-style: normal; margin-left: 6px; text-decoration: underline; }
+.pj-dated .ghost-w { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.4); }
+.pj-pact { display: grid; gap: 8px; margin: 12px 0; }
+.pj-pact small { color: var(--ink-2); font-size: 13.5px; }
+.pj-pact > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pj-thumb { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 8px 10px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--surface); font: 600 15px var(--font); color: var(--ink); cursor: pointer; }
+.pj-thumb svg { margin-left: auto; opacity: .2; }
+.pj-thumb .pj-av { width: 28px; height: 28px; font-size: 13px; box-shadow: none; }
+.pj-thumb.a[aria-pressed="true"] { border-color: var(--pa); background: var(--pa-soft); } .pj-thumb.b[aria-pressed="true"] { border-color: var(--pb); background: var(--pb-soft); }
+.pj-thumb[aria-pressed="true"] svg { opacity: 1; color: var(--good); }
 /* los hijos: primero lo que decíais, luego el plan y por último los años, con pausa para la intriga */
 .pj-revv .pj-plan { animation-delay: .7s; }
 .pj-revv .rv-box .big { color: var(--plan); }
