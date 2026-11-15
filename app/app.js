@@ -520,7 +520,7 @@
       <button class="askbox" data-act="whatif">${ic('pen', 18)}<span>Escribir otra pregunta para ${w('vuestro', 'tu')} asesor</span></button>
       ${S.booking ? bookedCard() : `<ul class="ticks" style="margin-top:6px"><li>${ic('check', 16)}${w('Salís', 'Sales')} con el orden de ${w('vuestros', 'tus')} pasos y respuesta a esto</li><li>${ic('check', 16)}${ns.mins} minutos, por videollamada</li><li>${ic('check', 16)}Sin preparar nada: ya tiene lo que ${w('habéis', 'has')} contestado</li></ul>
       <button class="btn block big-cta" data-act="book">${ic('cal')} Elegir día con ${w('vuestro', 'tu')} asesor</button>
-      <button class="link" style="width:100%" data-act="later">${S.later ? `${w('Os', 'Te')} avisamos dentro de una semana` : `Ahora no. ${w('Avisadnos', 'Avísame')} dentro de una semana`}</button>`}`;
+      <button class="link" style="width:100%" data-act="later">${window.__PREVIEW__ ? (S.later ? 'Sin prisa: el plan sigue aquí' : 'Ahora no') : S.later ? 'Recordatorio en el calendario, dentro de una semana' : `Ahora no. ${w('Recordádnoslo', 'Recuérdamelo')} en una semana`}</button>`}`;
   }
 
   let STORY_DIR = '';
@@ -766,10 +766,12 @@
 
   // Una semana después: se pide el saldo, no un "ya lo hice".
   const WEEK_REASONS = () => [w('Tenemos dudas', 'Tengo dudas'), w('No sabemos cómo hacerlo', 'No sé cómo hacerlo'), 'Ahora no es prioridad', E.fam.pl ? 'No lo vemos igual los dos' : 'Prefiero hablarlo antes'];
-  function weekSheet() {
+  // real: se abre desde el enlace de la cita del calendario (?semana=1). Si no, es la vista previa.
+  function weekSheet(real) {
     const p = E.primer;
-    sheet(`<div class="kicker">Una semana después · vista previa</div><h2>${esc(p.semana.q)}</h2>
-      <p class="muted small">Esto llegaría a los siete días. Se mira en la app del banco y se escribe aquí.</p>
+    sheet(`<div class="kicker">Una semana después${real ? '' : ' · vista previa'}</div><h2>${esc(p.semana.q)}</h2>
+      ${S.phrase ? `<p class="week-why">${w('Lo que os movía', 'Lo que te movía')} hace una semana: <b>«${esc(S.phrase)}»</b></p>` : ''}
+      <p class="muted small">${real ? `${w('Miradlo', 'Míralo')} en la app del banco y ${w('escribidlo', 'escríbelo')} aquí.` : 'Esto llegaría a los siete días, con la cita del calendario. Se mira en la app del banco y se escribe aquí.'}</p>
       <div class="moneyin"><input id="bal" type="number" inputmode="numeric" min="0" step="100" placeholder="0" aria-label="Saldo de la tarjeta"><span>$</span></div>
       <div class="chips" style="margin:10px 0 16px"><button class="chip" data-act="weekfill" data-v="${p.despues}">${p.despuesTxt}</button><button class="chip" data-act="weekfill" data-v="${p.hoy}">${p.hoyTxt}, sigue igual</button></div>
       <button class="btn block" data-act="weekok">Comprobar</button>`);
@@ -825,12 +827,17 @@
   const vidaK = () => { const q = vidaQ(), k = E.fam.hijos[0]; return q && q.vis && q.vis.base != null && k ? k.nombre : null; };
   const vidaDijo = (v, html) => { const q = vidaQ(), k = vidaK(), B = t => (html ? `<b>${t}</b>` : t);
     return k ? `creíais que el seguro llegaba hasta los ${v} años de ${esc(k)}; llega hasta los ${B(q.real)}` : `decíais ${esc(showV(q, v))}; el plan dice ${B(esc(q.plan))}`; };
+  // Una sola medida por frase: la edad del hijo para lo que creían y lo que hay; años de gastos para lo que recomienda el plan.
+  const vidaFound = () => { const q = vidaQ(), v = q.vis || {}, k = vidaK();
+    if (!k) return `${cap1(vidaDijo(S.pj.vida, true))}.${vidaRec() ? ` Lo que recomienda el plan: ${esc(vidaRec())}.` : ''}`;
+    const rec = v.total ? ` El plan recomienda <b>${v.total} años</b> de gastos${v.base + v.total <= 25 ? `, hasta los ${v.base + v.total} de ${esc(k)}` : ''}; hoy son ${v.on}.` : '';
+    return `Creíais que el seguro llegaba hasta los ${S.pj.vida} años de ${esc(k)}; llega hasta los <b>${q.real}</b>.${rec}`; };
   const vidaJunto = () => { const q = vidaQ(), k = vidaK(); return k ? `creían que cubría hasta los ${S.pj.vida} años de ${k} (plan: hasta los ${q.real})` : `${showV(q, S.pj.vida)} (plan: ${q.plan})`; };
   const cap1 = t => t.charAt(0).toUpperCase() + t.slice(1);
   const titVida = () => { const q = vidaQ(), k = vidaK(); return k ? `Hoy, hasta los ${q.real} años de ${k}` : `Hoy, ${q.plan}`; };
   // Lo mínimo que recomienda el plan (vis.total = cobertura mínima recomendada / gastos de casa, en años).
   const vidaRec = () => { const v = vidaQ().vis || {}, k = vidaK(); if (!v.total) return '';
-    return k && v.base + v.total <= 25 ? `hasta los ${v.base + v.total} años de ${k}` : `${v.total} años de gastos de casa; hoy cubre ${v.on}`; };
+    return k && v.base + v.total <= 25 ? `hasta los ${v.base + v.total} años de ${k}` : `${v.total} años de gastos de casa (hoy, ${v.on})`; };
 
   // Qué propone el plan para cada dato: su paso si lo tiene; si no, lo que dice la línea del plan y se pregunta al asesor.
   const PASO_DE = { tarjeta_interes: 'card', vida: 'life' };
@@ -963,7 +970,8 @@
       ${prop ? `<div class="pj-prop"><small>${prop.lab || propLab}</small><b>${esc(prop.tit)}</b><span>${esc(prop.txt)}</span></div>` : ''}</div>`;
   // Sus palabras: para qué lo hacen. Va al recordatorio del calendario y a la hoja del asesor.
   const pjWhy = () => `<div class="pj-why"><small>¿Para qué lo hacéis?</small>${S.phrase ? `<p class="pj-quote">«${esc(S.phrase)}» <button class="link small" data-act="pjwhy" data-v="">Cambiar</button></p>`
-    : `<div class="pj-whyc">${E.frases.map(f => `<button class="chip" data-act="pjwhy" data-v="${esc(f)}">${esc(f)}</button>`).join('')}</div>`}</div>`;
+    : `<div class="pj-whyc">${E.frases.map(f => `<button class="chip" data-act="pjwhy" data-v="${esc(f)}">${esc(f)}</button>`).join('')}</div>
+      <div class="pj-whyw"><input id="pjwhyt" type="text" maxlength="90" placeholder="O con vuestras palabras" aria-label="Para qué lo hacéis, con vuestras palabras"><button class="btn soft" data-act="pjwhyok">Guardar</button></div>`}</div>`;
   // La fecha la confirman los dos antes de apuntarla.
   const pjPact = () => `<div class="pj-pact"><small>Lo confirmáis los dos</small><div>${['a', 'b'].map(x => `<button class="pj-thumb ${x}" data-act="pjpact" data-x="${x}" aria-pressed="${!!(CAL && CAL.pact && CAL.pact[x])}">${pAv(x)} ${esc(pName(x))} ${ic('check', 16)}</button>`).join('')}</div></div>`;
   const pjCalBtn = k => (window.__PREVIEW__ ? '' : `<button class="btn block ghost-w" data-act="ics" data-k="${k}">${ic('cal', 18)} Añadir al calendario del móvil</button>`);
@@ -980,7 +988,10 @@
       ${pjWhy()}
       ${S.payDate ? `<div class="datechip"><span class="dc-ic">${ic('cal', 22)}</span><div><small>Lo hacéis el</small><b>${esc(S.payDate.label)}</b></div><button class="link small" data-act="cal" data-k="pay">Cambiar</button></div>
         ${pjCalBtn('pay')}
-        <button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>El calendario os lo recuerda y el enlace abre esta comprobación: el saldo de la tarjeta</small></span>${ic('arrow', 18)}</button>`
+        <button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>El calendario os lo recuerda y el enlace abre esta comprobación: el saldo de la tarjeta</small></span>${ic('arrow', 18)}</button>
+        <div class="pj-next"><small>Y después, con vuestro asesor</small><b>${E.pasos.length - 1 > 0 ? `Los ${E.pasos.length - 1} pasos que quedan` : 'Lo que queda del plan'}${E.pasos[1] ? `, empezando por ${esc(low1(E.pasos[1].titulo))}` : ''}</b>
+          ${S.booking ? `<div class="datechip"><span class="dc-ic">${ic('chat', 22)}</span><div><small>Vuestra reunión</small><b>${esc(S.booking.label)}</b></div><button class="link small" data-act="book">Cambiar</button></div>${pjCalBtn('meet')}`
+            : `<button class="btn block soft" data-act="book">${ic('cal', 18)} Elegir el día de la reunión</button>`}</div>`
         : `<button class="btn block soft" data-act="cal" data-k="pay">${ic('cal', 18)} Elegir el día</button>`}</div>`;
   }
   // Salud financiera de la familia: nota de hoy (con la marca de lo que dijeron), con el primer paso y con el plan.
@@ -999,7 +1010,7 @@
     tops.push(pjTopic('scale', 'Vuestro riesgo', same ? `Ante una caída, los dos haríais lo mismo: ${esc(low1(ra[4]))}.` : `Ante una caída, ${esc(pName('a'))} ${esc(low1(ra[1]))} y ${esc(pName('b'))} ${esc(low1(rb[1]))}.`,
       pa && pb ? { tit: off.length ? `Revisar el perfil de ${off.map(pName).join(' y ')}` : pa.nivel !== pb.nivel ? 'Decidir juntos cuánto riesgo queréis' : 'Seguir con el perfil que indicasteis',
         txt: `En el plan, ${pa.nombre} indicó ${low1(pLab(pa))} y ${pb.nombre}, ${low1(pLab(pb))}. ${off.length || pa.nivel !== pb.nivel ? 'Antes de decidir, lo revisáis con vuestro asesor.' : 'Lo que haríais encaja con lo que indicasteis.'}` } : null, 'Con vuestro asesor'));
-    if (vq) tops.push(pjTopic('heart', partVida(), `${cap1(vidaDijo(S.pj.vida, true))}.${vidaRec() ? ` Lo que recomienda el plan: ${esc(vidaRec())}.` : ''}`, planPara('vida')));
+    if (vq) tops.push(pjTopic('heart', partVida(), vidaFound(), planPara('vida')));
     return `<div class="narrow pj-rev pj-map">
       <p class="pj-kick dark">Lo que habéis descubierto</p>
       ${pjSalud()}
@@ -1008,8 +1019,7 @@
       ${tops.join('')}
       ${temas.length ? `<p class="tiny pj-noted">${ic('chat', 14)} Lo que no coincide (${temas.length}) ya está apuntado en vuestras preguntas para el asesor.</p>` : ''}
       <div class="pj-cta">
-        ${!E.primer ? '' : S.booking ? `<div class="datechip"><span class="dc-ic">${ic('chat', 22)}</span><div><small>Vuestra reunión</small><b>${esc(S.booking.label)}</b></div><button class="link small" data-act="book">Cambiar</button></div>`
-          : `<p>El asesor no decide por vosotros: os enseña las opciones con las cifras de vuestro plan y decidís juntos.</p><button class="btn block" data-act="book">${ic('cal', 18)} Pedir reunión con el asesor</button>`}
+        ${!E.primer || S.payDate || S.booking ? '' : `<p>El asesor no decide por vosotros: os enseña las opciones con las cifras de vuestro plan y decidís juntos.</p><button class="btn block" data-act="book">${ic('cal', 18)} Pedir reunión con el asesor</button>`}
         <button class="btn ghost block" data-act="pjplan">Ver vuestro plan ${ic('arrow', 18)}</button>
         <button class="link block" data-act="pjagain">Volver a empezar</button>
       </div></div>`;
@@ -1166,6 +1176,7 @@
         break;
       case 'pjgo': pjGo(); break;
       case 'pjwhy': S.phrase = v || null; save(); render(); break;
+      case 'pjwhyok': { const el = document.getElementById('pjwhyt'), t = el && el.value.trim(); if (t) { S.phrase = t; save(); render(); } else if (el) el.focus(); break; }
       case 'pjpact': CAL.pact = CAL.pact || {}; CAL.pact[b.dataset.x] = !CAL.pact[b.dataset.x]; calSheet(CAL.kind, true); break;
       case 'pjpick': { const kind = k, x = b.dataset.x; S.pj[kind][x] = v; save();
         app.querySelectorAll(`[data-act="pjpick"][data-k="${kind}"][data-x="${x}"]`).forEach(el => el.setAttribute('aria-pressed', el.dataset.v === v));
@@ -1216,7 +1227,7 @@
       case 'story': S.stage = 'story'; S.slide = 0; render(); window.scrollTo(0, 0); break;
       case 'tog': { const s = b.dataset.s; S.steps[s] = S.steps[s] === 'yes' ? null : 'yes'; keep(); break; }
       case 'oq': { const id = b.dataset.id; S.openQ = S.openQ.includes(id) ? S.openQ.filter(x => x !== id) : S.openQ.concat(id); keep(); break; }
-      case 'later': S.later = true; keep(); toast(`Hecho. ${w('Os', 'Te')} avisamos dentro de una semana`); break;
+      case 'later': S.later = true; keep(); if (window.__PREVIEW__) toast('Sin prisa. El plan sigue aquí'); else { laterIcs(); toast('Recordatorio para dentro de una semana'); } break;
       case 'vote': {
         const s = b.dataset.s, before = scoreFor(accepted()).v;
         S.steps[s] = S.steps[s] === v ? null : v; keep();
@@ -1266,23 +1277,31 @@
 
   // Cita al calendario con alarma, el objetivo de la familia en el título y un enlace de vuelta.
   // El pago lleva una segunda cita a la semana que abre la comprobación del saldo (?semana=1).
+  const icsZ = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const icsTx = t => String(t).replace(/[\\,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
+  const icsBase = () => location.origin + location.pathname + '?caso=' + encodeURIComponent(E.slug || '');
+  const icsEv = (uid, st, en, sum, desc, url, alarm) => ['BEGIN:VEVENT', 'UID:' + uid + '@plan', 'DTSTAMP:' + icsZ(new Date()), 'DTSTART:' + icsZ(st), 'DTEND:' + icsZ(en),
+    'SUMMARY:' + icsTx(sum), 'DESCRIPTION:' + icsTx(desc + '\n' + url), 'URL:' + url, 'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsTx(sum), 'TRIGGER:' + alarm, 'END:VALARM', 'END:VEVENT'];
+  function icsSave(evs, name) {
+    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//plan//es', ...evs, 'END:VCALENDAR'].join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = name; a.click();
+  }
+  // «Ahora no»: una cita dentro de una semana, a las 19:00, que devuelve al plan.
+  function laterIcs() {
+    const d = new Date(); d.setDate(d.getDate() + 7); d.setHours(19, 0, 0, 0);
+    icsSave(icsEv(Date.now(), d, new Date(d.getTime() + 15 * 60000), 'Volver a vuestro plan' + (S.phrase ? ` · ${S.phrase}` : ''), 'Mirad vuestro plan y elegid el día para hablarlo con el asesor.', icsBase(), '-PT0M'), 'volver-al-plan.ics');
+  }
   function downloadIcs(kind) {
     const pay = kind === 'pay', b = pay ? S.payDate : S.booking; if (!b) return;
     const s = fromIso(b.iso.slice(0, 10), b.time), e2 = new Date(s.getTime() + (pay ? 15 : b.mins) * 60000);
-    const z = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-    const tx = t => String(t).replace(/[\\,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
-    const base = location.origin + location.pathname + '?caso=' + encodeURIComponent(E.slug || '');
-    const why = S.phrase ? ` · ${S.phrase}` : '';
-    const ev = (uid, st, en, sum, desc, url, alarm) => ['BEGIN:VEVENT', 'UID:' + uid + '@plan', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(st), 'DTEND:' + z(en),
-      'SUMMARY:' + tx(sum), 'DESCRIPTION:' + tx(desc + '\n' + url), 'URL:' + url, 'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + tx(sum), 'TRIGGER:' + alarm, 'END:VALARM', 'END:VEVENT'];
+    const base = icsBase(), why = S.phrase ? ` · ${S.phrase}` : '', ev = icsEv;
     let evs;
     if (pay) {
       const w1 = new Date(s.getTime() + 7 * 864e5), w2 = new Date(w1.getTime() + 10 * 60000);
       evs = [...ev(Date.now(), s, e2, E.primer.titulo + why, `Primer paso de vuestro plan. Después, el saldo de la tarjeta queda en ${E.primer.despuesTxt} y la nota pasa a ${E.primer.nota}.`, base, '-PT15M'),
         ...ev(Date.now() + 1, w1, w2, 'Comprobar el saldo de la tarjeta' + why, `Mirad el saldo en la app del banco y escribidlo en vuestro plan.`, base + '&semana=1', '-PT0M')];
     } else evs = ev(Date.now(), s, e2, 'Reunión con el asesor' + why, summaryText(), base, '-PT1H');
-    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//plan//es', ...evs, 'END:VCALENDAR'].join('\r\n');
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = pay ? 'primer-paso.ics' : 'reunion-plan.ics'; a.click();
+    icsSave(evs, pay ? 'primer-paso.ics' : 'reunion-plan.ics');
   }
   function summaryText() {
     const acc = E.pasos.filter(p => S.steps[p.key] === 'yes').map(p => '- ' + p.titulo), open = S.doubts.filter(d => d.status === 'open').map(d => '- ' + d.q);
@@ -1300,7 +1319,7 @@
       await abrirCaso(slug, q.has('reset'));
       if (q.get('demo') === 'plan' || q.get('demo') === 'story') { S.stage = q.get('demo'); S.prefs.level = q.get('l') === 'pro' ? 'pro' : 'new'; S.phrase = S.phrase || E.frases[0]; if (q.get('s')) S.slide = +q.get('s'); }
       render();
-      if (q.get('semana') && E.primer && S.payDate && !S.week) weekSheet();
+      if (q.get('semana') && E.primer && S.payDate && !S.week) weekSheet(true);
     } catch (err) {
       console.error(err);
       app.innerHTML = `<div class="narrow card"><h2>No hemos podido cargar el plan.</h2><p>Arranca la web con <code>npm start</code> desde la raíz del repo. Si faltan los estudios, se generan con <code>npm run estudio</code>.</p><button class="btn" onclick="location.reload()">Reintentar</button></div>`;

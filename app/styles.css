@@ -999,6 +999,15 @@ body[data-pj] .dock { background: none; }
 .pj-quote { margin: 0; font-size: 16px; font-style: italic; color: #fff; }
 .pj-quote .link { display: inline; width: auto; min-height: 0; padding: 0; color: #fff; opacity: .8; font-style: normal; margin-left: 6px; text-decoration: underline; }
 .pj-dated .ghost-w { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.4); }
+.pj-whyw { display: flex; gap: 6px; margin-top: 4px; min-width: 0; }
+.pj-why { min-width: 0; grid-template-columns: minmax(0, 1fr); }
+.pj-whyw input { flex: 1 1 0; width: 0; min-width: 0; min-height: 40px; padding: 6px 12px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08); color: #fff; font: 15px var(--font); }
+.pj-whyw input::placeholder { color: rgba(255,255,255,.6); }
+.pj-whyw .btn { flex: none; width: auto; min-height: 40px; padding: 6px 14px; background: #fff; color: var(--plan); }
+.pj-next { display: grid; gap: 6px; margin-top: 10px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.15); }
+.pj-next > small { font-size: 13px; color: rgba(255,255,255,.75); }
+.pj-next > b { font-size: 16px; color: #fff; }
+.week-why { margin: 0 0 8px; font-size: 15px; }
 .pj-pact { display: grid; gap: 8px; margin: 12px 0; }
 .pj-pact small { color: var(--ink-2); font-size: 13.5px; }
 .pj-pact > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
