@@ -309,6 +309,7 @@
    "items": []
   }
  ],
+ "pareja": null,
  "lectura": "Le importa poder comprar la casa sin quedarse sin colchón y, al mismo tiempo, no recortar su jubilación. Lo que más le moverá es ver cuántos meses de gastos cubre su efectivo. También reaccionará fuerte al dato sobre hasta cuándo duran sus ahorros.",
  "porqueOrden": "Primero la liquidez y la casa, luego la jubilación; cerramos con la nota y una buena noticia de la tarjeta",
  "preguntas": [
@@ -563,12 +564,13 @@
  ],
  "sinUsar": [],
  "generado": {
-  "fecha": "2026-11-14",
-  "datos": "mcp",
+  "fecha": "2026-11-15",
+  "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [
    "nota.siente: descartado por jerga o rayas"
   ],
-  "llmFecha": "2026-11-14"
+  "llmFecha": "2026-11-14",
+  "datosLlm": "mcp"
  }
 }

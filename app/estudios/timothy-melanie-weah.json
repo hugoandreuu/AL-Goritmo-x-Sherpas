@@ -406,6 +406,34 @@
    "items": []
   }
  ],
+ "pareja": {
+  "perfiles": [
+   {
+    "nombre": "Timothy",
+    "riesgo": "Growth",
+    "nivel": 4,
+    "etiqueta": "Dinámico"
+   },
+   {
+    "nombre": "Melanie",
+    "riesgo": "Moderate",
+    "nivel": 3,
+    "etiqueta": "Equilibrado"
+   }
+  ],
+  "caida": {
+   "pct": 0.0915,
+   "txt": "9,2 %",
+   "dias": 37
+  },
+  "escala": [
+   "Muy prudente",
+   "Prudente",
+   "Equilibrado",
+   "Dinámico",
+   "Atrevido"
+  ]
+ },
  "lectura": "Les importa proteger a los niños y decidir qué hacer con el efectivo sobrante. Ver cuánto del pago de la tarjeta son intereses les moverá más que otros datos.",
  "porqueOrden": "Primero el coste invisible que sangra la liquidez, luego la protección de la familia, la nota global y acabamos con la buena noticia del colchón.",
  "preguntas": [
@@ -681,10 +709,11 @@
   }
  ],
  "generado": {
-  "fecha": "2026-11-14",
-  "datos": "mcp",
+  "fecha": "2026-11-15",
+  "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [],
-  "llmFecha": "2026-11-14"
+  "llmFecha": "2026-11-14",
+  "datosLlm": "mcp"
  }
 }

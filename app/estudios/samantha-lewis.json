@@ -320,6 +320,7 @@
    "items": []
   }
  ],
+ "pareja": null,
  "lectura": "Samantha prioriza proteger a Ethan y Ava y asegurarse de tener tranquilidad a largo plazo. Lo que más le moverá es saber hasta cuándo le duran los ahorros. También le interesará la concentración de sus inversiones y confirmar que su colchón es suficiente.",
  "porqueOrden": "Primero toca lo más crítico (la jubilación), luego la inversión concreta que le preocupa, después una buena noticia sobre su colchón y al final el resultado global.",
  "preguntas": [
@@ -564,10 +565,11 @@
  ],
  "sinUsar": [],
  "generado": {
-  "fecha": "2026-11-14",
-  "datos": "mcp",
+  "fecha": "2026-11-15",
+  "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [],
-  "llmFecha": "2026-11-14"
+  "llmFecha": "2026-11-14",
+  "datosLlm": "mcp"
  }
 }

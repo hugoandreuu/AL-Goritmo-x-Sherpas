@@ -1,9 +1,9 @@
 # Estudio: Samantha Lewis
 
 - Caso: `samantha-lewis`
-- Datos: MCP de Sherpas (get_case)
+- Datos: archivos de `cases/` (los mismos JSON que sirve el MCP)
 - Frases: escritas por el LLM de Sherpas (`gpt-5-mini`, el 2026-11-14), con control de cifras
-- Generado: 2026-11-14
+- Generado: 2026-11-15
 
 ## Lo que lee el LLM de esta familia
 
