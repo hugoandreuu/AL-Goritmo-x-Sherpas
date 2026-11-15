@@ -19,7 +19,7 @@
   const fresh = () => ({
     stage: 'home', qi: 0, who: null, phrase: null, a: {}, prefs: { level: null },
     gain: null, payDate: null, week: null, fold: {}, react: {}, slide: 0, openQ: null, later: false,
-    steps: {}, doubts: [], booking: null, cat: null,
+    steps: {}, doubts: [], booking: null, cat: null, help: {},
   });
   let S = fresh();
   const save = () => { try { localStorage.setItem(KEY(), JSON.stringify(S)); } catch (e) { /* sin almacenamiento */ } };
@@ -39,7 +39,7 @@
     if (!CASOS[slug]) CASOS[slug] = await fetch('estudios/' + slug + '.json').then(r => { if (!r.ok) throw new Error(slug); return r.json(); });
     E = CASOS[slug];
     QMAP = Object.fromEntries(E.preguntas.map(q => [q.id, q]));
-    QUIZ = ['who', ...E.preguntas.map(q => q.id), 'gain'];
+    QUIZ = [...(E.fam.pl ? ['who'] : []), 'phrase', 'level', ...E.preguntas.map(q => q.id), 'gain'];
     SLIDES = ['foto', ...E.frenos.map(id => 'f:' + id), 'pasos', 'camino', E.primer ? 'primer' : null, 'reunion'].filter(Boolean);
     S = fresh();
     if (!limpio) { try { const raw = localStorage.getItem(KEY()); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) { /* nada */ } }
@@ -97,8 +97,8 @@
 
   // ------------------------------------------------------------------ quiz
   function progress() {
-    const i = S.qi, n = QUIZ.length, left = Math.max(1, Math.round((n - i) * 0.6));
-    return `<div class="progress" aria-label="Paso ${i + 1} de ${n}"><div class="bar"><i style="width:${(i / n) * 100}%"></i></div><span class="tiny">~${left} min</span></div>`;
+    const i = S.qi, n = QUIZ.length;
+    return `<div class="progress thin" aria-label="Paso ${i + 1} de ${n}"><div class="bar"><i style="width:${(i / n) * 100}%"></i></div></div>`;
   }
   const CONF = [['sure', w0 => 'Seguro'], ['doubt', () => 'Lo dudo'], ['none', () => 'Ni idea']];
   const confChips = key => `<p class="muted small" style="margin:14px 0 6px">¿Qué tan ${w('seguros estáis', 'claro lo tienes')}? <span class="tiny">(opcional)</span></p>
@@ -157,46 +157,115 @@
   const proBlock = q => PRO() && q.pro ? `<div class="protech"><span class="tag navy">Para quien sabe de finanzas</span><p>${esc(q.pro)}</p><div class="src">Origen en el plan: ${esc(q.origen)}</div></div>` : '';
 
   const REACT = [['wow', () => w('No lo sabíamos', 'No lo sabía'), 'eye'], ['worry', () => w('Nos preocupa', 'Me preocupa'), 'help'], ['fix', () => w('Queremos arreglarlo', 'Quiero arreglarlo'), 'check']];
-  let PEND = null, JUST = false;
+  let PEND = null, JUST = false, REVEAL_T = null;
 
+  // --- C. Revelación: caja del dato, regla de la distancia, frase letra a letra, imagen, frase que toca y salida.
+  function banda(q, v) {
+    if (veredicto(q, v) === 'cerca') return 'clavado';
+    if (q.tipo === 'opciones') return Math.abs(v - q.real) === 1 ? 'cerca' : 'lejos';
+    const tol = q.tipo === 'importe' ? q.cerca * q.real : q.cerca;
+    return Math.abs(q.real - v) <= 2.5 * tol ? 'cerca' : 'lejos';
+  }
+  const BANDA = { clavado: () => 'Clavado', cerca: () => 'Muy cerca', lejos: () => `Lejos de lo que ${w('pensabais', 'pensabas')}` };
+  function ruler(q, v) {
+    if (q.tipo === 'opciones') return '';
+    const lo = Math.min(q.min, v, q.real), hi = Math.max(q.max, v, q.real), P = x => (x - lo) / (hi - lo || 1) * 100;
+    const g = P(v), r = P(q.real);
+    return `<div class="ruler" data-st="ruler" aria-hidden="true"><div class="rl-t"><i class="rl-gap ${g > r ? 'rev' : ''}" style="left:${Math.min(g, r)}%;width:${Math.abs(g - r)}%"></i>
+      <span class="rl-m you" style="left:${g}%"><small>${w('Vosotros', 'Tú')}</small></span><span class="rl-m plan" style="left:${r}%"><small>Plan</small></span></div></div>`;
+  }
   function revealView(q) {
-    const a = S.a[q.id], r = S.react[q.id], bad = q.tono === 'malo';
-    const count = q.tipo === 'importe' ? { to: q.real, fmt: 'money' } : q.tipo === 'anio' ? { from: a.value, to: q.real, fmt: 'year' } : q.tipo === 'num' && !q.mid ? { to: q.real, fmt: 'num', suf: q.sufijo || '' } : null;
-    return `<div class="rv ${bad ? 'bad' : 'good'} ${JUST ? 'seq' : ''}">
-      <div class="rv-vs"><div class="you"><small>${w('Vosotros decíais', 'Tú decías')}</small><b>${esc(fmtGuess(q, a.value))}</b></div><span class="vs-ar">${ic('arrow', 18)}</span>
-        <div class="pl"><small>${w('Vuestro', 'Tu')} plan dice</small><b class="big ${q.mid ? 'mid' : ''}"${count ? ` data-count='${JSON.stringify(count)}'` : ''}>${esc(q.plan)}</b><em>${esc(q.unidad)}</em></div></div>
-      <h2 class="reveal-head">${esc(titular(q, a.value))}</h2>
-      <div class="rv-vis">${vis(q)}</div>
-      ${q.siente ? `<p class="rv-feel">${q.siente}</p>` : ''}
-      <div class="rv-exit"><span class="dc-ic">${ic(bad ? 'arrow' : 'check', 20)}</span><span>${esc(q.salida)}</span></div>
-      ${bad ? `<div class="rv-react"><small>¿Cómo ${w('os', 'te')} deja esto?</small><div class="react3">${REACT.map(([v, l, i]) => `<button data-act="react" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}">${ic(i, 18)}<span>${l()}</span></button>`).join('')}</div></div>` : ''}
-      <details class="why rv-more"><summary>Ver el detalle</summary><div class="card">${rowsTbl(q.filas)}${proBlock(q)}</div></details>
-      ${origen(q)}
-    </div>${dock('Seguir', true)}`;
+    const a = S.a[q.id], r = S.react[q.id], bad = q.tono === 'malo', b = banda(q, a.value), help = S.help && S.help[q.id], tit = titular(q, a.value);
+    const count = q.tipo === 'importe' ? { to: q.real, fmt: 'money' } : q.tipo === 'anio' ? { from: a.value, to: q.real, fmt: 'year' } : q.tipo === 'num' && !q.mid ? { to: q.real, fmt: 'num', suf: q.sufijo || '', d: q.real % 1 ? 1 : 0 } : null;
+    return `<div class="rv2 ${bad ? 'bad' : 'good'} b-${b} ${JUST ? 'play' : ''}">
+      <p class="rv-guess">${w('Vosotros decíais', 'Tú decías')} <b>${esc(fmtGuess(q, a.value))}</b></p>
+      <div class="rv-box" data-st="box"><small>${w('Vuestro', 'Tu')} plan dice</small>
+        <b class="big ${q.mid ? 'mid' : ''}"${count ? ` data-count='${JSON.stringify(count)}'` : ''}>${esc(q.plan)}</b><em>${esc(q.unidad)}</em>
+        ${b === 'clavado' ? `<svg class="rv-tick" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>` : ''}</div>
+      ${ruler(q, a.value)}
+      <div class="rv-prec" data-st="type"><small class="rv-band">${esc(BANDA[b]())}</small><h2 class="rv-type" data-text="${esc(tit)}">${esc(tit)}</h2></div>
+      <div class="rv-vis" data-st="vis">${vis(q)}</div>
+      ${q.siente ? `<p class="rv-feel" data-st="fade">${q.siente}</p>` : ''}
+      ${bad ? `<div class="rv-react" data-st="fade"><small>¿Cómo ${w('os', 'te')} deja esto?</small><div class="react3">${REACT.map(([v, l, i]) => `<button data-act="react" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}">${ic(i, 18)}<span>${l()}</span></button>`).join('')}</div></div>` : ''}
+      ${help ? `<div class="rv-exit" id="rv-exit"><span class="dc-ic">${ic(bad ? 'arrow' : 'check', 20)}</span><span>${esc(q.salida)}</span></div>` : ''}
+      <div class="rv-foot" data-st="fade"><details class="why rv-more"><summary>Ver el detalle</summary><div class="card">${rowsTbl(q.filas)}${proBlock(q)}</div></details>${origen(q)}</div>
+      <div class="rv-dock" data-st="dock">${help ? dock('Seguir', true) : `<div class="dock"><button class="btn block" data-act="help" data-k="${q.id}">Podemos ${w('ayudaros', 'ayudarte')} con esto</button><button class="link block" data-act="next">Seguir</button></div>`}</div>
+    </div>`;
   }
 
+  // Carga: una gota cae en el centro y abre ondas, como en un lago.
   function suspense(q) {
-    return `<div class="suspense" role="status" aria-live="polite"><div><div class="orb" style="margin:0 auto 28px"></div><p>Buscando el dato en ${w('vuestro', 'tu')} plan…</p><p class="sub">${esc(q.creian)}</p></div></div>`;
+    const a = S.a[q.id] || {};
+    return `<div class="lake-w" role="status" aria-live="polite"><p class="rv-guess">${w('Vosotros decíais', 'Tú decías')} <b>${esc(fmtGuess(q, a.value))}</b></p>
+      <div class="lake" aria-hidden="true"><i class="drop"></i><i class="rip"></i><i class="rip"></i><i class="rip"></i></div>
+      <p class="lk-t">Buscando el dato en ${w('vuestro', 'tu')} plan…</p></div>`;
   }
   function playReveal(q) {
-    if (REDUCED()) { render(); return; }
     PEND = q.id; render();
-    setTimeout(() => { PEND = null; JUST = true; render(); JUST = false; runCounts(); animateRing(); }, 1500);
+    REVEAL_T = setTimeout(() => endSuspense(q.id), 2300);
   }
-  function runCounts() {
-    document.querySelectorAll('.seq [data-count]').forEach(el => {
-      const c = JSON.parse(el.getAttribute('data-count')); const final = el.innerHTML;
-      const from = c.from != null ? c.from : 0, dur = 1300, delay = 900;
-      const fmt = v => c.fmt === 'money' ? M(Math.round(v)) : c.fmt === 'num' ? Math.round(v) + (c.suf || '') : String(Math.round(v));
-      el.classList.add('counting'); el.textContent = fmt(from);
-      const t0 = performance.now() + delay;
-      const tick = now => {
-        const k = Math.min(1, Math.max(0, (now - t0) / dur)), e = 1 - Math.pow(1 - k, 3);
-        el.textContent = fmt(from + (c.to - from) * e);
-        if (k < 1) requestAnimationFrame(tick); else { el.innerHTML = final; el.classList.remove('counting'); }
-      };
-      requestAnimationFrame(tick);
+  function endSuspense(id) {
+    clearTimeout(REVEAL_T);
+    if (PEND !== id) return;
+    PEND = null; JUST = true; render(); JUST = false; runSeq();
+  }
+
+  // Secuencia de la revelación. Un toque fuera de los botones la lleva al final.
+  let SEQ = [], SEQ_ID = 0;
+  function runSeq() {
+    const root = app.querySelector('.rv2.play'); if (!root) return;
+    SEQ_ID++;
+    const at = (ms, f) => SEQ.push(setTimeout(f, ms));
+    const show = el => {
+      el.classList.add('on');
+      if (el.dataset.st === 'dock') return;
+      const r = el.getBoundingClientRect(), room = window.innerHeight - 110;
+      if (r.bottom > room) window.scrollBy({ top: Math.min(r.bottom - room, r.top - 70), behavior: 'smooth' });
+    };
+    let t = 120;
+    root.querySelectorAll('[data-st]').forEach(el => {
+      const k = el.dataset.st;
+      if (k === 'box') { at(t, () => { show(el); countUp(el.querySelector('[data-count]'), 250); }); t += el.querySelector('[data-count]') ? 1950 : 900; }
+      else if (k === 'ruler') { at(t, () => show(el)); t += 1100; }
+      else if (k === 'type') {
+        const p = el.querySelector('.rv-type'), txt = p.dataset.text;
+        p.style.minHeight = p.offsetHeight + 'px'; p.setAttribute('aria-label', txt); p.textContent = '';
+        at(t, () => { show(el); typeIn(p, txt); }); t += 250 + txt.length * 26 + 450;
+      } else if (k === 'vis') { at(t, () => { show(el); animateRing(); }); t += 1200; }
+      else if (k === 'dock') { at(t, () => { show(el); SEQ = []; }); }
+      else { at(t, () => show(el)); t += 500; }
     });
+  }
+  function typeIn(p, txt) {
+    let i = 0;
+    const step = () => { i++; p.textContent = txt.slice(0, i); if (i < txt.length) SEQ.push(setTimeout(step, 26)); };
+    SEQ.push(setTimeout(step, 250));
+  }
+  function finishSeq() {
+    SEQ.forEach(clearTimeout); SEQ = []; SEQ_ID++;
+    const root = app.querySelector('.rv2.play'); if (!root) return;
+    const visEl = root.querySelector('[data-st="vis"]'), ringLeft = visEl && !visEl.classList.contains('on');
+    root.querySelectorAll('[data-final]').forEach(el => { el.innerHTML = el.dataset.final; el.classList.remove('counting'); });
+    root.querySelectorAll('.rv-type').forEach(p => { p.textContent = p.dataset.text; });
+    root.querySelectorAll('[data-st]').forEach(el => el.classList.add('on'));
+    root.classList.remove('play');
+    if (ringLeft) animateRing();
+  }
+  function countUp(el, delay) {
+    if (!el) return;
+    const c = JSON.parse(el.getAttribute('data-count')), final = el.innerHTML, id = SEQ_ID;
+    el.dataset.final = final;
+    const from = c.from != null ? c.from : 0, dur = 1400;
+    const fmt = v => c.fmt === 'money' ? M(Math.round(v)) : c.fmt === 'num' ? (c.d ? dec(v, 1) : Math.round(v)) + (c.suf || '') : String(Math.round(v));
+    el.classList.add('counting'); el.textContent = fmt(from);
+    const t0 = performance.now() + delay;
+    const tick = now => {
+      if (id !== SEQ_ID) return;
+      const k = Math.min(1, Math.max(0, (now - t0) / dur)), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmt(from + (c.to - from) * e);
+      if (k < 1) requestAnimationFrame(tick); else { el.innerHTML = final; el.classList.remove('counting'); }
+    };
+    requestAnimationFrame(tick);
   }
 
   function preparePlan() {
@@ -214,62 +283,81 @@
     setTimeout(go, 450 + lis.length * 600 + 450);
   }
 
+  // --- B. Cada pregunta: aparece sola en el centro, respira y sube para dejar sitio al widget.
+  let INTRO = null, INTRO_T = null, ADV_T = null, BUCKET = null;
+  const showV = (q, v) => q.tipo === 'importe' ? M(v) : q.tipo === 'anio' ? String(v) : dec(v, 1) + (q.sufijo || '');
+  function numWidget(q, a) {
+    const has = a.value != null, st = q.step || 1, mid = Math.round((q.min + q.max) / 2 / st) * st;
+    return `<div class="numw"><div class="nw-val ${has ? '' : 'empty'}" id="amt">${has ? showV(q, a.value) : '?'}</div>
+      <div class="nw-track"><input type="range" min="${q.min}" max="${q.max}" step="${st}" value="${a.value ?? mid}" class="${has ? '' : 'untouched'}" data-act="range" data-k="${q.id}" aria-label="${esc(q.creian)}">${has ? '' : '<i class="nw-hint" aria-hidden="true"></i>'}</div>
+      <div class="spread tiny"><span>${showV(q, q.min)}</span><span>${showV(q, q.max)}</span></div>
+      ${has ? '' : `<p class="tiny nw-tip">${w('Arrastrad', 'Arrastra')} la barra</p>`}</div>`;
+  }
+  function introQ() {
+    const st = app.querySelector('.qstage.intro'), head = st && st.querySelector('.qhead'); if (!head) return;
+    st.classList.add('think');
+    const r = head.getBoundingClientRect(), dy = Math.max(0, window.innerHeight * 0.4 - (r.top + r.height / 2));
+    head.style.transform = `translateY(${Math.round(dy)}px)`;
+    INTRO_T = setTimeout(settleQ, dy > 0 ? 1300 : 800);
+  }
+  function settleQ() {
+    clearTimeout(INTRO_T);
+    const st = app.querySelector('.qstage.think'); if (!st) return;
+    st.classList.remove('think'); st.querySelector('.qhead').style.transform = '';
+  }
+  // Barrido: lo de ahora sale por la izquierda y lo nuevo entra por la derecha.
+  let SWIPING = false;
+  function swipe(fn) {
+    const el = app.firstElementChild;
+    if (!el || SWIPING) { if (!SWIPING) fn(); return; }
+    SWIPING = true; el.classList.add('sw-out');
+    setTimeout(() => { SWIPING = false; fn(); const n = app.firstElementChild; if (n) n.classList.add('sw-in'); }, 320);
+  }
+  const nextQ = () => swipe(() => { S.qi = Math.min(S.qi + 1, QUIZ.length - 1); render(); });
+  const advance = () => { clearTimeout(ADV_T); ADV_T = setTimeout(nextQ, 280); };
+
   function renderQuiz() {
     const step = QUIZ[S.qi];
+    clearTimeout(INTRO_T);
     if (PEND === step) { app.innerHTML = `<div class="narrow">${progress()}${suspense(QMAP[step])}</div>`; window.scrollTo(0, 0); return; }
-    let h = `<div class="narrow"><div class="qwrap">${progress()}`;
+    const q = QMAP[step], a = q ? (S.a[q.id] || {}) : {};
+    if (q && a.revealed) { app.innerHTML = `<div class="narrow">${progress()}${revealView(q)}</div>`; if (!JUST) animateRing(); return; }
+    const perm = q && q.permiso && !a.permission, key = step + (perm ? ':permiso' : '');
+    const intro = INTRO !== key; INTRO = key;
+    if (intro) BUCKET = null;
+    let head = '', body = '', dk = '';
     if (step === 'who') {
       const ad = E.fam.adultos;
-      h += (E.fam.pl ? `<h2 class="q">¿Quién mira el plan?</h2>
-        <div class="chips">${[['juntos', 'Los dos juntos'], ['a', ad[0].nombre], ['b', ad[1].nombre]].map(([v, l]) => `<button class="chip" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${esc(l)}</button>`).join('')}</div>` : '') +
-        `<h2 class="q" ${E.fam.pl ? 'style="margin-top:28px"' : ''}>En una línea, ¿qué ${w('os', 'te')} importa más?</h2>
-        ${E.frases.map((p, i) => `<button class="opt" data-act="phrase" data-v="${esc(p)}" aria-pressed="${S.phrase === p}">${optBody(['heart', 'moon', 'card', 'sun'][i % 4], esc(p))}</button>`).join('')}
-        <h2 class="q" style="margin-top:24px">¿Cómo ${w('os manejáis', 'te manejas')} con las finanzas?</h2>
-        <div class="seg2" role="group" aria-label="Nivel">
-          <button class="segb" data-act="level" data-v="new" aria-pressed="${S.prefs.level === 'new'}">${ic('seed', 22)}<b>${w('Somos nuevos', 'Soy nuevo')} en esto</b><span>Sin tecnicismos y paso a paso</span></button>
-          <button class="segb" data-act="level" data-v="pro" aria-pressed="${S.prefs.level === 'pro'}">${ic('chart', 22)}<b>${w('Sabemos', 'Sé')} de finanzas</b><span>Con el detalle técnico a la vista</span></button>
-        </div>
-        <p class="tiny">No hay respuestas buenas ni malas. Se puede cambiar después.</p>
-        ${dock('Empezar', S.who && S.phrase && S.prefs.level)}`;
+      head = `<h2 class="q">¿Quién mira el plan?</h2>`;
+      body = [['juntos', 'Los dos juntos', 'heart'], ['a', ad[0].nombre, 'eye'], ['b', ad[1].nombre, 'eye']].map(([v, l, i], k) => `<button class="opt" style="--i:${k}" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${optBody(i, esc(l))}</button>`).join('');
+    } else if (step === 'phrase') {
+      head = `<h2 class="q">En una línea, ¿qué ${w('os', 'te')} importa más?</h2>`;
+      body = E.frases.map((p, i) => `<button class="opt" style="--i:${i}" data-act="phrase" data-v="${esc(p)}" aria-pressed="${S.phrase === p}">${optBody(['heart', 'moon', 'card', 'sun'][i % 4], esc(p))}</button>`).join('');
+    } else if (step === 'level') {
+      head = `<h2 class="q">¿Cómo ${w('os manejáis', 'te manejas')} con las finanzas?</h2><p class="muted">No hay respuestas buenas ni malas. Se puede cambiar después.</p>`;
+      body = `<div class="seg2" role="group" aria-label="Nivel">
+          <button class="segb" style="--i:0" data-act="level" data-v="new" aria-pressed="${S.prefs.level === 'new'}">${ic('seed', 22)}<b>${w('Somos nuevos', 'Soy nuevo')} en esto</b><span>Sin tecnicismos y paso a paso</span></button>
+          <button class="segb" style="--i:1" data-act="level" data-v="pro" aria-pressed="${S.prefs.level === 'pro'}">${ic('chart', 22)}<b>${w('Sabemos', 'Sé')} de finanzas</b><span>Con el detalle técnico a la vista</span></button></div>`;
     } else if (step === 'gain') {
-      h += `<h2 class="q">Si esto estuviera resuelto, ¿qué cambiaría en casa?</h2>
-        <p class="muted">${w('Elegid', 'Elige')} la que más se parezca.</p>
-        ${E.ganancias.map(([i, t]) => `<button class="opt" data-act="gain" data-v="${esc(t)}" aria-pressed="${S.gain === t}">${optBody(i, esc(t))}</button>`).join('')}
-        ${dock(`Ver ${w('vuestro', 'tu')} plan`, S.gain, 'toplan')}`;
+      head = `<h2 class="q">Si esto estuviera resuelto, ¿qué cambiaría en casa?</h2><p class="muted">${w('Elegid', 'Elige')} la que más se parezca.</p>`;
+      body = E.ganancias.map(([i, t], k) => `<button class="opt" style="--i:${k}" data-act="gain" data-v="${esc(t)}" aria-pressed="${S.gain === t}">${optBody(i, esc(t))}</button>`).join('');
+      dk = dock(`Ver ${w('vuestro', 'tu')} plan`, S.gain, 'toplan');
+    } else if (perm) {
+      head = `<div class="permic">${ic('shield', 30)}</div><h2 class="q">Lo siguiente no es fácil, pero tiene arreglo.</h2><p class="muted">Hablamos de proteger a ${esc(E.fam.hijos.map(k => k.nombre).join(' y '))}. ¿Lo vemos ahora?</p>`;
+      body = `<button class="btn block" data-act="perm" data-v="now">Lo vemos ahora</button><button class="link block" style="width:100%" data-act="perm" data-v="later">Saltar por ahora</button>`;
     } else {
-      const q = QMAP[step], a = S.a[q.id] || {}, n = E.preguntas.indexOf(q) + 1, N = E.preguntas.length;
-      const num = `<div class="qnum"><i>${n}</i> de ${N}</div>`;
-      if (a.revealed) h += revealView(q);
-      else if (q.permiso && !a.permission) {
-        h += `<div class="card" style="text-align:center;padding:28px 22px"><div class="opt-ic" style="width:64px;height:64px;border-radius:20px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin:0 auto 14px">${ic('shield', 30)}</div><h2>Lo siguiente no es fácil, pero tiene arreglo.</h2>
-          <p>Hablamos de proteger a ${esc(E.fam.hijos.map(k => k.nombre).join(' y '))}. ¿Lo vemos ahora?</p>
-          <button class="btn block" data-act="perm" data-v="now">Lo vemos ahora</button>
-          <button class="link block" style="width:100%" data-act="perm" data-v="later">Saltar por ahora</button></div>`;
-      } else if (q.tipo === 'importe' || q.tipo === 'num') {
-        const show = v => q.tipo === 'importe' ? M(v) : v + (q.sufijo || '');
-        h += `${num}<h2 class="q">${esc(q.q)}</h2>${q.sub ? `<p class="muted">${esc(q.sub)}</p>` : ''}
-          <div class="amount"><div class="val ${a.value == null ? 'empty' : ''}" id="amt">${a.value == null ? `${w('Moved', 'Mueve')} la barra` : show(a.value)}</div>
-          <input type="range" min="${q.min}" max="${q.max}" step="${q.step}" value="${a.value ?? Math.round((q.min + q.max) / 2 / q.step) * q.step}" class="${a.value == null ? 'untouched' : ''}" data-act="range" data-k="${q.id}" aria-label="${esc(q.creian)}">
-          <div class="spread tiny"><span>${show(q.min)}</span><span>${show(q.max)}</span></div></div>
-          ${confChips(q.id)}${dock('Ver el dato', a.value != null, 'reveal')}`;
-      } else if (q.tipo === 'anio') {
-        const y = a.value, d0 = Math.floor(q.min / 10) * 10;
-        h += `${num}<h2 class="q">${esc(q.q)}</h2>
-          <div class="chips" style="margin:14px 0">${[0, 10, 20, 30].map(k => d0 + k).map(d => `<button class="chip" data-act="decade" data-k="${q.id}" data-v="${d}" aria-pressed="${y != null && Math.floor(y / 10) * 10 === d}">${d}s</button>`).join('')}</div>
-          <div class="stepper"><button data-act="yr" data-k="${q.id}" data-v="-1" aria-label="Un año menos" ${y == null ? 'disabled' : ''}>−</button><div class="yearval">${y ?? '—'}</div><button data-act="yr" data-k="${q.id}" data-v="1" aria-label="Un año más" ${y == null ? 'disabled' : ''}>+</button></div>
-          ${y == null ? `<p class="tiny" style="text-align:center">${w('Elegid', 'Elige')} una década y ${w('ajustad', 'ajusta')} el año.</p>` : ''}
-          ${confChips(q.id)}${dock('Ver la fecha', y != null, 'reveal')}`;
-      } else {
+      const n = E.preguntas.indexOf(q) + 1, N = E.preguntas.length, has = a.value != null;
+      head = `<div class="qnum"><i>${n}</i> de ${N}</div><h2 class="q">${esc(q.q)}</h2>${q.sub ? `<p class="muted">${esc(q.sub)}</p>` : ''}`;
+      if (q.tipo === 'opciones') {
         const icons = OPT_ICONS[q.tema] || ['zero', 'clock', 'cal', 'shield'];
-        h += `${num}<h2 class="q">${esc(q.q)}</h2>
-          ${q.opciones.map((o, i) => `<button class="opt" data-act="opt" data-k="${q.id}" data-v="${i}" aria-pressed="${a.value === i}">${optBody(icons[i % icons.length], esc(o))}</button>`).join('')}
-          ${confChips(q.id)}${dock('Ver la respuesta', a.value != null, 'reveal')}`;
-      }
+        body = q.opciones.map((o, i) => `<button class="opt" style="--i:${i}" data-act="opt" data-k="${q.id}" data-v="${i}" aria-pressed="${a.value === i}">${optBody(icons[i % icons.length], esc(o))}</button>`).join('');
+      } else body = numWidget(q, a);
+      body += `<div class="confw ${has ? '' : 'hid'}">${confChips(q.id)}</div>`;
+      dk = dock(q.tipo === 'anio' ? 'Ver la fecha' : q.tipo === 'opciones' ? 'Ver la respuesta' : 'Ver el dato', has, 'reveal');
     }
-    h += '</div></div>';
-    app.innerHTML = h;
+    app.innerHTML = `<div class="narrow"><div class="qstage ${intro ? 'intro' : ''}">${progress()}<div class="qhead">${head}</div><div class="qbody">${body}</div>${dk}</div></div>`;
     window.scrollTo(0, 0);
-    animateRing();
+    if (intro) introQ();
   }
 
   // ------------------------------------------------------------------ anillo de la nota
@@ -639,32 +727,32 @@
   }
 
   let homeTimer = null;
+  // --- A. Portada: vuestros nombres, una frase y un botón. Al pulsar, barrido y frase puente.
   function renderHome() {
-    const ad = E.fam.adultos, kids = E.fam.hijos.map(k => k.nombre).join(' y '), q1 = E.preguntas[1] || E.preguntas[0], n = E.preguntas.length;
-    app.innerHTML = `<section class="welcome">
-      <div style="display:grid;gap:22px;min-width:0">
-        <span class="eyebrow-pill"><span class="av"><span style="background:var(--accent)">${esc(ad[0].nombre[0])}</span>${ad[1] ? `<span style="background:var(--sky);color:var(--navy)">${esc(ad[1].nombre[0])}</span>` : ''}</span>${esc(E.fam.titulo)}</span>
-        <h1>${E.fam.pl ? 'Bienvenidos a vuestro' : `Hola, ${esc(ad[0].nombre)}. Este es tu`} <em>plan a futuro</em></h1>
-        <p class="lead">${w('Vuestro', 'Tu')} asesor ha preparado un plan para ${w('vosotros', 'ti')}${kids ? ` y para ${esc(kids)}` : ''}. Primero ${w('os', 'te')} preguntamos, después ${w('os', 'te')} lo enseñamos. Al final ${w('decidís si queréis', 'decides si quieres')} verlo con él.</p>
-        <button class="megacta" data-act="start"><span><b>${S.qi > 0 ? `Seguir donde lo ${w('dejasteis', 'dejaste')}` : `Ver ${w('vuestro', 'tu')} plan en 5 minutos`}</b><small>${n} preguntas rápidas · sin registros</small></span><span class="go">${ic('arrow', 26)}</span></button>
-        <div class="trust"><span>${ic('clock', 16)}5 minutos</span><span>${ic('lock', 16)}Sin cuentas ni datos nuevos</span><span>${ic('check', 16)}Cifras de ${w('vuestro', 'tu')} plan</span><span>${ic('eye', 16)}${w('Vuestro', 'Tu')} asesor verá las respuestas para preparar la reunión</span></div>
-        <button class="link" style="text-align:left;width:fit-content;padding-left:0" data-act="skip">${w('Preferimos', 'Prefiero')} ir directamente al plan</button>
-      </div>
-      <div class="teaser" aria-hidden="true"><div class="blob"></div>
-        <div class="tcard main"><div class="kicker">${w('Vuestra', 'Tu')} nota de salud financiera</div>
-          <div class="blurnum" id="blurnum">??</div>
-          <div style="height:10px;border-radius:99px;background:var(--surface-2);margin:14px 0 8px;overflow:hidden"><div style="height:100%;width:62%;background:linear-gradient(90deg,var(--s2),#f29a6e);border-radius:99px"></div></div>
-          <div class="spread tiny"><span>${w('Vosotros decís', 'Tú dices')}…</span><span>El plan dice…</span></div></div>
-        <div class="tcard mini a"><span class="dot" style="background:var(--good-soft);color:var(--good)">${ic(q1.icon, 18)}</span><span><b>${esc(q1.creian)}</b><br><span class="tiny">Lo vemos en la pregunta ${E.preguntas.indexOf(q1) + 1}</span></span></div>
-        <div class="tcard mini b"><span class="dot" style="background:var(--accent-soft);color:var(--accent)">${ic('flag', 18)}</span><span><b>${E.pasos.length} pasos</b><br><span class="tiny">y el primero, con fecha</span></span></div>
-      </div></section>
-      <div class="demo-casos"><p class="tiny" style="margin:0 0 8px">Prototipo del reto. La misma app con cualquier plan de Sherpas: ${w('elegid', 'elige')} un caso de ejemplo.</p>${casePicker()}</div>
-      <p class="foot">Esto ayuda a entender el plan del asesor. No es consejo nuevo ni lo cambia. ${fuente()}</p>`;
+    const ad = E.fam.adultos, kids = E.fam.hijos.map(k => k.nombre).join(' y ');
+    app.innerHTML = `<div class="home"><section class="hello">
+        <h1><span class="h-a">${w('Bienvenidos a vuestro', 'Te damos la bienvenida a tu')}</span> <span class="h-b">plan de futuro</span></h1>
+        <p class="h-names">${esc(ad.map(x => x.nombre).join(' y '))}</p>
+        ${kids ? `<p class="h-kids">Pensado también para ${esc(kids)}.</p>` : ''}
+        <button class="startbtn" data-act="start"><span>${S.qi > 0 ? `Seguir donde lo ${w('dejasteis', 'dejaste')}` : 'Empezar'}</span><span class="arr">${ic('arrow', 22)}</span></button>
+        <p class="h-trust">5 minutos · Sin cuentas · Cifras de ${w('vuestro', 'tu')} plan<br>${w('Vuestro', 'Tu')} asesor verá las respuestas para preparar la reunión</p>
+      </section>
+      <div class="home-foot"><button class="link small" data-act="skip">${w('Preferimos', 'Prefiero')} ir directamente al plan</button>
+        <details class="h-casos"><summary>Prototipo del reto: cambiar de familia</summary>${casePicker()}</details>
+        <p class="foot">Esto ayuda a entender el plan del asesor. No es consejo nuevo ni lo cambia. ${fuente()}</p></div></div>`;
     clearInterval(homeTimer);
-    if (!REDUCED()) homeTimer = setInterval(() => {
-      const el = document.getElementById('blurnum'); if (!el) { clearInterval(homeTimer); return; }
-      el.textContent = String(10 + Math.floor(Math.random() * 90));
-    }, 140);
+  }
+  let BRIDGE_T = null;
+  function bridge() {
+    topActions.innerHTML = '';
+    app.innerHTML = `<div class="narrow"><button class="bridge" data-act="bridge"><span>Antes de ir a los detalles,</span> <span>veamos cuánto ${w('conocéis vuestra', 'conoces tu')} situación.</span></button></div>`;
+    window.scrollTo(0, 0);
+    BRIDGE_T = setTimeout(endBridge, 2900);
+  }
+  function endBridge() {
+    clearTimeout(BRIDGE_T);
+    if (!app.querySelector('.bridge')) return;
+    swipe(() => { S.stage = 'quiz'; render(); });
   }
 
   function render() {
@@ -689,8 +777,13 @@
       const q = QMAP[t.dataset.k];
       t.classList.remove('untouched');
       S.a[q.id] = Object.assign(S.a[q.id] || {}, { value: +t.value });
-      const v = document.getElementById('amt'); v.textContent = q.tipo === 'importe' ? M(+t.value) : t.value + (q.sufijo || ''); v.classList.remove('empty');
+      const v = document.getElementById('amt'); v.textContent = showV(q, +t.value); v.classList.remove('empty');
+      app.querySelectorAll('.nw-hint, .nw-tip').forEach(x => x.remove());
+      const cw = app.querySelector('.confw'); if (cw) cw.classList.remove('hid');
       const btn = document.querySelector('[data-act="reveal"]'); if (btn) btn.disabled = false;
+      const bk = Math.floor((+t.value - q.min) / ((q.max - q.min) || 1) * 12);
+      if (BUCKET !== null && bk !== BUCKET) { try { if (navigator.vibrate) navigator.vibrate(4); } catch (er) { /* sin vibración */ } }
+      BUCKET = bk;
       save();
     }
   });
@@ -704,16 +797,23 @@
   const toPlan = () => { S.stage = 'plan'; S.prefs.level = S.prefs.level || 'new'; };
 
   document.addEventListener('click', async e => {
+    if (app.contains(e.target) && !e.target.closest('[data-act], summary, a')) {
+      if (app.querySelector('.qstage.think')) { settleQ(); return; }
+      if (PEND && app.querySelector('.lake-w')) { endSuspense(PEND); return; }
+      if (SEQ.length && app.querySelector('.rv2.play')) { finishSeq(); return; }
+    }
     const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
     const act = b.dataset.act, v = b.dataset.v, k = b.dataset.k;
-    const go = () => { S.qi = Math.min(S.qi + 1, QUIZ.length - 1); render(); };
+    const go = nextQ;
     switch (act) {
-      case 'start': S.stage = 'quiz'; render(); break;
+      case 'start': if (S.qi > 0) swipe(() => { S.stage = 'quiz'; render(); }); else swipe(bridge); break;
+      case 'bridge': endBridge(); break;
+      case 'help': S.help[k] = true; keep(); { const ex = document.getElementById('rv-exit'); if (ex) ex.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break;
       case 'skip': toPlan(); render(); window.scrollTo(0, 0); break;
       case 'caso': closeSheet(); await abrirCaso(v); render(); window.scrollTo(0, 0); break;
-      case 'who': S.who = v; render(); break;
-      case 'level': S.prefs.level = v; render(); break;
-      case 'phrase': S.phrase = v; render(); break;
+      case 'who': S.who = v; render(); advance(); break;
+      case 'level': S.prefs.level = v; render(); advance(); break;
+      case 'phrase': S.phrase = v; render(); advance(); break;
       case 'gain': S.gain = v; render(); break;
       case 'react': S.react[k] = v; keep(); break;
       case 'conf': S.a[k] = Object.assign(S.a[k] || {}, { conf: v }); render(); break;
@@ -721,7 +821,7 @@
       case 'yr': { const a = S.a[k], q = QMAP[k]; a.value = Math.max(q.min, Math.min(q.max, a.value + +v)); render(); break; }
       case 'opt': S.a[k] = Object.assign(S.a[k] || {}, { value: +v }); render(); break;
       case 'perm': { const id = QUIZ[S.qi]; if (v === 'later') { S.a[id] = { permission: 'later' }; go(); } else { S.a[id] = Object.assign(S.a[id] || {}, { permission: 'now' }); render(); } break; }
-      case 'reveal': { const q = QMAP[QUIZ[S.qi]]; S.a[q.id].revealed = true; playReveal(q); break; }
+      case 'reveal': { const q = QMAP[QUIZ[S.qi]]; S.a[q.id].revealed = true; const st = app.querySelector('.qstage'); if (st) st.classList.add('fade-out'); setTimeout(() => playReveal(q), 300); break; }
       case 'next': go(); break;
       case 'toplan': preparePlan(); break;
       case 'nextslide': S.slide = Math.min(S.slide + 1, SLIDES.length - 1); STORY_DIR = 'fwd'; render(); window.scrollTo(0, 0); break;
