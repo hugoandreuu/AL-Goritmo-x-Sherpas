@@ -871,7 +871,9 @@
     const used = { top: [], bot: [], bot2: [] };
     const mk = (cls, v, lab) => { const x = P(v), row = ['top', 'bot', 'bot2'].find(r => used[r].every(y => Math.abs(y - x) > 18)) || 'bot2'; used[row].push(x);
       return `<span class="pj-mk ${cls} ${row}" style="left:${x}%"><i></i><small>${lab}</small></span>`; };
-    return `<div class="pj-track" aria-hidden="true"><div class="pj-line"></div>${mk('plan', q.real, 'Plan')}${mk('a', va, esc(pName('a')))}${mk('b', vb, esc(pName('b')))}</div>`;
+    const da = Math.abs(va - q.real), db = Math.abs(vb - q.real), win = da < db ? 'a' : db < da ? 'b' : '';
+    const gap = (c, v) => `<span class="pj-gap ${c}" style="left:${Math.min(P(v), P(q.real))}%;width:${Math.abs(P(v) - P(q.real))}%"></span>`;
+    return `<div class="pj-track" aria-hidden="true"><div class="pj-line"></div>${gap('a', va)}${gap('b', vb)}${mk('plan', q.real, 'Plan')}${mk('a' + (win === 'a' ? ' win' : ''), va, esc(pName('a')))}${mk('b' + (win === 'b' ? ' win' : ''), vb, esc(pName('b')))}</div>`;
   }
   function pjRevMoney() {
     const q = moneyQ(), ca = moneyClose('a'), cb = moneyClose('b');
@@ -962,6 +964,23 @@
     const prog = `<div class="progress thin"><div class="bar"><i style="width:${S.pj.step / (PJ_STEPS.length - 1) * 100}%"></i></div></div>`;
     const V = { intro: pjIntro, level: pjLevel, pass: () => pjPass(x), money: () => pjMoney(x), rev: () => (x === 'money' ? pjRevMoney() : pjRevRisk()), risk: () => pjRisk(x), guess: () => pjGuess(x), vote: () => pjVote(x), profile: pjProfile, map: pjMap }[kind];
     app.innerHTML = (kind === 'pass' ? '' : prog) + V();
+    // El fondo es de quien contesta; en lo que se ve juntos vuelve al morado de los dos.
+    if (window.Fondo) Fondo.who(x === 'a' ? -1 : x === 'b' ? 1 : 0);
+  }
+  // Al terminar su turno, la carta se da la vuelta (queda boca abajo, con candado) y sale como una carta pasada.
+  function pjSeal(then) {
+    const nx = PJ_STEPS[S.pj.step + 1] || '', card = app.querySelector('.pj-turn .pj-card');
+    if (!card || !(nx.startsWith('pass') || nx.startsWith('rev')) || REDUCED() || !card.animate) { then(); return; }
+    const x = PJ_STEPS[S.pj.step].split(':')[1];
+    card.style.position = 'relative';
+    const back = document.createElement('div');
+    back.className = 'pj-seal ' + x; back.innerHTML = `${ic('lock', 30)}<b>Guardado en secreto</b>`;
+    card.animate([{ transform: 'perspective(900px) rotateY(0)' }, { transform: 'perspective(900px) rotateY(90deg)' }], { duration: 260, easing: 'ease-in', fill: 'forwards' }).onfinish = () => {
+      card.appendChild(back);
+      const a = card.animate([{ transform: 'perspective(900px) rotateY(-90deg)', opacity: 1 }, { transform: 'perspective(900px) rotateY(0)', opacity: 1, offset: .35 }, { transform: 'perspective(900px) rotateY(0)', opacity: 1, offset: .7 },
+        { transform: `perspective(900px) translateX(${x === 'a' ? '' : '-'}120%) rotate(${x === 'a' ? 8 : -8}deg)`, opacity: 0 }], { duration: 1100, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+      a.onfinish = then;
+    };
   }
   function pjSheetBlock() {
     if (!S.pj || S.pj.step < PJ_STEPS.indexOf('map')) return '';
@@ -1091,8 +1110,8 @@
         if (v === 'pareja') { if (S.mode !== 'pareja' || !S.pj) S.pj = pjFresh(); S.mode = 'pareja'; S.who = 'juntos'; swipe(() => { S.stage = 'pareja'; render(); window.scrollTo(0, 0); }); }
         else { if (S.mode !== 'solo') { S.qi = 0; S.who = null; } S.mode = 'solo'; if (S.qi > 0) swipe(() => { S.stage = 'quiz'; render(); }); else swipe(bridge); }
         break;
-      case 'pjgo': pjGo(); break;
-      case 'pjpick': { const kind = k, x = b.dataset.x; S.pj[kind][x] = v; render(); clearTimeout(ADV_T); ADV_T = setTimeout(pjGo, 320); break; }
+      case 'pjgo': if (b.id === 'pjsave') { b.disabled = true; pjSeal(pjGo); } else pjGo(); break;
+      case 'pjpick': { const kind = k, x = b.dataset.x; S.pj[kind][x] = v; render(); clearTimeout(ADV_T); ADV_T = setTimeout(() => pjSeal(pjGo), 320); break; }
       case 'pjplan': {
         // El modo pareja ya es el quiz para dos: del quiz abierto solo se pide la frase, y de ahí al plan.
         S.prefs.level = S.prefs.level || 'new';

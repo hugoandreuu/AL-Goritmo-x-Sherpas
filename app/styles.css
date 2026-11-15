@@ -866,6 +866,32 @@ i.gone { background: var(--bad); box-shadow: inset 0 -3px 0 rgba(0,0,0,.14); }
 .pj-pass.a .pj-btn svg, .pj-pass.a .pj-av.xl { color: var(--pa); } .pj-pass.b .pj-btn svg, .pj-pass.b .pj-av.xl { color: var(--pb); }
 .pj-pass .pj-av.xl { background: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,.25), 0 14px 36px rgba(0,0,0,.18); }
 
+/* Guardar en secreto: la carta queda boca abajo con candado y se va */
+.pj-seal { position: absolute; inset: -1px; border-radius: inherit; display: grid; place-content: center; justify-items: center; gap: 10px; color: #fff; z-index: 3;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 10px, transparent 10px 20px), var(--c); }
+.pj-seal.a { --c: var(--pa); } .pj-seal.b { --c: var(--pb); }
+.pj-seal b { font-family: var(--head); font-size: 18px; }
+
+/* Destapar a la vez: las dos respuestas aparecen boca abajo y se giran juntas; luego el plan */
+.pj-rev .pj-says > div, .pj-rev .pj-col { position: relative; animation: pjFlip .7s var(--ease) .35s both; }
+.pj-rev .pj-says > div::after, .pj-rev .pj-col::after { content: ''; position: absolute; inset: 0; border-radius: inherit; display: grid; place-items: center; color: #fff;
+  animation: pjBack .7s linear .35s both; pointer-events: none;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 10px, transparent 10px 20px), var(--c); }
+.pj-rev .pj-says > .a, .pj-rev .pj-col.a { --c: var(--pa); } .pj-rev .pj-says > .b, .pj-rev .pj-col.b { --c: var(--pb); }
+@keyframes pjFlip { from { transform: perspective(900px) rotateY(-180deg); } to { transform: perspective(900px) rotateY(0); } }
+@keyframes pjBack { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.pj-rev .pj-plan { animation-delay: 1.15s; }
+.pj-rev .pj-mk.a { animation-delay: 1.35s; } .pj-rev .pj-mk.b { animation-delay: 1.5s; } .pj-rev .pj-mk.plan { animation-delay: 1.85s; }
+.pj-gap { position: absolute; height: 3px; border-radius: 2px; transform-origin: left; animation: pjGrow .6s var(--ease) 2.15s both; }
+.pj-gap.a { top: 40px; background: var(--pa); } .pj-gap.b { top: 53px; background: var(--pb); }
+@keyframes pjGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.pj-mk.win i { animation: pjWin .6s var(--ease) 2.8s both; }
+@keyframes pjWin { 0%, 100% { transform: none; } 40% { transform: translateY(-14px) scale(1.25); } 70% { transform: translateY(2px) scale(.95); } }
+.pj-rev .rv-feel.on { animation: pjUp .5s var(--ease) 3s both; }
+.pj-rev .pj-thought { animation: pjUp .4s var(--ease) 1.1s both; }
+.pj-rev:not(.pj-map) .pj-scale .pj-dot { animation-delay: calc(var(--k) * .15s + 1.4s); }
+.pj-rev .pj-fact { animation-delay: 1.9s; }
+
 /* respuesta privada */
 .pj-turn { padding-top: 6px; }
 .pj-who { display: flex; align-items: center; gap: 10px; font-size: 15px; margin: 4px 0 10px; color: var(--ink-2); }
