@@ -218,14 +218,16 @@
   }
 
   // Secuencia de la revelación. Un toque fuera de los botones la lleva al final.
-  let SEQ = [], SEQ_ID = 0;
+  let SEQ = [], SEQ_ID = 0, SEQ_USER = false;
+  ['wheel', 'touchstart', 'keydown'].forEach(ev => addEventListener(ev, () => { if (SEQ.length) SEQ_USER = true; }, { passive: true }));
   function runSeq() {
     const root = app.querySelector('.rv2.play'); if (!root) return;
     SEQ_ID++;
     const at = (ms, f) => SEQ.push(setTimeout(f, ms));
+    SEQ_USER = false;
     const show = el => {
       el.classList.add('on');
-      if (el.dataset.st === 'dock') return;
+      if (el.dataset.st === 'dock' || SEQ_USER) return; // si la persona ya se mueve por la pantalla, no la arrastramos
       const r = el.getBoundingClientRect(), room = window.innerHeight - 110;
       if (r.bottom > room) window.scrollBy({ top: Math.min(r.bottom - room, r.top - 70), behavior: 'smooth' });
     };
@@ -421,8 +423,7 @@
     }
     if (window.Fondo) { Fondo.mood(0); Fondo.focus(false); }
     app.innerHTML = `<div class="narrow"><div class="qstage ${intro ? 'intro' : ''}">${progress()}<div class="qhead">${head}</div><div class="qbody">${body}</div>${dk}</div></div>`;
-    window.scrollTo(0, 0);
-    if (intro) introQ();
+    if (intro) { window.scrollTo(0, 0); introQ(); }
   }
 
   // ------------------------------------------------------------------ anillo de la nota

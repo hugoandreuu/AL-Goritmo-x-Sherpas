@@ -817,7 +817,8 @@ body.fondo-on { background: transparent; }
 body.fondo-on #fondo { opacity: 1; }
 body.nogl.fondo-on { background: radial-gradient(60% 50% at 10% 5%, #e4dcff 0%, transparent 70%), radial-gradient(50% 45% at 95% 20%, #d9ccff 0%, transparent 70%), radial-gradient(55% 45% at 80% 100%, #f5d9fb 0%, transparent 70%), #f8f6ff fixed; }
 body.fondo-on .top { background: rgba(250,248,255,.72); }
-body.fondo-on .dock { background: linear-gradient(to top, rgba(248,246,255,.78) 45%, rgba(248,246,255,0)); }
+body.fondo-on .dock { background: none; isolation: isolate; }
+body.fondo-on .dock .link { background: rgba(255,255,255,.72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-radius: 14px; margin-top: 8px; }
 body.gl .lake .rip { display: none; }
 
 /* Texto libre */
@@ -860,5 +861,5 @@ body.gl .lake .rip { display: none; }
 @keyframes vtOut { to { opacity: 0; } }
 @keyframes vtIn { from { opacity: 0; } }
 .hello h1 .h-b { background: linear-gradient(90deg, var(--accent), #8b5cf6 70%); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: .06em; }
-body.fondo-on .rv2 .rv-dock .dock { background: linear-gradient(to top, rgba(248,246,255,.97) 72%, rgba(248,246,255,0)); padding-top: 20px; }
+body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .chip.sm[aria-pressed="true"] { background: #6a4ce0; border-color: #6a4ce0; color: #fff; }
