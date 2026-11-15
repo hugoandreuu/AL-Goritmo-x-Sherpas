@@ -662,3 +662,149 @@ i.gone { background: var(--bad); box-shadow: inset 0 -3px 0 rgba(0,0,0,.14); }
 .caso[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 .demo-casos { max-width: 640px; margin: 8px auto 0; padding: 14px; border-radius: 20px; background: var(--surface-2); }
 @media (min-width: 700px) { .casos { grid-template-columns: repeat(4, 1fr); } }
+
+/* ==================================================================
+   Rediseño A · B · C (rama redesign). Una idea por pantalla, una sola curva
+   suave de salida, sin rebote ni temblor. Un toque salta al final.
+   ================================================================== */
+:root { --soft: cubic-bezier(.22,1,.36,1); --soft-in: cubic-bezier(.55,0,.7,.2); }
+
+/* Barrido entre pantallas: sale por la izquierda, entra por la derecha */
+.sw-out { animation: swOut .32s var(--soft-in) both; }
+.sw-in { animation: swIn .5s var(--soft) both; }
+@keyframes swOut { to { opacity: 0; transform: translateX(-32px); } }
+@keyframes swIn { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: none; } }
+
+/* A · Portada */
+.home { display: grid; min-height: calc(100svh - 72px - 120px); grid-template-rows: 1fr auto; }
+.hello { display: grid; align-content: center; justify-items: center; text-align: center; gap: 14px; padding: 32px 0 24px; }
+.hello h1 { font-size: clamp(32px, 8.6vw, 56px); line-height: 1.08; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+.hello h1 span { display: inline-block; animation: hin .7s var(--soft) both; }
+.hello h1 .h-b { animation-delay: .3s; color: var(--accent); }
+.hello .h-names { font-family: var(--head); font-size: clamp(24px, 6.4vw, 34px); font-weight: 600; margin: 4px 0 0; animation: hin .7s var(--soft) .65s both; }
+.hello .h-kids { margin: 0; color: var(--ink-2); animation: hin .7s var(--soft) .9s both; }
+.startbtn { margin-top: 22px; display: inline-flex; align-items: center; gap: 12px; min-height: 60px; padding: 12px 14px 12px 30px; border: 0; border-radius: 999px; background: var(--accent); color: #fff; font: 600 19px/1 var(--head); cursor: pointer; box-shadow: var(--shadow-lg); animation: hin .7s var(--soft) 1.15s both; transition: background .2s; }
+.startbtn:hover { background: var(--accent-2); }
+.startbtn .arr { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.18); display: grid; place-items: center; }
+.startbtn .arr svg { animation: nudge 4s ease-in-out 2.4s infinite; }
+@keyframes nudge { 0%, 82%, 100% { transform: none; } 90% { transform: translateX(4px); } }
+.hello .h-trust { font-size: 13px; color: var(--ink-3); margin: 6px 0 0; line-height: 1.6; animation: hin .7s var(--soft) 1.4s both; }
+@keyframes hin { from { opacity: 0; transform: translateY(10px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+.home-foot { text-align: center; animation: hin .7s var(--soft) 1.6s both; }
+.home-foot .link { font-size: 14.5px; }
+.h-casos { margin: 4px auto 0; max-width: 520px; text-align: left; }
+.h-casos summary { cursor: pointer; font-size: 13px; color: var(--ink-3); text-align: center; list-style: none; padding: 8px; }
+.h-casos summary::-webkit-details-marker { display: none; }
+.h-casos .casos { margin-top: 6px; }
+.home-foot .foot { text-align: left; }
+
+/* Frase puente */
+.bridge { display: grid; place-content: center; width: 100%; min-height: calc(100svh - 72px - 140px); border: 0; background: none; cursor: pointer; padding: 0 8px; text-align: center; font: 600 clamp(24px, 6.6vw, 36px)/1.3 var(--head); color: var(--ink); text-wrap: balance; }
+.bridge span { display: block; animation: hin .8s var(--soft) .15s both; }
+.bridge span + span { color: var(--accent); animation-delay: .75s; }
+
+/* B · Quiz: pensar, responder, comprometerse */
+.progress.thin { margin: 0 0 22px; }
+.progress.thin .bar { height: 4px; }
+.qstage .qhead { transition: transform .7s var(--soft); will-change: transform; }
+.qstage.think .qhead { transition: none; }
+.qstage.intro .qhead > * { animation: qin .6s var(--soft) both; }
+.qstage.intro .qhead > :nth-child(2) { animation-delay: .1s; }
+.qstage.intro .qhead > :nth-child(n+3) { animation-delay: .2s; }
+@keyframes qin { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: none; } }
+.qstage .qhead .q { text-wrap: balance; }
+.qstage .qbody, .qstage .dock { transition: opacity .5s var(--soft) .15s, transform .5s var(--soft) .15s; }
+.qstage.think .qbody, .qstage.think .dock { opacity: 0; transform: translateY(14px); pointer-events: none; }
+.qstage.intro .qbody .opt, .qstage.intro .qbody .segb { transition: opacity .45s var(--soft), transform .45s var(--soft), border-color .15s, background .15s; transition-delay: calc(.2s + var(--i, 0) * 80ms), calc(.2s + var(--i, 0) * 80ms), 0s, 0s; }
+.qstage.think .qbody .opt, .qstage.think .qbody .segb { opacity: 0; transform: translateY(10px); }
+.qstage.fade-out { opacity: 0; transition: opacity .28s ease-in; }
+.qstage .dock .btn:disabled { opacity: 0; transform: translateY(8px); pointer-events: none; }
+.qstage .dock .btn { transition: opacity .4s var(--soft), transform .4s var(--soft), background .2s; }
+.confw { transition: opacity .4s var(--soft); }
+.confw.hid { opacity: 0; pointer-events: none; height: 0; overflow: hidden; }
+.permic { width: 64px; height: 64px; border-radius: 20px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; margin: 0 0 14px; }
+
+/* El widget del número: número grande + deslizador */
+.numw { display: grid; gap: 6px; margin: 22px 0 6px; }
+.nw-val { font-family: var(--head); font-size: clamp(44px, 13vw, 60px); font-weight: 700; text-align: center; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1.1; min-height: 66px; }
+.nw-val.empty { color: var(--sky); }
+.nw-track { position: relative; }
+.numw input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; margin: 0; cursor: pointer; }
+.numw input[type=range]::-webkit-slider-runnable-track { height: 8px; border-radius: 99px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+.numw input[type=range]::-moz-range-track { height: 8px; border-radius: 99px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); }
+.numw input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; margin-top: -11px; border-radius: 50%; background: #fff; border: 3px solid var(--accent); box-shadow: 0 4px 12px rgba(70,102,215,.3); }
+.numw input[type=range]::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 3px solid var(--accent); box-shadow: 0 4px 12px rgba(70,102,215,.3); }
+.nw-hint { position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: #fff; border: 3px solid var(--sky); pointer-events: none; animation: hintSlide 2.4s var(--soft) .4s both; }
+.qstage.think .nw-hint { animation-play-state: paused; }
+@keyframes hintSlide { 0% { opacity: 0; transform: none; } 12% { opacity: 1; transform: none; } 40% { transform: translateX(-44px); } 72% { transform: translateX(44px); } 100% { opacity: 1; transform: none; } }
+.nw-tip { text-align: center; margin: 4px 0 0; }
+
+/* C · Carga: la gota y las ondas */
+.lake-w { min-height: 56vh; display: grid; align-content: center; justify-items: center; gap: 10px; text-align: center; animation: swIn .35s var(--soft) both; }
+.lake { position: relative; width: 240px; height: 240px; }
+.lake .drop { position: absolute; left: 50%; top: 50%; width: 12px; height: 16px; margin: -8px 0 0 -6px; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; background: var(--accent); animation: fall .55s cubic-bezier(.5,0,1,.6) .15s both, sink .25s ease-out .7s both; }
+@keyframes fall { from { opacity: 0; transform: translateY(-120px); } 25% { opacity: 1; } to { opacity: 1; transform: none; } }
+@keyframes sink { to { opacity: 0; transform: scale(.2); } }
+.lake .rip { position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid var(--accent); opacity: 0; animation: rip 1.6s cubic-bezier(.2,.7,.3,1) .7s both; }
+.lake .rip:nth-of-type(3) { animation-delay: 1s; }
+.lake .rip:nth-of-type(4) { animation-delay: 1.3s; }
+@keyframes rip { from { opacity: .6; transform: scale(.04); } to { opacity: 0; transform: scale(1); } }
+.lk-t { font-family: var(--head); font-size: 19px; font-weight: 600; margin: 0; animation: hin .6s var(--soft) .3s both; }
+
+/* C · Revelación */
+.rv2 { display: grid; gap: 14px; }
+.rv-guess { margin: 0; font-size: 14px; color: var(--ink-3); text-align: center; }
+.rv-guess b { color: var(--ink-2); font-weight: 600; }
+.rv-box { position: relative; text-align: center; border: 2px solid var(--accent); border-radius: 22px; padding: 18px 16px 16px; background: #fff; box-shadow: var(--shadow); }
+.rv2.bad .rv-box { border-color: var(--s2); }
+.rv2.good .rv-box { border-color: var(--s3); }
+.rv-box small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+.rv-box .big { display: block; font-family: var(--head); font-size: clamp(40px, 12vw, 58px); line-height: 1.1; margin: 4px 0 2px; font-variant-numeric: tabular-nums; color: var(--bad, #b5461b); }
+.rv2.good .rv-box .big { color: var(--good); }
+.rv-box .big.mid { font-size: clamp(24px, 7.4vw, 34px); }
+.rv-box em { font-style: normal; font-size: 14px; color: var(--ink-2); }
+.rv-tick { position: absolute; top: 12px; right: 12px; color: var(--good); }
+.rv-tick path { stroke-dasharray: 24; stroke-dashoffset: 0; }
+.rv2.play .rv-box.on .rv-tick path { animation: draw .6s var(--soft) 1.8s both; }
+@keyframes draw { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+
+.ruler { padding: 22px 26px 22px; }
+.rl-t { position: relative; height: 4px; border-radius: 99px; background: var(--line); }
+.rl-gap { position: absolute; top: 0; height: 100%; border-radius: 99px; background: var(--s2); transform-origin: left; transition: transform .8s var(--soft) .25s; }
+.rl-gap.rev { transform-origin: right; }
+.rv2.good .rl-gap { background: var(--s3); }
+.rl-m { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #fff; border: 3px solid var(--ink-3); transition: opacity .4s var(--soft) .9s; }
+.rl-m.plan { border-color: var(--s2); }
+.rv2.good .rl-m.plan { border-color: var(--s3); }
+.rl-m small { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 11.5px; font-weight: 600; color: var(--ink-3); }
+.rl-m.you small { top: 16px; }
+.rl-m.plan small { bottom: 16px; color: var(--ink); }
+.rv2.play .ruler:not(.on) .rl-gap { transform: scaleX(0); }
+.rv2.play .ruler:not(.on) .rl-m.plan { opacity: 0; }
+.rv2.play .ruler .rl-m.you { transition: none; }
+
+.rv-prec { display: grid; gap: 4px; }
+.rv-band { font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--s2); }
+.rv2.good .rv-band, .rv2.b-clavado .rv-band { color: var(--good); }
+.rv-type { margin: 0; font-size: clamp(22px, 6vw, 28px); text-wrap: balance; }
+.rv2 .rv-vis { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 18px 16px; display: grid; gap: 12px; justify-items: center; }
+.rv2.bad .rv-vis { background: linear-gradient(180deg, var(--bad-soft, #fff1e6), #fff 70%); border-color: #ffd9bd; }
+.rv2.good .rv-vis { background: linear-gradient(180deg, var(--good-soft), #fff 70%); border-color: #bfe3cc; }
+.rv2 .rv-feel { font-size: 18px; line-height: 1.45; margin: 0; }
+.rv2 .rv-exit { animation: hin .6s var(--soft) both; }
+.rv2 .rv-foot { display: grid; gap: 6px; }
+.rv2 .rv-dock { position: sticky; bottom: 0; z-index: 5; }
+.rv2 .rv-dock .dock { position: static; }
+.rv2 .dock .link { margin-top: 2px; width: 100%; text-align: center; }
+
+/* Secuencia: cada pieza espera su turno */
+.rv2.play [data-st] { transition: opacity .55s var(--soft), transform .55s var(--soft); }
+.rv2.play [data-st]:not(.on) { opacity: 0; transform: translateY(12px); pointer-events: none; }
+.rv2.play .rv-box:not(.on) { transform: scale(.96); }
+.rv2.play [data-st]:not(.on), .rv2.play [data-st]:not(.on) * { animation-play-state: paused !important; }
+/* Las imágenes de cada dato arrancan cuando aparecen */
+.rv2.play .rv-vis.on .coins i.gone, .rv2.play .rv-vis.on .dots i { animation: coinpop .5s var(--soft) both; animation-delay: calc(.2s + var(--d)); }
+.rv2.play .rv-vis.on .age.lg { animation: coinpop .6s var(--soft) both; animation-delay: calc(.3s + var(--d) - 400ms); }
+.rv2.play .rv-vis.on .yrs i { animation: coinpop .45s var(--soft) both; animation-delay: calc(.2s + var(--d)); }
+.rv2.play .rv-vis.on .meses i { animation: coinpop .4s var(--soft) both; animation-delay: calc(.2s + var(--d)); }
+.rv2.play .rv-vis.on .tm-on { animation: grow 1s var(--soft) .2s both; transform-origin: left; }
