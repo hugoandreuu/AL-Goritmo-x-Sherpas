@@ -381,24 +381,44 @@
    },
    "filas": [
     [
-     "Seguro de Daniel",
+     "Seguro de Daniel hoy",
      "250.000 $"
     ],
     [
-     "Mínimo para Daniel",
-     "1,6 M$"
+     "Recomendado para Daniel",
+     "1,6 M$ a 2,4 M$"
     ],
     [
-     "Seguro de Emily",
+     "Le falta como mínimo",
+     "1,35 M$"
+    ],
+    [
+     "Ingresos de Daniel que protege",
+     "160.000 $ al año"
+    ],
+    [
+     "Seguro de Emily hoy",
      "200.000 $"
     ],
     [
-     "Mínimo para Emily",
-     "1,2 M$"
+     "Recomendado para Emily",
+     "1,2 M$ a 1,8 M$"
+    ],
+    [
+     "Le falta como mínimo",
+     "1 M$"
+    ],
+    [
+     "Ingresos de Emily que protege",
+     "120.000 $ al año"
     ],
     [
      "Gastos de casa al año",
      "160.290 $"
+    ],
+    [
+     "Dependen de esos ingresos",
+     "Oliver (11) y Sophia (9)"
     ]
    ],
    "pro": "Capital asegurado: Daniel 250.000 $ y Emily 200.000 $. Mínimo recomendado: 1,6 M$ y 1,2 M$.",
@@ -450,12 +470,20 @@
      "19.000 $"
     ],
     [
-     "Meses cubiertos",
+     "Gastos básicos al mes",
+     "13.358 $"
+    ],
+    [
+     "Meses que cubre hoy",
      "1,4"
     ],
     [
-     "Reserva recomendada",
+     "Reserva que recomienda el plan",
      "106.860 $ a 120.218 $"
+    ],
+    [
+     "Meses tras apartar los gastos ya previstos",
+     "1,1"
     ]
    ],
    "pro": "Liquidez accesible: 19.000 $, 1,4 meses de gastos esenciales. Reserva objetivo: 106.860 $ a 120.218 $.",
@@ -505,7 +533,7 @@
      "18.000 $"
     ],
     [
-     "Interés",
+     "Interés anual",
      "25 %"
     ],
     [
@@ -513,12 +541,40 @@
      "450 $"
     ],
     [
-     "De eso, intereses",
+     "De eso, intereses al mes",
      "374 $"
     ],
     [
-     "Fin previsto",
+     "Intereses en un año (cuenta nuestra)",
+     "4.482 $"
+    ],
+    [
+     "Pago al mes que recomienda el plan",
+     "527 $ a 715 $"
+    ],
+    [
+     "Fin previsto a este ritmo",
      "enero de 2034"
+    ],
+    [
+     "Préstamo de estudios",
+     "12.000 $ al 5,2 %"
+    ],
+    [
+     "Hipoteca",
+     "560.000 $ al 6,5 %"
+    ],
+    [
+     "Préstamo del coche",
+     "28.000 $ al 7,9 %"
+    ],
+    [
+     "Pagos de deudas al mes, en total",
+     "5.420 $"
+    ],
+    [
+     "Parte de los ingresos que va a deudas",
+     "27 %"
     ]
    ],
    "pro": "Deuda revolving de 18.000 $ al 25 % TAE. De la cuota de 450 $, 374 $ son intereses. Fin previsto: enero de 2034.",
@@ -560,7 +616,7 @@
     "t": "tramo",
     "de": 62,
     "corte": null,
-    "hasta": null,
+    "hasta": 90,
     "ok": true
    },
    "titulares": {
@@ -573,7 +629,7 @@
    "calc": null,
    "freno": {
     "kick": "La jubilación",
-    "h2": "Los ahorros se acaban a los null. El plan llega hasta los null."
+    "h2": "Llegáis: al final del plan quedan 260.272 $."
    },
    "filas": [
     [
@@ -581,12 +637,28 @@
      "62 y 60"
     ],
     [
-     "Queda al final del plan",
+     "Gasto al año en la jubilación",
+     "124.071 $"
+    ],
+    [
+     "Ingresos garantizados al año (pensiones y rentas)",
+     "59.466 $"
+    ],
+    [
+     "Parte del gasto que cubren los ingresos",
+     "49 %"
+    ],
+    [
+     "Lo que sale de los ahorros cada año",
+     "62.932 $"
+    ],
+    [
+     "Ahorros que quedan al final del plan",
      "260.272 $"
     ],
     [
-     "Gasto cubierto por ingresos",
-     "49 %"
+     "El plan llega hasta los",
+     "90 años"
     ]
    ],
    "pro": "Ingresos sobre necesidad anual en jubilación: 49 %. Remanente al final del plan: 260.272 $ en dólares de hoy.",

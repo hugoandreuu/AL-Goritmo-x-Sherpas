@@ -193,7 +193,7 @@
         <div class="sugg">${REACT.map(([v, l, i]) => `<button class="chip sm" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}">${l()}</button>`).join('')}</div>
         ${(S.notes || {})[q.id] ? `<p class="saved">${ic('check', 15)}Guardado en el cuaderno de ${w('vuestro', 'tu')} asesor</p>` : `<button class="btn soft savebtn" data-act="note" data-k="${q.id}" disabled>Guardar para ${w('vuestro', 'tu')} asesor</button>`}</div>
       ${help ? `<div class="rv-exit" id="rv-exit"><span class="dc-ic">${ic(bad ? 'arrow' : 'check', 20)}</span><span>${esc(q.salida)}</span></div>` : ''}
-      <div class="rv-foot" data-st="fade"><details class="why rv-more"><summary>Ver el detalle</summary><div class="card">${rowsTbl(q.filas)}${proBlock(q)}</div></details>${origen(q)}</div>
+      <div class="rv-foot" data-st="fade"><details class="why rv-more"><summary>Ver las cifras de ${w('vuestro', 'tu')} informe</summary><div class="card">${rowsTbl(q.filas)}${proBlock(q)}</div></details>${origen(q)}</div>
       <div class="rv-dock" data-st="dock">${help ? dock('Seguir', true) : `<div class="dock"><button class="btn block" data-act="help" data-k="${q.id}">Podemos ${w('ayudaros', 'ayudarte')} con esto</button><button class="link block" data-act="next">Seguir</button></div>`}</div>
     </div>`;
   }
