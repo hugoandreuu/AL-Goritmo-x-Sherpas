@@ -102,7 +102,7 @@ details.why summary::before { content: "+"; display: inline-grid; place-items: c
 details.why[open] summary::before { content: "–"; }
 .story { font-size: 18.5px; line-height: 1.55; }
 .story strong { color: var(--accent); }
-.src { font-size: 12px; color: var(--ink-3); margin-top: 8px; font-family: ui-monospace, Menlo, monospace; word-break: break-word; }
+.src { font-size: 12px; color: var(--ink-3); margin-top: 8px; font-family: var(--font); word-break: break-word; }
 
 /* quiz */
 .progress { display: flex; align-items: center; gap: 10px; margin: 4px 0 18px; }
@@ -438,7 +438,6 @@ ul.ticks li { display: flex; gap: 8px; align-items: flex-start; } ul.ticks svg {
 .react3 button svg { color: var(--accent); }
 .react3 button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(70,102,215,.3); }
 .react3 button[aria-pressed="true"] svg { color: #fff; }
-.rv-more .card { box-shadow: none; margin: 6px 0 0; }
 .seq > *:nth-child(5) { animation-delay: 2.4s; } .seq > *:nth-child(6) { animation-delay: 2.8s; } .seq > *:nth-child(n+7) { animation-delay: 3.1s; }
 
 /* monedas: de cada 10 $, cuántos son intereses */
@@ -1133,6 +1132,18 @@ body.gl .lake .rip { display: none; }
 .qstage.intro .sugg .chip { transition: opacity .45s var(--soft), transform .45s var(--soft), background .15s; transition-delay: calc(.35s + var(--i, 0) * 70ms), calc(.35s + var(--i, 0) * 70ms), 0s; }
 .qstage.think .sugg .chip { opacity: 0; transform: translateY(8px); }
 .sugg-t { margin: 14px 0 0; }
+.sugg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 2px; }
+.sg { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-height: 104px; padding: 14px; border-radius: 18px; border: 2px solid #6a4ce0; background: #fff; box-shadow: 0 3px 0 rgba(106,76,224,.35); color: var(--ink); font: 600 15px/1.3 var(--font); text-align: left; cursor: pointer; transition: background .15s, border-color .15s, transform .15s, box-shadow .15s; }
+.sg:hover { background: #f4f0ff; }
+.sg:active { box-shadow: 0 1px 0 rgba(106,76,224,.35); }
+.sg:active { transform: scale(.98); }
+.sg:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+.sg-ic { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #6a4ce0; color: #fff; }
+.sg[aria-pressed="true"] { background: #6a4ce0; border-color: #6a4ce0; color: #fff; }
+.sg[aria-pressed="true"] .sg-ic { background: #fff; color: #6a4ce0; }
+.qstage.intro .sugg-grid .sg { transition: opacity .45s var(--soft), transform .45s var(--soft), background .15s; transition-delay: calc(.35s + var(--i, 0) * 70ms), calc(.35s + var(--i, 0) * 70ms), 0s; }
+.qstage.think .sugg-grid .sg { opacity: 0; transform: translateY(8px); }
+.sugg-grid + .sugg-t { margin-top: 16px; }
 .skipw { width: 100%; text-align: center; color: var(--ink-3); font-weight: 500; }
 .qstage .dock .btn[data-act="worry"]:disabled { opacity: .35; transform: none; pointer-events: none; }
 .porque { display: inline-flex; align-items: center; gap: 5px; margin-left: 10px; padding: 3px 10px; border-radius: 99px; background: rgba(139,108,255,.14); color: #6a4ce0; font-size: 11.5px; letter-spacing: .02em; text-transform: none; font-weight: 600; }
@@ -1199,11 +1210,9 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 @media (max-width: 380px) { .tm-res li { grid-template-columns: 1fr; gap: 0; } }
 @media (min-width: 1000px) { .temas { grid-template-columns: 1fr 1fr; } }
 
-.tm-open { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; border-radius: 14px; }
-.tm-open:focus-visible { outline: 3px solid var(--sky); outline-offset: 4px; }
-.tm-mas { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; color: var(--accent); font-weight: 600; font-size: 14.5px; min-height: 32px; }
+.tm-open { display: block; }
 .card-btn { margin-bottom: 12px; }
-.tm-o { display: block; color: var(--ink-3); font-size: 11.5px; font-family: ui-monospace, monospace; }
+.tm-o { display: block; color: var(--ink-3); font-size: 11.5px; font-family: var(--font); }
 .tm-pl { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
 .tm-pl li { display: flex; gap: 8px; align-items: flex-start; font-size: 15px; }
 .tm-pl .tm-n { flex: none; margin: 1px 0 0; }
@@ -1314,3 +1323,61 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .qstage.pj-turn .qhead .pj-qsub { margin: 0 0 14px; }
 .qstage .dock .btn[data-act="pjfrase"]:disabled { opacity: .35; transform: none; pointer-events: none; }
 .qstage.think .sugg .chip { opacity: 0; transform: translateY(8px); }
+
+/* Botones con la paleta de sherpaswealth.com (pedido de hugo, 16 nov): el botón principal de su web
+   («Book a demo») es un degradado de lavanda #948df7 a azul #4565d6 con texto blanco; azul de marca #6586fc,
+   azul claro #afbff8 y #e0eeff, violeta #774be5, tinta #141419 y marino #0e1c29. */
+:root { --sh-blue: #6586fc; --sh-deep: #4565d6; --sh-lav: #948df7; --sh-violet: #774be5; --sh-light: #afbff8; --sh-pale: #e0eeff; --sh-ink: #141419;
+  --sh-cta: linear-gradient(127deg, #948df7 11%, #4565d6 119%); }
+.btn:not(.ghost):not(.soft):not(.pj-btn) { background-image: var(--sh-cta); color: #fff; box-shadow: inset 0 1px 2px #b8c1e6, 0 4px 14px rgba(69,101,214,.28); }
+.btn:not(.ghost):not(.soft):not(.pj-btn):hover { filter: brightness(1.06); }
+.btn.ghost { color: var(--sh-deep); border-color: var(--sh-deep); }
+.btn.soft { background: #fff; color: var(--sh-deep); border: 1.5px solid var(--sh-light); }
+
+/* Tarjetas de frases: blancas con borde azul de Sherpas; al elegir, el degradado del botón principal. */
+.sg { border-color: var(--sh-blue); box-shadow: 0 3px 0 var(--sh-light); }
+.sg:hover { background: var(--sh-pale); }
+.sg:active { box-shadow: 0 1px 0 var(--sh-light); }
+.sg-ic { background: var(--sh-cta); }
+.sg[aria-pressed="true"] { background: var(--sh-cta); border-color: var(--sh-deep); color: #fff; }
+.sg[aria-pressed="true"] .sg-ic { background: #fff; color: var(--sh-deep); }
+
+/* Pastillas pequeñas: borde y texto azules sobre blanco. */
+.chip.sm { background: #fff; border: 1.5px solid var(--sh-blue); color: var(--sh-deep); font-weight: 600; box-shadow: 0 2px 0 var(--sh-light); }
+.chip.sm:hover { background: var(--sh-pale); }
+.chip.sm[aria-pressed="true"] { background: var(--sh-cta); border-color: var(--sh-deep); color: #fff; }
+
+/* Dictado por voz */
+.micw { position: relative; }
+.micw textarea { padding-right: 60px; }
+.mic { position: absolute; right: 10px; bottom: 10px; display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; border: 0; background: var(--sh-cta); color: #fff; cursor: pointer; box-shadow: 0 2px 8px rgba(69,101,214,.35); }
+.mic:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.mic.on { background: var(--sh-violet); animation: micOn 1.1s ease-in-out infinite; }
+@keyframes micOn { 0%, 100% { box-shadow: 0 0 0 0 rgba(119,75,229,.5); } 50% { box-shadow: 0 0 0 10px rgba(119,75,229,0); } }
+.pj-whyw .mic { position: static; flex: none; width: 40px; height: 40px; }
+
+/* Reacción tras el dato (variante A): tres tarjetas en fila; el texto propio, opcional, debajo. */
+.rv-note-q { font-weight: 600; }
+.rx-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.rx { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px; border-radius: 16px; border: 2px solid var(--sh-blue); background: #fff; box-shadow: 0 3px 0 var(--sh-light); color: var(--ink); font: 600 13.5px/1.2 var(--font); text-align: center; cursor: pointer; transition: background .15s, transform .15s, box-shadow .15s; }
+.rx:hover { background: var(--sh-pale); }
+.rx:active { transform: scale(.98); box-shadow: 0 1px 0 var(--sh-light); }
+.rx:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+.rx .sg-ic { width: 36px; height: 36px; }
+.rx[aria-pressed="true"] { background: var(--sh-cta); border-color: var(--sh-deep); color: #fff; }
+.rx[aria-pressed="true"] .sg-ic { background: #fff; color: var(--sh-deep); }
+.addnote { justify-self: start; display: inline-flex; align-items: center; gap: 6px; color: var(--sh-deep); font-weight: 600; font-size: 14.5px; padding: 4px 0; }
+.note-w { display: grid; gap: 8px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.note-w[hidden], .rx-ok[hidden], .addnote[hidden] { display: none; }
+
+/* Entrada del modo pareja: título en blanco sobre el morado, y todo entra escalonado tras la frase previa */
+.pj-intro .pj-h1 { color: #fff; text-shadow: 0 2px 18px rgba(69,60,180,.35); }
+.pj-intro > * { animation: hin .7s var(--soft) both; }
+.pj-intro > :nth-child(1) { animation-delay: .05s; } .pj-intro > :nth-child(2) { animation-delay: .2s; } .pj-intro > :nth-child(3) { animation-delay: .35s; }
+.pj-intro > :nth-child(4) { animation-delay: .5s; } .pj-intro > :nth-child(5) { animation-delay: .7s; } .pj-intro > :nth-child(6) { animation-delay: .85s; }
+/* Transiciones suaves: la frase previa y la tarjeta guardada se funden hacia arriba; lo siguiente entra con un fundido */
+.fade-out { animation: fdOut .45s var(--soft-in) both; pointer-events: none; }
+@keyframes fdOut { to { opacity: 0; transform: translateY(-14px); filter: blur(4px); } }
+.fd-in { animation: pjFade .45s var(--soft) both; }
+.sealing .dock { opacity: 0; transition: opacity .2s; pointer-events: none; }
