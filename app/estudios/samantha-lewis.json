@@ -735,7 +735,7 @@
    "icon": "home",
    "quien": "asesor",
    "titulo": "Asegurar tu casa",
-   "porque": "Hoy la casa no tiene seguro de hogar en el plan.",
+   "porque": "Hoy la casa no tiene seguro de hogar en el estudio.",
    "n": 1,
    "nota": 84,
    "esfuerzo": "medio",
@@ -843,7 +843,7 @@
    "anio": 2053,
    "cuando": "2053",
    "t": "Aquí se acaban los ahorros",
-   "s": "A los 73 años, según tu plan"
+   "s": "A los 73 años, según tu estudio"
   }
  ],
  "abiertas": [
@@ -893,7 +893,7 @@
     },
     {
      "q": "¿Y si pierdo el trabajo?",
-     "a": "El plan no trae ese escenario calculado.",
+     "a": "El estudio no trae ese escenario calculado.",
      "covered": "no",
      "id": "imprevistos-2"
     }
@@ -912,7 +912,7 @@
     },
     {
      "q": "¿Cuánto costaría al mes?",
-     "a": "El plan no trae precios. Los presupuestos los trae tu asesor.",
+     "a": "El estudio no trae precios. Los presupuestos los trae tu asesor.",
      "covered": "no",
      "id": "seguros-2"
     }
@@ -950,7 +950,7 @@
     },
     {
      "q": "¿Y si me jubilo antes?",
-     "a": "El plan solo está calculado con las edades de hoy.",
+     "a": "El estudio solo está calculado con las edades de hoy.",
      "covered": "no",
      "id": "jubilacion-2"
     }
@@ -1298,15 +1298,15 @@
    },
    "titulares": {
     "cerca": "Lo veías venir. Mira hasta dónde llega.",
-    "mas": "El plan dice que no llega.",
-    "menos": "El plan dice otra cosa."
+    "mas": "El estudio dice que no llega.",
+    "menos": "El estudio dice otra cosa."
    },
    "siente": "Con este plan, tus ahorros acaban a <b>73 años</b>. Eso deja parte de tus gastos de jubilación sin cubrir más adelante.",
    "salida": "Es de lo primero que se ve con tu asesor: cuánto ahorrar y cuándo jubilarte.",
    "calc": null,
    "freno": {
     "kick": "La jubilación",
-    "h2": "Los ahorros se acaban a los 73. El plan llega hasta los 90."
+    "h2": "Los ahorros se acaban a los 73. El estudio llega hasta los 90."
    },
    "filas": [
     [
@@ -1334,7 +1334,7 @@
      "73 años"
     ],
     [
-     "El plan llega hasta los",
+     "El estudio llega hasta los",
      "90 años"
     ]
    ],
@@ -1372,7 +1372,7 @@
    "titulares": {
     "cerca": "Lo tenías claro.",
     "mas": "Más de lo que pensabas.",
-    "menos": "Menos de lo que pensabas. Aun así, el plan lo ve alto."
+    "menos": "Menos de lo que pensabas. Aun así, el estudio lo ve alto."
    },
    "siente": "Hoy tienes <b>39 %</b> de lo invertido en un solo fondo, VTI. El plan propone dejarlo en <b>25 %</b>, para no depender tanto de una sola posición y dar más equilibrio a tu cartera.",
    "salida": "Qué vender y cuándo se ve con tu asesor.",
@@ -1479,7 +1479,7 @@
    "sufijo": "",
    "real": 82,
    "cerca": 5,
-   "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?",
+   "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu estudio?",
    "sub": "A ojo. Aquí nadie examina a nadie.",
    "plan": "82",
    "unidad": "de 100, hoy",

@@ -831,7 +831,7 @@
     "A Michael le faltan como mínimo <b>720.000 $</b> de seguro de vida.",
     "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>."
    ],
-   "asesor": "Cuánto contratar y cuánto cuesta: el plan no trae precios."
+   "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios."
   }
  ],
  "frases": [
@@ -974,7 +974,7 @@
    "anio": 2075,
    "cuando": "2075",
    "t": "Aquí se acaban los ahorros",
-   "s": "A los 85 años, según tu plan"
+   "s": "A los 85 años, según tu estudio"
   }
  ],
  "abiertas": [
@@ -1020,7 +1020,7 @@
     },
     {
      "q": "¿Y si pierdo el trabajo?",
-     "a": "El plan no trae ese escenario calculado.",
+     "a": "El estudio no trae ese escenario calculado.",
      "covered": "no",
      "id": "imprevistos-2"
     }
@@ -1039,7 +1039,7 @@
     },
     {
      "q": "¿Y si la pago entera de golpe?",
-     "a": "El plan no trae esa cuenta hecha.",
+     "a": "El estudio no trae esa cuenta hecha.",
      "covered": "no",
      "id": "tarjeta-2"
     }
@@ -1058,7 +1058,7 @@
     },
     {
      "q": "¿Cuánto costaría al mes?",
-     "a": "El plan no trae precios. Los presupuestos los trae tu asesor.",
+     "a": "El estudio no trae precios. Los presupuestos los trae tu asesor.",
      "covered": "no",
      "id": "seguros-2"
     }
@@ -1077,7 +1077,7 @@
     },
     {
      "q": "¿Y si me jubilo antes?",
-     "a": "El plan solo está calculado con las edades de hoy.",
+     "a": "El estudio solo está calculado con las edades de hoy.",
      "covered": "no",
      "id": "jubilacion-2"
     }
@@ -1515,15 +1515,15 @@
    },
    "titulares": {
     "cerca": "Lo veías venir. Mira hasta dónde llega.",
-    "mas": "El plan dice que no llega.",
-    "menos": "El plan dice otra cosa."
+    "mas": "El estudio dice que no llega.",
+    "menos": "El estudio dice otra cosa."
    },
-   "siente": "Michael, según el plan tus ahorros se acaban a los <b>85 años</b> cuando tu objetivo es jubilarte a los 58. Los ingresos garantizados cubren el 34% del gasto previsto.",
+   "siente": "Michael, según el estudio tus ahorros se acaban a los <b>85 años</b> cuando tu objetivo es jubilarte a los 58. Los ingresos garantizados cubren el 34% del gasto previsto.",
    "salida": "Tu plan trae un paso para esto, y solo con él la nota pasa de 26 a 62.",
    "calc": null,
    "freno": {
     "kick": "La jubilación",
-    "h2": "Los ahorros se acaban a los 85. El plan llega hasta los 90."
+    "h2": "Los ahorros se acaban a los 85. El estudio llega hasta los 90."
    },
    "filas": [
     [
@@ -1551,7 +1551,7 @@
      "85 años"
     ],
     [
-     "El plan llega hasta los",
+     "El estudio llega hasta los",
      "90 años"
     ]
    ],
@@ -1575,7 +1575,7 @@
    "sufijo": "",
    "real": 26,
    "cerca": 5,
-   "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?",
+   "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu estudio?",
    "sub": "A ojo. Aquí nadie examina a nadie.",
    "plan": "26",
    "unidad": "de 100, hoy",

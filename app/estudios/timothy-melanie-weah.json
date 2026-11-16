@@ -973,7 +973,7 @@
     "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>.",
     "Liam y Josh dependen de vuestros ingresos."
    ],
-   "asesor": "Cuánto contratar y cuánto cuesta: el plan no trae precios."
+   "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios."
   }
  ],
  "frases": [
@@ -1225,7 +1225,7 @@
     },
     {
      "q": "¿Y si uno de los dos pierde el trabajo?",
-     "a": "El plan no trae ese escenario calculado.",
+     "a": "El estudio no trae ese escenario calculado.",
      "covered": "no",
      "id": "imprevistos-2"
     }
@@ -1263,7 +1263,7 @@
     },
     {
      "q": "¿Cuánto costaría al mes?",
-     "a": "El plan no trae precios. Los presupuestos los trae vuestro asesor.",
+     "a": "El estudio no trae precios. Los presupuestos los trae vuestro asesor.",
      "covered": "no",
      "id": "seguros-2"
     }
@@ -1295,13 +1295,13 @@
    "items": [
     {
      "q": "¿Nos llega?",
-     "a": "Sí. Al final del plan quedan <b>2,37 M$</b>.",
+     "a": "Sí. Al final del estudio quedan <b>2,37 M$</b>.",
      "covered": "yes",
      "id": "jubilacion-1"
     },
     {
      "q": "¿Y si nos jubilamos antes?",
-     "a": "El plan solo está calculado con las edades de hoy.",
+     "a": "El estudio solo está calculado con las edades de hoy.",
      "covered": "no",
      "id": "jubilacion-2"
     }
@@ -1355,7 +1355,7 @@
     "facts.retirement.incomeShareOfNeed"
    ],
    [
-    "Al final del plan quedan",
+    "Al final del estudio quedan",
     "2,37 M$",
     "facts.retirement.savingsLeftAtPlanEnd"
    ]
@@ -1446,7 +1446,7 @@
     "tono": ""
    },
    {
-    "lab": "Al final del plan quedan",
+    "lab": "Al final del estudio quedan",
     "val": "2,37 M$",
     "sub": "en dólares de hoy",
     "tono": "bueno"
@@ -1886,7 +1886,7 @@
    "sufijo": "",
    "real": 60,
    "cerca": 5,
-   "q": "Del 0 al 100, ¿qué nota de salud financiera creéis que os pone vuestro plan?",
+   "q": "Del 0 al 100, ¿qué nota de salud financiera creéis que os pone vuestro estudio?",
    "sub": "A ojo. Aquí nadie examina a nadie.",
    "plan": "60",
    "unidad": "de 100, hoy",
@@ -2030,7 +2030,7 @@
   {
    "id": "jubilacion",
    "creian": "Jubilación",
-   "plan": "Sí, llega y al final del plan quedan 2,37 M$"
+   "plan": "Sí, llega y al final del estudio quedan 2,37 M$"
   }
  ],
  "generado": {
