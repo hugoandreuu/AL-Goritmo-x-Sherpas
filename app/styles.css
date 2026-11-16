@@ -1465,3 +1465,17 @@ i.pa { background: var(--accent); } i.pb { background: var(--navy); }
   .nodo .nd-ic { width: 28px; height: 28px; border-radius: 9px; }
   .nodo .nd-pie { margin-top: 6px; } .nodo .nd-pie .tag { font-size: 11px; }
 }
+
+/* Versión sobria: tarjetas con icono, cifra y nombre; un solo "Ver más" con el detalle plano. */
+.capa { border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; padding: 12px 0 4px; min-width: 0; }
+.capa > h4 { margin: 0 0 8px; font-size: 15px; font-weight: 700; }
+.capa .dsg { margin: 0; } .capa p { margin: .5em 0; }
+.capa .dsg table { table-layout: auto; width: 100%; }
+.capa .dsg td { white-space: normal; overflow-wrap: anywhere; vertical-align: top; }
+.capa .dsg td:last-child { text-align: right; min-width: 40%; }
+.vermas { margin-top: 8px; }
+.nd-top > svg { color: var(--ink-3); }
+.nodo .nd-nom { margin-top: 2px; }
+.portada { padding: 16px; gap: 0; }
+.pt-nota { border: 0; background: transparent; padding: 0; }
+.pt-nota:hover { box-shadow: none; }

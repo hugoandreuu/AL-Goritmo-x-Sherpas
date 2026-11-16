@@ -668,31 +668,29 @@
   const ESTADO_N = { low: 'A reforzar', mid: 'Mejorable', hi: 'Bien', neutro: 'Para saber' };
   const EST_IC = { low: 'flag', mid: 'eye', hi: 'check', neutro: 'list' };
   const sinTags = h => String(h || '').replace(/<[^>]+>/g, '');
-  function nodos() {
+  // Seis temas que salen en todas las familias: las cinco áreas con nota y jubilación y metas.
+  // Los demás puntos del informe van dentro del tema al que pertenecen; "supuestos" queda como enlace al pie.
+  const DENTRO = { flujo: 'Ahorro', impuestos: 'Inversiones', cartera: 'Inversiones', universidad: 'jubilacion' };
+  const NOMBRE = { Ahorro: 'Ahorro y gastos' };
+  const ptsDe = id => (E.puntos || []).filter(p => DENTRO[p.id] === id);
+  function nodos(todos) {
     const ts = temasPlan();
-    const areas = ts.map(x => ({ id: x.a.nombre, tipo: 'area', x, nombre: x.a.nombre, icon: x.a.icon, sub: x.t.sub(), estado: nivel(x.a.nota), cifra: String(x.a.nota), de: '/100', cifraLab: 'nota del área',
-      titular: sinTags((x.a.lectura || [])[0] || (x.a.resumen || []).map(r => `${r[0]}: ${r[1]}`)[0] || ''), pasos: x.pasos.length, nota: x.a.nota }));
-    const pts = (E.puntos || []).map(p => ({ ...p, tipo: 'punto', pasos: 0, nota: 50 }));
+    const areas = ts.map(x => ({ id: x.a.nombre, tipo: 'area', x, nombre: NOMBRE[x.a.nombre] || x.a.nombre, icon: x.a.icon, estado: nivel(x.a.nota), cifra: String(x.a.nota), de: '/100',
+      pasos: x.pasos.length, nota: x.a.nota }));
+    const pts = (E.puntos || []).filter(p => todos || (!DENTRO[p.id] && p.estado !== 'neutro')).map(p => ({ ...p, tipo: 'punto', pasos: 0, nota: 50 }));
     return areas.concat(pts).sort((a, b) => RANGO[a.estado] - RANGO[b.estado] || a.nota - b.nota);
   }
-  const nodo = id => nodos().find(n => n.id === id);
+  const nodo = id => nodos(true).find(n => n.id === id);
   function nodoCard(n, i) {
     return `<button class="nodo est-${n.estado}" data-act="tema" data-k="${esc(n.id)}" style="--i:${i}">
-      <span class="nd-top"><span class="nd-ic">${ic(n.icon, 18)}</span><span class="nd-est">${ic(EST_IC[n.estado], 14)}${ESTADO_N[n.estado]}</span></span>
-      <span class="nd-cifra"><b>${esc(n.cifra)}</b>${n.de ? `<small>${n.de}</small>` : ''}</span><span class="nd-lab">${esc(n.cifraLab)}</span>
-      <span class="nd-nom">${esc(n.nombre)}</span><span class="nd-tit">${esc(n.titular)}</span>
-      <span class="nd-pie">${n.pasos ? `<span class="tag acc">${n.pasos} ${n.pasos === 1 ? 'paso' : 'pasos'} del plan</span>` : '<span></span>'}<span class="nd-ver">Ver a fondo ${ic('arrow', 14)}</span></span></button>`;
+      <span class="nd-top"><span class="nd-ic">${ic(n.icon, 18)}</span>${ic('arrow', 16)}</span>
+      <span class="nd-cifra"><b>${esc(n.cifra)}</b>${n.de ? `<small>${n.de}</small>` : ''}</span>${n.tipo === 'punto' ? `<span class="nd-lab">${esc(n.cifraLab)}</span>` : ''}
+      <span class="nd-nom">${esc(n.nombre)}</span></button>`;
   }
-  // Portada: la nota en grande con su color y tres frases (lo mejor, lo que más pesa, el primer paso).
+  // Portada: solo la nota, en grande y con su color. Al tocarla se ve cómo se calcula.
   function portada() {
-    const ns = nodos(), est = nivel(E.nota.hoy), peor = ns.find(n => n.estado !== 'neutro'), mejor = ns.slice().reverse().find(n => n.estado === 'hi'), p0 = E.pasos[0];
-    const frases = [mejor ? [`check`, `Lo más fuerte: <b>${esc(low1(mejor.nombre))}</b> (${esc(mejor.cifra)}${mejor.de || ''}).`] : null,
-      peor ? ['flag', `Lo que más pesa: <b>${esc(low1(peor.nombre))}</b>. ${esc(peor.titular)}`] : null,
-      p0 ? ['arrow', `Primer paso del plan: <b>${esc(low1(pTitulo(p0)))}</b>. Con todo el plan, la nota llega a <b>${E.nota.max}</b>.`] : null].filter(Boolean);
-    return `<section class="portada est-${est}"><div class="kicker" style="margin:0">Informe de ${esc(E.fam.titulo)}</div>
-      <button class="pt-nota" data-act="tema" data-k="__nota" aria-label="Ver la nota a fondo">${ring(E.nota.hoy, E.nota.max)}
-        <span class="pt-txt"><span class="nd-est">${ic(EST_IC[est], 14)}${ESTADO_N[est]}</span><b>${w('Vuestra', 'Tu')} nota de salud financiera</b><small>${E.nota.banda ? `Banda ${esc(E.nota.banda)}. ` : ''}Toca para ver cómo se calcula.</small></span></button>
-      <ul class="pt-frases">${frases.map(([i2, f], k) => `<li style="--i:${k}">${ic(i2, 16)}<span>${f}</span></li>`).join('')}</ul></section>`;
+    return `<section class="portada est-${nivel(E.nota.hoy)}"><button class="pt-nota" data-act="tema" data-k="__nota" aria-label="Ver cómo se calcula la nota">${ring(E.nota.hoy, E.nota.max)}
+      <span class="pt-txt"><b>${w('Vuestra', 'Tu')} nota financiera</b></span></button></section>`;
   }
   // Texto del informe (narrative): en español si hay traducción revisada; si no, el original.
   function narrHtml(n) {
@@ -709,7 +707,7 @@
   }
   const capasHtml = (capas, narr) => {
     const bloques = (capas || []).map(c => [c.titulo, capaHtml(c)]).concat((narr || []).map(n => [`${n.titulo} · informe`, narrHtml(n)]));
-    return bloques.length ? `<div class="capas">${bloques.map(([t2, h]) => `<details class="capa"><summary><span>${esc(t2)}</span>${ic('arrow', 16)}</summary><div class="capa-in">${h}</div></details>`).join('')}</div>` : '';
+    return bloques.length ? `<div class="capas">${bloques.map(([t2, h]) => `<div class="capa"><h4>${esc(t2)}</h4>${h}</div>`).join('')}</div>` : '';
   };
   const narrDe = id => (E.narrativa || []).filter(n => n.punto === id);
   const conexHtml = ids => { const ns = (ids || []).map(nodo).filter(Boolean); return ns.length ? `<div class="conex"><span class="small muted">Conectado con</span>${ns.map(n => `<button class="chip sm est-${n.estado}" data-act="tema" data-k="${esc(n.id)}">${ic(n.icon, 14)}${esc(n.nombre)}</button>`).join('')}</div>` : ''; };
@@ -835,12 +833,12 @@
   function renderTema() {
     const k = S.temaK, desdeResumen = S.temaFrom === 'story', origen = desdeResumen ? 'Resumen' : 'Plan';
     let html = '', titulo = '';
-    const cifraBig = n => `<div class="tp-cifra est-${n.estado}"><b>${esc(n.cifra)}</b>${n.de ? `<small>${n.de}</small>` : ''}<span>${esc(n.cifraLab)}</span><span class="nd-est">${ic(EST_IC[n.estado], 14)}${ESTADO_N[n.estado]}</span></div>`;
+    const cifraBig = n => `<div class="tp-cifra est-${n.estado}"><b>${esc(n.cifra)}</b>${n.de ? `<small>${n.de}</small>` : ''}${n.tipo === 'punto' ? `<span>${esc(n.cifraLab)}</span>` : ''}</div>`;
     if (k === '__nota') {
       titulo = 'Nota general';
       html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
         <div class="foto">${ring(E.nota.hoy, E.nota.max)}</div>
-        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'A reforzar (menos de 50)', bueno: 'Bien (75 o más)' }, plano: true }) + conexHtml(E.areas.map(a => a.nombre)))}
+        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'A reforzar (menos de 50)', bueno: 'Bien (75 o más)' }, plano: true }))}
         ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s2 => (paso(s2) || {}).titulo || s2).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}
         ${sec(3, 'Ver más', capasHtml(E.notaCapas, narrDe('__nota')))}`;
     } else if (k === '__ruta') {
@@ -850,26 +848,26 @@
         ${sec(1, 'El camino, hito a hito', lineaHtml())}
         ${sec(2, `Cómo crece ${w('vuestro', 'tu')} patrimonio`, grafLinea(r))}
         ${sec(3, 'Qué significa', lecturaHtml(r.lectura))}
-        ${asesorHtml(r.asesor)}${conexHtml(['jubilacion', 'universidad'])}
+        ${asesorHtml(r.asesor)}
         <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(r.detalle, true)}</details>`;
     } else {
       const n = nodo(k); if (!n) { volverTema(); return; }
       titulo = n.nombre;
-      const head = `<header class="tp-h"><div class="tp-hh"><span class="ar-ic">${ic(n.icon, 20)}</span><div><h1>${esc(n.nombre)}</h1><small class="muted">${esc(n.sub || '')}</small></div></div>${cifraBig(n)}${n.titular ? `<p class="tp-tit">${esc(n.titular)}</p>` : ''}</header>`;
+      const head = `<header class="tp-h"><div class="tp-hh"><span class="ar-ic">${ic(n.icon, 20)}</span><h1>${esc(n.nombre)}</h1></div>${cifraBig(n)}</header>`;
+      // Los puntos que viven dentro de este tema: su gráfica arriba y su detalle en "Ver más".
+      const sub = ptsDe(n.id), grafs = sub.map(p => graf(p.graf) + graf(p.graf2)).join('');
+      const masSub = sub.map(p => capasHtml([{ t: 'filas', titulo: p.nombre, filas: (p.kpis || []).map(q => [q.lab, q.val + (q.sub ? ` (${q.sub})` : '')]) }].concat(p.capas || []), narrDe(p.id))).join('');
+      const verMas = body => `<details class="fold-all vermas"><summary>Ver más</summary>${body}</details>`;
       if (n.tipo === 'area') {
         const { x } = n, { a, pasos } = x;
-        html = `${head}${kpisHtml(a.kpis)}
-          ${sec(1, 'Lo esencial', lecturaHtml(a.lectura) + dijeron(x))}
-          ${sec(2, 'En gráfico', graf(a.graf) + desgloseHtml(a.desglose))}
-          ${sec(3, `Lo que propone ${w('vuestro', 'tu')} plan`, pasos.length ? pasos.map(pasoTema).join('') : sinPaso(x))}
-          ${asesorHtml(a.asesor)}${conexHtml(a.conexiones)}
-          ${sec(4, 'Ver más', capasHtml(a.capas, narrDe(a.nombre)) + `<details class="capa"><summary><span>Todas las cifras de este tema</span>${ic('arrow', 16)}</summary><div class="capa-in">${filasTema(a.detalle, true)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></div></details>`)}`;
+        html = `${head}${kpisHtml(a.kpis)}${dijeron(x)}
+          ${sec(1, 'En gráfico', graf(a.graf) + desgloseHtml(a.desglose) + grafs)}
+          ${sec(2, `Lo que propone ${w('vuestro', 'tu')} plan`, pasos.length ? pasos.map(pasoTema).join('') : sinPaso(x))}
+          ${verMas(lecturaHtml(a.lectura) + capasHtml(a.capas, narrDe(a.nombre)) + masSub + `<div class="capa"><h4>Todas las cifras de este tema</h4>${filasTema(a.detalle, true)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></div>`)}`;
       } else {
         html = `${head}${kpisHtml(n.kpis)}
-          ${sec(1, 'Lo esencial', lecturaHtml(n.lectura))}
-          ${sec(2, 'En gráfico', graf(n.graf) + graf(n.graf2))}
-          ${asesorHtml(n.asesor)}${conexHtml(n.conexiones)}
-          ${sec(3, 'Ver más', capasHtml(n.capas, narrDe(n.id)))}`;
+          ${sec(1, 'En gráfico', graf(n.graf) + graf(n.graf2) + grafs)}
+          ${verMas(lecturaHtml(n.lectura) + capasHtml(n.capas, narrDe(n.id)) + masSub)}`;
       }
     }
     app.innerHTML = `<div class="narrow tpage"><nav class="migas" aria-label="Estás en"><button class="link" data-act="temaback">${ic('arrow', 14).replace('<svg', '<svg style="transform:rotate(180deg)"')} ${origen}</button><span>›</span><b>${esc(titulo)}</b></nav>${html}
@@ -887,10 +885,10 @@
     const nx = nextStep(), c = counts();
     const ns = nodos();
     let main = portada();
-    main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestro', 'Tu')} informe, de lo más urgente a lo que está bien</div>
-      <p class="muted" style="margin-top:-2px">${ns.length} puntos. Toca uno para ver lo esencial, sus gráficas y, si ${w('queréis', 'quieres')}, todo el detalle. Las cinco áreas con nota son las que calculan ${w('vuestra', 'tu')} nota; ahí ${w('votáis', 'votas')} los pasos del plan.</p>
+    main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>De lo más urgente a lo que está bien</div>
       <div class="nodos">${ns.map(nodoCard).join('')}</div>
-      <div class="temas" style="margin-top:14px">${rutaCard()}</div></div>`;
+      <div class="temas" style="margin-top:14px">${rutaCard()}</div>
+      ${nodo('supuestos') ? `<button class="link small" style="margin-top:10px" data-act="tema" data-k="supuestos">Cómo se ha calculado</button>` : ''}</div>`;
 
     main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Vuestro', 'Tu')} siguiente paso</div>
       <div class="card close"><div class="meter">
