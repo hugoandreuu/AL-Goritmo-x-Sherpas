@@ -47,7 +47,7 @@ Hoy 60 de 100. Con los pasos del plan, 78.
 - Salida: Tiene arreglo y se ve con vuestro asesor: él trae los presupuestos.
 - Escrito por el LLM: q, siente
 
-### 3. Del 0 al 100, ¿qué nota de salud financiera creéis que os pone vuestro plan?
+### 3. Del 0 al 100, ¿qué nota de salud financiera creéis que os pone vuestro estudio?
 
 - Dato del plan: **60** de 100, hoy (mala noticia)
 - Origen: `score.published_score · score.pillars`
@@ -69,7 +69,7 @@ Hoy 60 de 100. Con los pasos del plan, 78.
 - Salida: Con parte de ese efectivo es con lo que vuestro plan propone pagar la tarjeta.
 - Escrito por el LLM: q, siente
 
-Preguntas posibles que no se usan en este caso: Año en que se acaba la tarjeta (septiembre de 2039 pagando 300 $ al mes); Jubilación (Sí, llega y al final del plan quedan 2,37 M$).
+Preguntas posibles que no se usan en este caso: Año en que se acaba la tarjeta (septiembre de 2039 pagando 300 $ al mes); Jubilación (Sí, llega y al final del estudio quedan 2,37 M$).
 
 ## Pasos del plan
 

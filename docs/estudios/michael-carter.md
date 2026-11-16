@@ -45,13 +45,13 @@ Hoy 26 de 100. Con los pasos del plan, 62.
 - Dato del plan: **hasta los 85** te duran los ahorros (mala noticia)
 - Origen: `key_metrics.facts.retirement`
 - Si acierta: «Lo veías venir. Mira hasta dónde llega.»
-- Si el dato es mayor de lo que dijo: «El plan dice que no llega.»
-- Si es menor: «El plan dice otra cosa.»
-- Para que lo sienta: Michael, según el plan tus ahorros se acaban a los **85 años** cuando tu objetivo es jubilarte a los 58. Los ingresos garantizados cubren el 34% del gasto previsto.
+- Si el dato es mayor de lo que dijo: «El estudio dice que no llega.»
+- Si es menor: «El estudio dice otra cosa.»
+- Para que lo sienta: Michael, según el estudio tus ahorros se acaban a los **85 años** cuando tu objetivo es jubilarte a los 58. Los ingresos garantizados cubren el 34% del gasto previsto.
 - Salida: Tu plan trae un paso para esto, y solo con él la nota pasa de 26 a 62.
 - Escrito por el LLM: q, siente
 
-### 3. Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?
+### 3. Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu estudio?
 
 - Dato del plan: **26** de 100, hoy (mala noticia)
 - Origen: `score.published_score · score.pillars`
@@ -92,7 +92,7 @@ El plan no trae la nota de varios pasos juntos; la app no la inventa.
 - 2027: La casa (550.000 $)
 - 2028: Se acaba la tarjeta
 - 2047: Jubilación
-- 2075: Aquí se acaban los ahorros (A los 85 años, según tu plan)
+- 2075: Aquí se acaban los ahorros (A los 85 años, según tu estudio)
 
 ## Para el asesor
 

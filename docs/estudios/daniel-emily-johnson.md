@@ -59,12 +59,12 @@ Hoy 52 de 100. Con los pasos del plan, 60.
 - Si el dato es mayor de lo que dijo: «Son {dif} más al mes de lo que pensabais.»
 - Si es menor: «Menos de lo que temíais. Aun así, mirad a dónde se va.»
 - Para que lo sienta: De cada **450 $** que pagáis, **374 $** son intereses. La deuda casi no baja. Así dura hasta **enero de 2034**.
-- Salida: Vuestro plan la señala como vuestra deuda más cara. Cómo subir el pago se ve con vuestro asesor.
+- Salida: Vuestro estudio la señala como vuestra deuda más cara. Cómo subir el pago se ve con vuestro asesor.
 - Escrito por el LLM: q
 
 ### 4. ¿Os llega para jubilaros a los 62 y 60 y vivir de ello?
 
-- Dato del plan: **Sí, llega** y al final del plan quedan 260.272 $ (buena noticia)
+- Dato del plan: **Sí, llega** y al final del estudio quedan 260.272 $ (buena noticia)
 - Origen: `key_metrics.facts.retirement`
 - Si acierta: «Eso es. Llegáis.»
 - Si el dato es mayor de lo que dijo: «Mejor de lo que pensabais.»

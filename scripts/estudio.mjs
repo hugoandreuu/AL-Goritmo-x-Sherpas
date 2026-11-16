@@ -851,6 +851,25 @@ function leerTemas(E, fh, ia) {
   return out;
 }
 
+// Lo que contesta la familia se contrasta con los RESULTADOS DEL ESTUDIO (cifras, nota, proyecciones).
+// El PLAN son los pasos a seguir y los objetivos de cada área. Esta pasada corrige las frases
+// (de plantilla o del LLM) que llaman "plan" a un resultado del estudio. No toca cifras.
+const SEMANTICA = [
+  [/\bsegún (el|tu|vuestro) plan\b/g, 'según $1 estudio'],
+  [/\b([Ee]l|[Tt]u|[Vv]uestro) plan (dice(?! que sigas)|la señala|lo ve|llega hasta|no trae|solo está calculado)\b/g, '$1 estudio $2'],
+  [/\bpone (tu|vuestro) plan\b/g, 'pone $1 estudio'],
+  [/\b(al|Al) final del plan\b/g, '$1 final del estudio'],
+  [/\bRemanente al final del plan\b/g, 'Remanente al final del estudio'],
+  [/\bseguro de hogar en el plan\b/g, 'seguro de hogar en el estudio'],
+];
+function semantica(o) {
+  for (const k of Object.keys(o)) {
+    const v = o[k];
+    if (typeof v === 'string') o[k] = SEMANTICA.reduce((t, [re, to]) => t.replace(re, to), v);
+    else if (v && typeof v === 'object') semantica(v);
+  }
+  return o;
+}
 function cerrar(E) {
   const porId = Object.fromEntries(E.catalogo.map(q => [q.id, q]));
   E.preguntas = E.orden.map(id => porId[id]).filter(Boolean);
@@ -931,7 +950,7 @@ async function main() {
       const r = reaplicar(E, guardado); g.textos = 'llm:' + guardado.modelo; g.llmFecha = guardado.fecha; g.avisos.push(...r.avisos); crudo = r.crudo;
       if (g.datos === 'archivos' && guardado.datos === 'mcp') g.datosLlm = 'mcp';
     }
-    cerrar(E); E.generado = g;
+    cerrar(E); semantica(E); E.generado = g;
     fs.writeFileSync(path.join(OUT, slug + '.json'), JSON.stringify(E, null, 1) + '\n');
     fs.writeFileSync(path.join(DOCS, slug + '.md'), informe(E, g, crudo));
     indice.push({ slug, titulo: E.fam.titulo, apellido: E.fam.apellido, nota: E.nota.hoy, datos: g.datos, textos: g.textos });

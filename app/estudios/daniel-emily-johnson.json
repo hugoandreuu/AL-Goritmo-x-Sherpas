@@ -967,7 +967,7 @@
     "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>.",
     "Oliver y Sophia dependen de vuestros ingresos."
    ],
-   "asesor": "Cuánto contratar y cuánto cuesta: el plan no trae precios."
+   "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios."
   }
  ],
  "frases": [
@@ -1142,7 +1142,7 @@
     },
     {
      "q": "¿Y si uno de los dos pierde el trabajo?",
-     "a": "El plan no trae ese escenario calculado.",
+     "a": "El estudio no trae ese escenario calculado.",
      "covered": "no",
      "id": "imprevistos-2"
     }
@@ -1161,7 +1161,7 @@
     },
     {
      "q": "¿Y si la pagamos entera de golpe?",
-     "a": "El plan no trae esa cuenta hecha.",
+     "a": "El estudio no trae esa cuenta hecha.",
      "covered": "no",
      "id": "tarjeta-2"
     }
@@ -1180,7 +1180,7 @@
     },
     {
      "q": "¿Cuánto costaría al mes?",
-     "a": "El plan no trae precios. Los presupuestos los trae vuestro asesor.",
+     "a": "El estudio no trae precios. Los presupuestos los trae vuestro asesor.",
      "covered": "no",
      "id": "seguros-2"
     }
@@ -1212,13 +1212,13 @@
    "items": [
     {
      "q": "¿Nos llega?",
-     "a": "Sí. Al final del plan quedan <b>260.272 $</b>.",
+     "a": "Sí. Al final del estudio quedan <b>260.272 $</b>.",
      "covered": "yes",
      "id": "jubilacion-1"
     },
     {
      "q": "¿Y si nos jubilamos antes?",
-     "a": "El plan solo está calculado con las edades de hoy.",
+     "a": "El estudio solo está calculado con las edades de hoy.",
      "covered": "no",
      "id": "jubilacion-2"
     }
@@ -1272,7 +1272,7 @@
     "facts.retirement.incomeShareOfNeed"
    ],
    [
-    "Al final del plan quedan",
+    "Al final del estudio quedan",
     "260.272 $",
     "facts.retirement.savingsLeftAtPlanEnd"
    ]
@@ -1358,7 +1358,7 @@
     "tono": ""
    },
    {
-    "lab": "Al final del plan quedan",
+    "lab": "Al final del estudio quedan",
     "val": "260 K$",
     "sub": "en dólares de hoy",
     "tono": "bueno"
@@ -1772,7 +1772,7 @@
     "menos": "Menos de lo que temíais. Aun así, mirad a dónde se va."
    },
    "siente": "De cada <b>450 $</b> que pagáis, <b>374 $</b> son intereses. La deuda casi no baja. Así dura hasta <b>enero de 2034</b>.",
-   "salida": "Vuestro plan la señala como vuestra deuda más cara. Cómo subir el pago se ve con vuestro asesor.",
+   "salida": "Vuestro estudio la señala como vuestra deuda más cara. Cómo subir el pago se ve con vuestro asesor.",
    "calc": "374 $ de 450 $, redondeado a décimas",
    "freno": {
     "kick": "La tarjeta",
@@ -1861,7 +1861,7 @@
    "q": "¿Os llega para jubilaros a los 62 y 60 y vivir de ello?",
    "sub": "",
    "plan": "Sí, llega",
-   "unidad": "y al final del plan quedan 260.272 $",
+   "unidad": "y al final del estudio quedan 260.272 $",
    "mid": true,
    "vis": {
     "t": "tramo",
@@ -1880,7 +1880,7 @@
    "calc": null,
    "freno": {
     "kick": "La jubilación",
-    "h2": "Llegáis: al final del plan quedan 260.272 $."
+    "h2": "Llegáis: al final del estudio quedan 260.272 $."
    },
    "filas": [
     [
@@ -1904,15 +1904,15 @@
      "62.932 $"
     ],
     [
-     "Ahorros que quedan al final del plan",
+     "Ahorros que quedan al final del estudio",
      "260.272 $"
     ],
     [
-     "El plan llega hasta los",
+     "El estudio llega hasta los",
      "90 años"
     ]
    ],
-   "pro": "Ingresos sobre necesidad anual en jubilación: 49 %. Remanente al final del plan: 260.272 $ en dólares de hoy.",
+   "pro": "Ingresos sobre necesidad anual en jubilación: 49 %. Remanente al final del estudio: 260.272 $ en dólares de hoy.",
    "origen": "key_metrics.facts.retirement",
    "creian": "Jubilación",
    "escritas": [

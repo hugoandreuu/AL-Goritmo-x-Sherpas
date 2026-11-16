@@ -30,8 +30,8 @@ Hoy 82 de 100. Con los pasos del plan, 84.
 - Dato del plan: **hasta los 73** te duran los ahorros (mala noticia)
 - Origen: `key_metrics.facts.retirement`
 - Si acierta: «Lo veías venir. Mira hasta dónde llega.»
-- Si el dato es mayor de lo que dijo: «El plan dice que no llega.»
-- Si es menor: «El plan dice otra cosa.»
+- Si el dato es mayor de lo que dijo: «El estudio dice que no llega.»
+- Si es menor: «El estudio dice otra cosa.»
 - Para que lo sienta: Con este plan, tus ahorros acaban a **73 años**. Eso deja parte de tus gastos de jubilación sin cubrir más adelante.
 - Salida: Es de lo primero que se ve con tu asesor: cuánto ahorrar y cuándo jubilarte.
 - Escrito por el LLM: q, siente
@@ -42,7 +42,7 @@ Hoy 82 de 100. Con los pasos del plan, 84.
 - Origen: `score.top_moves`
 - Si acierta: «Lo tenías claro.»
 - Si el dato es mayor de lo que dijo: «Más de lo que pensabas.»
-- Si es menor: «Menos de lo que pensabas. Aun así, el plan lo ve alto.»
+- Si es menor: «Menos de lo que pensabas. Aun así, el estudio lo ve alto.»
 - Para que lo sienta: Hoy tienes **39 %** de lo invertido en un solo fondo, VTI. El plan propone dejarlo en **25 %**, para no depender tanto de una sola posición y dar más equilibrio a tu cartera.
 - Salida: Qué vender y cuándo se ve con tu asesor.
 - Escrito por el LLM: q, siente
@@ -58,7 +58,7 @@ Hoy 82 de 100. Con los pasos del plan, 84.
 - Salida: Este punto ya está. No hay que tocarlo.
 - Escrito por el LLM: q, siente
 
-### 4. Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?
+### 4. Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu estudio?
 
 - Dato del plan: **82** de 100, hoy (buena noticia)
 - Origen: `score.published_score · score.pillars`
@@ -88,7 +88,7 @@ El plan no trae la nota de varios pasos juntos; la app no la inventa.
 - 2028: Universidad de Ava
 - 2030: La casa (500.000 $)
 - 2044: Jubilación
-- 2053: Aquí se acaban los ahorros (A los 73 años, según tu plan)
+- 2053: Aquí se acaban los ahorros (A los 73 años, según tu estudio)
 
 ## Para el asesor
 
