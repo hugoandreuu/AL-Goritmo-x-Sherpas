@@ -438,7 +438,6 @@ ul.ticks li { display: flex; gap: 8px; align-items: flex-start; } ul.ticks svg {
 .react3 button svg { color: var(--accent); }
 .react3 button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(70,102,215,.3); }
 .react3 button[aria-pressed="true"] svg { color: #fff; }
-.rv-more .card { box-shadow: none; margin: 6px 0 0; }
 .seq > *:nth-child(5) { animation-delay: 2.4s; } .seq > *:nth-child(6) { animation-delay: 2.8s; } .seq > *:nth-child(n+7) { animation-delay: 3.1s; }
 
 /* monedas: de cada 10 $, cuántos son intereses */
