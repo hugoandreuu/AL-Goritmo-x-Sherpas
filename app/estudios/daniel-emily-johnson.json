@@ -156,19 +156,19 @@
    "kpis": [
     {
      "lab": "Ingresos al año",
-     "val": "280.000 $",
+     "val": "280 K$",
      "sub": "",
      "tono": ""
     },
     {
      "lab": "Ahorro al año",
-     "val": "26.000 $",
+     "val": "26 K$",
      "sub": "9,3 % de los ingresos",
      "tono": "bueno"
     },
     {
      "lab": "Sobra al año",
-     "val": "15.032 $",
+     "val": "15 K$",
      "sub": "tras gastos y ahorro",
      "tono": ""
     }
@@ -282,39 +282,108 @@
     ]
    ],
    "graf": {
-    "tipo": "barras",
-    "titulo": "Lo que se debe, y a qué interés",
-    "items": [
-     {
-      "lab": "Hipoteca",
-      "v": 560000,
-      "txt": "560.000 $ · 6,5 %",
-      "tono": ""
-     },
-     {
-      "lab": "Préstamo del coche",
-      "v": 28000,
-      "txt": "28.000 $ · 7,9 %",
-      "tono": ""
-     },
-     {
-      "lab": "Tarjeta",
-      "v": 18000,
-      "txt": "18.000 $ · 24,9 %",
-      "tono": "coste"
-     },
-     {
-      "lab": "Préstamo de estudios",
-      "v": 12000,
-      "txt": "12.000 $ · 5,2 %",
-      "tono": ""
-     }
-    ]
+    "tipo": "curva",
+    "titulo": "Lo que se debe, año a año",
+    "serie": [
+     [
+      2026,
+      618000
+     ],
+     [
+      2027,
+      595926
+     ],
+     [
+      2028,
+      572108
+     ],
+     [
+      2029,
+      546361
+     ],
+     [
+      2030,
+      518474
+     ],
+     [
+      2031,
+      493659
+     ],
+     [
+      2032,
+      471889
+     ],
+     [
+      2033,
+      447910
+     ],
+     [
+      2034,
+      426157
+     ],
+     [
+      2035,
+      404006
+     ],
+     [
+      2036,
+      380370
+     ],
+     [
+      2037,
+      355152
+     ],
+     [
+      2038,
+      328244
+     ],
+     [
+      2039,
+      299535
+     ],
+     [
+      2040,
+      268903
+     ],
+     [
+      2041,
+      236219
+     ],
+     [
+      2042,
+      201346
+     ],
+     [
+      2043,
+      164138
+     ],
+     [
+      2044,
+      124439
+     ],
+     [
+      2045,
+      82080
+     ],
+     [
+      2046,
+      36884
+     ],
+     [
+      2047,
+      0
+     ]
+    ],
+    "marca": [
+     2047,
+     "Sin deudas · agosto de 2047"
+    ],
+    "nota": "Cuenta nuestra con el saldo, el interés y el pago de cada deuda de hoy. La fecha final es la del plan."
    },
    "kpis": [
     {
      "lab": "Deuda total",
-     "val": "618.000 $",
+     "val": "618 K$",
      "sub": "",
      "tono": ""
     },
@@ -542,13 +611,13 @@
    "kpis": [
     {
      "lab": "Invertido",
-     "val": "330.000 $",
+     "val": "330 K$",
      "sub": "",
      "tono": ""
     },
     {
      "lab": "Patrimonio neto",
-     "val": "511.000 $",
+     "val": "511 K$",
      "sub": "",
      "tono": ""
     },
@@ -683,7 +752,7 @@
    "kpis": [
     {
      "lab": "Efectivo",
-     "val": "19.000 $",
+     "val": "19 K$",
      "sub": "",
      "tono": ""
     },
@@ -696,12 +765,12 @@
     {
      "lab": "Recomendado",
      "val": "8 a 9 meses",
-     "sub": "106.860 $ a 120.218 $",
+     "sub": "107 K$ a 120 K$",
      "tono": ""
     },
     {
      "lab": "Falta",
-     "val": "92.360 $",
+     "val": "92 K$",
      "sub": "para reserva y gastos previstos",
      "tono": "coste"
     }
@@ -848,13 +917,13 @@
    "kpis": [
     {
      "lab": "Vida · Daniel",
-     "val": "250.000 $",
+     "val": "250 K$",
      "sub": "pide 1,6 M$ como mínimo",
      "tono": "coste"
     },
     {
      "lab": "Vida · Emily",
-     "val": "200.000 $",
+     "val": "200 K$",
      "sub": "pide 1,2 M$ como mínimo",
      "tono": "coste"
     },
@@ -1287,7 +1356,7 @@
    },
    {
     "lab": "Al final del plan quedan",
-    "val": "260.272 $",
+    "val": "260 K$",
     "sub": "en dólares de hoy",
     "tono": "bueno"
    },

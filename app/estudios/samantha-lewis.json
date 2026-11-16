@@ -128,13 +128,13 @@
    "kpis": [
     {
      "lab": "Ingresos al año",
-     "val": "250.000 $",
+     "val": "250 K$",
      "sub": "",
      "tono": ""
     },
     {
      "lab": "Ahorro al año",
-     "val": "60.000 $",
+     "val": "60 K$",
      "sub": "24 % de los ingresos",
      "tono": "bueno"
     },
@@ -392,7 +392,7 @@
    "kpis": [
     {
      "lab": "Invertido",
-     "val": "335.000 $",
+     "val": "335 K$",
      "sub": "",
      "tono": ""
     },
@@ -533,7 +533,7 @@
    "kpis": [
     {
      "lab": "Efectivo",
-     "val": "80.000 $",
+     "val": "80 K$",
      "sub": "",
      "tono": ""
     },
@@ -546,7 +546,7 @@
     {
      "lab": "Recomendado",
      "val": "5 a 6 meses",
-     "sub": "50.625 $ a 60.750 $",
+     "sub": "51 K$ a 61 K$",
      "tono": ""
     },
     {

@@ -671,18 +671,24 @@
       return `<figure class="gf"><figcaption>${esc(g.titulo)}</figcaption><div class="gr"><div class="gr-z" style="left:${pc(g.min)}%;width:${pc(g.max) - pc(g.min)}%"><span>Recomendado</span></div><i class="gr-v ${g.v < g.min ? 'coste' : 'bueno'}" style="width:${pc(g.v)}%"></i></div>
         <div class="gr-ax"><span>0</span><span style="left:${pc(g.min)}%">${esc(g.minTxt)}</span><span style="left:${pc(g.max)}%">${esc(g.maxTxt)}</span></div><p class="small" style="margin:.4em 0 0">Hoy: <b>${esc(g.txt)}</b></p></figure>`;
     }
+    if (g.tipo === 'curva') return svgLinea(g.serie, g.marca, g.titulo, g.nota);
     return '';
   }
-  function grafLinea(r) {
-    const s = r.serie || []; if (s.length < 2) return '';
+  // Línea en el tiempo (patrimonio del roadmap o curva de la deuda), con una marca y su rótulo.
+  function svgLinea(s, marca, titulo, nota) {
+    if (!s || s.length < 2) return '';
     const W = 320, H = 150, x0 = s[0][0], x1 = s[s.length - 1][0], mx = Math.max(...s.map(p => p[1])) || 1, mn = Math.min(0, ...s.map(p => p[1]));
-    const X = y => (y - x0) / (x1 - x0) * W, Y = v => H - (v - mn) / (mx - mn) * (H - 14) - 2;
+    const X = y => (y - x0) / ((x1 - x0) || 1) * W, Y = v => H - (v - mn) / (mx - mn) * (H - 14) - 2;
     const pts = s.map(p => `${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ');
-    const j = r.jubila && s.find(p => p[0] === r.jubila);
-    return `<figure class="gf"><figcaption>Patrimonio neto, en dólares de hoy</figcaption><svg class="gl" viewBox="0 0 ${W} ${H + 18}" role="img" aria-label="Evolución del patrimonio neto de ${x0} a ${x1}">
-      <polygon points="0,${H} ${pts} ${W},${H}" class="gl-a"/><polyline points="${pts}" class="gl-l"/>
-      ${j ? `<line x1="${X(j[0])}" x2="${X(j[0])}" y1="0" y2="${H}" class="gl-j"/><circle cx="${X(j[0])}" cy="${Y(j[1])}" r="4" class="gl-p"/><text x="${Math.min(X(j[0]) + 5, W - 70)}" y="12" class="gl-t">Jubilación · ${M(j[1])}</text>` : ''}
-      <text x="0" y="${H + 14}" class="gl-t">${x0} · ${M(s[0][1])}</text><text x="${W}" y="${H + 14}" class="gl-t" text-anchor="end">${x1} · ${M(s[s.length - 1][1])}</text></svg></figure>`;
+    const j = marca && s.find(p => p[0] === marca[0]);
+    return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><svg class="gl" viewBox="0 0 ${W} ${H + 18}" role="img" aria-label="${esc(titulo)}, de ${x0} a ${x1}">
+      <polygon points="0,${H} ${pts} ${X(x1)},${H}" class="gl-a"/><polyline points="${pts}" class="gl-l"/>
+      ${j ? `<line x1="${X(j[0])}" x2="${X(j[0])}" y1="0" y2="${H}" class="gl-j"/><circle cx="${X(j[0])}" cy="${Y(j[1])}" r="4" class="gl-p"/><text x="${X(j[0]) > W - 110 ? X(j[0]) - 5 : X(j[0]) + 5}" y="12" class="gl-t" ${X(j[0]) > W - 110 ? 'text-anchor="end"' : ''}>${esc(marca[1])}</text>` : ''}
+      <text x="0" y="${H + 14}" class="gl-t">${x0} · ${M(s[0][1])}</text><text x="${W}" y="${H + 14}" class="gl-t" text-anchor="end">${x1} · ${M(s[s.length - 1][1])}</text></svg>${nota ? `<p class="tiny" style="margin:6px 0 0">${esc(nota)}</p>` : ''}</figure>`;
+  }
+  function grafLinea(r) {
+    const j = r.jubila && (r.serie || []).find(p => p[0] === r.jubila);
+    return svgLinea(r.serie, j ? [j[0], `Jubilación · ${M(j[1])}`] : null, 'Patrimonio neto, en dólares de hoy');
   }
 
   // --- página de un tema (al tocar una tarjeta, en el resumen o en el plan completo).

@@ -140,13 +140,13 @@
    "kpis": [
     {
      "lab": "Ingresos al año",
-     "val": "180.000 $",
+     "val": "180 K$",
      "sub": "",
      "tono": ""
     },
     {
      "lab": "Ahorro al año",
-     "val": "43.000 $",
+     "val": "43 K$",
      "sub": "23,9 % de los ingresos",
      "tono": "bueno"
     },
@@ -268,33 +268,40 @@
     ]
    ],
    "graf": {
-    "tipo": "barras",
-    "titulo": "Lo que se debe, y a qué interés",
-    "items": [
-     {
-      "lab": "Préstamo del coche",
-      "v": 15000,
-      "txt": "15.000 $ · 5 %",
-      "tono": ""
-     },
-     {
-      "lab": "Préstamo de estudios",
-      "v": 10000,
-      "txt": "10.000 $ · 5,8 %",
-      "tono": ""
-     },
-     {
-      "lab": "Tarjeta",
-      "v": 3500,
-      "txt": "3.500 $ · 20 %",
-      "tono": "coste"
-     }
-    ]
+    "tipo": "curva",
+    "titulo": "Lo que se debe, año a año",
+    "serie": [
+     [
+      2026,
+      28500
+     ],
+     [
+      2027,
+      18778
+     ],
+     [
+      2028,
+      8862
+     ],
+     [
+      2029,
+      2091
+     ],
+     [
+      2030,
+      0
+     ]
+    ],
+    "marca": [
+     2030,
+     "Sin deudas · julio de 2030"
+    ],
+    "nota": "Cuenta nuestra con el saldo, el interés y el pago de cada deuda de hoy. La fecha final es la del plan."
    },
    "kpis": [
     {
      "lab": "Deuda total",
-     "val": "28.500 $",
+     "val": "29 K$",
      "sub": "",
      "tono": ""
     },
@@ -513,13 +520,13 @@
    "kpis": [
     {
      "lab": "Invertido",
-     "val": "145.000 $",
+     "val": "145 K$",
      "sub": "",
      "tono": ""
     },
     {
      "lab": "Patrimonio neto",
-     "val": "218.500 $",
+     "val": "219 K$",
      "sub": "",
      "tono": ""
     },
@@ -659,7 +666,7 @@
    "kpis": [
     {
      "lab": "Efectivo",
-     "val": "30.000 $",
+     "val": "30 K$",
      "sub": "",
      "tono": ""
     },
@@ -672,12 +679,12 @@
     {
      "lab": "Recomendado",
      "val": "5 a 6 meses",
-     "sub": "46.530 $ a 55.836 $",
+     "sub": "47 K$ a 56 K$",
      "tono": ""
     },
     {
      "lab": "Falta",
-     "val": "133.330 $",
+     "val": "133 K$",
      "sub": "para reserva y gastos previstos",
      "tono": "coste"
     }
@@ -786,8 +793,8 @@
    "kpis": [
     {
      "lab": "Vida",
-     "val": "180.000 $",
-     "sub": "pide 900.000 $ como mínimo",
+     "val": "180 K$",
+     "sub": "pide 900 K$ como mínimo",
      "tono": "coste"
     },
     {

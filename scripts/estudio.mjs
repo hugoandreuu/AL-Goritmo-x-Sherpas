@@ -50,6 +50,8 @@ const MES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'ag
 const miles = n => String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 const dec = (n, d = 1) => { let s = (+n).toFixed(d); if (s.includes('.')) s = s.replace(/\.?0+$/, ''); return s.replace('.', ','); };
 const M = v => (v == null || isNaN(v)) ? 'sin dato' : Math.abs(v) >= 1e6 ? dec(v / 1e6, 2) + ' M$' : (v < 0 ? '-' : '') + miles(v) + ' $';
+// Cifra redondeada para las cajas de cifras clave (como el informe: «$151K», «$1.5M»).
+const Mk = v => (v == null || isNaN(v)) ? 'sin dato' : Math.abs(v) >= 1e6 ? dec(v / 1e6, Math.abs(v) >= 1e7 ? 1 : 2) + ' M$' : Math.abs(v) >= 1e4 ? (v < 0 ? '-' : '') + miles(Math.round(Math.abs(v) / 1000)) + ' K$' : (v < 0 ? '-' : '') + miles(v) + ' $';
 const P = (v, d = 0) => dec(v * 100, d) + ' %';
 const fecha = iso => MES[+iso.slice(5, 7) - 1] + ' de ' + iso.slice(0, 4);
 const anio = iso => +iso.slice(0, 4);
@@ -638,6 +640,8 @@ function leerTemas(E, fh, ia) {
   const sl = R.savingsLevel || {}, inc = (get(fh, 'profile.incomes') || []).filter(i => i.type === 'SALARY_AND_WAGES');
   const match = (get(km, 'assetsAndInvestments.matchGapAnalysis') || []).filter(m => m.matchMaximizationStatus && m.matchMaximizationStatus !== 'NOT_APPLICABLE');
   const gastoAnual = num(get(R, 'investableAssetLevel.annualExpenses')), sinCobrar = match.reduce((s, m) => s + (m.uncapturedAnnualMatch || 0), 0), cobra = match.reduce((s, m) => s + (m.currentAnnualMatch || 0), 0);
+  // El análisis marca si el gasto declarado es fiable; si no, el gasto y lo que sobra se enseñan como estimados.
+  const est = get(ia, 'key_metrics.savingsAndContributions.savingsCapacity.savingsCapacityReliable') === false, ES = x => est ? x + ' (estimado)' : x;
   const SALIDA = { Taxes: 'Impuestos', 'Debt Payments': 'Deudas', 'Housing Expenses': 'Vivienda', Savings: 'Ahorro', Expenses: 'Gastos del día a día' };
   const sal = (get(km, 'savingsAndExpenses.incomeAndCashflow.outflowSummary') || []).slice(1).filter(r => r[0] !== 'Total' && r[1] > 0);
   const ahorroMatch = match.length ? (sinCobrar > 0 ? `Dejáis sin cobrar ${M(sinCobrar)} al año` : `${t('Cobráis', 'Cobras')} toda: ${M(cobra)} al año`) : null;
@@ -646,20 +650,34 @@ function leerTemas(E, fh, ia) {
     detalle: [
       ...inc.map(i => fila(`Sueldo${E.fam.pl ? ' de ' + (i.name.startsWith('Co-client') ? ad[1].first_name : ad[0].first_name) : ''}`, `${M(i.yearly)} al año`, 'profile.incomes')),
       fila('Ingresos brutos del hogar', sl.grossIncome != null ? `${M(sl.grossIncome)} al año` : null, 'ratios.savingsLevel.grossIncome'),
-      fila('Gastos al año (día a día, vivienda y deudas)', gastoAnual != null ? M(gastoAnual) : null, 'ratios.investableAssetLevel.annualExpenses'),
+      fila(ES('Gastos al año (día a día, vivienda y deudas)'), gastoAnual != null ? M(gastoAnual) : null, 'ratios.investableAssetLevel.annualExpenses'),
       fila('Ahorro al año', sl.savingAmount != null ? `${M(sl.savingAmount)} (${P(sl.ratio, 1)})` : null, 'ratios.savingsLevel'),
       ...match.map(m => fila(`Aportación de la empresa · ${m.accountName}`, m.uncapturedAnnualMatch > 0 ? `${M(m.currentAnnualMatch)} de ${M(m.maxPossibleAnnualMatch)} posibles` : `${M(m.currentAnnualMatch)} al año, la máxima`, 'matchGapAnalysis')),
-      ...sal.map(r => fila(`A dónde va: ${SALIDA[r[0]] || r[0]}`, `${M(Math.round(r[1]))} al año (${P(r[2], 1)})`, 'savingsAndExpenses.incomeAndCashflow.outflowSummary')),
-      fila('Lo que sobra este año tras gastos y ahorro', num(val(RT.netCashFlowThisYear)) != null ? M(Math.round(val(RT.netCashFlowThisYear))) : null, 'facts.retirement.netCashFlowThisYear'),
+      ...sal.map(r => fila(`A dónde va: ${r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0]}`, `${M(Math.round(r[1]))} al año (${P(r[2], 1)})`, 'savingsAndExpenses.incomeAndCashflow.outflowSummary')),
+      fila(ES('Lo que sobra este año tras gastos y ahorro'), num(val(RT.netCashFlowThisYear)) != null ? M(Math.round(val(RT.netCashFlowThisYear))) : null, 'facts.retirement.netCashFlowThisYear'),
       fila('Percentil de ingresos del hogar', get(km, 'savingsAndExpenses.incomeAndCashflow.householdIncomePercentile') != null ? `por encima del ${P(get(km, 'savingsAndExpenses.incomeAndCashflow.householdIncomePercentile'))} de hogares` : null, 'incomeAndCashflow.householdIncomePercentile'),
     ].filter(Boolean),
-    graf: sal.length ? { tipo: 'barras', titulo: `A dónde van ${t('vuestros', 'tus')} ${M(sl.grossIncome)} al año`, items: sal.map(r => ({ lab: SALIDA[r[0]] || r[0], v: r[1], txt: `${M(Math.round(r[1]))} · ${P(r[2])}`, tono: r[0] === 'Savings' ? 'bueno' : r[0] === 'Debt Payments' ? 'coste' : '' })).concat(num(val(RT.netCashFlowThisYear)) > 0 ? [{ lab: 'Sobra', v: val(RT.netCashFlowThisYear), txt: M(Math.round(val(RT.netCashFlowThisYear))), tono: 'bueno' }] : []) } : null,
+    graf: sal.length ? { tipo: 'barras', titulo: `A dónde van ${t('vuestros', 'tus')} ${M(sl.grossIncome)} al año`, items: sal.map(r => ({ lab: r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0], v: r[1], txt: `${M(Math.round(r[1]))} · ${P(r[2])}`, tono: r[0] === 'Savings' ? 'bueno' : r[0] === 'Debt Payments' ? 'coste' : '' })).concat(num(val(RT.netCashFlowThisYear)) > 0 ? [{ lab: 'Sobra', v: val(RT.netCashFlowThisYear), txt: M(Math.round(val(RT.netCashFlowThisYear))), tono: 'bueno' }] : []) } : null,
   };
 
   // Deudas · informe: «Debt management»
   const ld = (get(km, 'debtManagement.listOfDebts') || []).slice(1).filter(r => r[2] > 0).map(r => ({ nombre: r[0], tipo: TIPO_DEUDA[r[1]] || r[1], saldo: r[2], tipoInt: r[3], pago: r[4], interes: r[5] }));
   const ind = R.indebtedness || {}, dti = R.debtToIncome || {}, cara = ld.slice().sort((x, y) => y.tipoInt - x.tipoInt)[0];
   const libre = get(R, 'currentDPD.debtLastPayment'), ccFin = get(R, 'creditCardDebt.ccPayoffDate');
+  // Curva de la deuda (como «Debt amortization» del informe): cuenta nuestra con el saldo, el interés y el pago
+  // de cada deuda de hoy. Solo se enseña si acaba el mismo año que la fecha sin deudas que da el plan.
+  let curvaDeuda = null;
+  if (ld.length && libre) {
+    const sal2 = ld.map(d => ({ s: d.saldo, r: d.tipoInt / 12, p: d.pago })), y0 = E.hoyAnio, serie = [[y0, Math.round(sal2.reduce((x, d) => x + d.s, 0))]];
+    let mes = 0, ok = true;
+    while (sal2.some(d => d.s > 0) && mes < 12 * 60) {
+      mes++;
+      for (const d of sal2) if (d.s > 0) { if (d.p <= d.s * d.r) { ok = false; break; } d.s = Math.max(0, d.s * (1 + d.r) - d.p); }
+      if (!ok) break;
+      if (mes % 12 === 0 || !sal2.some(d => d.s > 0)) serie.push([y0 + Math.ceil(mes / 12), Math.round(sal2.reduce((x, d) => x + d.s, 0))]);
+    }
+    if (ok && Math.abs((y0 + Math.ceil(mes / 12)) - anio(libre)) <= 1) curvaDeuda = { tipo: 'curva', titulo: 'Lo que se debe, año a año', serie, marca: [serie[serie.length - 1][0], `Sin deudas · ${fecha(libre)}`], nota: 'Cuenta nuestra con el saldo, el interés y el pago de cada deuda de hoy. La fecha final es la del plan.' };
+  }
   out['Deudas'] = {
     resumen: ld.length ? [fila('Deuda total', `${M(ind.debtBalance)}, ${M(ind.monthlyDebtPayment)} al mes`, 'ratios.indebtedness'), fila('La más cara', cara ? `${cara.tipo}: ${M(cara.saldo)} al ${P(cara.tipoInt, 1)}` : null, 'debtManagement.listOfDebts'), fila('Sin deudas en', libre ? fecha(libre) : null, 'ratios.currentDPD')].filter(Boolean)
       : [fila('Deuda total', `0 $. ${t('No tenéis', 'No tienes')} deudas pendientes`, 'ratios.indebtedness')],
@@ -671,7 +689,7 @@ function leerTemas(E, fh, ia) {
       fila('La tarjeta se acaba, a este ritmo', ccFin && ld.some(d => d.tipo === 'Tarjeta') ? fecha(ccFin) : null, 'ratios.creditCardDebt.ccPayoffDate'),
       fila('Último pago de todas las deudas', libre ? fecha(libre) : null, 'ratios.currentDPD.debtLastPayment'),
     ].filter(Boolean),
-    graf: ld.length ? { tipo: 'barras', titulo: 'Lo que se debe, y a qué interés', items: ld.map(d => ({ lab: d.tipo, v: d.saldo, txt: `${M(d.saldo)} · ${P(d.tipoInt, 1)}`, tono: d === cara && cara.tipoInt >= 0.1 ? 'coste' : '' })) } : null,
+    graf: curvaDeuda || (ld.length ? { tipo: 'barras', titulo: 'Lo que se debe, y a qué interés', items: ld.map(d => ({ lab: d.tipo, v: d.saldo, txt: `${M(d.saldo)} · ${P(d.tipoInt, 1)}`, tono: d === cara && cara.tipoInt >= 0.1 ? 'coste' : '' })) } : null),
   };
 
   // Inversiones · informe: «Assets & Investments» + análisis de inversiones
@@ -750,17 +768,18 @@ function leerTemas(E, fh, ia) {
   const SAL2 = { Taxes: 'impuestos', 'Debt Payments': 'deudas', 'Housing Expenses': 'vivienda', Savings: 'ahorro', Expenses: 'gastos del día a día' };
   const de100 = sal.map(r => `${Math.round(r[2] * 100)} a ${SAL2[r[0]] || r[0]}`);
   Object.assign(out['Ahorro'], {
-    kpis: [k('Ingresos al año', ingresos != null ? M(ingresos) : null), k('Ahorro al año', sl.savingAmount != null ? M(sl.savingAmount) : null, sl.ratio != null ? `${pct(sl.ratio)} de los ingresos` : '', 'bueno'),
-      k('Sobra al año', sobraAnio != null ? M(Math.round(sobraAnio)) : null, 'tras gastos y ahorro', sobraAnio < 0 ? 'coste' : ''), match.length ? k('Aportación de la empresa', M(cobra), sinCobrar > 0 ? `${M(sinCobrar)} sin cobrar` : 'la máxima', sinCobrar > 0 ? 'coste' : 'bueno') : null].filter(Boolean),
-    desglose: sal.length ? { titulo: 'A dónde va lo que entra cada año', filas: sal.map(r => [SALIDA[r[0]] || r[0], M(Math.round(r[1]))]).concat(sobraAnio != null ? [[sobraAnio < 0 ? 'Falta' : 'Sobra', M(Math.round(sobraAnio))]] : []), total: ['Ingresos', M(ingresos)] } : null,
+    kpis: [k('Ingresos al año', ingresos != null ? Mk(ingresos) : null), k('Ahorro al año', sl.savingAmount != null ? Mk(sl.savingAmount) : null, sl.ratio != null ? `${pct(sl.ratio)} de los ingresos` : '', 'bueno'),
+      k(ES('Sobra al año'), sobraAnio != null ? Mk(Math.round(sobraAnio)) : null, est ? 'el gasto declarado puede ser bajo' : 'tras gastos y ahorro', sobraAnio < 0 ? 'coste' : ''), match.length ? k('Aportación de la empresa', Mk(cobra), sinCobrar > 0 ? `${Mk(sinCobrar)} sin cobrar` : 'la máxima', sinCobrar > 0 ? 'coste' : 'bueno') : null].filter(Boolean),
+    desglose: sal.length ? { titulo: 'A dónde va lo que entra cada año', filas: sal.map(r => [r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0], M(Math.round(r[1]))]).concat(sobraAnio != null ? [[ES(sobraAnio < 0 ? 'Falta' : 'Sobra'), M(Math.round(sobraAnio))]] : []), total: ['Ingresos', M(ingresos)] } : null,
     lectura: [de100.length ? `De cada 100 $ que entran, ${lista(de100)}.` : null,
       sobraAnio != null ? (sobraAnio >= 0 ? `Después de todo, este año ${t('os', 'te')} sobran ${b(M(Math.round(sobraAnio)))}.` : `Este año faltan ${b(M(Math.round(-sobraAnio)))}: se gasta más de lo que entra.`) : null,
+      est ? `El gasto del día a día y lo que sobra son ${b('estimados')}: el estudio avisa de que el gasto declarado puede estar por debajo del real.` : null,
       match.length ? (sinCobrar > 0 ? `La empresa podría aportar ${b(M(sinCobrar))} más al año que hoy no se cobran.` : `${t('Cobráis', 'Cobras')} toda la aportación de la empresa: ${b(M(cobra))} al año.`) : null].filter(Boolean),
     asesor: `Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año.`,
   });
   const caraInt = cara ? Math.round(cara.interes) : null;
   Object.assign(out['Deudas'], {
-    kpis: ld.length ? [k('Deuda total', M(ind.debtBalance)), k('Pago al mes', M(ind.monthlyDebtPayment)), k('Deudas sobre ingresos', dti.debtOnlyDti != null ? pct(dti.debtOnlyDti) : null, dti.ratio != null ? `${pct(dti.ratio)} con la vivienda` : ''), k('Sin deudas en', libre ? String(anio(libre)) : null, libre ? fecha(libre) : '')].filter(Boolean) : [k('Deuda total', '0 $', t('No tenéis deudas', 'No tienes deudas'), 'bueno')],
+    kpis: ld.length ? [k('Deuda total', Mk(ind.debtBalance)), k('Pago al mes', Mk(ind.monthlyDebtPayment)), k('Deudas sobre ingresos', dti.debtOnlyDti != null ? pct(dti.debtOnlyDti) : null, dti.ratio != null ? `${pct(dti.ratio)} con la vivienda` : ''), k('Sin deudas en', libre ? String(anio(libre)) : null, libre ? fecha(libre) : '')].filter(Boolean) : [k('Deuda total', '0 $', t('No tenéis deudas', 'No tienes deudas'), 'bueno')],
     desglose: ld.length ? { titulo: 'Lo que se debe', filas: ld.map(d => [`${d.tipo} · ${P(d.tipoInt, 1)}`, M(d.saldo)]), total: ['Total', M(ind.debtBalance)] } : null,
     lectura: ld.length ? [cara ? `La más cara es ${/^Préstamo/.test(cara.tipo) ? 'el' : 'la'} ${low(cara.tipo)}: ${b(M(cara.saldo))} al ${b(P(cara.tipoInt, 1))}, ${b(M(caraInt))} de intereses al mes.` : null,
       dti.ratio != null ? `Con la vivienda, los pagos se llevan el ${b(pct(dti.ratio))} de los ingresos. Los bancos se fijan a partir del 36 %.` : null,
@@ -769,7 +788,7 @@ function leerTemas(E, fh, ia) {
   });
   const eqInv = tot.investablePortfolioValue ? tot.equityExposure / tot.investablePortfolioValue : null, crisis = env.find(e => e.name === 'Global Financial Crisis');
   Object.assign(out['Inversiones'], {
-    kpis: [k('Invertido', invertible != null ? M(invertible) : null), k('Patrimonio neto', get(km, 'netWorthStatement.netWorth.total') != null ? M(get(km, 'netWorthStatement.netWorth.total')) : null),
+    kpis: [k('Invertido', invertible != null ? Mk(invertible) : null), k('Patrimonio neto', get(km, 'netWorthStatement.netWorth.total') != null ? Mk(get(km, 'netWorthStatement.netWorth.total')) : null),
       k('Rentabilidad', h.return3yAnnualized != null ? pct(h.return3yAnnualized) : null, 'al año, últimos 3 años', 'bueno'), k('Peor caída', h.maxDrawdown3y != null ? pct(Math.abs(h.maxDrawdown3y)) : null, h.maxDrawdownRecoveryDays ? `recuperada en ${h.maxDrawdownRecoveryDays} días` : '', 'coste')].filter(Boolean),
     desglose: la.length ? { titulo: `Dónde está ${t('vuestro', 'tu')} patrimonio`, filas: la.map(r => [TIPO_ACTIVO[r[0]] || r[0], M(r[2])]), total: ['Total', M(get(km, 'assetsAndInvestments.totalAssetsAndEquity.totalAssets'))] } : null,
     lectura: [eqInv != null ? `El ${b(pct(eqInv))} de lo invertido está en bolsa.` : null,
@@ -778,8 +797,8 @@ function leerTemas(E, fh, ia) {
     asesor: E.fam.pl && ad[0].risk_profile !== ad[1].risk_profile ? `${ad[0].first_name} es ${PERF[ad[0].risk_profile] || ad[0].risk_profile} y ${ad[1].first_name}, ${PERF[ad[1].risk_profile] || ad[1].risk_profile}: decidir juntos cuánto riesgo queréis en la cartera.` : `Si el riesgo de la cartera encaja con ${t('vuestro', 'tu')} perfil y con lo que ${t('queréis', 'quieres')} conseguir.`,
   });
   Object.assign(out['Colchón'], {
-    kpis: [k('Efectivo', ac != null ? M(ac) : null), k('Cubre', !isNaN(mc) ? `${dec(mc, 1)} meses` : null, 'de gastos básicos'), k('Recomendado', ef.minRecommendedEFMonths ? `${ef.minRecommendedEFMonths} a ${ef.maxRecommendedEFMonths} meses` : null, er.min != null ? `${M(er.min)} a ${M(er.max)}` : ''),
-      sobra > 0 ? k('Sobra', M(sobra), 'tras reserva y gastos previstos', 'bueno') : falta > 0 ? k('Falta', M(falta), 'para reserva y gastos previstos', 'coste') : null].filter(Boolean),
+    kpis: [k('Efectivo', ac != null ? Mk(ac) : null), k('Cubre', !isNaN(mc) ? `${dec(mc, 1)} meses` : null, 'de gastos básicos'), k('Recomendado', ef.minRecommendedEFMonths ? `${ef.minRecommendedEFMonths} a ${ef.maxRecommendedEFMonths} meses` : null, er.min != null ? `${Mk(er.min)} a ${Mk(er.max)}` : ''),
+      sobra > 0 ? k('Sobra', Mk(sobra), 'tras reserva y gastos previstos', 'bueno') : falta > 0 ? k('Falta', Mk(falta), 'para reserva y gastos previstos', 'coste') : null].filter(Boolean),
     desglose: C.totalCashNeeded ? { titulo: 'Lo que pide el plan tener en efectivo', filas: [['Reserva para imprevistos', `${M(er.min)} a ${M(er.max)}`], ...(C.nearTermGoals || []).map(g => [`Gasto ya previsto: ${/vacation/i.test(g.label) ? 'vacaciones' : /home|real estate|house/i.test(g.label) ? 'casa' : /vehicle|car/i.test(g.label) ? 'coche' : 'otro'}`, M(g.value)]), [`Lo que ${t('tenéis', 'tienes')}`, M(ac)]], total: ['Total que pide', `${M(C.totalCashNeeded.min)} a ${M(C.totalCashNeeded.max)}`] } : null,
     lectura: [!isNaN(mc) ? `${t('Vuestro', 'Tu')} efectivo cubre ${b(dec(mc, 1) + ' meses')} de gastos básicos; el plan pide de ${ef.minRecommendedEFMonths} a ${ef.maxRecommendedEFMonths}.` : null,
       sobra > 0 ? `Por encima de la reserva y de los gastos ya previstos sobran ${b(M(sobra))}.` : falta > 0 ? `Para la reserva y los gastos ya previstos faltan ${b(M(falta))}.` : null,
@@ -788,7 +807,7 @@ function leerTemas(E, fh, ia) {
   });
   const faltan = vidas.filter(v => (v.hoy || 0) < v.min);
   Object.assign(out['Seguros'], {
-    kpis: [...vidas.map(v => k(`Vida${E.fam.pl ? ' · ' + v.n : ''}`, M(v.hoy || 0), `pide ${M(v.min)} como mínimo`, (v.hoy || 0) < v.min ? 'coste' : 'bueno')), um.recommendedCoverage ? k('Responsabilidad civil', M(um.currentCoverage || 0), `pide ${M(um.recommendedCoverage)}`, (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno') : null, k('Pólizas', String(pol.length), 'en el plan')].filter(Boolean),
+    kpis: [...vidas.map(v => k(`Vida${E.fam.pl ? ' · ' + v.n : ''}`, Mk(v.hoy || 0), `pide ${Mk(v.min)} como mínimo`, (v.hoy || 0) < v.min ? 'coste' : 'bueno')), um.recommendedCoverage ? k('Responsabilidad civil', Mk(um.currentCoverage || 0), `pide ${Mk(um.recommendedCoverage)}`, (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno') : null, k('Pólizas', String(pol.length), 'en el plan')].filter(Boolean),
     desglose: vidas.length || um.recommendedCoverage ? { titulo: 'Lo que hay y lo que falta', filas: [...vidas.map(v => [`Vida · ${v.n}`, `${M(v.hoy || 0)} de ${M(v.min)}`]), um.recommendedCoverage ? ['Responsabilidad civil', `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)}`] : null].filter(Boolean),
       total: null } : null,
     lectura: [...faltan.map(v => `A ${v.n} le faltan como mínimo ${b(M(v.min - (v.hoy || 0)))} de seguro de vida.`),
@@ -820,8 +839,8 @@ function leerTemas(E, fh, ia) {
     ].filter(Boolean),
     kpis: [jA ? { lab: 'Jubilación', val: String(jA), sub: `a los ${lista(ad.map(a => String(a.retirement_age)))}`, tono: '' } : null,
       val(RT.incomeShareOfNeed) ? { lab: 'Los ingresos cubren', val: String(val(RT.incomeShareOfNeed)).replace('.', ',').replace('%', ' %'), sub: 'del gasto en la jubilación', tono: '' } : null,
-      agota ? { lab: 'Los ahorros se acaban', val: `a los ${(agota.label.match(/age (\d+)/) || [])[1]}`, sub: 'años', tono: 'coste' } : val(RT.savingsLeftAtPlanEnd) != null ? { lab: 'Al final del plan quedan', val: M(val(RT.savingsLeftAtPlanEnd)), sub: 'en dólares de hoy', tono: 'bueno' } : null,
-      enJub ? { lab: `Patrimonio al ${t('jubilaros', 'jubilarte')}`, val: M(enJub.net_worth_todays_dollars), sub: 'en dólares de hoy', tono: '' } : null].filter(Boolean),
+      agota ? { lab: 'Los ahorros se acaban', val: `a los ${(agota.label.match(/age (\d+)/) || [])[1]}`, sub: 'años', tono: 'coste' } : val(RT.savingsLeftAtPlanEnd) != null ? { lab: 'Al final del plan quedan', val: Mk(val(RT.savingsLeftAtPlanEnd)), sub: 'en dólares de hoy', tono: 'bueno' } : null,
+      enJub ? { lab: `Patrimonio al ${t('jubilaros', 'jubilarte')}`, val: Mk(enJub.net_worth_todays_dollars), sub: 'en dólares de hoy', tono: '' } : null].filter(Boolean),
     lectura: [val(RT.spendingNeed) && val(RT.guaranteedIncome) ? `En la jubilación ${t('gastaréis', 'gastarás')} unos ${b(M(Math.round(val(RT.spendingNeed))))} al año; las pensiones y rentas cubren ${b(M(Math.round(val(RT.guaranteedIncome))))} y el resto sale de los ahorros.` : null,
       val(ED.fundingGap) ? `Para la universidad faltan ${b(M(Math.round(val(ED.fundingGap))))}${val(ED.extraYearlySaving) > 0 ? `: unos ${b(M(Math.round(val(ED.extraYearlySaving))))} más al año` : ''}.` : null,
       get(R, 'retirementSavings.requiredExtraSavings') > 0 ? `Para que la jubilación llegue, el plan pide ahorrar ${b(M(Math.round(get(R, 'retirementSavings.requiredExtraSavings'))))} más al año.` : null].filter(Boolean),

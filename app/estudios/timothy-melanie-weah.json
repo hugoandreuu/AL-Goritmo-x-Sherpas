@@ -71,7 +71,7 @@
      "ratios.savingsLevel.grossIncome"
     ],
     [
-     "Gastos al año (día a día, vivienda y deudas)",
+     "Gastos al año (día a día, vivienda y deudas) (estimado)",
      "112.774 $",
      "ratios.investableAssetLevel.annualExpenses"
     ],
@@ -111,12 +111,12 @@
      "savingsAndExpenses.incomeAndCashflow.outflowSummary"
     ],
     [
-     "A dónde va: Gastos del día a día",
+     "A dónde va: Gastos del día a día (estimado)",
      "72.004 $ al año (26,7 %)",
      "savingsAndExpenses.incomeAndCashflow.outflowSummary"
     ],
     [
-     "Lo que sobra este año tras gastos y ahorro",
+     "Lo que sobra este año tras gastos y ahorro (estimado)",
      "36.961 $",
      "facts.retirement.netCashFlowThisYear"
     ],
@@ -155,7 +155,7 @@
       "tono": "bueno"
      },
      {
-      "lab": "Gastos del día a día",
+      "lab": "Gastos del día a día (estimado)",
       "v": 72004,
       "txt": "72.004 $ · 27 %",
       "tono": ""
@@ -171,25 +171,25 @@
    "kpis": [
     {
      "lab": "Ingresos al año",
-     "val": "270.000 $",
+     "val": "270 K$",
      "sub": "",
      "tono": ""
     },
     {
      "lab": "Ahorro al año",
-     "val": "61.500 $",
+     "val": "62 K$",
      "sub": "22,8 % de los ingresos",
      "tono": "bueno"
     },
     {
-     "lab": "Sobra al año",
-     "val": "36.961 $",
-     "sub": "tras gastos y ahorro",
+     "lab": "Sobra al año (estimado)",
+     "val": "37 K$",
+     "sub": "el gasto declarado puede ser bajo",
      "tono": ""
     },
     {
      "lab": "Aportación de la empresa",
-     "val": "14.000 $",
+     "val": "14 K$",
      "sub": "la máxima",
      "tono": "bueno"
     }
@@ -214,11 +214,11 @@
       "61.500 $"
      ],
      [
-      "Gastos del día a día",
+      "Gastos del día a día (estimado)",
       "72.004 $"
      ],
      [
-      "Sobra",
+      "Sobra (estimado)",
       "36.961 $"
      ]
     ],
@@ -230,6 +230,7 @@
    "lectura": [
     "De cada 100 $ que entran, 27 a impuestos, 4 a deudas, 11 a vivienda, 23 a ahorro y 27 a gastos del día a día.",
     "Después de todo, este año os sobran <b>36.961 $</b>.",
+    "El gasto del día a día y lo que sobra son <b>estimados</b>: el estudio avisa de que el gasto declarado puede estar por debajo del real.",
     "Cobráis toda la aportación de la empresa: <b>14.000 $</b> al año."
    ],
    "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año."
@@ -304,39 +305,76 @@
     ]
    ],
    "graf": {
-    "tipo": "barras",
-    "titulo": "Lo que se debe, y a qué interés",
-    "items": [
-     {
-      "lab": "Hipoteca",
-      "v": 50000,
-      "txt": "50.000 $ · 6 %",
-      "tono": ""
-     },
-     {
-      "lab": "Tarjeta",
-      "v": 18000,
-      "txt": "18.000 $ · 18 %",
-      "tono": "coste"
-     },
-     {
-      "lab": "Préstamo de estudios",
-      "v": 15000,
-      "txt": "15.000 $ · 5,5 %",
-      "tono": ""
-     },
-     {
-      "lab": "Préstamo del coche",
-      "v": 10000,
-      "txt": "10.000 $ · 4,5 %",
-      "tono": ""
-     }
-    ]
+    "tipo": "curva",
+    "titulo": "Lo que se debe, año a año",
+    "serie": [
+     [
+      2026,
+      93000
+     ],
+     [
+      2027,
+      64227
+     ],
+     [
+      2028,
+      33709
+     ],
+     [
+      2029,
+      24115
+     ],
+     [
+      2030,
+      20671
+     ],
+     [
+      2031,
+      16940
+     ],
+     [
+      2032,
+      14158
+     ],
+     [
+      2033,
+      13015
+     ],
+     [
+      2034,
+      11648
+     ],
+     [
+      2035,
+      10015
+     ],
+     [
+      2036,
+      8061
+     ],
+     [
+      2037,
+      5726
+     ],
+     [
+      2038,
+      2934
+     ],
+     [
+      2039,
+      0
+     ]
+    ],
+    "marca": [
+     2039,
+     "Sin deudas · septiembre de 2039"
+    ],
+    "nota": "Cuenta nuestra con el saldo, el interés y el pago de cada deuda de hoy. La fecha final es la del plan."
    },
    "kpis": [
     {
      "lab": "Deuda total",
-     "val": "93.000 $",
+     "val": "93 K$",
      "sub": "",
      "tono": ""
     },
@@ -564,13 +602,13 @@
    "kpis": [
     {
      "lab": "Invertido",
-     "val": "210.000 $",
+     "val": "210 K$",
      "sub": "",
      "tono": ""
     },
     {
      "lab": "Patrimonio neto",
-     "val": "695.500 $",
+     "val": "696 K$",
      "sub": "",
      "tono": ""
     },
@@ -705,7 +743,7 @@
    "kpis": [
     {
      "lab": "Efectivo",
-     "val": "150.800 $",
+     "val": "151 K$",
      "sub": "",
      "tono": ""
     },
@@ -718,12 +756,12 @@
     {
      "lab": "Recomendado",
      "val": "8 a 9 meses",
-     "sub": "75.180 $ a 84.578 $",
+     "sub": "75 K$ a 85 K$",
      "tono": ""
     },
     {
      "lab": "Sobra",
-     "val": "60.223 $",
+     "val": "60 K$",
      "sub": "tras reserva y gastos previstos",
      "tono": "bueno"
     }
@@ -885,14 +923,14 @@
    "kpis": [
     {
      "lab": "Vida · Timothy",
-     "val": "140.000 $",
-     "sub": "pide 750.000 $ como mínimo",
+     "val": "140 K$",
+     "sub": "pide 750 K$ como mínimo",
      "tono": "coste"
     },
     {
      "lab": "Vida · Melanie",
-     "val": "110.000 $",
-     "sub": "pide 600.000 $ como mínimo",
+     "val": "110 K$",
+     "sub": "pide 600 K$ como mínimo",
      "tono": "coste"
     },
     {
