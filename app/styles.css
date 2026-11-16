@@ -1147,3 +1147,12 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .pj-ladder li.mine small i { font-style: normal; font-weight: 700; color: var(--accent); }
 .pj-knows { list-style: none; margin: 4px 0 14px; padding: 0; display: grid; gap: 8px; text-align: left; }
 .pj-knows li { font-size: 14px; line-height: 1.35; padding: 10px 12px; border-radius: 12px; background: var(--bg-2); color: var(--ink); }
+.pj-myq { display: grid; gap: 8px; margin: 14px 0 6px; text-align: left; }
+.pj-myq label i { font-style: normal; font-weight: 400; color: var(--ink-3); font-size: 14px; }
+.pj-qcats { display: flex; flex-wrap: wrap; gap: 6px; }
+.pj-qcats .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; padding: 5px 10px; }
+.pj-myq .pj-whyw input { background: var(--surface); border-color: var(--line); color: var(--ink); }
+.pj-myq .pj-whyw input::placeholder { color: var(--ink-3); }
+.pj-myq .pj-whyw .btn { background: var(--plan); color: #fff; }
+.pj-myq p { margin: 0; }
+.pj-meet .pj-addq { display: inline-flex; align-items: center; gap: 6px; color: #fff; text-decoration: underline; text-underline-offset: 3px; margin: 2px 0 10px; font-weight: 600; }

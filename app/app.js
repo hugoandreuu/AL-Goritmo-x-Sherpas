@@ -1012,11 +1012,14 @@
   }
   // Objetivos de la línea del plan, con su año e importe; la jubilación siempre (es la que trae dato).
   // Lo que su frase toca: objetivos de la línea cuyo nombre aparece en ella y pasos del plan de sus temas.
+  const TEMA_LAB = { tarjeta: 'qué hacer con la tarjeta', vida: 'vuestro seguro de vida', colchon: 'vuestro colchón', jubilacion: 'vuestra jubilación', inversion: 'vuestras inversiones' };
   function pjMine() {
-    const f = S.phrase ? sinTilde(S.phrase) : '', goals = new Set(), steps = new Set(); if (!f) return { goals, steps };
+    const f = S.phrase ? sinTilde(S.phrase) : '', goals = new Set(), steps = new Set(); if (!f) return { goals, steps, extra: [] };
     (E.linea || []).forEach(l => { const w0 = sinTilde(l.t).replace(/^(el|la|los|las)\s+/, '').split(/\s+/)[0]; if (w0.length > 3 && f.includes(w0)) goals.add(l); });
-    temasDe(S.phrase).forEach(id => { if (PASO_DE[id]) steps.add(PASO_DE[id]); });
-    return { goals, steps };
+    const keys = new Set((E.pasos || []).map(x => x.key)), extra = [];
+    temasDe(S.phrase).forEach(id => { const k = PASO_DE[id], q = QMAP[id];
+      if (k && keys.has(k)) steps.add(k); else if (q && TEMA_LAB[q.tema] && !extra.includes(TEMA_LAB[q.tema])) extra.push(TEMA_LAB[q.tema]); });
+    return { goals, steps, extra };
   }
   function pjGoals(mine) {
     const L = E.linea || [], g = L.filter(l => l.c === 'goal' && !/^Universidad/.test(l.t)).slice(0, 3), end = L.find(l => l.c === 'end');
@@ -1025,7 +1028,7 @@
   }
   // Lo que se hace con el asesor: sus pasos y, si hace falta, revisar el perfil de riesgo.
   function pjConLista() {
-    const rp = riskProp(), con = (E.pasos || []).filter(x => x.quien === 'asesor').map(x => low1(x.titulo)).concat(rp && rp.revisar ? ['revisar vuestro perfil de riesgo'] : []);
+    const rp = riskProp(), con = (E.pasos || []).filter(x => x.quien === 'asesor').map(x => low1(x.titulo)).concat(rp && rp.revisar ? ['revisar vuestro perfil de riesgo'] : [], pjMine().extra.map(t => t + ' (vuestro motivo)'));
     return con.length > 1 ? con.slice(0, -1).join(', ') + ' y ' + con[con.length - 1] : con[0] || 'revisar el plan';
   }
   // Lo que el asesor ya sabe de ellos: su motivo, lo que creía cada uno frente al plan y lo que no encaja.
@@ -1037,12 +1040,20 @@
     if (vq && S.pj.vida != null) { const k = vidaK(); out.push(`Seguro de vida: ${k ? `creíais que cubría hasta los ${S.pj.vida} años de ${k}; el plan dice hasta los ${vq.real}` : `creíais ${showV(vq, S.pj.vida)}; el plan dice ${vq.plan}`}.`); }
     if (n && S.pj.nota != null) out.push(`Nota de salud financiera: creíais ${S.pj.nota}; el plan dice ${n.hoy}.`);
     const ra = riskOpt(S.pj.risk.a), rb = riskOpt(S.pj.risk.b);
+    const mq = pjMyQs(); if (mq.length) out.push(`Lo que queréis que os conteste: ${mq.map(d => `«${d.q}»`).join('; ')}.`);
     if (ra && rb) out.push(`Ante una caída: ${pName('a')} ${low1(ra[1])}${pa ? ` (perfil ${low1(pa.etiqueta)})` : ''}; ${pName('b')} ${low1(rb[1])}${pb ? ` (perfil ${low1(pb.etiqueta)})` : ''}. ${aciertos() === 2 ? 'Los dos sabíais lo que haría el otro.' : `Acertasteis ${aciertos()} de 2 sobre el otro.`}`);
     return out.map(t => t.replace(/(\d) (\$|%|años|meses)/g, '$1\u00a0$2'));
   }
-  function pjBooked() {
-    sheet(`<div class="celebrate"><div class="burst">${ic('check', 40)}</div><div class="kicker">Reunión pedida</div><h2>${esc(S.booking.label)}</h2>
-      <p>Con vuestro asesor: ${esc(pjConLista())}.</p></div>
+  const pjMyQs = () => S.doubts.filter(d => /^pjq-/.test(d.id));
+  function pjBooked(back) {
+    const cats = (E.dudas || []).filter(c => c.id !== 'otra'), g = (E.linea || []).find(l => l.c === 'goal' && !/^Universidad/.test(l.t)), mq = pjMyQs();
+    const eg = g ? `si adelantamos ${low1(g.t)}, ¿afecta a la jubilación?` : 'si nos compramos un coche, ¿nos cargamos la jubilación?';
+    sheet(`${back ? `<div class="kicker">Vuestra reunión</div><h2>${esc(S.booking.label)}</h2>` : `<div class="celebrate"><div class="burst">${ic('check', 40)}</div><div class="kicker">Reunión pedida</div><h2>${esc(S.booking.label)}</h2>`}
+      <p>Con vuestro asesor: ${esc(pjConLista())}.</p>${back ? '' : '</div>'}
+      <div class="pj-myq"><label class="pj-h3" for="pjq">¿Qué queréis que os conteste ese día? <i>(opcional)</i></label>
+        ${cats.length ? `<div class="pj-qcats" role="group" aria-label="Tema">${cats.map(c => `<button class="chip" data-act="pjqcat" data-v="${c.id}" aria-pressed="${S.cat === c.id}">${ic(c.icon, 14)} ${esc(c.label)}</button>`).join('')}</div>` : ''}
+        <div class="pj-whyw"><input id="pjq" maxlength="160" placeholder="Vuestra pregunta" value="${esc(DRAFT)}"><button class="btn" data-act="pjq">Apuntar</button></div>
+        <p class="small muted">${mq.length ? `Apuntadas: ${mq.length}. Podéis añadir más hasta el día de la reunión.` : `Por ejemplo: «${esc(cap1(eg))}»`}</p></div>
       <h3 class="pj-h3">Lo que vuestro asesor ya sabe de vosotros</h3><ul class="pj-knows">${pjGets().map(t => `<li>${esc(t)}</li>`).join('')}</ul>
       ${pjCalBtn('meet').replace('ghost-w', 'soft')}
       <button class="btn ghost block" data-act="close" style="margin-top:8px">Seguir</button>`);
@@ -1057,7 +1068,7 @@
       ${pjGoals(mine)}
       <div class="pj-meet"><small>${ic('chat', 16)} El siguiente paso: la reunión</small>
         <p>Con vuestro asesor: ${esc(lista)}. Ya tendrá lo que habéis contestado${S.phrase ? ` y vuestra frase, «${esc(S.phrase)}»` : ''}.</p>
-        ${S.booking ? pjCalBtn('meet').replace('ghost-w', 'ghost') : ''}</div>
+        ${S.booking ? `<button class="link pj-addq" data-act="pjbooked">${ic('pen', 16)} ${pjMyQs().length ? `Vuestras preguntas para ese día: ${pjMyQs().length} · añadir` : 'Apuntar lo que queréis que os conteste'}</button>${pjCalBtn('meet').replace('ghost-w', 'ghost')}` : ''}</div>
       ${p ? `<div class="pj-before"><small>Antes de ir, si queréis</small><h3>${esc(p.titulo)}</h3>
         <p class="small">${p.urgencia}</p>
         ${S.payDate ? `<div class="datechip"><span class="dc-ic">${ic('cal', 22)}</span><div><small>Lo hacéis el</small><b>${esc(S.payDate.label)}</b></div><button class="link small" data-act="cal" data-k="pay">Cambiar</button></div>
@@ -1163,7 +1174,7 @@
   }, true);
   document.addEventListener('input', e => {
     const t = e.target;
-    if (t.id === 'free') { DRAFT = t.value; return; }
+    if (t.id === 'free' || t.id === 'pjq') { DRAFT = t.value; return; }
     if (t.dataset.act === 'pjrange') {
       const x = t.dataset.k, q = x === 'vida' ? vidaQ() : x === 'nota' ? notaQ() : moneyQ();
       t.classList.remove('untouched'); if (x === 'vida' || x === 'nota') S.pj[x] = +t.value; else S.pj.money[x] = +t.value;
@@ -1291,6 +1302,13 @@
         if (!txt) { el.focus(); el.parentNode.classList.add('shake'); setTimeout(() => el.parentNode.classList.remove('shake'), 400); return; }
         S.doubts.push({ id: 'free-' + Date.now(), topic: S.cat || 'otra', paso: b.dataset.p || null, q: txt, covered: 'no', status: 'open' }); DRAFT = ''; keep(); askSheet(null); toast('Apuntada para la reunión'); break;
       }
+      case 'pjqcat': S.cat = S.cat === v ? null : v; pjBooked(true); break;
+      case 'pjq': {
+        const el = document.getElementById('pjq'), txt = (el.value || '').trim();
+        if (!txt) { el.focus(); el.parentNode.classList.add('shake'); setTimeout(() => el.parentNode.classList.remove('shake'), 400); return; }
+        S.doubts.push({ id: 'pjq-' + Date.now(), topic: S.cat || 'otra', q: txt, covered: 'no', status: 'open' }); DRAFT = ''; S.cat = null; keep(); render(); pjBooked(true); toast('Apuntada para la reunión'); break;
+      }
+      case 'pjbooked': pjBooked(true); break;
       case 'close': closeSheet(); break;
       case 'talk': talkSheet(); break;
       case 'settings': settingsSheet(); break;
@@ -1343,12 +1361,12 @@
       const w1 = new Date(s.getTime() + 7 * 864e5), w2 = new Date(w1.getTime() + 10 * 60000);
       evs = [...ev(Date.now(), s, e2, E.primer.titulo + why, `Primer paso de vuestro plan. Después, el saldo de la tarjeta queda en ${E.primer.despuesTxt} y la nota pasa a ${E.primer.nota}.`, base, '-PT15M'),
         ...ev(Date.now() + 1, w1, w2, 'Comprobar el saldo de la tarjeta' + why, `Mirad el saldo en la app del banco y escribidlo en vuestro plan.`, base + '&semana=1', '-PT0M')];
-    } else evs = ev(Date.now(), s, e2, 'Reunión con el asesor' + why, summaryText(), base, '-PT1H');
+    } else evs = ev(Date.now(), s, e2, 'Reunión con el asesor' + why, summaryText(), S.stage === 'pareja' ? base + '&reunion=1' : base, '-PT1H');
     icsSave(evs, pay ? 'primer-paso.ics' : 'reunion-plan.ics');
   }
   function summaryText() {
     const acc = E.pasos.filter(p => S.steps[p.key] === 'yes').map(p => '- ' + p.titulo), open = S.doubts.filter(d => d.status === 'open').map(d => '- ' + d.q);
-    return `${E.fam.titulo}. Reunión: ${S.booking ? S.booking.label + ' (' + S.booking.mins + ' min)' : 'sin fecha'}${S.phrase ? '\nLo que más importa: ' + S.phrase : ''}${S.gain ? '\nQué cambiaría en casa: ' + S.gain : ''}${pjDone() ? `\nLo que habéis contestado:\n${pjGets().slice(S.phrase ? 1 : 0).map(t => '- ' + t).join('\n')}` : ''}\nNivel: ${PRO() ? 'sabe de finanzas' : 'nuevo en esto'}${S.payDate ? '\nPrimer paso con fecha: ' + S.payDate.label : ''}\nPasos aceptados:\n${acc.join('\n') || '- ninguno'}\nPreguntas para la reunión:\n${open.join('\n') || '- ninguna'}`;
+    return `${E.fam.titulo}. Reunión: ${S.booking ? S.booking.label + ' (' + S.booking.mins + ' min)' : 'sin fecha'}${S.phrase ? '\nLo que más importa: ' + S.phrase : ''}${S.gain ? '\nQué cambiaría en casa: ' + S.gain : ''}${pjDone() ? `\nLo que habéis contestado:\n${pjGets().slice(S.phrase ? 1 : 0).filter(t => !/^Lo que queréis que os conteste/.test(t)).map(t => '- ' + t).join('\n')}` : ''}\nNivel: ${PRO() ? 'sabe de finanzas' : 'nuevo en esto'}${S.payDate ? '\nPrimer paso con fecha: ' + S.payDate.label : ''}\nPasos aceptados:\n${acc.join('\n') || '- ninguno'}\nPreguntas para la reunión:\n${open.join('\n') || '- ninguna'}`;
   }
   function copySummary() { const t = summaryText(); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Resumen copiado'), () => toast('No se ha podido copiar')); }
 
@@ -1363,6 +1381,7 @@
       if (q.get('demo') === 'plan' || q.get('demo') === 'story') { S.stage = q.get('demo'); S.prefs.level = q.get('l') === 'pro' ? 'pro' : 'new'; S.phrase = S.phrase || E.frases[0]; if (q.get('s')) S.slide = +q.get('s'); }
       render();
       if (q.get('semana') && E.primer && S.payDate && !S.week) weekSheet(true);
+      else if (q.get('reunion') && S.booking && S.stage === 'pareja' && pjDone()) pjBooked(true);
     } catch (err) {
       console.error(err);
       app.innerHTML = `<div class="narrow card"><h2>No hemos podido cargar el plan.</h2><p>Arranca la web con <code>npm start</code> desde la raíz del repo. Si faltan los estudios, se generan con <code>npm run estudio</code>.</p><button class="btn" onclick="location.reload()">Reintentar</button></div>`;
