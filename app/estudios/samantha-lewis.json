@@ -124,7 +124,61 @@
       "tono": ""
      }
     ]
-   }
+   },
+   "kpis": [
+    {
+     "lab": "Ingresos al año",
+     "val": "250.000 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Ahorro al año",
+     "val": "60.000 $",
+     "sub": "24 % de los ingresos",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Sobra al año",
+     "val": "-6.418 $",
+     "sub": "tras gastos y ahorro",
+     "tono": "coste"
+    }
+   ],
+   "desglose": {
+    "titulo": "A dónde va lo que entra cada año",
+    "filas": [
+     [
+      "Impuestos",
+      "66.818 $"
+     ],
+     [
+      "Vivienda",
+      "13.500 $"
+     ],
+     [
+      "Ahorro",
+      "60.000 $"
+     ],
+     [
+      "Gastos del día a día",
+      "116.100 $"
+     ],
+     [
+      "Falta",
+      "-6.418 $"
+     ]
+    ],
+    "total": [
+     "Ingresos",
+     "250.000 $"
+    ]
+   },
+   "lectura": [
+    "De cada 100 $ que entran, 27 a impuestos, 5 a vivienda, 24 a ahorro y 46 a gastos del día a día.",
+    "Este año faltan <b>6.418 $</b>: se gasta más de lo que entra."
+   ],
+   "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año."
   },
   {
    "nombre": "Deudas",
@@ -155,7 +209,20 @@
      "ratios.housingRatio"
     ]
    ],
-   "graf": null
+   "graf": null,
+   "kpis": [
+    {
+     "lab": "Deuda total",
+     "val": "0 $",
+     "sub": "No tienes deudas",
+     "tono": "bueno"
+    }
+   ],
+   "desglose": null,
+   "lectura": [
+    "No tienes deudas pendientes."
+   ],
+   "asesor": ""
   },
   {
    "nombre": "Inversiones",
@@ -321,7 +388,68 @@
       "tono": ""
      }
     ]
-   }
+   },
+   "kpis": [
+    {
+     "lab": "Invertido",
+     "val": "335.000 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Patrimonio neto",
+     "val": "1,4 M$",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Rentabilidad",
+     "val": "15,6 %",
+     "sub": "al año, últimos 3 años",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Peor caída",
+     "val": "11,9 %",
+     "sub": "recuperada en 78 días",
+     "tono": "coste"
+    }
+   ],
+   "desglose": {
+    "titulo": "Dónde está tu patrimonio",
+    "filas": [
+     [
+      "Efectivo",
+      "80.000 $"
+     ],
+     [
+      "Inversiones",
+      "335.000 $"
+     ],
+     [
+      "Vivienda",
+      "900.000 $"
+     ],
+     [
+      "Vehículos",
+      "80.000 $"
+     ],
+     [
+      "Otros",
+      "0 $"
+     ]
+    ],
+    "total": [
+     "Total",
+     "1,4 M$"
+    ]
+   },
+   "lectura": [
+    "El <b>84,6 %</b> de lo invertido está en bolsa.",
+    "Contando el efectivo, el reparto hoy es <b>68 / 32</b> (bolsa / resto). El análisis propone <b>65 / 35</b>, con una rentabilidad esperada del 6,78 % en vez del 6,13 %.",
+    "En una crisis como la de 2008, esta cartera habría caído un <b>17,9 %</b>."
+   ],
+   "asesor": "Si el riesgo de la cartera encaja con tu perfil y con lo que quieres conseguir."
   },
   {
    "nombre": "Colchón",
@@ -401,7 +529,63 @@
     "txt": "80.000 $",
     "minTxt": "50.625 $",
     "maxTxt": "60.750 $"
-   }
+   },
+   "kpis": [
+    {
+     "lab": "Efectivo",
+     "val": "80.000 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Cubre",
+     "val": "7,9 meses",
+     "sub": "de gastos básicos",
+     "tono": ""
+    },
+    {
+     "lab": "Recomendado",
+     "val": "5 a 6 meses",
+     "sub": "50.625 $ a 60.750 $",
+     "tono": ""
+    },
+    {
+     "lab": "Sobra",
+     "val": "750 $",
+     "sub": "tras reserva y gastos previstos",
+     "tono": "bueno"
+    }
+   ],
+   "desglose": {
+    "titulo": "Lo que pide el plan tener en efectivo",
+    "filas": [
+     [
+      "Reserva para imprevistos",
+      "50.625 $ a 60.750 $"
+     ],
+     [
+      "Gasto ya previsto: vacaciones",
+      "6.000 $"
+     ],
+     [
+      "Gasto ya previsto: otro",
+      "12.500 $"
+     ],
+     [
+      "Lo que tienes",
+      "80.000 $"
+     ]
+    ],
+    "total": [
+     "Total que pide",
+     "69.125 $ a 79.250 $"
+    ]
+   },
+   "lectura": [
+    "Tu efectivo cubre <b>7,9 meses</b> de gastos básicos; el plan pide de 5 a 6.",
+    "Por encima de la reserva y de los gastos ya previstos sobran <b>750 $</b>."
+   ],
+   "asesor": "Qué hacer con el efectivo que sobra: deudas, seguros o inversión."
   },
   {
    "nombre": "Seguros",
@@ -476,7 +660,46 @@
       "tono": "bueno"
      }
     ]
-   }
+   },
+   "kpis": [
+    {
+     "lab": "Vida",
+     "val": "2 M$",
+     "sub": "pide 1,25 M$ como mínimo",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Responsabilidad civil",
+     "val": "2 M$",
+     "sub": "pide 2 M$",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Pólizas",
+     "val": "3",
+     "sub": "en el plan",
+     "tono": ""
+    }
+   ],
+   "desglose": {
+    "titulo": "Lo que hay y lo que falta",
+    "filas": [
+     [
+      "Vida · Samantha",
+      "2 M$ de 1,25 M$"
+     ],
+     [
+      "Responsabilidad civil",
+      "2 M$ de 2 M$"
+     ]
+    ],
+    "total": null
+   },
+   "lectura": [
+    "Ethan y Ava dependen de tus ingresos.",
+    "Los seguros que pide el plan están cubiertos."
+   ],
+   "asesor": ""
   }
  ],
  "frases": [
@@ -808,11 +1031,6 @@
     "facts.education.fundingGap"
    ],
    [
-    "Ahorro extra al año para la universidad",
-    "-179.276 $",
-    "facts.education.extraYearlySaving"
-   ],
-   [
     "Patrimonio neto hoy",
     "1,4 M$",
     "netWorthStatement.netWorth"
@@ -823,6 +1041,37 @@
     "projections.yearly"
    ]
   ],
+  "kpis": [
+   {
+    "lab": "Jubilación",
+    "val": "2044",
+    "sub": "a los 65",
+    "tono": ""
+   },
+   {
+    "lab": "Los ingresos cubren",
+    "val": "25 %",
+    "sub": "del gasto en la jubilación",
+    "tono": ""
+   },
+   {
+    "lab": "Los ahorros se acaban",
+    "val": "a los 73",
+    "sub": "años",
+    "tono": "coste"
+   },
+   {
+    "lab": "Patrimonio al jubilarte",
+    "val": "2,11 M$",
+    "sub": "en dólares de hoy",
+    "tono": ""
+   }
+  ],
+  "lectura": [
+   "En la jubilación gastarás unos <b>153.672 $</b> al año; las pensiones y rentas cubren <b>38.336 $</b> y el resto sale de los ahorros.",
+   "Para la universidad faltan <b>98.838 $</b>."
+  ],
+  "asesor": "Qué cambiar para que los ahorros lleguen hasta el final.",
   "serie": [
    [
     2026,

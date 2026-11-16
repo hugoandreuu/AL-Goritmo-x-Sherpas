@@ -136,7 +136,72 @@
       "tono": ""
      }
     ]
-   }
+   },
+   "kpis": [
+    {
+     "lab": "Ingresos al año",
+     "val": "180.000 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Ahorro al año",
+     "val": "43.000 $",
+     "sub": "23,9 % de los ingresos",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Sobra al año",
+     "val": "-8.336 $",
+     "sub": "tras gastos y ahorro",
+     "tono": "coste"
+    },
+    {
+     "lab": "Aportación de la empresa",
+     "val": "7.000 $",
+     "sub": "la máxima",
+     "tono": "bueno"
+    }
+   ],
+   "desglose": {
+    "titulo": "A dónde va lo que entra cada año",
+    "filas": [
+     [
+      "Impuestos",
+      "40.664 $"
+     ],
+     [
+      "Deudas",
+      "11.400 $"
+     ],
+     [
+      "Vivienda",
+      "34.272 $"
+     ],
+     [
+      "Ahorro",
+      "43.000 $"
+     ],
+     [
+      "Gastos del día a día",
+      "66.000 $"
+     ],
+     [
+      "Falta",
+      "-8.336 $"
+     ]
+    ],
+    "total": [
+     "Ingresos",
+     "180.000 $"
+    ]
+   },
+   "lectura": [
+    "De cada 100 $ que entran, 23 a impuestos, 6 a deudas, 19 a vivienda, 24 a ahorro y 37 a gastos del día a día.",
+    "Este año faltan <b>8.336 $</b>: se gasta más de lo que entra.",
+    "Cobras toda la aportación de la empresa: <b>7.000 $</b> al año."
+   ],
+   "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año."
   },
   {
    "nombre": "Deudas",
@@ -225,7 +290,60 @@
       "tono": "coste"
      }
     ]
-   }
+   },
+   "kpis": [
+    {
+     "lab": "Deuda total",
+     "val": "28.500 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Pago al mes",
+     "val": "950 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Deudas sobre ingresos",
+     "val": "6,3 %",
+     "sub": "25,4 % con la vivienda",
+     "tono": ""
+    },
+    {
+     "lab": "Sin deudas en",
+     "val": "2030",
+     "sub": "julio de 2030",
+     "tono": ""
+    }
+   ],
+   "desglose": {
+    "titulo": "Lo que se debe",
+    "filas": [
+     [
+      "Préstamo del coche · 5 %",
+      "15.000 $"
+     ],
+     [
+      "Préstamo de estudios · 5,8 %",
+      "10.000 $"
+     ],
+     [
+      "Tarjeta · 20 %",
+      "3.500 $"
+     ]
+    ],
+    "total": [
+     "Total",
+     "28.500 $"
+    ]
+   },
+   "lectura": [
+    "La más cara es la tarjeta: <b>3.500 $</b> al <b>20 %</b>, <b>58 $</b> de intereses al mes.",
+    "Con la vivienda, los pagos se llevan el <b>25,4 %</b> de los ingresos. Los bancos se fijan a partir del 36 %.",
+    "Pagando como hasta ahora, la tarjeta se acaba en <b>julio de 2028</b>."
+   ],
+   "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla."
   },
   {
    "nombre": "Inversiones",
@@ -391,7 +509,68 @@
       "tono": ""
      }
     ]
-   }
+   },
+   "kpis": [
+    {
+     "lab": "Invertido",
+     "val": "145.000 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Patrimonio neto",
+     "val": "218.500 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Rentabilidad",
+     "val": "13,6 %",
+     "sub": "al año, últimos 3 años",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Peor caída",
+     "val": "10,2 %",
+     "sub": "recuperada en 62 días",
+     "tono": "coste"
+    }
+   ],
+   "desglose": {
+    "titulo": "Dónde está tu patrimonio",
+    "filas": [
+     [
+      "Efectivo",
+      "27.000 $"
+     ],
+     [
+      "Inversiones",
+      "145.000 $"
+     ],
+     [
+      "Vivienda",
+      "0 $"
+     ],
+     [
+      "Vehículos",
+      "40.000 $"
+     ],
+     [
+      "Otros",
+      "35.000 $"
+     ]
+    ],
+    "total": [
+     "Total",
+     "247.000 $"
+    ]
+   },
+   "lectura": [
+    "El <b>69,6 %</b> de lo invertido está en bolsa.",
+    "Contando el efectivo, el reparto hoy es <b>59 / 41</b> (bolsa / resto). El análisis propone <b>67 / 33</b>, con una rentabilidad esperada del 6,91 % en vez del 6,08 %.",
+    "En una crisis como la de 2008, esta cartera habría caído un <b>19,2 %</b>."
+   ],
+   "asesor": "Si el riesgo de la cartera encaja con tu perfil y con lo que quieres conseguir."
   },
   {
    "nombre": "Colchón",
@@ -476,7 +655,64 @@
     "txt": "30.000 $",
     "minTxt": "46.530 $",
     "maxTxt": "55.836 $"
-   }
+   },
+   "kpis": [
+    {
+     "lab": "Efectivo",
+     "val": "30.000 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Cubre",
+     "val": "3,2 meses",
+     "sub": "de gastos básicos",
+     "tono": ""
+    },
+    {
+     "lab": "Recomendado",
+     "val": "5 a 6 meses",
+     "sub": "46.530 $ a 55.836 $",
+     "tono": ""
+    },
+    {
+     "lab": "Falta",
+     "val": "133.330 $",
+     "sub": "para reserva y gastos previstos",
+     "tono": "coste"
+    }
+   ],
+   "desglose": {
+    "titulo": "Lo que pide el plan tener en efectivo",
+    "filas": [
+     [
+      "Reserva para imprevistos",
+      "46.530 $ a 55.836 $"
+     ],
+     [
+      "Gasto ya previsto: vacaciones",
+      "3.500 $"
+     ],
+     [
+      "Gasto ya previsto: casa",
+      "113.300 $"
+     ],
+     [
+      "Lo que tienes",
+      "30.000 $"
+     ]
+    ],
+    "total": [
+     "Total que pide",
+     "163.330 $ a 172.636 $"
+    ]
+   },
+   "lectura": [
+    "Tu efectivo cubre <b>3,2 meses</b> de gastos básicos; el plan pide de 5 a 6.",
+    "Para la reserva y los gastos ya previstos faltan <b>133.330 $</b>.",
+    "Hoy ese efectivo rinde <b>0 $</b> al año; bien colocado, unos <b>230 $</b>."
+   ],
+   "asesor": "Cómo llegar a la reserva sin dejar de lado lo demás."
   },
   {
    "nombre": "Seguros",
@@ -546,7 +782,46 @@
       "tono": "coste"
      }
     ]
-   }
+   },
+   "kpis": [
+    {
+     "lab": "Vida",
+     "val": "180.000 $",
+     "sub": "pide 900.000 $ como mínimo",
+     "tono": "coste"
+    },
+    {
+     "lab": "Responsabilidad civil",
+     "val": "0 $",
+     "sub": "pide 1 M$",
+     "tono": "coste"
+    },
+    {
+     "lab": "Pólizas",
+     "val": "2",
+     "sub": "en el plan",
+     "tono": ""
+    }
+   ],
+   "desglose": {
+    "titulo": "Lo que hay y lo que falta",
+    "filas": [
+     [
+      "Vida · Michael",
+      "180.000 $ de 900.000 $"
+     ],
+     [
+      "Responsabilidad civil",
+      "0 $ de 1 M$"
+     ]
+    ],
+    "total": null
+   },
+   "lectura": [
+    "A Michael le faltan como mínimo <b>720.000 $</b> de seguro de vida.",
+    "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>."
+   ],
+   "asesor": "Cuánto contratar y cuánto cuesta: el plan no trae precios."
   }
  ],
  "frases": [
@@ -871,6 +1146,37 @@
     "projections.yearly"
    ]
   ],
+  "kpis": [
+   {
+    "lab": "Jubilación",
+    "val": "2047",
+    "sub": "a los 58",
+    "tono": ""
+   },
+   {
+    "lab": "Los ingresos cubren",
+    "val": "34 %",
+    "sub": "del gasto en la jubilación",
+    "tono": ""
+   },
+   {
+    "lab": "Los ahorros se acaban",
+    "val": "a los 85",
+    "sub": "años",
+    "tono": "coste"
+   },
+   {
+    "lab": "Patrimonio al jubilarte",
+    "val": "1,51 M$",
+    "sub": "en dólares de hoy",
+    "tono": ""
+   }
+  ],
+  "lectura": [
+   "En la jubilación gastarás unos <b>89.649 $</b> al año; las pensiones y rentas cubren <b>30.036 $</b> y el resto sale de los ahorros.",
+   "Para que la jubilación llegue, el plan pide ahorrar <b>20.231 $</b> más al año."
+  ],
+  "asesor": "Qué cambiar para que los ahorros lleguen hasta el final.",
   "serie": [
    [
     2026,

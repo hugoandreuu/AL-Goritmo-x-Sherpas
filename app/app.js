@@ -486,7 +486,8 @@
       return `<div class="kick">Tema ${k + 1} de ${ts.length}</div>${temaCard(ts[k], 0, 'story')}`;
     }
     if (id === 'ruta') {
-      return `<div class="kick">${w('Vuestro', 'Tu')} roadmap</div><h2>De hoy a ${w('vuestra', 'tu')} jubilación.</h2>${rutaCard('story')}`;
+      return `<div class="kick">${w('Vuestro', 'Tu')} roadmap</div><h2>De hoy a ${w('vuestra', 'tu')} jubilación, hito a hito.</h2>${lineaHtml()}
+        <button class="btn soft block" style="margin-top:14px" data-act="tema" data-k="__ruta">${ic('chart', 16)} Ver a fondo, con cifras y gráfico</button>`;
     }
     if (id.startsWith('f:')) {
       const q = QMAP[id.slice(2)], g = S.a[q.id], n = E.frenos.indexOf(q.id) + 1;
@@ -650,7 +651,7 @@
     const men = x.qs.some(q => (S.match || []).includes(q.id)) ? `<span class="porque tm-men">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
     return `<article class="tema ${nivel(a.nota)}" style="--i:${i}">${men}
       <button class="tm-open" data-act="tema" data-k="${esc(a.nombre)}" aria-label="Ver ${esc(a.nombre)} a fondo">${cabTema(a, t)}${filasTema(a.resumen)}
-        <span class="tm-mas">${ic('chart', 15)} Ver a fondo, con gráfico</span></button>
+        <span class="tm-mas">${ic('arrow', 15)} Abrir la página del tema</span></button>
       ${story ? dijeron(x) : ''}
       <div class="tm-plan"><div class="kicker" style="margin:0 0 6px">${pasos.length ? `Lo que propone ${w('vuestro', 'tu')} plan` : `${w('Vuestro', 'Tu')} plan`}</div>${plan}</div>
     </article>`;
@@ -684,42 +685,56 @@
       <text x="0" y="${H + 14}" class="gl-t">${x0} · ${M(s[0][1])}</text><text x="${W}" y="${H + 14}" class="gl-t" text-anchor="end">${x1} · ${M(s[s.length - 1][1])}</text></svg></figure>`;
   }
 
-  // --- vista a fondo de un tema (al tocar la tarjeta, en el resumen y en el plan completo)
-  function temaSheet(nombre) {
-    if (nombre === '__nota') return notaSheet();
-    if (nombre === '__ruta') return rutaSheet();
-    const x = temaDe(nombre); if (!x) return;
-    const { a, t, pasos } = x;
-    sheet(`<div class="tema-big ${nivel(a.nota)}">${cabTema(a, t, 'h2')}</div>
-      ${graf(a.graf)}
-      <h3 style="margin-top:16px">Las cifras de ${w('vuestro', 'tu')} plan</h3>${filasTema(a.detalle, true)}
-      ${dijeron(x)}
-      ${pasos.length ? `<h3 style="margin-top:16px">Lo que propone</h3><ul class="tm-pl">${pasos.map(p => `<li><b class="tm-n">${E.pasos.indexOf(p) + 1}</b><span><b>${esc(pTitulo(p))}</b>${p.porque ? `<br><span class="small muted">${esc(p.porque)}</span>` : ''}</span></li>`).join('')}</ul>` : `<div style="margin-top:12px">${sinPaso(x)}</div>`}
-      <p class="tiny" style="margin-top:14px">Puntos de este tema en la nota: ${esc(a.puntos || a.nota + ' de 100')}. Cifras del informe de ${w('vuestro', 'tu')} plan.</p>`);
+  // --- página de un tema (al tocar una tarjeta, en el resumen o en el plan completo).
+  // Misma estructura que su sección en el informe: cifras clave, desglose con total y gráfico,
+  // qué significa, lo que propone el plan, para hablar con el asesor y, al final, todas las cifras.
+  const kpisHtml = ks => ks && ks.length ? `<div class="kpis">${ks.map((x, i) => `<div class="kpi ${x.tono || ''}" style="--i:${i}"><small>${esc(x.lab)}</small><b>${esc(x.val)}</b>${x.sub ? `<span>${esc(x.sub)}</span>` : ''}</div>`).join('')}</div>` : '';
+  const desgloseHtml = d => d ? `<div class="dsg"><div class="dsg-t">${esc(d.titulo)}</div><table>${d.filas.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}${d.total ? `<tr class="tot"><td>${esc(d.total[0])}</td><td>${esc(d.total[1])}</td></tr>` : ''}</table></div>` : '';
+  const lecturaHtml = ls => ls && ls.length ? `<ul class="lect">${ls.map(l => `<li>${l}</li>`).join('')}</ul>` : '';
+  const asesorHtml = t => t ? `<div class="asesor">${ic('chat', 18)}<div><b>Para hablar con ${w('vuestro', 'tu')} asesor</b><p>${esc(t)}</p><button class="link small" data-act="whatif">Apuntar una pregunta</button></div></div>` : '';
+  const sec = (n, t, body) => body ? `<section class="tp-sec"><div class="kicker"><b>${n}</b>${t}</div>${body}</section>` : '';
+  function abrirTema(k) { S.temaFrom = S.stage === 'tema' ? S.temaFrom : S.stage; S.temaY = window.scrollY; S.temaK = k; S.stage = 'tema'; render(); window.scrollTo(0, 0); }
+  function volverTema(dest) {
+    const from = dest || S.temaFrom || 'plan', y = from === S.temaFrom ? S.temaY : 0;
+    S.stage = from; S.temaK = null; render(); window.scrollTo(0, y || 0);
   }
-  function notaSheet() {
-    const ord = E.areas.slice().sort((a, b) => a.nota - b.nota);
-    sheet(`<h2>Nota de salud financiera: ${E.nota.hoy}</h2><p class="muted small">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p>
-      ${graf({ tipo: 'barras', titulo: 'Las cinco áreas, de 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} pts` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })) })}
-      <h3 style="margin-top:16px">Cómo sube con cada paso</h3>${filasTema(E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `nota ${p.nota}`]).concat(Object.entries(E.combos || {}).map(([k, v]) => [k.split('|').map(s => (paso(s) || {}).titulo || s).join(' + '), `nota ${v}`])))}
-      <p class="tiny">Lo que más pesa: ${esc(ord[0].nombre)} (${ord[0].nota}). Lo mejor: ${esc(ord[ord.length - 1].nombre)} (${ord[ord.length - 1].nota}).</p>`);
+  function renderTema() {
+    const k = S.temaK, desdeResumen = S.temaFrom === 'story';
+    let html = '';
+    if (k === '__nota') {
+      html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
+        <div class="foto">${ring(E.nota.hoy, E.nota.max)}</div>
+        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })) }) + `<div class="tp-links">${E.areas.map(a => `<button class="chip sm" data-act="tema" data-k="${esc(a.nombre)}">${esc(a.nombre)}</button>`).join('')}</div>`)}
+        ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s => (paso(s) || {}).titulo || s).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}`;
+    } else if (k === '__ruta') {
+      const r = E.roadmap || {};
+      html = `<header class="tp-h"><div class="kicker">${w('Vuestro', 'Tu')} roadmap</div><h1>De hoy a ${w('vuestra', 'tu')} jubilación</h1></header>
+        ${kpisHtml(r.kpis)}
+        ${sec(1, 'El camino, hito a hito', lineaHtml())}
+        ${sec(2, `Cómo crece ${w('vuestro', 'tu')} patrimonio`, grafLinea(r))}
+        ${sec(3, 'Qué significa', lecturaHtml(r.lectura))}
+        ${asesorHtml(r.asesor)}
+        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(r.detalle, true)}</details>`;
+    } else {
+      const x = temaDe(k); if (!x) { volverTema(); return; }
+      const { a, t, pasos } = x;
+      html = `<header class="tp-h tema-big ${nivel(a.nota)}">${cabTema(a, t, 'h1')}</header>
+        ${kpisHtml(a.kpis)}
+        ${sec(1, 'El desglose', desgloseHtml(a.desglose) + graf(a.graf))}
+        ${sec(2, 'Qué significa', lecturaHtml(a.lectura) + dijeron(x))}
+        ${sec(3, `Lo que propone ${w('vuestro', 'tu')} plan`, pasos.length ? pasos.map(pasoTema).join('') : sinPaso(x))}
+        ${asesorHtml(a.asesor)}
+        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(a.detalle, true)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></details>`;
+    }
+    app.innerHTML = `<div class="narrow tpage"><button class="link tp-back" data-act="temaback">${ic('arrow', 16).replace('<svg', '<svg style="transform:rotate(180deg)"')} ${desdeResumen ? 'Volver al resumen' : 'Volver al plan completo'}</button>${html}
+      <p class="foot">Cifras del informe de ${w('vuestro', 'tu')} plan. ${fuente()}</p></div>
+      <div class="cta-bar"><div class="cta-in">${desdeResumen ? `<button class="btn ghost grow" data-act="temaback">Volver al resumen</button><button class="btn grow" data-act="temaback" data-v="plan">Plan completo</button>` : `<button class="btn grow" data-act="temaback">Volver al plan completo</button>`}</div></div>`;
+    if (k === '__nota') animateRing();
   }
-  function rutaSheet() {
-    const r = E.roadmap || {};
-    sheet(`<h2>${w('Vuestra', 'Tu')} vida financiera, de hoy al final del plan</h2>${grafLinea(r)}
-      <h3 style="margin-top:16px">Las cifras</h3>${filasTema(r.detalle, true)}
-      <h3 style="margin-top:16px">Hitos</h3>${lineaHtml()}`);
-  }
-  function rutaCard(modo) {
-    const r = E.roadmap || {};
-    return `<article class="tema ruta"><button class="tm-open" data-act="tema" data-k="__ruta" aria-label="Ver el roadmap a fondo">
-      <header class="tm-h"><span class="ar-ic">${ic('flag', 18)}</span><div class="tm-ht"><h3>${w('Vuestro', 'Tu')} roadmap</h3><small>De hoy a la jubilación y al final del plan</small></div></header>
-      ${filasTema(r.resumen)}${goalsRow()}<span class="tm-mas">${ic('chart', 15)} Ver a fondo, con gráfico</span></button>
-      </article>`;
-  }
-  function goalsRow() {
-    const g = E.linea.filter(x => x.c === 'goal' || x.c === 'end');
-    return g.length ? `<div class="goalrow sm">${g.map(x => `<div class="goalc"><span>${ic(x.icon, 18)}</span><b>${esc(x.cuando)}</b><small>${esc(x.t)}</small></div>`).join('')}</div>` : '';
+  // Roadmap: el camino de hitos, de hoy a la jubilación.
+  function rutaCard() {
+    return `<article class="tema ruta"><header class="tm-h"><span class="ar-ic">${ic('flag', 18)}</span><div class="tm-ht"><h3>${w('Vuestro', 'Tu')} roadmap</h3><small>El camino de hitos, de hoy a la jubilación</small></div></header>
+      ${lineaHtml()}<button class="btn soft block" style="margin-top:12px" data-act="tema" data-k="__ruta">${ic('chart', 16)} Ver a fondo, con cifras y gráfico</button></article>`;
   }
 
   function renderPlan() {
@@ -733,7 +748,7 @@
     const temas = temasPlan();
     main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestro', 'Tu')} plan en ${temas.length} temas</div>
       <p class="muted" style="margin-top:-2px">Son las ${temas.length} partes con las que ${w('vuestro', 'tu')} plan calcula la nota. Lo que ${w('habéis', 'has')} contestado eran situaciones de estos temas. ${w('Tocad', 'Toca')} uno para verlo a fondo.</p>
-      <div class="temas">${temas.map((x, i) => temaCard(x, i, 'plan')).join('')}${rutaCard('plan')}</div></div>`;
+      <div class="temas">${temas.map((x, i) => temaCard(x, i, 'plan')).join('')}${rutaCard()}</div></div>`;
 
     main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Vuestro', 'Tu')} siguiente paso</div>
       <div class="card close"><div class="meter">
@@ -1225,6 +1240,7 @@
     else if (S.stage === 'quiz') renderQuiz();
     else if (S.stage === 'pareja') renderPareja();
     else if (S.stage === 'story') renderStory();
+    else if (S.stage === 'tema') renderTema();
     else renderPlan();
     save();
   }
@@ -1355,7 +1371,8 @@
         break;
       }
       case 'noreason': S.doubts.push({ id: 'no-' + b.dataset.s + '-' + Date.now(), topic: 'otra', paso: b.dataset.s, q: `No a «${low1(paso(b.dataset.s).titulo)}»: ${v}`, covered: 'no', status: 'open' }); closeSheet(); keep(); toast('Apuntado para la reunión'); break;
-      case 'tema': temaSheet(k); break;
+      case 'tema': abrirTema(k); break;
+      case 'temaback': volverTema(v); break;
       case 'whatif': askSheet(null); break;
       case 'cat': { const veil = document.getElementById('veil'); S.cat = S.cat === v ? null : v; save(); askSheet(veil ? veil.dataset.paso : null); break; }
       case 'ask': answerSheet(b.dataset.t, b.dataset.id); break;

@@ -53,6 +53,7 @@ const M = v => (v == null || isNaN(v)) ? 'sin dato' : Math.abs(v) >= 1e6 ? dec(v
 const P = (v, d = 0) => dec(v * 100, d) + ' %';
 const fecha = iso => MES[+iso.slice(5, 7) - 1] + ' de ' + iso.slice(0, 4);
 const anio = iso => +iso.slice(0, 4);
+const low = s2 => s2.charAt(0).toLowerCase() + s2.slice(1);
 const lista = a => a.length <= 1 ? a.join('') : a.slice(0, -1).join(', ') + ' y ' + a[a.length - 1];
 const b = s => `<b>${s}</b>`;
 const get = (o, p) => p.split('.').reduce((x, k) => (x == null ? null : x[k]), o) ?? null;
@@ -740,6 +741,63 @@ function leerTemas(E, fh, ia) {
     graf: vidas.length || um.recommendedCoverage ? { tipo: 'barras', titulo: 'Lo que hay frente a lo recomendado', items: [...vidas.map(v => ({ lab: `Vida${E.fam.pl ? ' ' + v.n : ''}`, v: v.hoy || 0, ref: v.min, txt: `${M(v.hoy || 0)} de ${M(v.min)}`, tono: (v.hoy || 0) < v.min ? 'coste' : 'bueno' })), um.recommendedCoverage ? { lab: 'Resp. civil', v: um.currentCoverage || 0, ref: um.recommendedCoverage, txt: `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)}`, tono: (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno' } : null].filter(Boolean) } : null,
   };
 
+  // ---- página de cada tema, con la estructura de su sección del informe:
+  // cifras clave (las cajas de arriba del PDF), desglose con su total (la tabla), qué significa (las viñetas)
+  // y «para hablar con el asesor» (el recuadro «We should look into»). Todo con cifras del plan.
+  const k = (lab, val, sub, tono) => (val == null || val === '' ? null : { lab, val: String(val), sub: sub || '', tono: tono || '' });
+  const pct = x => P(x, 1).replace(',0 ', ' ');
+  const ingresos = sl.grossIncome, sobraAnio = num(val(RT.netCashFlowThisYear));
+  const SAL2 = { Taxes: 'impuestos', 'Debt Payments': 'deudas', 'Housing Expenses': 'vivienda', Savings: 'ahorro', Expenses: 'gastos del día a día' };
+  const de100 = sal.map(r => `${Math.round(r[2] * 100)} a ${SAL2[r[0]] || r[0]}`);
+  Object.assign(out['Ahorro'], {
+    kpis: [k('Ingresos al año', ingresos != null ? M(ingresos) : null), k('Ahorro al año', sl.savingAmount != null ? M(sl.savingAmount) : null, sl.ratio != null ? `${pct(sl.ratio)} de los ingresos` : '', 'bueno'),
+      k('Sobra al año', sobraAnio != null ? M(Math.round(sobraAnio)) : null, 'tras gastos y ahorro', sobraAnio < 0 ? 'coste' : ''), match.length ? k('Aportación de la empresa', M(cobra), sinCobrar > 0 ? `${M(sinCobrar)} sin cobrar` : 'la máxima', sinCobrar > 0 ? 'coste' : 'bueno') : null].filter(Boolean),
+    desglose: sal.length ? { titulo: 'A dónde va lo que entra cada año', filas: sal.map(r => [SALIDA[r[0]] || r[0], M(Math.round(r[1]))]).concat(sobraAnio != null ? [[sobraAnio < 0 ? 'Falta' : 'Sobra', M(Math.round(sobraAnio))]] : []), total: ['Ingresos', M(ingresos)] } : null,
+    lectura: [de100.length ? `De cada 100 $ que entran, ${lista(de100)}.` : null,
+      sobraAnio != null ? (sobraAnio >= 0 ? `Después de todo, este año ${t('os', 'te')} sobran ${b(M(Math.round(sobraAnio)))}.` : `Este año faltan ${b(M(Math.round(-sobraAnio)))}: se gasta más de lo que entra.`) : null,
+      match.length ? (sinCobrar > 0 ? `La empresa podría aportar ${b(M(sinCobrar))} más al año que hoy no se cobran.` : `${t('Cobráis', 'Cobras')} toda la aportación de la empresa: ${b(M(cobra))} al año.`) : null].filter(Boolean),
+    asesor: `Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año.`,
+  });
+  const caraInt = cara ? Math.round(cara.interes) : null;
+  Object.assign(out['Deudas'], {
+    kpis: ld.length ? [k('Deuda total', M(ind.debtBalance)), k('Pago al mes', M(ind.monthlyDebtPayment)), k('Deudas sobre ingresos', dti.debtOnlyDti != null ? pct(dti.debtOnlyDti) : null, dti.ratio != null ? `${pct(dti.ratio)} con la vivienda` : ''), k('Sin deudas en', libre ? String(anio(libre)) : null, libre ? fecha(libre) : '')].filter(Boolean) : [k('Deuda total', '0 $', t('No tenéis deudas', 'No tienes deudas'), 'bueno')],
+    desglose: ld.length ? { titulo: 'Lo que se debe', filas: ld.map(d => [`${d.tipo} · ${P(d.tipoInt, 1)}`, M(d.saldo)]), total: ['Total', M(ind.debtBalance)] } : null,
+    lectura: ld.length ? [cara ? `La más cara es ${/^Préstamo/.test(cara.tipo) ? 'el' : 'la'} ${low(cara.tipo)}: ${b(M(cara.saldo))} al ${b(P(cara.tipoInt, 1))}, ${b(M(caraInt))} de intereses al mes.` : null,
+      dti.ratio != null ? `Con la vivienda, los pagos se llevan el ${b(pct(dti.ratio))} de los ingresos. Los bancos se fijan a partir del 36 %.` : null,
+      ccFin && ld.some(d => d.tipo === 'Tarjeta') ? `Pagando como hasta ahora, la tarjeta se acaba en ${b(fecha(ccFin))}.` : null].filter(Boolean) : [`${t('No tenéis', 'No tienes')} deudas pendientes.`],
+    asesor: ld.length ? `Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla.` : '',
+  });
+  const eqInv = tot.investablePortfolioValue ? tot.equityExposure / tot.investablePortfolioValue : null, crisis = env.find(e => e.name === 'Global Financial Crisis');
+  Object.assign(out['Inversiones'], {
+    kpis: [k('Invertido', invertible != null ? M(invertible) : null), k('Patrimonio neto', get(km, 'netWorthStatement.netWorth.total') != null ? M(get(km, 'netWorthStatement.netWorth.total')) : null),
+      k('Rentabilidad', h.return3yAnnualized != null ? pct(h.return3yAnnualized) : null, 'al año, últimos 3 años', 'bueno'), k('Peor caída', h.maxDrawdown3y != null ? pct(Math.abs(h.maxDrawdown3y)) : null, h.maxDrawdownRecoveryDays ? `recuperada en ${h.maxDrawdownRecoveryDays} días` : '', 'coste')].filter(Boolean),
+    desglose: la.length ? { titulo: `Dónde está ${t('vuestro', 'tu')} patrimonio`, filas: la.map(r => [TIPO_ACTIVO[r[0]] || r[0], M(r[2])]), total: ['Total', M(get(km, 'assetsAndInvestments.totalAssetsAndEquity.totalAssets'))] } : null,
+    lectura: [eqInv != null ? `El ${b(pct(eqInv))} de lo invertido está en bolsa.` : null,
+      h.currentEquityPct != null && eqP != null ? `Contando el efectivo, el reparto hoy es ${b(`${Math.round(h.currentEquityPct * 100)} / ${100 - Math.round(h.currentEquityPct * 100)}`)} (bolsa / resto). El análisis propone ${b(`${Math.round(eqP * 100)} / ${100 - Math.round(eqP * 100)}`)}${pa.expectedPerformance != null && ta.expectedPerformance != null ? `, con una rentabilidad esperada del ${P(ta.expectedPerformance, 2)} en vez del ${P(pa.expectedPerformance, 2)}` : ''}.` : null,
+      crisis ? `En una crisis como la de 2008, esta cartera habría caído un ${b(pct(Math.abs(crisis.performance)))}.` : null].filter(Boolean),
+    asesor: E.fam.pl && ad[0].risk_profile !== ad[1].risk_profile ? `${ad[0].first_name} es ${PERF[ad[0].risk_profile] || ad[0].risk_profile} y ${ad[1].first_name}, ${PERF[ad[1].risk_profile] || ad[1].risk_profile}: decidir juntos cuánto riesgo queréis en la cartera.` : `Si el riesgo de la cartera encaja con ${t('vuestro', 'tu')} perfil y con lo que ${t('queréis', 'quieres')} conseguir.`,
+  });
+  Object.assign(out['Colchón'], {
+    kpis: [k('Efectivo', ac != null ? M(ac) : null), k('Cubre', !isNaN(mc) ? `${dec(mc, 1)} meses` : null, 'de gastos básicos'), k('Recomendado', ef.minRecommendedEFMonths ? `${ef.minRecommendedEFMonths} a ${ef.maxRecommendedEFMonths} meses` : null, er.min != null ? `${M(er.min)} a ${M(er.max)}` : ''),
+      sobra > 0 ? k('Sobra', M(sobra), 'tras reserva y gastos previstos', 'bueno') : falta > 0 ? k('Falta', M(falta), 'para reserva y gastos previstos', 'coste') : null].filter(Boolean),
+    desglose: C.totalCashNeeded ? { titulo: 'Lo que pide el plan tener en efectivo', filas: [['Reserva para imprevistos', `${M(er.min)} a ${M(er.max)}`], ...(C.nearTermGoals || []).map(g => [`Gasto ya previsto: ${/vacation/i.test(g.label) ? 'vacaciones' : /home|real estate|house/i.test(g.label) ? 'casa' : /vehicle|car/i.test(g.label) ? 'coche' : 'otro'}`, M(g.value)]), [`Lo que ${t('tenéis', 'tienes')}`, M(ac)]], total: ['Total que pide', `${M(C.totalCashNeeded.min)} a ${M(C.totalCashNeeded.max)}`] } : null,
+    lectura: [!isNaN(mc) ? `${t('Vuestro', 'Tu')} efectivo cubre ${b(dec(mc, 1) + ' meses')} de gastos básicos; el plan pide de ${ef.minRecommendedEFMonths} a ${ef.maxRecommendedEFMonths}.` : null,
+      sobra > 0 ? `Por encima de la reserva y de los gastos ya previstos sobran ${b(M(sobra))}.` : falta > 0 ? `Para la reserva y los gastos ya previstos faltan ${b(M(falta))}.` : null,
+      cy && cy[2] > cy[1] ? `Hoy ese efectivo rinde ${b(M(Math.round(cy[1])))} al año; bien colocado, unos ${b(M(Math.round(cy[2])))}.` : null].filter(Boolean),
+    asesor: sobra > 0 ? `Qué hacer con el efectivo que sobra: deudas, seguros o inversión.` : `Cómo llegar a la reserva sin dejar de lado lo demás.`,
+  });
+  const faltan = vidas.filter(v => (v.hoy || 0) < v.min);
+  Object.assign(out['Seguros'], {
+    kpis: [...vidas.map(v => k(`Vida${E.fam.pl ? ' · ' + v.n : ''}`, M(v.hoy || 0), `pide ${M(v.min)} como mínimo`, (v.hoy || 0) < v.min ? 'coste' : 'bueno')), um.recommendedCoverage ? k('Responsabilidad civil', M(um.currentCoverage || 0), `pide ${M(um.recommendedCoverage)}`, (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno') : null, k('Pólizas', String(pol.length), 'en el plan')].filter(Boolean),
+    desglose: vidas.length || um.recommendedCoverage ? { titulo: 'Lo que hay y lo que falta', filas: [...vidas.map(v => [`Vida · ${v.n}`, `${M(v.hoy || 0)} de ${M(v.min)}`]), um.recommendedCoverage ? ['Responsabilidad civil', `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)}`] : null].filter(Boolean),
+      total: null } : null,
+    lectura: [...faltan.map(v => `A ${v.n} le faltan como mínimo ${b(M(v.min - (v.hoy || 0)))} de seguro de vida.`),
+      um.recommendedCoverage && (um.currentCoverage || 0) < um.recommendedCoverage ? `${(um.currentCoverage || 0) ? 'Falta' : 'No hay'} seguro de responsabilidad civil: el plan pide ${b(M(um.recommendedCoverage))}.` : null,
+      ki.length ? `${lista(ki.map(k2 => k2.first_name))} ${ki.length > 1 ? 'dependen' : 'depende'} de ${t('vuestros', 'tus')} ingresos.` : null,
+      !faltan.length && !(um.recommendedCoverage && (um.currentCoverage || 0) < um.recommendedCoverage) ? `Los seguros que pide el plan están cubiertos.` : null].filter(Boolean),
+    asesor: faltan.length || (um.currentCoverage || 0) < (um.recommendedCoverage || 0) ? `Cuánto contratar y cuánto cuesta: el plan no trae precios.` : '',
+  });
+
   // Roadmap · informe: «Retirement & Goals» + educación + proyección del patrimonio
   const yearly = get(fh, 'projections.yearly') || [], gs = get(fh, 'goals.goalsSummary') || [], cg = get(fh, 'goals.chartGoals') || [];
   const jub = cg.filter(g => g.goalType === 'RETIREMENT').map(g => anio(g.date)), jA = jub.length ? Math.max(...jub) : null;
@@ -756,10 +814,18 @@ function leerTemas(E, fh, ia) {
       fila('Ahorro extra que pide la jubilación', get(R, 'retirementSavings.requiredExtraSavings') > 0 ? `${M(Math.round(get(R, 'retirementSavings.requiredExtraSavings')))} al año` : null, 'ratios.retirementSavings.requiredExtraSavings'),
       ...(get(R, 'educationSavings.goalsSummary') || []).map(g => fila(`${g.goalName.replace('College ', 'Universidad de ')}`, `empieza en ${fecha(g.date)}; ahorrado ${M(g.accountBalance || 0)}, falta ${M(Math.round(g.totalGAP))}`, 'ratios.educationSavings')),
       fila('Falta para la universidad', val(ED.fundingGap) ? M(Math.round(val(ED.fundingGap))) : null, 'facts.education.fundingGap'),
-      fila('Ahorro extra al año para la universidad', val(ED.extraYearlySaving) ? M(Math.round(val(ED.extraYearlySaving))) : null, 'facts.education.extraYearlySaving'),
+      fila('Ahorro extra al año para la universidad', val(ED.extraYearlySaving) > 0 ? M(Math.round(val(ED.extraYearlySaving))) : null, 'facts.education.extraYearlySaving'),
       fila('Patrimonio neto hoy', get(km, 'netWorthStatement.netWorth.total') != null ? M(get(km, 'netWorthStatement.netWorth.total')) : null, 'netWorthStatement.netWorth'),
       fila(`Patrimonio neto al ${t('jubilaros', 'jubilarte')} (dólares de hoy)`, enJub ? M(enJub.net_worth_todays_dollars) : null, 'projections.yearly'),
     ].filter(Boolean),
+    kpis: [jA ? { lab: 'Jubilación', val: String(jA), sub: `a los ${lista(ad.map(a => String(a.retirement_age)))}`, tono: '' } : null,
+      val(RT.incomeShareOfNeed) ? { lab: 'Los ingresos cubren', val: String(val(RT.incomeShareOfNeed)).replace('.', ',').replace('%', ' %'), sub: 'del gasto en la jubilación', tono: '' } : null,
+      agota ? { lab: 'Los ahorros se acaban', val: `a los ${(agota.label.match(/age (\d+)/) || [])[1]}`, sub: 'años', tono: 'coste' } : val(RT.savingsLeftAtPlanEnd) != null ? { lab: 'Al final del plan quedan', val: M(val(RT.savingsLeftAtPlanEnd)), sub: 'en dólares de hoy', tono: 'bueno' } : null,
+      enJub ? { lab: `Patrimonio al ${t('jubilaros', 'jubilarte')}`, val: M(enJub.net_worth_todays_dollars), sub: 'en dólares de hoy', tono: '' } : null].filter(Boolean),
+    lectura: [val(RT.spendingNeed) && val(RT.guaranteedIncome) ? `En la jubilación ${t('gastaréis', 'gastarás')} unos ${b(M(Math.round(val(RT.spendingNeed))))} al año; las pensiones y rentas cubren ${b(M(Math.round(val(RT.guaranteedIncome))))} y el resto sale de los ahorros.` : null,
+      val(ED.fundingGap) ? `Para la universidad faltan ${b(M(Math.round(val(ED.fundingGap))))}${val(ED.extraYearlySaving) > 0 ? `: unos ${b(M(Math.round(val(ED.extraYearlySaving))))} más al año` : ''}.` : null,
+      get(R, 'retirementSavings.requiredExtraSavings') > 0 ? `Para que la jubilación llegue, el plan pide ahorrar ${b(M(Math.round(get(R, 'retirementSavings.requiredExtraSavings'))))} más al año.` : null].filter(Boolean),
+    asesor: agota ? `Qué cambiar para que los ahorros lleguen hasta el final.` : `Cómo encajar las metas (casa, coche, universidad) sin mover la jubilación.`,
     serie: yearly.map(y => [y.year, Math.round(y.net_worth_todays_dollars)]),
     jubila: jA,
   };
