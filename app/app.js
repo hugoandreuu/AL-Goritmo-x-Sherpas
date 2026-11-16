@@ -76,6 +76,8 @@
     return E.pasos.find(p => ks.includes(p.key)) || null;
   };
   const vistos = () => (S.seen = S.seen || {});
+  // Nota a la que llegaría la ruta sumando este paso a los ya elegidos (solo notas del plan). Si no la sube, se dice.
+  const conPaso = p => { const now = scoreFor(accepted()).v, v = scoreFor([...new Set([...accepted(), p.key])]).v; return v > now ? `con este paso, nota ${v}` : accepted().includes(p.key) ? `nota ${v}` : 'no mueve la nota por sí solo'; };
   function descubrir(q) { // al revelar: la parada que arregla esto queda descubierta
     const p = pasoDe(q);
     if (p) vistos()[p.key] = true;
@@ -87,15 +89,16 @@
   function routeBar() {
     const P = E.pasos; if (!P.length || !E.nota) return '';
     const acc = accepted(), sc = scoreFor(acc).v, lo = E.nota.hoy, hi = Math.max(E.nota.max, lo + 1), seen = vistos();
+    const hechos = P.filter(p => (S.done || {})[p.key]).map(p => p.key), hoy = hechos.length ? scoreFor(hechos).v : lo;
     const nDone = acc.length, nSeen = P.filter(p => seen[p.key] || acc.includes(p.key)).length;
     const fases = ['quiz', 'story', 'plan'], cur = fases.indexOf(S.stage === 'tema' ? 'story' : S.stage);
-    const estado = nDone ? `${nDone} de ${P.length} ${P.length === 1 ? 'parada' : 'paradas'} en ${w('vuestra', 'tu')} ruta`
+    const estado = nDone ? `${hechos.length ? `${hechos.length} ${hechos.length === 1 ? 'hecha' : 'hechas'} y ` : ''}${nDone} de ${P.length} ${P.length === 1 ? 'elegida' : 'elegidas'}${sc > hoy ? `. Hechas, la nota llegaría a ${sc}` : ''}`
       : S.stage === 'quiz' ? `${nSeen} de ${P.length} ${P.length === 1 ? 'parada descubierta' : 'paradas descubiertas'}` : `${P.length} ${P.length === 1 ? 'parada' : 'paradas'} hasta ${E.nota.max}`;
-    return `<nav class="route" aria-label="${w('Vuestra', 'Tu')} ruta: nota ${sc} de ${E.nota.max} posibles. ${esc(estado)}">
+    return `<nav class="route" aria-label="${w('Vuestra', 'Tu')} ruta: nota de hoy ${hoy}${nDone ? `, con los pasos elegidos llegaría a ${sc}` : ''}; con todo el plan, ${E.nota.max}. ${esc(estado)}">
       <div class="rt-top"><ol class="rt-fases">${fases.map((f, i) => `<li class="${i < cur ? 'past' : i === cur ? 'cur' : ''}">${FASE[f]}</li>`).join('')}</ol>
-        <span class="rt-sc"><b id="rt-now">${sc}</b><span>/ ${E.nota.max}</span></span></div>
+        <span class="rt-sc"><span>Hoy</span><b id="rt-now">${hoy}</b>${nDone && sc > hoy ? `<span class="rt-goal">→ ${sc}</span>` : `<span>/ 100</span>`}</span></div>
       <div class="rt-track"><span class="rt-end lo" title="Nota de hoy">${lo}</span>
-        <div class="rt-line">${P.map((p, i) => `<i class="rt-seg ${acc.includes(p.key) ? 'on' : ''}" style="left:${i / (P.length + 1) * 100}%;width:${100 / (P.length + 1)}%"></i>`).join('')}<i class="rt-seg ${acc.length === P.length ? 'on' : ''}" style="left:${P.length / (P.length + 1) * 100}%;width:${100 / (P.length + 1)}%"></i>
+        <div class="rt-line"><i class="rt-fill" style="width:${nDone === P.length ? 100 : nDone / (P.length + 1) * 100}%"></i>
         ${P.map((p, i) => { const st = acc.includes(p.key) ? 'done' : seen[p.key] || S.stage !== 'quiz' ? 'seen' : 'off';
           return `<button class="rt-stop ${st}" id="rs-${p.key}" style="left:${(i + 1) / (P.length + 1) * 100}%" data-act="stop" data-s="${p.key}" aria-label="Parada ${i + 1}: ${st === 'off' ? 'por descubrir' : esc(pTitulo(p)) + (st === 'done' ? ', en la ruta' : '')}">${st === 'done' ? ic('check', 13) : st === 'off' ? '?' : i + 1}</button>`; }).join('')}</div>
         <span class="rt-end hi" title="Nota con todo el plan">${hi}</span></div>
@@ -117,8 +120,8 @@
       : `<div class="rr-meet"><p>Es lo que más se aleja de lo que ${w('pensabais', 'pensabas')}. Si ${w('preferís', 'prefieres')} verlo con una persona:</p><button class="btn soft block" data-act="book" data-k="quiz">${ic('cal', 18)} Elegir día con ${w('vuestro', 'tu')} asesor</button></div>`) : '';
     let body;
     if (p) {
-      body = `<div class="rr-k">${ic('flag', 15)}Esto tiene salida en ${w('vuestra', 'tu')} ruta</div>
-        <div class="rr-stop ${yes ? 'done' : ''}"><b class="rr-n">${yes ? ic('check', 15) : i + 1}</b><div><b>${esc(pTitulo(p))}</b><small>Parada ${i + 1} · ${quienTxt(p)} · con este paso, nota ${p.nota}</small></div></div>
+      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan da un paso para esto</div>
+        <div class="rr-stop ${yes ? 'done' : ''}"><b class="rr-n">${yes ? ic('check', 15) : i + 1}</b><div><b>${esc(pTitulo(p))}</b><small>Parada ${i + 1} · ${quienTxt(p)} · ${conPaso(p)}</small></div></div>
         ${q.salida ? `<p class="small muted rr-sal">${esc(q.salida)}</p>` : ''}
         ${yes ? `<p class="saved">${ic('check', 15)}En ${w('vuestra', 'tu')} ruta. Lo ${w('decidís', 'decides')} del todo en el plan.</p>`
           : `<button class="btn block" data-act="rtake" data-s="${p.key}">${ic('plus', 18)} ${w('Lo queremos', 'Lo quiero')} en ${w('nuestra', 'mi')} ruta</button>`}`;
@@ -253,14 +256,14 @@
       <p class="rv-guess">${w('Vosotros decíais', 'Tú decías')} <b>${esc(fmtGuess(q, a.value))}</b></p>
       <div class="rv-box" data-st="box"><small>${w('Vuestro', 'Tu')} estudio dice</small>
         <b class="big ${q.mid ? 'mid' : ''}"${count ? ` data-count='${JSON.stringify(count)}'` : ''}>${esc(q.plan)}</b><em>${esc(q.unidad)}</em>
-        ${b === 'clavado' ? `<svg class="rv-tick" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>` : ''}</div>
+        ${b === 'clavado' && !bad ? `<svg class="rv-tick" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>` : ''}</div>
       ${ruler(q, a.value)}
       <div class="rv-prec" data-st="type"><small class="rv-band">${esc(BANDA[b]())}</small><h2 class="rv-type" data-text="${esc(tit)}">${esc(tit)}</h2></div>
       <div class="rv-vis" data-st="vis">${vis(q)}</div>
       ${q.siente ? `<p class="rv-feel" data-st="fade">${q.siente}</p>` : ''}
       ${rvRoute(q)}
       <div class="rv-note" data-st="fade"><div class="rv-note-q">¿Qué ${w('os pasa', 'te pasa')} por la cabeza al ver esto?</div>
-        <div class="rx-row">${REACT.map(([v, l, i]) => `<button class="rx" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}"><span class="sg-ic">${ic(i, 18)}</span><span>${l()}</span></button>`).join('')}</div>
+        <div class="rx-row">${REACT.filter(([v]) => !(v === 'fix' && pasoDe(q))).map(([v, l, i]) => `<button class="rx" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}"><span class="sg-ic">${ic(i, 18)}</span><span>${l()}</span></button>`).join('')}</div>
         <p class="saved rx-ok" ${r ? '' : 'hidden'}>${ic('check', 15)}Apuntado para ${w('vuestro', 'tu')} asesor</p>
         ${(S.notes || {})[q.id] ? '' : `<button class="link addnote" data-act="addnote">${ic('pen', 16)}Añadir algo con ${w('vuestras', 'tus')} palabras</button>`}
         <div class="note-w" ${(S.notes || {})[q.id] ? '' : 'hidden'}><label for="note" class="sr">Con ${w('vuestras', 'tus')} palabras</label>
@@ -608,7 +611,7 @@
       <button class="askbox" data-act="whatif">${ic('pen', 18)}<span>Escribir otra pregunta para ${w('vuestro', 'tu')} asesor</span></button>
       ${S.booking ? bookedCard() : `<ul class="ticks" style="margin-top:6px"><li>${ic('check', 16)}${w('Salís', 'Sales')} con el orden de ${w('vuestros', 'tus')} pasos y respuesta a esto</li><li>${ic('check', 16)}${ns.mins} minutos, por videollamada</li><li>${ic('check', 16)}Sin preparar nada: ya tiene lo que ${w('habéis', 'has')} contestado</li></ul>
       <button class="btn block big-cta" data-act="book">${ic('cal')} Elegir día con ${w('vuestro', 'tu')} asesor</button>
-      <button class="link" style="width:100%" data-act="later">${window.__PREVIEW__ ? (S.later ? 'Sin prisa: el plan sigue aquí' : 'Ahora no') : S.later ? 'Recordatorio en el calendario, dentro de una semana' : `Ahora no. ${w('Recordádnoslo', 'Recuérdamelo')} en una semana`}</button>`}`;
+      <button class="link" style="width:100%" data-act="later">${window.__PREVIEW__ ? (S.later ? 'Sin prisa: el plan sigue aquí' : 'Ahora no') : S.later ? 'Recordatorios a los 3 y 30 días, en el calendario' : `Ahora no. ${w('Recordádnoslo', 'Recuérdamelo')} en 3 y en 30 días`}</button>`}`;
   }
 
   let STORY_DIR = '';
@@ -1007,8 +1010,8 @@
     let main = `<section class="planhero"><div class="kicker" style="margin:0">Plan de ${esc(E.fam.titulo)}</div>
       <h1>«${esc(S.phrase || `${w('Vuestro', 'Tu')} plan`)}»</h1>
       <div class="heroscore">${ring(sc.v, max)}
-        <div><b class="hs-t">${acc.length ? `${w('Vuestra', 'Tu')} nota con lo que ${w('habéis', 'has')} aceptado` : `${w('Vuestra', 'Tu')} nota de salud financiera, hoy`}</b>
-        <p class="muted small" style="margin:.3em 0 0">${max > E.nota.hoy ? `Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${max}</b>. ` : ''}${w('Lleváis', 'Llevas')} ${acc.length} de ${c.n}.${sc.parcial ? ' El plan da la nota de cada paso por separado.' : ''}</p></div></div></section>`;
+        <div><b class="hs-t">${acc.length ? `La nota que ${w('tendríais', 'tendrías')} al hacer lo elegido` : `${w('Vuestra', 'Tu')} nota de salud financiera, hoy`}</b>
+        <p class="muted small" style="margin:.3em 0 0">${acc.length ? `Hoy es <b>${(() => { const h = E.pasos.filter(p => (S.done || {})[p.key]).map(p => p.key); return h.length ? scoreFor(h).v : E.nota.hoy; })()}</b>. ` : ''}${max > E.nota.hoy ? `Con todos los pasos de ${w('vuestro', 'tu')} plan llega a <b>${max}</b>. ` : ''}${w('Habéis elegido', 'Has elegido')} ${acc.length} de ${c.n}.${sc.parcial ? ' El plan da la nota de cada paso por separado.' : ''}</p></div></div></section>`;
 
     const temas = temasPlan();
     main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestro', 'Tu')} plan en ${temas.length} temas</div>
@@ -1176,7 +1179,7 @@
   }
   const meetCtas = () => S.booking ? '<button class="btn block" data-act="close">Seguir</button>' : '<button class="btn block" data-act="book">Pedir reunión</button><button class="link" style="width:100%" data-act="close">Ahora no</button>';
   function weekDone(balance) {
-    S.week = { done: true, balance }; S.steps[E.primer.key] = 'yes'; keep();
+    S.week = { done: true, balance }; S.steps[E.primer.key] = 'yes'; S.done = Object.assign(S.done || {}, { [E.primer.key]: true }); keep();
     sheet(`<div class="celebrate"><div class="burst">${ic('check', 40)}</div><div class="kicker">Paso 1 hecho</div><h2>De ${E.nota.hoy} a ${E.primer.nota}, sin ayuda de nadie.</h2>
       <p>La tarjeta ha bajado a ${M(balance)}. Los pasos que quedan se ven con ${w('vuestro', 'tu')} asesor.</p></div>${meetCtas()}`);
   }
@@ -1663,7 +1666,7 @@
   if (SR) new MutationObserver(() => addMics()).observe(document.body, { childList: true, subtree: true });
   function keep() { const y = window.scrollY; render(); window.scrollTo(0, y); }
   const marcaSugg = b => app.querySelectorAll('.sg').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-  function toast(t) { const el = document.createElement('div'); el.className = 'toast'; el.textContent = t; document.body.appendChild(el); setTimeout(() => el.remove(), 2400); }
+  function toast(t) { const el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); el.textContent = t; document.body.appendChild(el); setTimeout(() => el.remove(), 2400); }
 
   // ------------------------------------------------------------------ eventos
   document.addEventListener('toggle', e => {
@@ -1761,10 +1764,12 @@
         const after = scoreFor(accepted()).v, stop = document.getElementById('rs-' + s0);
         if (stop) stop.scrollIntoView({ block: 'nearest' });
         fly(b, pTitulo(paso(s0)), 'rs-' + s0);
-        setTimeout(() => { keep(); refreshRoute(); toast(after > before ? `${w('Vuestra', 'Tu')} nota sube de ${before} a ${after}` : 'En la ruta'); }, 860);
+        setTimeout(() => { keep(); refreshRoute(); toast(after > before ? `Elegido. Hecho, la nota pasaría de ${before} a ${after}` : 'Elegido para la ruta'); }, 860);
         break;
       }
       case 'rask': { const q = QMAP[k]; if (!S.doubts.some(d => d.id === 'rq-' + k)) S.doubts.push({ id: 'rq-' + k, topic: 'otra', q: `${q.creian}: ${q.plan} ${q.unidad}. ¿Cómo lo arreglamos?`, covered: 'no', status: 'open' }); fly(b, 'Para la reunión'); keep(); break; }
+      case 'vhecho': S.done = S.done || {}; S.done[b.dataset.s] = true; S.steps[b.dataset.s] = 'yes'; keep(); vueltaSheet(+b.dataset.n); break;
+      case 'vaun': S.doubts.push({ id: 'vaun-' + b.dataset.s + '-' + Date.now(), topic: 'otra', paso: b.dataset.s, q: `Aún no hemos hecho «${low1(pTitulo(paso(b.dataset.s)))}». ¿Qué nos frena?`, covered: 'no', status: 'open' }); closeSheet(); keep(); toast('Apuntado para la reunión'); break;
       case 'stop': {
         const p = paso(b.dataset.s), i = E.pasos.indexOf(p);
         if (S.stage === 'plan') { const el = document.getElementById('step-' + p.key); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); } }
@@ -1827,7 +1832,7 @@
         const after = scoreFor(accepted()).v;
         if (S.steps[s] === 'doubt') { S.cat = null; askSheet(s); } else if (S.steps[s] === 'no') noSheet(s);
         else if (S.steps[s] === 'yes' && E.primer && E.primer.key === s && !S.payDate) calSheet('pay');
-        else if (S.steps[s] === 'yes') toast(after > before ? `${w('Vuestra', 'Tu')} nota sube de ${before} a ${after}` : 'Apuntado');
+        else if (S.steps[s] === 'yes') toast(after > before ? `Elegido. Hecho, la nota pasaría de ${before} a ${after}` : 'Apuntado');
         break;
       }
       case 'noreason': S.doubts.push({ id: 'no-' + b.dataset.s + '-' + Date.now(), topic: 'otra', paso: b.dataset.s, q: `No a «${low1(paso(b.dataset.s).titulo)}»: ${v}`, covered: 'no', status: 'open' }); closeSheet(); keep(); toast('Apuntado para la reunión'); break;
@@ -1892,18 +1897,21 @@
   // «Ahora no»: dos citas reales en el calendario, a los 3 y a los 30 días, que vuelven a la ruta.
   function laterIcs() {
     const evs = [3, 30].flatMap((n, i) => { const d = new Date(); d.setDate(d.getDate() + n); d.setHours(19, 0, 0, 0);
-      return icsEv(Date.now() + i, d, new Date(d.getTime() + 15 * 60000), `${w('Vuestra', 'Tu')} ruta, ${n} días después` + (S.phrase ? ` · ${S.phrase}` : ''), `Mirad qué paradas lleváis y cuál es la siguiente.`, icsBase() + '&vuelta=' + n, '-PT0M'); });
+      return icsEv(Date.now() + i, d, new Date(d.getTime() + 15 * 60000), `${w('Vuestra', 'Tu')} ruta, ${n} días después` + (S.phrase ? ` · ${S.phrase}` : ''), `Mirad qué paradas lleváis y cuál es la siguiente.`, icsBase() + '&vuelta=' + n + (accepted().length ? '&r=' + accepted().join(',') : ''), '-PT0M'); });
     icsSave(evs, 'volver-a-la-ruta.ics');
   }
   // Al volver desde esas citas (?vuelta=3 o 30): lo hecho, lo que falta y la siguiente parada.
   function vueltaSheet(n) {
-    const P = E.pasos, acc = accepted(), sc = scoreFor(acc).v, sig = P.find(p => !acc.includes(p.key));
-    sheet(`<div class="kicker">${n} días después</div><h2>${acc.length ? `${w('Lleváis', 'Llevas')} ${acc.length} de ${P.length} paradas. Nota ${sc}.` : `${w('Vuestra', 'Tu')} ruta sigue aquí, en ${sc}.`}</h2>
+    const P = E.pasos, acc = accepted(), done = S.done || {}, hechos = P.filter(p => done[p.key]), sig = P.find(p => acc.includes(p.key) && !done[p.key]) || P.find(p => !done[p.key]);
+    const sc = scoreFor(hechos.map(p => p.key)).v;
+    sheet(`<div class="kicker">${n} días después</div><h2>${hechos.length ? `${w('Habéis hecho', 'Has hecho')} ${hechos.length} de ${P.length}. Nota ${sc}.` : sig ? `¿${w('Habéis hecho', 'Has hecho')} «${esc(low1(pTitulo(sig)))}»?` : `${w('Vuestra', 'Tu')} ruta sigue aquí.`}</h2>
       ${S.phrase ? `<p class="week-why">${w('Lo que os movía', 'Lo que te movía')}: <b>«${esc(S.phrase)}»</b></p>` : ''}
-      <ol class="rr-list big">${P.map((p, i) => `<li class="${acc.includes(p.key) ? 'done' : p === sig ? 'next' : ''}"><b class="rr-n sm">${acc.includes(p.key) ? ic('check', 12) : i + 1}</b><span>${esc(pTitulo(p))}<small>${acc.includes(p.key) ? 'Hecho o decidido' : p === sig ? `Siguiente · con este paso, nota ${p.nota}` : `Nota ${p.nota}`}</small></span></li>`).join('')}</ol>
-      ${S.booking ? `<p class="saved">${ic('check', 15)}Reunión pedida: ${esc(S.booking.short)}</p><button class="btn block" data-act="close">Ver ${w('vuestro', 'tu')} plan</button>`
-        : `<button class="btn block" data-act="book">${ic('cal', 18)} ${sig && sig.quien === 'familia' ? 'Elegir día para hacerlo' : `Elegir día con ${w('vuestro', 'tu')} asesor`}</button><button class="link" style="width:100%" data-act="close">Ver ${w('vuestro', 'tu')} plan</button>`}`);
+      <ol class="rr-list big">${P.map((p, i) => `<li class="${done[p.key] ? 'done' : p === sig ? 'next' : ''}"><b class="rr-n sm">${done[p.key] ? ic('check', 12) : i + 1}</b><span>${esc(pTitulo(p))}<small>${done[p.key] ? 'Hecho' : acc.includes(p.key) ? 'Elegido, sin confirmar' : 'Sin elegir'}</small></span></li>`).join('')}</ol>
+      ${sig && !done[sig.key] ? `<div class="row" style="margin-bottom:12px"><button class="btn soft grow" data-act="vhecho" data-s="${sig.key}" data-n="${n}">Sí, ${w('lo hemos hecho', 'lo he hecho')}</button><button class="btn ghost grow" data-act="vaun" data-s="${sig.key}">Aún no</button></div>` : ''}
+      ${S.booking ? `<p class="saved">${ic('check', 15)}Reunión pedida: ${esc(S.booking.short)}</p><button class="link" style="width:100%" data-act="close">Ver ${w('vuestro', 'tu')} plan</button>`
+        : `<button class="link" style="width:100%" data-act="book">${ic('cal', 16)} Elegir día con ${w('vuestro', 'tu')} asesor</button><button class="link" style="width:100%" data-act="close">Ver ${w('vuestro', 'tu')} plan</button>`}`);
   }
+
   function downloadIcs(kind) {
     const pay = kind === 'pay', b = pay ? S.payDate : S.booking; if (!b) return;
     const s = fromIso(b.iso.slice(0, 10), b.time), e2 = new Date(s.getTime() + (pay ? 15 : b.mins) * 60000);
@@ -1935,6 +1943,7 @@
       await abrirCaso(slug, q.has('reset'));
       if (q.get('demo') === 'plan' || q.get('demo') === 'story') { S.stage = q.get('demo'); S.prefs.level = q.get('l') === 'pro' ? 'pro' : 'new'; S.phrase = S.phrase || E.frases[0]; if (q.get('s')) S.slide = +q.get('s'); }
       render();
+      if (q.get('vuelta') && q.get('r')) q.get('r').split(',').forEach(k => { if (paso(k)) S.steps[k] = 'yes'; });
       if (q.get('vuelta') && E.pasos.length) { if (S.stage === 'home' || S.stage === 'quiz') { toPlan(); render(); } vueltaSheet(+q.get('vuelta') || 3); }
       else if (q.get('semana') && E.primer && S.payDate && !S.week) weekSheet(true);
       else if (q.get('reunion') && S.booking && S.stage === 'pareja' && pjDone()) pjBooked(true);

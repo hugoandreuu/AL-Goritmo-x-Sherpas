@@ -782,7 +782,7 @@ i.gone { background: var(--bad); box-shadow: inset 0 -3px 0 rgba(0,0,0,.14); }
 
 .rv-prec { display: grid; gap: 4px; }
 .rv-band { font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--s2); }
-.rv2.good .rv-band, .rv2.b-clavado .rv-band { color: var(--good); }
+.rv2.good .rv-band, .rv2.good.b-clavado .rv-band { color: var(--good); }
 .rv-type { margin: 0; font-size: clamp(22px, 6vw, 28px); text-wrap: balance; }
 .rv2 .rv-vis { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 18px 16px; display: grid; gap: 12px; justify-items: center; }
 .rv2.bad .rv-vis { background: linear-gradient(180deg, var(--bad-soft, #fff1e6), #fff 70%); border-color: #ffd9bd; }
@@ -1459,14 +1459,14 @@ body.fondo-on .rul-arr { background: rgba(255,255,255,.85); -webkit-backdrop-fil
 
 /* La ruta: un solo hilo para el quiz, el resumen y el plan. De la nota de hoy a la del plan, parada a parada. */
 .route { background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; padding: 9px 12px 8px; margin: 0 0 14px; box-shadow: var(--shadow); }
-.plan-grid .route { position: sticky; top: 64px; z-index: 15; backdrop-filter: blur(8px); }
+.route { position: sticky; top: 64px; z-index: 15; backdrop-filter: blur(8px); }
 .rt-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.rt-fases { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; font-size: 12px; font-weight: 600; color: var(--ink-3); letter-spacing: .02em; }
+.rt-fases { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; font-size: 12px; font-weight: 600; color: #5f6168; letter-spacing: .02em; }
 .rt-fases li { display: flex; align-items: center; gap: 4px; }
 .rt-fases li + li::before { content: ""; width: 10px; height: 1.5px; background: var(--line); }
 .rt-fases li.past { color: var(--ink-2); }
 .rt-fases li.cur { color: var(--accent); }
-.rt-sc { display: inline-flex; align-items: baseline; gap: 3px; font-size: 12px; color: var(--ink-3); }
+.rt-sc { display: inline-flex; align-items: baseline; gap: 4px; font-size: 12px; color: #5f6168; }
 .rt-sc b { font: 700 19px/1 var(--head); color: var(--ink); }
 .route.bump .rt-sc b { animation: bump .6s var(--soft); display: inline-block; }
 .rt-track { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
@@ -1481,7 +1481,8 @@ body.fondo-on .rul-arr { background: rgba(255,255,255,.85); -webkit-backdrop-fil
 .rt-stop.done { background: var(--good); border: 2px solid var(--good); color: #fff; }
 .rt-stop.got { animation: bump .6s var(--soft); }
 @keyframes stopin { from { transform: scale(.4); } 60% { transform: scale(1.18); } to { transform: none; } }
-.rt-st { margin: 2px 0 0; font-size: 12px; color: var(--ink-3); }
+.rt-st { margin: 2px 0 0; font-size: 12px; color: #5f6168; }
+.rt-goal { color: var(--accent); font-weight: 600; margin-left: 2px; }
 
 /* Final de cada sorpresa: la parada de la ruta que la arregla. */
 .rv2 .rv-route { background: var(--accent-soft); border-radius: 20px; padding: 16px; display: grid; gap: 10px; }
