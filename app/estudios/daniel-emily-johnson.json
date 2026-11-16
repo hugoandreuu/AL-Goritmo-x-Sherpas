@@ -1064,15 +1064,23 @@
      {
       "lab": "Vida Daniel",
       "v": 250000,
-      "ref": 1600000,
-      "txt": "250.000 $ de 1,6 M$",
+      "zona": [
+       1600000,
+       2400000
+      ],
+      "ref": null,
+      "txt": "250 K$ de 1,6 M$ a 2,4 M$",
       "tono": "coste"
      },
      {
       "lab": "Vida Emily",
       "v": 200000,
-      "ref": 1200000,
-      "txt": "200.000 $ de 1,2 M$",
+      "zona": [
+       1200000,
+       1800000
+      ],
+      "ref": null,
+      "txt": "200 K$ de 1,2 M$ a 1,8 M$",
       "tono": "coste"
      },
      {
@@ -2787,6 +2795,16 @@
     "tipo": "flujo",
     "titulo": "Cómo se reparten 280.000 $ al año",
     "total": 280000,
+    "fuentes": [
+     {
+      "lab": "Daniel",
+      "v": 160000
+     },
+     {
+      "lab": "Emily",
+      "v": 120000
+     }
+    ],
     "grupos": [
      {
       "lab": "Gastos",
@@ -3101,6 +3119,37 @@
    ]
   },
   {
+   "graf2": {
+    "tipo": "apiladas",
+    "titulo": "Dónde está el dinero, según cómo tributa cada cuenta",
+    "series": [
+     "Emily",
+     "Daniel"
+    ],
+    "items": [
+     {
+      "lab": "Tributa cada año",
+      "partes": [
+       64000,
+       0
+      ]
+     },
+     {
+      "lab": "Tributa al sacar el dinero",
+      "partes": [
+       100000,
+       150000
+      ]
+     },
+     {
+      "lab": "Libre de impuestos",
+      "partes": [
+       30000,
+       0
+      ]
+     }
+    ]
+   },
    "id": "impuestos",
    "nombre": "Impuestos y cuentas",
    "icon": "coins",
@@ -3579,6 +3628,34 @@
    ]
   },
   {
+   "comparar": [
+    {
+     "lab": "Bolsa / bonos y efectivo",
+     "hoy": "54 / 46",
+     "prop": "66 / 34"
+    },
+    {
+     "lab": "Rentabilidad al año",
+     "hoy": "13,65 %",
+     "prop": "16,51 %"
+    },
+    {
+     "lab": "Oscilación al año",
+     "hoy": "8,12 %",
+     "prop": "8,39 %",
+     "menosMejor": true
+    }
+   ],
+   "perfiles": [
+    {
+     "nombre": "Daniel",
+     "perfil": "dinámico"
+    },
+    {
+     "nombre": "Emily",
+     "perfil": "equilibrado"
+    }
+   ],
    "id": "cartera",
    "nombre": "Cómo se ha portado la cartera",
    "icon": "stack",
@@ -4612,6 +4689,28 @@
      "0 a 100"
     ]
    ]
+  }
+ ],
+ "cajas": [
+  {
+   "lab": "Hogar",
+   "val": "Daniel y Emily",
+   "sub": "44 y 42 años · 2 hijos"
+  },
+  {
+   "lab": "Ingresos al año",
+   "val": "280 K$",
+   "sub": "Daniel 160 K$ · Emily 120 K$"
+  },
+  {
+   "lab": "Patrimonio neto",
+   "val": "511 K$",
+   "sub": "1,13 M$ en bienes"
+  },
+  {
+   "lab": "Deudas",
+   "val": "618 K$",
+   "sub": "5.420 $ al mes"
   }
  ],
  "narrativa": [

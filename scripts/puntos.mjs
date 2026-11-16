@@ -224,7 +224,8 @@ export function leerPuntos(E, fh, ia) {
     conexiones: ['Ahorro', 'Deudas', 'impuestos'],
     kpis: filas([k('Ingresos', Mk(ins.total), 'al año, brutos'), k('Impuestos', Mk(cr.totalTaxes), `tipo efectivo ${P(cr.effectiveTaxRate, 1)}`), k('Ahorro', isNum(sr) ? P(sr, 1) : null, M(cs.reportedAnnualSavings) + ' al año', estF === 'hi' ? 'bueno' : ''),
       k((free.total || 0) >= 0 ? 'Sobra' : 'Falta', Mk(Math.abs(free.total || 0)), fiable ? 'al año' : 'estimado: el gasto puede estar infradeclarado', fiable && free.total >= 0 ? 'bueno' : 'coste')]),
-    graf: out.length ? { tipo: 'flujo', titulo: `Cómo se reparten ${M(ins.total)} al año`, total: ins.total, grupos: out.filter(o => o.total > 0).map(o => ({ lab: FLUJO[o.name] || o.name, v: o.total, partes: (o.items || []).filter(i => i.total > 0).map(i => ({ lab: FLUJO[i.name] || i.name, v: i.total })) })).concat(free.total > 0 ? [{ lab: 'Sobra', v: free.total, partes: [], sobra: true }] : []) } : null,
+    graf: out.length ? { tipo: 'flujo', titulo: `Cómo se reparten ${M(ins.total)} al año`, total: ins.total,
+      fuentes: porPersona ? filas([ins.client > 0 ? { lab: nom('client'), v: ins.client } : null, ins.coClient > 0 ? { lab: nom('coClient'), v: ins.coClient } : null, ins.joint > 0 ? { lab: 'Conjunto', v: ins.joint } : null]) : [], grupos: out.filter(o => o.total > 0).map(o => ({ lab: FLUJO[o.name] || o.name, v: o.total, partes: (o.items || []).filter(i => i.total > 0).map(i => ({ lab: FLUJO[i.name] || i.name, v: i.total })) })).concat(free.total > 0 ? [{ lab: 'Sobra', v: free.total, partes: [], sobra: true }] : []) } : null,
     lectura: filas([
       `Entran ${b(M(ins.total))} al año${porPersona ? ` (${nom('client')} ${M(ins.client)}, ${nom('coClient')} ${M(ins.coClient)})` : ''}. Los impuestos se llevan ${b(M(Math.round(cr.totalTaxes)))}, un ${P(cr.effectiveTaxRate, 1)}.`,
       isNum(sr) ? `Se ahorra el ${b(P(sr, 1))} de lo que se gana, ${M(cs.reportedAnnualSavings)} al año contando lo de la empresa. El 20 % es la referencia habitual.` : null,
@@ -251,6 +252,8 @@ export function leerPuntos(E, fh, ia) {
   const matriz = {}; accts.forEach(a => { const o = (a.owner || []).length > 1 ? 'Conjunto' : (a.owner || ['—'])[0], f = FISCAL[a.tax_treatment] || a.tax_treatment; matriz[o] = matriz[o] || {}; matriz[o][f] = (matriz[o][f] || 0) + a.balance; });
   const fcols = Object.values(FISCAL).filter(f => Object.values(matriz).some(m => m[f]));
   puntos.push({
+    graf2: fcols.length ? { tipo: 'apiladas', titulo: 'Dónde está el dinero, según cómo tributa cada cuenta', series: Object.keys(matriz),
+      items: fcols.map(f => ({ lab: f, partes: Object.keys(matriz).map(o => matriz[o][f] || 0) })) } : null,
     id: 'impuestos', nombre: 'Impuestos y cuentas', icon: 'coins', sub: 'Cuentas con ventajas fiscales que quedan por usar',
     cifra: ahorroFiscal > 0 ? M(Math.round(ahorroFiscal)) : 'Sin margen', cifraLab: ahorroFiscal > 0 ? 'de impuestos al año que se podrían ahorrar' : 'las cuentas con ventaja fiscal están aprovechadas', estado: ahorroFiscal > 0 ? 'mid' : 'hi',
     titular: ahorroFiscal > 0 ? `Usando el margen de ${lista(buckets.filter(r => r[5] > 0).map(r => BUCKET[r[1]] || r[1]))}, se pagarían unos ${M(Math.round(ahorroFiscal))} menos de impuestos al año.` : 'No queda margen fiscal relevante por usar.',
@@ -288,6 +291,11 @@ export function leerPuntos(E, fh, ia) {
   const apal = pos.filter(p => /Leveraged/i.test(p.category || ''));
   const filasAsig = (as.rows || []).filter(r => r.label !== 'Weighted avg ER');
   puntos.push({
+    comparar: isNum(get(ts, 'allocation.annualReturn')) ? filas([
+      get(ia, 'analysis.summary.assetAllocation.currentEF') ? { lab: 'Bolsa / bonos y efectivo', hoy: `${Math.round(get(ia, 'analysis.summary.assetAllocation.currentEF.equity') * 100)} / ${Math.round(get(ia, 'analysis.summary.assetAllocation.currentEF.fixedIncome') * 100)}`, prop: `${Math.round(get(ia, 'analysis.summary.assetAllocation.targetEF.equity') * 100)} / ${Math.round(get(ia, 'analysis.summary.assetAllocation.targetEF.fixedIncome') * 100)}` } : null,
+      { lab: 'Rentabilidad al año', hoy: P(get(as, 'allocation.annualReturn'), 2), prop: P(get(ts, 'allocation.annualReturn'), 2) },
+      { lab: 'Oscilación al año', hoy: P(get(as, 'allocation.standardDeviation'), 2), prop: P(get(ts, 'allocation.standardDeviation'), 2), menosMejor: true }]) : [],
+    perfiles: ad.map(a => ({ nombre: a.first_name, perfil: PERFIL[a.risk_profile] || a.risk_profile })),
     id: 'cartera', nombre: 'Cómo se ha portado la cartera', icon: 'stack', sub: 'Los últimos 3 años, frente a una cartera de referencia',
     cifra: isNum(H.return3yAnnualized) ? P(H.return3yAnnualized, 1) : '—', cifraLab: `al año en 3 años${isNum(B.return3yAnnualized) ? ` (referencia ${P(B.return3yAnnualized, 1)})` : ''}`, estado: estC,
     titular: desv != null ? `Lo invertido está un ${P(g0.currentEquityPct)} en bolsa; el perfil ${PERFIL[g0.targetProfile] || g0.targetProfile} pide un ${P(g0.targetEquityPct)}.` : 'Rentabilidad, riesgo y reparto de la cartera.',
@@ -360,7 +368,15 @@ export function leerPuntos(E, fh, ia) {
     tabla('Cada paso del plan', ['Paso', 'Esfuerzo', 'Nota', 'Quita un techo'], (E.pasos || []).map(p => [p.titulo, ESF[p.esfuerzo] || p.esfuerzo || '—', `${sc.published_score ?? ''} → ${p.nota}`, p.abre ? 'Sí' : 'No'])),
     capaFilas('La escala', [fila('Nota publicada', sc.published_score), fila('Banda', ({ critical: 'crítica', vulnerable: 'vulnerable', stable: 'estable', strong: 'fuerte', excellent: 'excelente' })[sc.band] || sc.band), fila('Escala', sc.scale ? String(sc.scale).replace(' to ', ' a ') : null)]),
   ]);
-  return { puntos, extra, notaCapas };
+  // Cajas de la portada (pág. 1 del estudio): hogar, ingresos, patrimonio y deuda.
+  const nws = km.netWorthStatement || {}, dm = km.debtManagement || {};
+  const deuda = get(nws, 'liabilities.total'), pagoMes = (dm.listOfDebts || []).slice(1).reduce((x, r) => x + (isNum(r[4]) ? r[4] : 0), 0);
+  const cajas = filas([
+    { lab: t('Hogar', 'Tú'), val: ad.map(a => a.first_name).join(' y '), sub: filas([ad.map(a => a.age).join(' y ') + ' años', ki.length ? `${ki.length} ${ki.length === 1 ? 'hijo' : 'hijos'}` : null]).join(' · ') },
+    isNum(ins.total) ? { lab: 'Ingresos al año', val: Mk(ins.total), sub: porPersona ? `${nom('client')} ${Mk(ins.client)} · ${nom('coClient')} ${Mk(ins.coClient)}` : 'brutos' } : null,
+    isNum(get(nws, 'netWorth.total')) ? { lab: 'Patrimonio neto', val: Mk(get(nws, 'netWorth.total')), sub: isNum(get(nws, 'assets.total')) ? `${Mk(get(nws, 'assets.total'))} en bienes` : '' } : null,
+    isNum(deuda) ? { lab: 'Deudas', val: Mk(deuda), sub: pagoMes ? `${M(pagoMes)} al mes` : '' } : null]);
+  return { puntos, extra, notaCapas, cajas };
 }
 
 // Divide un texto del informe en frases o viñetas («- **Título** — texto»).

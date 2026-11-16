@@ -766,8 +766,12 @@
      {
       "lab": "Vida",
       "v": 2000000,
-      "ref": 1250000,
-      "txt": "2 M$ de 1,25 M$",
+      "zona": [
+       1250000,
+       2500000
+      ],
+      "ref": null,
+      "txt": "2 M$ de 1,25 M$ a 2,5 M$",
       "tono": "bueno"
      },
      {
@@ -2358,6 +2362,7 @@
     "tipo": "flujo",
     "titulo": "Cómo se reparten 250.000 $ al año",
     "total": 250000,
+    "fuentes": [],
     "grupos": [
      {
       "lab": "Gastos",
@@ -2558,6 +2563,21 @@
    ]
   },
   {
+   "graf2": {
+    "tipo": "apiladas",
+    "titulo": "Dónde está el dinero, según cómo tributa cada cuenta",
+    "series": [
+     "Samantha"
+    ],
+    "items": [
+     {
+      "lab": "Tributa cada año",
+      "partes": [
+       415000
+      ]
+     }
+    ]
+   },
    "id": "impuestos",
    "nombre": "Impuestos y cuentas",
    "icon": "coins",
@@ -3083,6 +3103,30 @@
    ]
   },
   {
+   "comparar": [
+    {
+     "lab": "Bolsa / bonos y efectivo",
+     "hoy": "68 / 32",
+     "prop": "65 / 35"
+    },
+    {
+     "lab": "Rentabilidad al año",
+     "hoy": "15,53 %",
+     "prop": "16,11 %"
+    },
+    {
+     "lab": "Oscilación al año",
+     "hoy": "8,88 %",
+     "prop": "8 %",
+     "menosMejor": true
+    }
+   ],
+   "perfiles": [
+    {
+     "nombre": "Samantha",
+     "perfil": "dinámico"
+    }
+   ],
    "id": "cartera",
    "nombre": "Cómo se ha portado la cartera",
    "icon": "stack",
@@ -4069,6 +4113,28 @@
      "0 a 100"
     ]
    ]
+  }
+ ],
+ "cajas": [
+  {
+   "lab": "Tú",
+   "val": "Samantha",
+   "sub": "47 años · 2 hijos"
+  },
+  {
+   "lab": "Ingresos al año",
+   "val": "250 K$",
+   "sub": "brutos"
+  },
+  {
+   "lab": "Patrimonio neto",
+   "val": "1,4 M$",
+   "sub": "1,4 M$ en bienes"
+  },
+  {
+   "lab": "Deudas",
+   "val": "0 $",
+   "sub": ""
   }
  ],
  "narrativa": [

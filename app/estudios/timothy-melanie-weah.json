@@ -1092,15 +1092,23 @@
      {
       "lab": "Vida Timothy",
       "v": 140000,
-      "ref": 750000,
-      "txt": "140.000 $ de 750.000 $",
+      "zona": [
+       750000,
+       1500000
+      ],
+      "ref": null,
+      "txt": "140 K$ de 750 K$ a 1,5 M$",
       "tono": "coste"
      },
      {
       "lab": "Vida Melanie",
       "v": 110000,
-      "ref": 600000,
-      "txt": "110.000 $ de 600.000 $",
+      "zona": [
+       600000,
+       1200000
+      ],
+      "ref": null,
+      "txt": "110 K$ de 600 K$ a 1,2 M$",
       "tono": "coste"
      },
      {
@@ -2988,6 +2996,16 @@
     "tipo": "flujo",
     "titulo": "Cómo se reparten 270.000 $ al año",
     "total": 270000,
+    "fuentes": [
+     {
+      "lab": "Timothy",
+      "v": 150000
+     },
+     {
+      "lab": "Melanie",
+      "v": 120000
+     }
+    ],
     "grupos": [
      {
       "lab": "Impuestos",
@@ -3314,6 +3332,37 @@
    ]
   },
   {
+   "graf2": {
+    "tipo": "apiladas",
+    "titulo": "Dónde está el dinero, según cómo tributa cada cuenta",
+    "series": [
+     "Melanie",
+     "Timothy"
+    ],
+    "items": [
+     {
+      "lab": "Tributa cada año",
+      "partes": [
+       190000,
+       0
+      ]
+     },
+     {
+      "lab": "Tributa al sacar el dinero",
+      "partes": [
+       55000,
+       70000
+      ]
+     },
+     {
+      "lab": "Libre de impuestos",
+      "partes": [
+       20000,
+       25000
+      ]
+     }
+    ]
+   },
    "id": "impuestos",
    "nombre": "Impuestos y cuentas",
    "icon": "coins",
@@ -3841,6 +3890,34 @@
    ]
   },
   {
+   "comparar": [
+    {
+     "lab": "Bolsa / bonos y efectivo",
+     "hoy": "45 / 55",
+     "prop": "40 / 60"
+    },
+    {
+     "lab": "Rentabilidad al año",
+     "hoy": "11,67 %",
+     "prop": "11,71 %"
+    },
+    {
+     "lab": "Oscilación al año",
+     "hoy": "7,48 %",
+     "prop": "5,1 %",
+     "menosMejor": true
+    }
+   ],
+   "perfiles": [
+    {
+     "nombre": "Timothy",
+     "perfil": "dinámico"
+    },
+    {
+     "nombre": "Melanie",
+     "perfil": "equilibrado"
+    }
+   ],
    "id": "cartera",
    "nombre": "Cómo se ha portado la cartera",
    "icon": "stack",
@@ -4949,6 +5026,28 @@
      "0 a 100"
     ]
    ]
+  }
+ ],
+ "cajas": [
+  {
+   "lab": "Hogar",
+   "val": "Timothy y Melanie",
+   "sub": "40 y 38 años · 2 hijos"
+  },
+  {
+   "lab": "Ingresos al año",
+   "val": "270 K$",
+   "sub": "Timothy 150 K$ · Melanie 120 K$"
+  },
+  {
+   "lab": "Patrimonio neto",
+   "val": "696 K$",
+   "sub": "789 K$ en bienes"
+  },
+  {
+   "lab": "Deudas",
+   "val": "93 K$",
+   "sub": "2.960 $ al mes"
   }
  ],
  "narrativa": [

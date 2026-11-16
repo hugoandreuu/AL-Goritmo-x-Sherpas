@@ -758,7 +758,7 @@ function leerTemas(E, fh, ia) {
       ...pol.map(p => fila(`Póliza · ${TIPO_SEGURO[p.type] || p.type}${E.fam.pl ? ((a => a ? ' · ' + a : '')(/^Your /.test(p.name) ? ad[0].first_name : (ad.find(x => p.name.includes(x.first_name)) || {}).first_name)) : ''}`, typeof p.coverage === 'number' ? M(p.coverage) : 'en vigor, sin importe en el plan', 'profile.insurance')),
       ki.length ? fila('Dependen de estos ingresos', lista(ki.map(k => `${k.first_name} (${k.age})`)), 'case.household') : null,
     ].filter(Boolean),
-    graf: vidas.length || um.recommendedCoverage ? { tipo: 'barras', titulo: 'Lo que hay frente a lo recomendado', items: [...vidas.map(v => ({ lab: `Vida${E.fam.pl ? ' ' + v.n : ''}`, v: v.hoy || 0, ref: v.min, txt: `${M(v.hoy || 0)} de ${M(v.min)}`, tono: (v.hoy || 0) < v.min ? 'coste' : 'bueno' })), um.recommendedCoverage ? { lab: 'Resp. civil', v: um.currentCoverage || 0, ref: um.recommendedCoverage, txt: `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)}`, tono: (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno' } : null].filter(Boolean), leyenda: { coste: 'Por debajo del mínimo', bueno: 'Cubierto' } } : null,
+    graf: vidas.length || um.recommendedCoverage ? { tipo: 'barras', titulo: 'Lo que hay frente a lo recomendado', items: [...vidas.map(v => ({ lab: `Vida${E.fam.pl ? ' ' + v.n : ''}`, v: v.hoy || 0, zona: v.max > v.min ? [v.min, v.max] : null, ref: v.max > v.min ? null : v.min, txt: `${Mk(v.hoy || 0)} de ${Mk(v.min)} a ${Mk(v.max)}`, tono: (v.hoy || 0) < v.min ? 'coste' : 'bueno' })), um.recommendedCoverage ? { lab: 'Resp. civil', v: um.currentCoverage || 0, ref: um.recommendedCoverage, txt: `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)}`, tono: (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno' } : null].filter(Boolean), leyenda: { coste: 'Por debajo del mínimo', bueno: 'Cubierto' } } : null,
   };
 
   // ---- página de cada tema, con la estructura de su sección del informe:
@@ -943,7 +943,7 @@ async function main() {
     const PU = leerPuntos(E, d.fh, d.ia);
     const CONEX = { Ahorro: ['flujo', 'impuestos', 'jubilacion'], Deudas: ['Colchón', 'flujo'], Inversiones: ['cartera', 'jubilacion'], 'Colchón': ['Deudas', 'Seguros', 'universidad'], Seguros: ['Colchón', 'Deudas'] };
     E.areas.forEach(a => { a.capas = (PU.extra[a.nombre] || {}).capas || []; a.conexiones = CONEX[a.nombre] || []; });
-    E.puntos = PU.puntos; E.notaCapas = PU.notaCapas;
+    E.puntos = PU.puntos; E.notaCapas = PU.notaCapas; E.cajas = PU.cajas;
     const trad = fs.existsSync(TRAD(slug)) ? JSON.parse(fs.readFileSync(TRAD(slug), 'utf8')) : {};
     E.narrativa = Object.entries(NARRATIVA).map(([clave, [punto, titulo]]) => {
       const [parte, campo] = clave.split('.'), en = get(parte === 'fh' ? d.fh : d.ia, 'narrative.' + campo);

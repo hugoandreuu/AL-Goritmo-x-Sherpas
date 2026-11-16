@@ -939,8 +939,12 @@
      {
       "lab": "Vida",
       "v": 180000,
-      "ref": 900000,
-      "txt": "180.000 $ de 900.000 $",
+      "zona": [
+       900000,
+       1800000
+      ],
+      "ref": null,
+      "txt": "180 K$ de 900 K$ a 1,8 M$",
       "tono": "coste"
      },
      {
@@ -2416,6 +2420,7 @@
     "tipo": "flujo",
     "titulo": "Cómo se reparten 180.000 $ al año",
     "total": 180000,
+    "fuentes": [],
     "grupos": [
      {
       "lab": "Gastos",
@@ -2650,6 +2655,33 @@
    ]
   },
   {
+   "graf2": {
+    "tipo": "apiladas",
+    "titulo": "Dónde está el dinero, según cómo tributa cada cuenta",
+    "series": [
+     "Michael"
+    ],
+    "items": [
+     {
+      "lab": "Tributa cada año",
+      "partes": [
+       87000
+      ]
+     },
+     {
+      "lab": "Tributa al sacar el dinero",
+      "partes": [
+       80000
+      ]
+     },
+     {
+      "lab": "Libre de impuestos",
+      "partes": [
+       5000
+      ]
+     }
+    ]
+   },
    "id": "impuestos",
    "nombre": "Impuestos y cuentas",
    "icon": "coins",
@@ -3129,6 +3161,30 @@
    ]
   },
   {
+   "comparar": [
+    {
+     "lab": "Bolsa / bonos y efectivo",
+     "hoy": "59 / 41",
+     "prop": "67 / 33"
+    },
+    {
+     "lab": "Rentabilidad al año",
+     "hoy": "13,59 %",
+     "prop": "16,63 %"
+    },
+    {
+     "lab": "Oscilación al año",
+     "hoy": "7,9 %",
+     "prop": "8,36 %",
+     "menosMejor": true
+    }
+   ],
+   "perfiles": [
+    {
+     "nombre": "Michael",
+     "perfil": "dinámico"
+    }
+   ],
    "id": "cartera",
    "nombre": "Cómo se ha portado la cartera",
    "icon": "stack",
@@ -4115,6 +4171,28 @@
      "0 a 100"
     ]
    ]
+  }
+ ],
+ "cajas": [
+  {
+   "lab": "Tú",
+   "val": "Michael",
+   "sub": "37 años"
+  },
+  {
+   "lab": "Ingresos al año",
+   "val": "180 K$",
+   "sub": "brutos"
+  },
+  {
+   "lab": "Patrimonio neto",
+   "val": "219 K$",
+   "sub": "247 K$ en bienes"
+  },
+  {
+   "lab": "Deudas",
+   "val": "29 K$",
+   "sub": "950 $ al mes"
   }
  ],
  "narrativa": [

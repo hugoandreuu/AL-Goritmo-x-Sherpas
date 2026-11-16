@@ -690,7 +690,8 @@
   // Portada: solo la nota, en grande y con su color. Al tocarla se ve cómo se calcula.
   function portada() {
     return `<section class="portada est-${nivel(E.nota.hoy)}"><button class="pt-nota" data-act="tema" data-k="__nota" aria-label="Ver cómo se calcula la nota">${ring(E.nota.hoy, E.nota.max)}
-      <span class="pt-txt"><b>${w('Vuestra', 'Tu')} nota financiera</b></span></button></section>`;
+      <span class="pt-txt"><b>${w('Vuestra', 'Tu')} nota financiera</b></span></button>
+      ${(E.cajas || []).length ? `<div class="cajas">${E.cajas.map(c => `<div><small>${esc(c.lab)}</small><b>${esc(c.val)}</b>${c.sub ? `<span>${esc(c.sub)}</span>` : ''}</div>`).join('')}</div>` : ''}</section>`;
   }
   // Texto del informe (narrative): en español si hay traducción revisada; si no, el original.
   function narrHtml(n) {
@@ -726,17 +727,18 @@
   const leyenda = items => items.length ? `<div class="gx-leg">${items.map(([c, t]) => `<span><i class="${c}"></i>${esc(t)}</span>`).join('')}</div>` : '';
   // Barras horizontales: nombre y cifra en una línea encima de cada barra, eje común abajo.
   function barrasHtml(titulo, items, extra = {}) {
-    const top = Math.max(...items.map(it => Math.max(it.v || 0, it.ref || 0)), extra.zona ? extra.zona[1] : 0) || 1;
+    const top = Math.max(...items.map(it => Math.max(it.v || 0, it.ref || 0, it.zona ? it.zona[1] : 0)), extra.zona ? extra.zona[1] : 0) || 1;
     const t = marcas(0, top), mx = t[t.length - 1], pc = v => Math.max(0, Math.min(100, v / mx * 100));
     const leg = [];
     if (items.some(it => it.tono === 'coste')) leg.push(['coste', extra.costeTxt || 'A vigilar']);
     if (items.some(it => it.tono === 'bueno')) leg.push(['bueno', extra.buenoTxt || 'A favor']);
     if (items.some(it => it.ref)) leg.push(['ref', 'Mínimo que recomienda el plan']);
+    if (items.some(it => it.zona)) leg.push(['zona', 'Rango que recomienda el plan']);
     if (extra.zona) leg.push(['zona', `Recomendado: ${extra.zona[2]}`]);
     return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><div class="gx">
       <div class="gx-plot">${t.map(v => `<i class="gx-g${v === 0 ? ' z' : ''}" style="left:${pc(v)}%"></i>`).join('')}${extra.zona ? `<i class="gx-zona" style="left:${pc(extra.zona[0])}%;width:${pc(extra.zona[1]) - pc(extra.zona[0])}%"></i>` : ''}
       ${items.map((it, k) => `<div class="gx-row ${it.tono || ''}" style="--i:${k}"><div class="gx-h"><span class="gx-l" title="${esc(it.lab)}">${esc(it.lab)}</span><span class="gx-v">${esc(it.txt || M(it.v))}</span></div>
-        <div class="gx-bar">${it.v > 0 ? `<i style="width:${Math.max(0.8, pc(it.v))}%"></i>` : ''}${it.ref ? `<b class="gx-ref" style="left:${pc(it.ref)}%"></b>` : ''}</div></div>`).join('')}</div>
+        <div class="gx-bar">${it.zona ? `<b class="gx-rz" style="left:${pc(it.zona[0])}%;width:${pc(it.zona[1]) - pc(it.zona[0])}%"></b>` : ''}${it.v > 0 ? `<i style="width:${Math.max(0.8, pc(it.v))}%"></i>` : ''}${it.ref ? `<b class="gx-ref" style="left:${pc(it.ref)}%"></b>` : ''}</div></div>`).join('')}</div>
       <div class="gx-ax">${t.map((v, k) => `<span class="${k === 0 ? 'ini' : k === t.length - 1 ? 'fin' : ''}" style="left:${pc(v)}%">${extra.plano ? v : ejeTxt(v)}</span>`).join('')}</div></div>${leyenda(leg)}</figure>`;
   }
   function graf(g) {
@@ -746,14 +748,40 @@
     if (g.tipo === 'curva') return svgLinea(g.serie, g.marca, g.titulo, g.nota);
     if (g.tipo === 'flujo') return flujoHtml(g);
     if (g.tipo === 'pares') return paresHtml(g);
+    if (g.tipo === 'apiladas') return apiladasHtml(g);
     return '';
   }
-  // Barra segmentada del sueldo: un bloque por destino, con su leyenda y lo que hay dentro de cada uno.
+  // Flujo del sueldo (como el Sankey de la pág. 7 del estudio): a la izquierda lo que entra, por persona;
+  // a la derecha cada destino con su cifra y su %. El grosor de cada banda es proporcional al dinero.
   function flujoHtml(g) {
     const tot = g.grupos.reduce((x, y) => x + y.v, 0) || 1, col = (gr, k) => gr.sobra ? 'fx-s' : 'fx-' + (k % 6);
-    return `<figure class="gf"><figcaption>${esc(g.titulo)}</figcaption>
-      <div class="fx-bar" role="img" aria-label="${esc(g.grupos.map(x => `${x.lab} ${Math.round(x.v / tot * 100)} %`).join(', '))}">${g.grupos.map((x, k) => { const pc = x.v / tot * 100; return `<i class="${col(x, k)}" style="flex:${x.v};--i:${k}" title="${esc(x.lab)}: ${M(Math.round(x.v))}">${pc >= 9 ? `${Math.round(pc)} %` : ''}</i>`; }).join('')}</div>
-      <ul class="fx-ley">${g.grupos.map((x, k) => `<li><span class="fx-h"><i class="${col(x, k)}"></i><b>${esc(x.lab)}</b><span>${M(Math.round(x.v))} · ${Math.round(x.v / tot * 100)} %</span></span>${x.partes.length > 1 ? `<span class="fx-p">${x.partes.map(p2 => `${esc(p2.lab)} ${Mk(p2.v)}`).join(' · ')}</span>` : ''}</li>`).join('')}</ul></figure>`;
+    const W = Math.round(Math.max(300, Math.min(640, window.innerWidth) - 60)), gap = 6, minH = 30;
+    const fuentes = (g.fuentes && g.fuentes.length ? g.fuentes : [{ lab: 'Ingresos', v: g.total || tot }]);
+    const hs = g.grupos.map(x => Math.max(minH, x.v / tot * 300)), H = hs.reduce((a, b) => a + b, 0) + gap * (hs.length - 1);
+    const xL = 0, wL = 12, xR = Math.round(W * 0.42), wR = 12, lx = xR + wR + 8;
+    // Izquierda: una columna de alto H partida por persona.
+    let yl = 0; const izq = fuentes.map(f => { const h = f.v / (g.total || tot) * H, r = { ...f, y: yl, h }; yl += h; return r; });
+    let yr = 0, ys = 0; const bandas = g.grupos.map((x, k) => { const hR = hs[k], th = x.v / tot * H, r = { x, k, yR: yr, hR, yS: ys, th }; yr += hR + gap; ys += th; return r; });
+    const curva = b => { const a0 = b.yS, a1 = b.yS + b.th, c = b.yR + (b.hR - Math.min(b.hR, b.th)) / 2, d = c + Math.min(b.hR, b.th), m = (xL + wL + xR) / 2;
+      return `M${xL + wL},${a0} C${m},${a0} ${m},${c} ${xR},${c} L${xR},${d} C${m},${d} ${m},${a1} ${xL + wL},${a1} Z`; };
+    const svg = `<svg class="sk" width="${W}" height="${Math.ceil(H) + 4}" viewBox="0 -2 ${W} ${Math.ceil(H) + 4}" role="img" aria-label="${esc(g.grupos.map(x => `${x.lab} ${M(Math.round(x.v))}, ${Math.round(x.v / tot * 100)} %`).join('; '))}">
+      ${bandas.map(b => `<path d="${curva(b)}" class="sk-b ${col(b.x, b.k)}" style="--i:${b.k}"/>`).join('')}
+      ${izq.map((f, k) => `<rect x="${xL}" y="${f.y}" width="${wL}" height="${Math.max(1, f.h - (k < izq.length - 1 ? 2 : 0))}" rx="3" class="sk-src"/>`).join('')}
+      ${bandas.map(b => `<rect x="${xR}" y="${b.yR}" width="${wR}" height="${b.hR}" rx="3" class="${col(b.x, b.k)}"/><text x="${lx}" y="${b.yR + b.hR / 2 - 3}" class="sk-l">${esc(b.x.lab)}</text><text x="${lx}" y="${b.yR + b.hR / 2 + 12}" class="sk-v">${M(Math.round(b.x.v))} · ${Math.round(b.x.v / tot * 100)} %</text>`).join('')}</svg>`;
+    const fuentesTxt = izq.map(f => `<span><b>${esc(f.lab)}</b> ${M(Math.round(f.v))}</span>`).join('');
+    const partes = g.grupos.filter(x => x.partes.length > 1);
+    return `<figure class="gf"><figcaption>${esc(g.titulo)}</figcaption><div class="sk-src-t">${fuentesTxt}</div><div class="sk-w">${svg}</div>${g.total && tot > g.total + 1 ? `<p class="gx-falta">Salen ${M(Math.round(tot))} y entran ${M(Math.round(g.total))}: faltan ${M(Math.round(tot - g.total))} al año.</p>` : ''}
+      ${partes.length ? `<details class="gl-tab"><summary>Qué hay dentro de cada bloque</summary><ul class="fx-ley">${partes.map(x => `<li><span class="fx-h"><b>${esc(x.lab)}</b><span>${M(Math.round(x.v))}</span></span><span class="fx-p">${x.partes.map(p2 => `${esc(p2.lab)} ${Mk(p2.v)}`).join(' · ')}</span></li>`).join('')}</ul></details>` : ''}</figure>`;
+  }
+  // Barras apiladas por persona (dinero por tipo de cuenta, pág. 12 del estudio), sobre un eje común.
+  function apiladasHtml(g) {
+    const tots = g.items.map(x => x.partes.reduce((a, b) => a + b, 0)), t = marcas(0, Math.max(...tots) || 1), mx = t[t.length - 1], pc = v => v / mx * 100;
+    return `<figure class="gf"><figcaption>${esc(g.titulo)}</figcaption><div class="gx">
+      <div class="gx-plot">${t.map(v => `<i class="gx-g${v === 0 ? ' z' : ''}" style="left:${pc(v)}%"></i>`).join('')}
+      ${g.items.map((x, k) => `<div class="gx-row" style="--i:${k}"><div class="gx-h"><span class="gx-l" title="${esc(x.lab)}">${esc(x.lab)}</span><span class="gx-v">${M(Math.round(tots[k]))}</span></div>
+        <div class="gx-bar ap">${x.partes.map((v, j) => v > 0 ? `<i class="ow-${j % 3}" style="width:${pc(v)}%" title="${esc(g.series[j])}: ${M(Math.round(v))}"></i>` : '').join('')}</div></div>`).join('')}</div>
+      <div class="gx-ax">${t.map((v, k) => `<span class="${k === 0 ? 'ini' : k === t.length - 1 ? 'fin' : ''}" style="left:${pc(v)}%">${ejeTxt(v)}</span>`).join('')}</div></div>
+      <div class="gx-leg">${g.series.map((n, j) => `<span><i class="ow-${j % 3}"></i>${esc(n)}</span>`).join('')}</div></figure>`;
   }
   // Pares de barras (hoy frente a propuesto). Con signo: eje centrado en cero para subidas y caídas.
   function paresHtml(g) {
@@ -855,18 +883,24 @@
       titulo = n.nombre;
       const head = `<header class="tp-h"><div class="tp-hh"><span class="ar-ic">${ic(n.icon, 20)}</span><h1>${esc(n.nombre)}</h1></div>${cifraBig(n)}</header>`;
       // Los puntos que viven dentro de este tema: su gráfica arriba y su detalle en "Ver más".
-      const sub = ptsDe(n.id), grafs = sub.map(p => graf(p.graf) + graf(p.graf2)).join('');
+      const sub = ptsDe(n.id), lee = t2 => t2 ? `<p class="gf-lee">${esc(sinTags(t2))}</p>` : '';
+      const extraPt = p => (p.comparar && p.comparar.length ? `<div class="cmp"><div class="cmp-h"><span></span><small>Hoy</small><small>Propuesto</small></div>${p.comparar.map(c => `<div><span>${esc(c.lab)}</span><b>${esc(c.hoy)}</b><b class="cmp-p">${esc(c.prop)}</b></div>`).join('')}</div>` : '')
+        + (p.perfiles && p.perfiles.length ? `<p class="perf">${ic('scale', 15)} Perfil de riesgo: ${p.perfiles.map(f => `<b>${esc(f.nombre)}</b>, ${esc(f.perfil)}`).join(' · ')}</p>` : '');
+      // Sin repetir cifras que ya están arriba ni la gráfica del área si un punto la cuenta mejor (el flujo en Ahorro).
+      const vistos = new Set(((n.x && n.x.a.kpis) || n.kpis || []).map(q => q.val)), nuevas = ks => (ks || []).filter(q => !vistos.has(q.val) && vistos.add(q.val));
+      const grafs = sub.map(p => `<div class="sub-pt"><h3>${ic(p.icon, 16)} ${esc(p.nombre)}</h3>${lee(p.titular)}${kpisHtml(nuevas(p.kpis))}${extraPt(p)}${graf(p.graf)}${graf(p.graf2)}</div>`).join('');
+      const tapa = sub.some(p => p.graf && p.graf.tipo === 'flujo');
       const masSub = sub.map(p => capasHtml([{ t: 'filas', titulo: p.nombre, filas: (p.kpis || []).map(q => [q.lab, q.val + (q.sub ? ` (${q.sub})` : '')]) }].concat(p.capas || []), narrDe(p.id))).join('');
       const verMas = body => `<details class="fold-all vermas"><summary>Ver más</summary>${body}</details>`;
       if (n.tipo === 'area') {
         const { x } = n, { a, pasos } = x;
         html = `${head}${kpisHtml(a.kpis)}${dijeron(x)}
-          ${sec(1, 'En gráfico', graf(a.graf) + desgloseHtml(a.desglose) + grafs)}
+          ${sec(1, 'En gráfico', (tapa ? '' : lee((a.lectura || [])[0]) + graf(a.graf)) + grafs)}
           ${sec(2, `Lo que propone ${w('vuestro', 'tu')} plan`, pasos.length ? pasos.map(pasoTema).join('') : sinPaso(x))}
-          ${verMas(lecturaHtml(a.lectura) + capasHtml(a.capas, narrDe(a.nombre)) + masSub + `<div class="capa"><h4>Todas las cifras de este tema</h4>${filasTema(a.detalle, true)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></div>`)}`;
+          ${verMas(lecturaHtml(a.lectura) + desgloseHtml(a.desglose) + capasHtml(a.capas, narrDe(a.nombre)) + masSub + `<div class="capa"><h4>Todas las cifras de este tema</h4>${filasTema(a.detalle, true)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></div>`)}`;
       } else {
         html = `${head}${kpisHtml(n.kpis)}
-          ${sec(1, 'En gráfico', graf(n.graf) + graf(n.graf2) + grafs)}
+          ${sec(1, 'En gráfico', lee(n.titular) + extraPt(n) + graf(n.graf) + graf(n.graf2) + grafs)}
           ${verMas(lecturaHtml(n.lectura) + capasHtml(n.capas, narrDe(n.id)) + masSub)}`;
       }
     }
