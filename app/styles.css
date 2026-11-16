@@ -1392,14 +1392,14 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
   filter: blur(calc(min(var(--d), 3) * 2.6px)) saturate(calc(1 - min(var(--d), 3) * .18)); opacity: calc(1 - min(var(--d), 3) * .2);
   transition: filter .7s var(--ease), opacity .7s var(--ease); }
 .rul-stage.dragging .rul-card { transition: none; }
-.rul-in { background: var(--surface, #fff); border: 1px solid var(--line); border-radius: 24px; padding: 20px 18px 16px; box-shadow: 0 18px 50px rgba(27,36,55,.16), 0 2px 6px rgba(27,36,55,.06); animation: none; }
+.rul-in { display: flex; flex-direction: column; background: var(--surface, #fff); border: 1px solid var(--line); border-radius: 24px; padding: 20px 18px 16px; box-shadow: 0 18px 50px rgba(27,36,55,.16), 0 2px 6px rgba(27,36,55,.06); animation: none; }
 .rul-card:not(.front) .rul-in { pointer-events: none; }
 .rul-card:not(.front) { cursor: pointer; }
 .rul-card.front .rul-in { box-shadow: 0 26px 70px rgba(27,36,55,.22), 0 2px 8px rgba(27,36,55,.08); }
 .rul-stage.spin .rul-card.front .rul-in { animation: rulpop .95s var(--ease) both; }
 @keyframes rulpop { 0% { transform: scale(.94); } 55% { transform: scale(1.025); } 100% { transform: none; } }
 .rul-in .tema { box-shadow: none; border: 0; padding: 0; margin: 0; }
-.rul-abrir { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 4px; min-height: 46px; border-radius: 14px; border: 1.5px dashed var(--accent); background: var(--accent-soft); color: var(--accent); font: 600 15.5px/1 var(--font); cursor: pointer; transition: transform .15s, background .15s; }
+.rul-abrir { margin-top: auto !important; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 4px; min-height: 46px; border-radius: 14px; border: 1.5px dashed var(--accent); background: var(--accent-soft); color: var(--accent); font: 600 15.5px/1 var(--font); cursor: pointer; transition: transform .15s, background .15s; }
 .rul-abrir:hover { background: #e3e9ff; } .rul-abrir:active { transform: scale(.98); }
 .rul-wrap .segs { position: relative; z-index: 5; }
 .rul-stage { z-index: 1; }
@@ -1435,3 +1435,24 @@ body.rul-lock .cta-bar { z-index: 50; }
 .itile.ancha > b { font: 600 14.5px/1.4 var(--font); }
 .itile b.n { font-weight: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) { .rul-ring.anim { transition-duration: .2s; } .rul-card { transition: none; } .rul-stage.spin .rul-card.front .rul-in { animation: none; } .rul-full, .rul-full-in { transition: none !important; } }
+body.fondo-on .rul-nav { background: none; }
+body.fondo-on .rul-arr { background: rgba(255,255,255,.85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+/* Tarjeta de la nota general más compacta dentro de la ruleta, para que todas tengan una altura parecida */
+.rul-in h2 { font-size: clamp(21px, 5.4vw, 26px); }
+.rul-in.slide { gap: 10px; }
+.rul-in .foto { padding: 10px 14px; gap: 12px; border-radius: 18px; }
+.rul-in .ring { width: 96px; height: 96px; }
+.rul-in .ring svg { width: 96px; height: 96px; }
+.rul-in .rg-num b { font-size: 30px; }
+.rul-in .areas { gap: 5px; }
+.rul-in .ar { padding: 4px 9px; border-radius: 12px; }
+.rul-in .ar-ic { width: 28px; height: 28px; }
+.rul-in .card-btn > .foto + .areas { margin-top: 8px; }
+.rul-in > p.tiny { font-size: 12px; }
+@media (min-width: 700px) {
+  .rul-in .card-btn { display: grid; grid-template-columns: 138px 1fr; gap: 12px; align-items: stretch; }
+  .rul-in .card-btn > .foto { grid-template-columns: 1fr; justify-items: center; text-align: center; align-content: center; padding: 12px 10px; }
+  .rul-in .card-btn > .foto p { font-size: 13px; }
+  .rul-in .card-btn > .foto + .areas { margin-top: 0; }
+  .rul-in .ar { grid-template-columns: 28px 1fr 70px 28px; gap: 8px; }
+}

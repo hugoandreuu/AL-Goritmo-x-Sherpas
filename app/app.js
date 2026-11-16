@@ -42,7 +42,7 @@
     QMAP = Object.fromEntries(E.preguntas.map(q => [q.id, q]));
     buildQuiz([]);
     // Resumen tras el quiz: la nota, una tarjeta por cada uno de los 5 temas y el roadmap.
-    SLIDES = ['foto', ...temasPlan().map(x => 't:' + x.a.nombre), 'ruta'];
+    SLIDES = ['foto', ...temasPlan().map(x => 't:' + x.a.nombre)]; // el roadmap sale en el plan completo
     S = fresh();
     if (!limpio) { try { const raw = localStorage.getItem(KEY()); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) { /* nada */ } }
     if (!E.fam.pl) S.who = 'a';
@@ -582,6 +582,11 @@
       c.style.setProperty('--d', d.toFixed(3));
       c.classList.toggle('front', k === cur && d < .5);
     });
+    if (!anim) { // todas las tarjetas con la misma altura, la de la más alta
+      cards.forEach(c => { c.firstElementChild.style.minHeight = ''; });
+      const hMax = Math.max(...cards.map(c => c.firstElementChild.offsetHeight));
+      cards.forEach(c => { c.firstElementChild.style.minHeight = hMax + 'px'; });
+    }
     const f = cards[cur]; if (f) st.style.height = f.offsetHeight + 'px';
   }
   // Barra de arriba, flechas y posición, sin volver a pintar las tarjetas (así el giro no se corta).
@@ -754,7 +759,6 @@
     const men = x.qs.some(q => (S.match || []).includes(q.id)) ? `<span class="porque tm-men">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
     return `<article class="tema ${nivel(a.nota)}" style="--i:${i}">${men}
       <div class="tm-open">${cabTema(a, t)}${filasTema(a.resumen)}</div>
-      ${story ? dijeron(x) : ''}
       <div class="tm-plan"><div class="kicker" style="margin:0 0 6px">${pasos.length ? `Lo que propone ${w('vuestro', 'tu')} plan` : `${w('Vuestro', 'Tu')} plan`}</div>${plan}</div>
     </article>`;
   }
@@ -905,7 +909,7 @@
       html = `<header class="tp-h tema-big ${nivel(a.nota)}">${cabTema(a, t, 'h1')}</header>
         ${kpisHtml(a.kpis)}
         ${sec(1, 'El desglose', desgloseHtml(a.desglose) + graf(a.graf))}
-        ${sec(2, 'Qué significa', lecturaHtml(a.lectura) + dijeron(x))}
+        ${sec(2, 'Qué significa', lecturaHtml(a.lectura))}
         ${sec(3, `Lo que propone ${w('vuestro', 'tu')} plan`, pasos.length ? pasos.map(pasoTema).join('') : sinPaso(x))}
         ${asesorHtml(a.asesor)}
         <details class="fold-all"><summary>Todas las cifras de este tema</summary>${cifrasHtml(a.detalle)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></details>`;
@@ -1541,7 +1545,7 @@
 
   function render() {
     renderTop();
-    if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz' || S.stage === 'pareja');
+    if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz' || S.stage === 'pareja' || S.stage === 'story');
     if (S.stage !== 'pareja') { delete document.body.dataset.pj; if (window.Fondo) Fondo.who(null); }
     if (window.Fondo) Fondo.vivo(S.stage === 'pareja' && S.pj && S.pj.step === 0);
     if (S.stage !== 'story') document.body.classList.remove('rul-lock');
