@@ -701,7 +701,8 @@
     const x0 = s[0][0], x1 = s[s.length - 1][0], span = (x1 - x0) || 1;
     const X = y => L + (y - x0) / span * pw, Y = v => T + ph - (v - y0) / ((y1 - y0) || 1) * ph;
     const pasoX = [1, 2, 5, 10, 20, 25].find(p => span / p <= Math.max(3, Math.floor(pw / 62))) || 50;
-    const xt = []; for (let y = Math.ceil(x0 / pasoX) * pasoX; y <= x1; y += pasoX) xt.push(y);
+    const xt = [x0]; for (let y = Math.ceil(x0 / pasoX) * pasoX; y <= x1; y += pasoX) if ((X(y) - X(x0)) > 52 && (X(x1) - X(y)) > 52) xt.push(y);
+    xt.push(x1); // primer y último año siempre a la vista
     const pts = s.map(p => `${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ');
     const j = marca && s.find(p => p[0] === marca[0]);
     let anot = '';
@@ -712,10 +713,10 @@
     const resumen = `${x0}: ${M(Math.round(s[0][1]))} · ${x1}: ${M(Math.round(s[s.length - 1][1]))}`;
     return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><div class="gl-w"><svg class="gl" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(titulo)}. ${esc(resumen)}" data-s='${JSON.stringify(s.map(p => [p[0], Math.round(p[1])]))}' data-g="${[L, T, pw, ph, x0, span, y0, y1 - y0].join(',')}">
       ${yt.map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" class="gl-g${v === 0 ? ' z' : ''}"/><text x="${L - 8}" y="${Y(v) + 4}" class="gl-t" text-anchor="end">${ejeTxt(v)}</text>`).join('')}
-      ${xt.map(y => `<line x1="${X(y)}" x2="${X(y)}" y1="${T + ph}" y2="${T + ph + 4}" class="gl-g z"/><text x="${X(y)}" y="${H - 4}" class="gl-t" text-anchor="middle">${y}</text>`).join('')}
+      ${xt.map((y, k) => `<line x1="${X(y)}" x2="${X(y)}" y1="${T + ph}" y2="${T + ph + 4}" class="gl-g z"/><text x="${X(y)}" y="${H - 4}" class="gl-t" text-anchor="${k === 0 ? 'start' : k === xt.length - 1 ? 'end' : 'middle'}">${y}</text>`).join('')}
       <polygon points="${X(x0)},${Y(Math.max(0, y0))} ${pts} ${X(x1)},${Y(Math.max(0, y0))}" class="gl-a"/><polyline points="${pts}" class="gl-l"/>${anot}
       <g class="gl-hv"><line class="gl-hl" y1="${T}" y2="${T + ph}"/><circle r="4.5" class="gl-hp"/></g></svg><div class="gl-tip" aria-hidden="true"></div></div>
-      <p class="gl-res">${esc(resumen)}</p>${nota ? `<p class="tiny" style="margin:4px 0 0">${esc(nota)}</p>` : ''}</figure>`;
+      <p class="gl-res">${esc(resumen)}</p><details class="gl-tab"><summary>Ver los datos</summary><div><table><tr><th>Año</th><th>Dólares</th></tr>${s.map(p => `<tr><td>${p[0]}</td><td>${M(Math.round(p[1]))}</td></tr>`).join('')}</table></div></details>${nota ? `<p class="tiny" style="margin:4px 0 0">${esc(nota)}</p>` : ''}</figure>`;
   }
   // Al pasar el dedo o el ratón por una línea: año y cifra de ese punto.
   function lineaHover(e) {
