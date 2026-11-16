@@ -29,7 +29,7 @@ Las pocas cuentas propias (por ejemplo, años de gastos que cubre el seguro) las
 
 ## Modo pareja: «Vuestro dinero, visto por los dos»
 
-Si el plan es de dos adultos, la portada pregunta **¿Quién va a ver el plan?**: *Los dos juntos* (modo pareja) o *Uno de los dos* (el cuestionario de siempre). En la entrada del modo pareja se elige el nivel (nuevos o saben de finanzas), que cambia cómo se cuenta, no las cifras.
+Si el plan es de dos adultos, la portada pregunta **¿Quién va a ver el plan?**: *Los dos juntos* (el juego de pareja) o *Solo el quiz* (sin juego; lo pueden hacer juntos o uno de los dos por su cuenta). En la entrada del modo pareja se elige el nivel (nuevos o saben de finanzas), que cambia cómo se cuenta, no las cifras.
 
 Funciona como el perfil de riesgo de pareja de los asesores: cada uno contesta en privado en el mismo móvil y se compara en cuanto termina cada parte. No hay ganadores ni "impostores": el objetivo es que la pareja se conozca mejor con el dinero. Son 14 pantallas y la primera comparación llega en la quinta. Cuando contesta uno, el fondo toma su color (azul o teja); cuando lo veis juntos, vuelve a neutro.
 

@@ -1164,3 +1164,4 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .gl-a { fill: var(--accent-soft); } .gl-l { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
 .gl-j { stroke: var(--navy); stroke-dasharray: 4 4; } .gl-p { fill: var(--navy); }
 .gl-t { font-size: 11px; fill: var(--ink-2); font-family: var(--font); }
+.tm-men { margin: 0 0 10px; }

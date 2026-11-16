@@ -391,8 +391,8 @@
     let head = '', body = '', dk = '';
     if (step === 'who') {
       const ad = E.fam.adultos;
-      head = S.mode === 'solo' ? `<h2 class="q">¿Quién eres?</h2><p class="muted">Contestas por tu cuenta. Luego podéis verlo los dos juntos desde el inicio.</p>` : `<h2 class="q">¿Quién mira el plan?</h2>`;
-      body = (S.mode === 'solo' ? [] : [['juntos', 'Los dos juntos', 'heart']]).concat([['a', ad[0].nombre, 'eye'], ['b', ad[1].nombre, 'eye']]).map(([v, l, i], k) => `<button class="opt" style="--i:${k}" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${optBody(i, esc(l))}</button>`).join('');
+      head = `<h2 class="q">¿Quién mira el plan?</h2>`;
+      body = [['juntos', 'Los dos juntos', 'heart']].concat([['a', ad[0].nombre, 'eye'], ['b', ad[1].nombre, 'eye']]).map(([v, l, i], k) => `<button class="opt" style="--i:${k}" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${optBody(i, esc(l))}</button>`).join('');
     } else if (step === 'phrase') {
       head = `<h2 class="q">¿Qué es lo que más ${w('os ronda', 'te ronda')} la cabeza con el dinero?</h2><p class="muted">Con ${w('vuestras', 'tus')} palabras. También ${w('podéis', 'puedes')} dictarlo con el micrófono del teclado.</p>`;
       body = `<textarea id="worry" class="free" rows="3" maxlength="240" data-act="free-in" placeholder="${esc(E.fam.hijos.length ? `Por ejemplo: que a ${E.fam.hijos.map(k => k.nombre).join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilo a la jubilación')}">${esc(S.phrase || '')}</textarea>
@@ -647,7 +647,8 @@
     const plan = pasos.length
       ? (story ? `<ul class="tm-pl">${pasos.map(p => `<li><b class="tm-n">${E.pasos.indexOf(p) + 1}</b>${esc(pTitulo(p))}</li>`).join('')}</ul>` : pasos.map(pasoTema).join(''))
       : sinPaso(x);
-    return `<article class="tema ${nivel(a.nota)}" style="--i:${i}">
+    const men = x.qs.some(q => (S.match || []).includes(q.id)) ? `<span class="porque tm-men">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
+    return `<article class="tema ${nivel(a.nota)}" style="--i:${i}">${men}
       <button class="tm-open" data-act="tema" data-k="${esc(a.nombre)}" aria-label="Ver ${esc(a.nombre)} a fondo">${cabTema(a, t)}${filasTema(a.resumen)}
         <span class="tm-mas">${ic('chart', 15)} Ver a fondo, con gráfico</span></button>
       ${story ? dijeron(x) : ''}
@@ -1186,7 +1187,7 @@
       <button class="door duo" data-act="mode" data-v="pareja"><span class="pj-duo sm">${pAv('a')}${pAv('b')}</span>
         <span class="d-tx"><b>${enPareja ? 'Seguir donde lo dejasteis' : 'Los dos juntos'}</b><span>En pareja, con un solo móvil. Cada uno contesta en privado.</span><small>Unos 4 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button>
       <button class="door solo" data-act="mode" data-v="solo"><span class="d-ic">${ic('eye', 22)}</span>
-        <span class="d-tx"><b>${enSolo ? 'Seguir donde lo dejé' : 'Uno de los dos'}</b><span>${esc(ad[0].nombre)} o ${esc(ad[1].nombre)}, por su cuenta.</span><small>Unos 5 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button></div>`;
+        <span class="d-tx"><b>${enSolo ? 'Seguir donde lo dejasteis' : 'Solo el quiz'}</b><span>Sin juego. Juntos, o ${esc(ad[0].nombre)} o ${esc(ad[1].nombre)} por su cuenta.</span><small>Unos 5 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button></div>`;
   }
   // --- A. Portada: vuestros nombres, una frase y un botón. Al pulsar, barrido y frase puente.
   function renderHome() {
