@@ -657,83 +657,87 @@
     </article>`;
   }
 
-  // --- gráficos (sin librerías). Una sola gramática para todos: título, leyenda cuando hace falta,
-  // eje con marcas en cifras redondas y rejilla fina, y las etiquetas fuera de las marcas para que
-  // nunca se corten. Las cifras exactas siguen en el desglose y en «Ver los datos».
-  const dc = (x, n) => x.toFixed(n).replace('.', ',').replace(/,0+$/, '');
-  const kf = (v, u = '$') => {
-    if (u !== '$') return dc(v, 0);
-    const a = Math.abs(v), s = v < 0 ? '-' : '';
-    return a >= 1e6 ? `${s}${dc(a / 1e6, a >= 1e7 ? 0 : 1)} M$` : a >= 1e3 ? `${s}${dc(a / 1e3, a >= 1e4 ? 0 : 1)} K$` : `${s}${Math.round(a)} $`;
-  };
-  // Marcas del eje: de 0 a un tope redondo, en 3 a 5 pasos de 1, 2, 2,5 o 5 × 10^n.
-  function marcas(max, n = 4) {
-    if (!(max > 0)) return [0, 1];
-    const raw = max / n, p = 10 ** Math.floor(Math.log10(raw)), st = [1, 2, 2.5, 5, 10].map(m => m * p).find(x => x >= raw - 1e-9);
-    const k = Math.ceil(max / st - 1e-9);
-    return Array.from({ length: k + 1 }, (_, i) => +(i * st).toFixed(6));
+  // --- gráficos (sin librerías). Reglas: todo empieza en cero sobre un eje con marcas redondas,
+  // rejilla fina y discreta, un solo color por gráfico salvo cuando el color significa algo (y entonces
+  // hay leyenda), textos siempre del mismo tamaño y nunca encima de la marca ni cortados.
+  const ejeTxt = v => { const a = Math.abs(v); return a === 0 ? '0' : a >= 1e6 ? dec(v / 1e6, 1) + ' M$' : a >= 1e3 ? dec(v / 1e3, 0) + ' K$' : Math.round(v) + ' $'; };
+  function marcas(lo, hi, n = 4) { // marcas redondas (1, 2, 2,5, 5 × 10^k) que cubren [lo, hi]
+    const r = (hi - lo) || Math.abs(hi) || 1, raw = r / n, e = Math.pow(10, Math.floor(Math.log10(raw)));
+    const paso = [1, 2, 2.5, 5, 10].map(m => m * e).find(m => m >= raw);
+    const a = Math.floor(lo / paso) * paso, b = Math.ceil(hi / paso) * paso, t = [];
+    for (let v = a; v <= b + paso / 2; v += paso) t.push(Math.round(v * 100) / 100);
+    return t;
   }
-  // Etiqueta de eje: centrada en su marca, pero pegada al borde en los extremos para no salirse.
-  const ejeLab = (pc, txt) => `<span style="left:${pc}%;transform:translateX(${pc < 6 ? 0 : pc > 94 ? -100 : -50}%)">${esc(txt)}</span>`;
-  const ejeX = (ts, top, u) => `<div class="gx" aria-hidden="true">${ts.map(v => ejeLab(v / top * 100, kf(v, u))).join('')}</div>`;
-  const pista = (ts, body) => `<div class="gb-t" style="--k:${ts.length - 1}">${body}</div>`;
+  const leyenda = items => items.length ? `<div class="gx-leg">${items.map(([c, t]) => `<span><i class="${c}"></i>${esc(t)}</span>`).join('')}</div>` : '';
+  // Barras horizontales: nombre y cifra en una línea encima de cada barra, eje común abajo.
+  function barrasHtml(titulo, items, extra = {}) {
+    const top = Math.max(...items.map(it => Math.max(it.v || 0, it.ref || 0)), extra.zona ? extra.zona[1] : 0) || 1;
+    const t = marcas(0, top), mx = t[t.length - 1], pc = v => Math.max(0, Math.min(100, v / mx * 100));
+    const leg = [];
+    if (items.some(it => it.tono === 'coste')) leg.push(['coste', extra.costeTxt || 'A vigilar']);
+    if (items.some(it => it.tono === 'bueno')) leg.push(['bueno', extra.buenoTxt || 'A favor']);
+    if (items.some(it => it.ref)) leg.push(['ref', 'Mínimo que recomienda el plan']);
+    if (extra.zona) leg.push(['zona', `Recomendado: ${extra.zona[2]}`]);
+    return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><div class="gx">
+      <div class="gx-plot">${t.map(v => `<i class="gx-g${v === 0 ? ' z' : ''}" style="left:${pc(v)}%"></i>`).join('')}${extra.zona ? `<i class="gx-zona" style="left:${pc(extra.zona[0])}%;width:${pc(extra.zona[1]) - pc(extra.zona[0])}%"></i>` : ''}
+      ${items.map((it, k) => `<div class="gx-row ${it.tono || ''}" style="--i:${k}"><div class="gx-h"><span class="gx-l" title="${esc(it.lab)}">${esc(it.lab)}</span><span class="gx-v">${esc(it.txt || M(it.v))}</span></div>
+        <div class="gx-bar">${it.v > 0 ? `<i style="width:${Math.max(0.8, pc(it.v))}%"></i>` : ''}${it.ref ? `<b class="gx-ref" style="left:${pc(it.ref)}%"></b>` : ''}</div></div>`).join('')}</div>
+      <div class="gx-ax">${t.map((v, k) => `<span class="${k === 0 ? 'ini' : k === t.length - 1 ? 'fin' : ''}" style="left:${pc(v)}%">${ejeTxt(v)}</span>`).join('')}</div></div>${leyenda(leg)}</figure>`;
+  }
   function graf(g) {
     if (!g) return '';
-    const u = g.unidad || '$';
-    if (g.tipo === 'barras') {
-      const ts = marcas(g.max || Math.max(...g.items.map(it => Math.max(it.v || 0, it.ref || 0)))), top = ts[ts.length - 1], hayRef = g.items.some(it => it.ref);
-      const valTxt = it => it.ref ? `${kf(it.v || 0, u)} de ${kf(it.ref, u)}` : u === '$' ? [kf(it.v || 0, u), ...String(it.txt || '').split(' · ').slice(1)].join(' · ') : (it.txt || kf(it.v, u));
-      return `<figure class="gf"><figcaption>${esc(g.titulo)}</figcaption>
-        ${hayRef ? `<div class="gleg"><span><b class="gb-ref sm"></b>Lo mínimo que recomienda el plan</span></div>` : ''}
-        ${g.items.map((it, k) => `<div class="gb ${it.tono || ''}" style="--i:${k}" title="${esc(it.lab)}: ${esc(it.txt || M(it.v))}"><div class="gb-h"><span class="gb-l">${esc(it.lab)}</span><span class="gb-v">${esc(valTxt(it))}</span></div>
-          ${pista(ts, `<i style="width:${Math.max(0.8, (it.v || 0) / top * 100)}%"></i>${it.ref ? `<b class="gb-ref" style="left:${it.ref / top * 100}%"></b>` : ''}`)}</div>`).join('')}
-        ${ejeX(ts, top, u)}</figure>`;
-    }
-    if (g.tipo === 'rango') {
-      const ts = marcas(Math.max(g.v, g.max) * 1.05), top = ts[ts.length - 1], pc = v => v / top * 100;
-      return `<figure class="gf"><figcaption>${esc(g.titulo)}</figcaption>
-        <div class="gleg"><span><i class="sw zona"></i>Recomendado: ${esc(kf(g.min))} a ${esc(kf(g.max))}</span></div>
-        <div class="gb ${g.v < g.min ? 'coste' : 'bueno'}" title="Hoy: ${esc(g.txt)}. Recomendado: ${esc(g.minTxt)} a ${esc(g.maxTxt)}"><div class="gb-h"><span class="gb-l">Hoy</span><span class="gb-v">${esc(kf(g.v))}</span></div>
-          ${pista(ts, `<i style="width:${Math.max(0.8, pc(g.v))}%"></i><s class="gb-z" style="left:${pc(g.min)}%;width:${Math.max(1, pc(g.max) - pc(g.min))}%"></s>`)}</div>
-        ${ejeX(ts, top, '$')}</figure>`;
-    }
+    if (g.tipo === 'barras') return barrasHtml(g.titulo, g.items, { costeTxt: g.leyenda && g.leyenda.coste, buenoTxt: g.leyenda && g.leyenda.bueno });
+    if (g.tipo === 'rango') return barrasHtml(g.titulo, [{ lab: 'Hoy', v: g.v, txt: g.txt, tono: g.v < g.min ? 'coste' : 'bueno' }], { zona: [g.min, g.max, `${g.minTxt} a ${g.maxTxt}`], costeTxt: 'Por debajo de lo recomendado', buenoTxt: 'Dentro o por encima' });
     if (g.tipo === 'curva') return svgLinea(g.serie, g.marca, g.titulo, g.nota);
     return '';
   }
-  // Línea en el tiempo (patrimonio del roadmap o curva de la deuda): eje de cifras a la izquierda,
-  // años debajo, rejilla fina, una marca con su rótulo y un punto por año con su cifra al pasar el ratón.
+  // Línea en el tiempo (patrimonio del roadmap o curva de la deuda) con ejes X (años) e Y (dólares).
+  // Se dibuja al ancho real de la página para que los textos salgan a su tamaño, ni más grandes ni más pequeños.
   function svgLinea(s, marca, titulo, nota) {
     if (!s || s.length < 2) return '';
-    const x0 = s[0][0], x1 = s[s.length - 1][0], ys = marcas(Math.max(...s.map(p => p[1]))), top = ys[ys.length - 1];
-    const X = y => (y - x0) / ((x1 - x0) || 1) * 100, Y = v => Math.max(0, v) / top * 100;
-    const pts = s.map(p => `${X(p[0]).toFixed(2)},${(100 - Y(p[1])).toFixed(2)}`).join(' ');
-    const paso = [1, 2, 5, 10, 20].find(st => (x1 - x0) / st <= 6) || 25, anios = [];
-    for (let a = Math.ceil(x0 / paso) * paso; a <= x1; a += paso) if (a - x0 >= paso * .6 && x1 - a >= paso * .6) anios.push(a);
-    anios.unshift(x0); anios.push(x1); // primer y último año siempre a la vista
-    const j = marca && s.find(p => p[0] === marca[0]), jx = j ? X(j[0]) : 0, ult = s[s.length - 1];
-    const anchoHit = 100 / (s.length - 1);
-    return `<figure class="gf" role="group" aria-label="${esc(titulo)}, de ${x0} a ${Math.round(x1)}"><figcaption>${esc(titulo)}</figcaption>
-      <div class="glc">
-        <div class="gy" aria-hidden="true">${ys.map(v => `<span style="bottom:${Y(v)}%">${esc(kf(v))}</span>`).join('')}</div>
-        <div class="gp">
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            ${ys.map(v => `<line x1="0" x2="100" y1="${100 - Y(v)}" y2="${100 - Y(v)}" class="gl-g"/>`).join('')}
-            <polygon points="0,100 ${pts} ${X(x1)},100" class="gl-a"/><polyline points="${pts}" class="gl-l"/>
-            ${j ? `<line x1="${jx}" x2="${jx}" y1="0" y2="100" class="gl-j"/>` : ''}
-          </svg>
-          ${j ? `<b class="gm" style="left:${jx}%;bottom:${Y(j[1])}%"></b><span class="gm-lab ${jx > 55 ? 'izq' : ''}" style="left:${jx}%">${esc(marca[1])}</span>` : ''}
-          ${!j || j !== ult ? `<b class="gm fin" style="left:100%;bottom:${Y(ult[1])}%"></b>` : ''}
-          ${s.map(p => { const l = Math.max(0, X(p[0]) - anchoHit / 2), r = Math.min(100, X(p[0]) + anchoHit / 2); return `<span class="gh" style="left:${l}%;width:${r - l}%" title="${Math.floor(p[0])}: ${esc(M(p[1]))}"></span>`; }).join('')}
-        </div>
-        <div></div>
-        <div class="gx" aria-hidden="true">${anios.map(a => ejeLab(X(a), String(Math.floor(a)))).join('')}</div>
-      </div>
-      <details class="gtab"><summary>Ver los datos</summary><table>${s.map(p => `<tr><td>${Math.floor(p[0])}</td><td>${esc(M(p[1]))}</td></tr>`).join('')}</table></details>
-      ${nota ? `<p class="tiny" style="margin:6px 0 0">${esc(nota)}</p>` : ''}</figure>`;
+    const W = Math.round(Math.max(280, Math.min(640, window.innerWidth) - 60)), H = 190;
+    const vs = s.map(p => p[1]), yt = marcas(Math.min(0, ...vs), Math.max(...vs)), y0 = yt[0], y1 = yt[yt.length - 1];
+    const L = Math.max(...yt.map(v => ejeTxt(v).length)) * 6.6 + 10, R = 10, T = 26, B = 24, pw = W - L - R, ph = H - T - B;
+    const x0 = s[0][0], x1 = s[s.length - 1][0], span = (x1 - x0) || 1;
+    const X = y => L + (y - x0) / span * pw, Y = v => T + ph - (v - y0) / ((y1 - y0) || 1) * ph;
+    const pasoX = [1, 2, 5, 10, 20, 25].find(p => span / p <= Math.max(3, Math.floor(pw / 62))) || 50;
+    const xt = [x0]; for (let y = Math.ceil(x0 / pasoX) * pasoX; y <= x1; y += pasoX) if ((X(y) - X(x0)) > 52 && (X(x1) - X(y)) > 52) xt.push(y);
+    xt.push(x1); // primer y último año siempre a la vista
+    const pts = s.map(p => `${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ');
+    const j = marca && s.find(p => p[0] === marca[0]);
+    let anot = '';
+    if (j) { // rótulo arriba, encajado dentro del gráfico
+      const tw = marca[1].length * 6.4, cx = X(j[0]), lx = Math.max(L, Math.min(W - R - tw, cx - tw / 2));
+      anot = `<line x1="${cx}" x2="${cx}" y1="${T - 6}" y2="${T + ph}" class="gl-j"/><circle cx="${cx}" cy="${Y(j[1])}" r="4.5" class="gl-p"/><text x="${lx}" y="${T - 10}" class="gl-m">${esc(marca[1])}</text>`;
+    }
+    const resumen = `${x0}: ${M(Math.round(s[0][1]))} · ${x1}: ${M(Math.round(s[s.length - 1][1]))}`;
+    return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><div class="gl-w"><svg class="gl" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(titulo)}. ${esc(resumen)}" data-s='${JSON.stringify(s.map(p => [p[0], Math.round(p[1])]))}' data-g="${[L, T, pw, ph, x0, span, y0, y1 - y0].join(',')}">
+      ${yt.map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" class="gl-g${v === 0 ? ' z' : ''}"/><text x="${L - 8}" y="${Y(v) + 4}" class="gl-t" text-anchor="end">${ejeTxt(v)}</text>`).join('')}
+      ${xt.map((y, k) => `<line x1="${X(y)}" x2="${X(y)}" y1="${T + ph}" y2="${T + ph + 4}" class="gl-g z"/><text x="${X(y)}" y="${H - 4}" class="gl-t" text-anchor="${k === 0 ? 'start' : k === xt.length - 1 ? 'end' : 'middle'}">${y}</text>`).join('')}
+      <polygon points="${X(x0)},${Y(Math.max(0, y0))} ${pts} ${X(x1)},${Y(Math.max(0, y0))}" class="gl-a"/><polyline points="${pts}" class="gl-l"/>${anot}
+      <g class="gl-hv"><line class="gl-hl" y1="${T}" y2="${T + ph}"/><circle r="4.5" class="gl-hp"/></g></svg><div class="gl-tip" aria-hidden="true"></div></div>
+      <p class="gl-res">${esc(resumen)}</p><details class="gl-tab"><summary>Ver los datos</summary><div><table><tr><th>Año</th><th>Dólares</th></tr>${s.map(p => `<tr><td>${p[0]}</td><td>${M(Math.round(p[1]))}</td></tr>`).join('')}</table></div></details>${nota ? `<p class="tiny" style="margin:4px 0 0">${esc(nota)}</p>` : ''}</figure>`;
+  }
+  // Al pasar el dedo o el ratón por una línea: año y cifra de ese punto.
+  function lineaHover(e) {
+    const sv = e.target.closest && e.target.closest('svg.gl'); if (!sv) return;
+    const s = JSON.parse(sv.dataset.s), [L, T, pw, ph, x0, span, y0, yr] = sv.dataset.g.split(',').map(Number);
+    const r = sv.getBoundingClientRect(), k = r.width / sv.viewBox.baseVal.width, xv = (e.clientX - r.left) / k;
+    const yr0 = x0 + (xv - L) / pw * span, p = s.reduce((a, b) => Math.abs(b[0] - yr0) < Math.abs(a[0] - yr0) ? b : a);
+    const cx = L + (p[0] - x0) / span * pw, cy = T + ph - (p[1] - y0) / (yr || 1) * ph;
+    const g = sv.querySelector('.gl-hv'), tip = sv.parentNode.querySelector('.gl-tip');
+    g.style.opacity = 1; g.querySelector('line').setAttribute('x1', cx); g.querySelector('line').setAttribute('x2', cx);
+    g.querySelector('circle').setAttribute('cx', cx); g.querySelector('circle').setAttribute('cy', cy);
+    tip.innerHTML = `<b>${p[0]}</b> ${M(p[1])}`; tip.style.opacity = 1;
+    const tw = tip.offsetWidth; tip.style.left = Math.max(0, Math.min(r.width - tw, cx * k - tw / 2)) + 'px'; tip.style.top = Math.max(0, cy * k - 44) + 'px';
+  }
+  function lineaFuera(e) {
+    const w = e.target.closest && e.target.closest('.gl-w'); if (!w) return;
+    w.querySelector('.gl-hv').style.opacity = 0; w.querySelector('.gl-tip').style.opacity = 0;
   }
   function grafLinea(r) {
     const j = r.jubila && (r.serie || []).find(p => p[0] === r.jubila);
-    return svgLinea(r.serie, j ? [j[0], `Jubilación · ${M(j[1])}`] : null, 'Patrimonio neto, en dólares de hoy');
+    return svgLinea(r.serie, j ? [j[0], `Jubilación ${j[0]} · ${M(Math.round(j[1]))}`] : null, 'Patrimonio neto, en dólares de hoy');
   }
 
   // --- página de un tema (al tocar una tarjeta, en el resumen o en el plan completo).
@@ -755,7 +759,7 @@
     if (k === '__nota') {
       html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
         <div class="foto">${ring(E.nota.hoy, E.nota.max)}</div>
-        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'Nota de cada área, de 0 a 100', unidad: 'nota', max: 100, items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })) }) + `<div class="tp-links">${E.areas.map(a => `<button class="chip sm" data-act="tema" data-k="${esc(a.nombre)}">${esc(a.nombre)}</button>`).join('')}</div>`)}
+        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })) }) + `<div class="tp-links">${E.areas.map(a => `<button class="chip sm" data-act="tema" data-k="${esc(a.nombre)}">${esc(a.nombre)}</button>`).join('')}</div>`)}
         ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s => (paso(s) || {}).titulo || s).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}`;
     } else if (k === '__ruta') {
       const r = E.roadmap || {};
@@ -1342,6 +1346,9 @@
   }
   const toPlan = () => { S.stage = 'plan'; S.prefs.level = S.prefs.level || 'new'; };
 
+  document.addEventListener('pointermove', lineaHover);
+  document.addEventListener('pointerdown', lineaHover);
+  document.addEventListener('pointerout', e => { if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('svg.gl')) lineaFuera(e); });
   document.addEventListener('click', async e => {
     if (app.contains(e.target) && !e.target.closest('[data-act], summary, a')) {
       if (app.querySelector('.qstage.think')) { settleQ(); return; }
