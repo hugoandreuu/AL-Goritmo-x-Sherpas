@@ -41,31 +41,933 @@
    "nombre": "Ahorro",
    "icon": "coins",
    "nota": 54,
-   "puntos": "16/30"
+   "puntos": "16/30",
+   "resumen": [
+    [
+     "Ahorro al año",
+     "26.000 $, el 9,3 % de vuestros ingresos",
+     "ratios.savingsLevel"
+    ]
+   ],
+   "detalle": [
+    [
+     "Sueldo de Daniel",
+     "160.000 $ al año",
+     "profile.incomes"
+    ],
+    [
+     "Sueldo de Emily",
+     "120.000 $ al año",
+     "profile.incomes"
+    ],
+    [
+     "Ingresos brutos del hogar",
+     "280.000 $ al año",
+     "ratios.savingsLevel.grossIncome"
+    ],
+    [
+     "Gastos al año (día a día, vivienda y deudas)",
+     "160.290 $",
+     "ratios.investableAssetLevel.annualExpenses"
+    ],
+    [
+     "Ahorro al año",
+     "26.000 $ (9,3 %)",
+     "ratios.savingsLevel"
+    ],
+    [
+     "A dónde va: Impuestos",
+     "78.678 $ al año (28,1 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+    ],
+    [
+     "A dónde va: Deudas",
+     "15.840 $ al año (5,7 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+    ],
+    [
+     "A dónde va: Vivienda",
+     "60.450 $ al año (21,6 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+    ],
+    [
+     "A dónde va: Ahorro",
+     "26.000 $ al año (9,3 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+    ],
+    [
+     "A dónde va: Gastos del día a día",
+     "84.000 $ al año (30 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+    ],
+    [
+     "Lo que sobra este año tras gastos y ahorro",
+     "15.032 $",
+     "facts.retirement.netCashFlowThisYear"
+    ],
+    [
+     "Percentil de ingresos del hogar",
+     "por encima del 90 % de hogares",
+     "incomeAndCashflow.householdIncomePercentile"
+    ]
+   ],
+   "graf": {
+    "tipo": "barras",
+    "titulo": "A dónde van vuestros 280.000 $ al año",
+    "items": [
+     {
+      "lab": "Impuestos",
+      "v": 78677.99,
+      "txt": "78.678 $ · 28 %",
+      "tono": ""
+     },
+     {
+      "lab": "Deudas",
+      "v": 15840,
+      "txt": "15.840 $ · 6 %",
+      "tono": "coste"
+     },
+     {
+      "lab": "Vivienda",
+      "v": 60450,
+      "txt": "60.450 $ · 22 %",
+      "tono": ""
+     },
+     {
+      "lab": "Ahorro",
+      "v": 26000,
+      "txt": "26.000 $ · 9 %",
+      "tono": "bueno"
+     },
+     {
+      "lab": "Gastos del día a día",
+      "v": 84000,
+      "txt": "84.000 $ · 30 %",
+      "tono": ""
+     },
+     {
+      "lab": "Sobra",
+      "v": 15032.01,
+      "txt": "15.032 $",
+      "tono": "bueno"
+     }
+    ],
+    "leyenda": {
+     "coste": "Pago de deudas",
+     "bueno": "Ahorro y lo que sobra"
+    }
+   },
+   "kpis": [
+    {
+     "lab": "Ingresos al año",
+     "val": "280 K$",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Ahorro al año",
+     "val": "26 K$",
+     "sub": "9,3 % de los ingresos",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Sobra al año",
+     "val": "15 K$",
+     "sub": "tras gastos y ahorro",
+     "tono": ""
+    }
+   ],
+   "desglose": {
+    "titulo": "A dónde va lo que entra cada año",
+    "filas": [
+     [
+      "Impuestos",
+      "78.678 $"
+     ],
+     [
+      "Deudas",
+      "15.840 $"
+     ],
+     [
+      "Vivienda",
+      "60.450 $"
+     ],
+     [
+      "Ahorro",
+      "26.000 $"
+     ],
+     [
+      "Gastos del día a día",
+      "84.000 $"
+     ],
+     [
+      "Sobra",
+      "15.032 $"
+     ]
+    ],
+    "total": [
+     "Ingresos",
+     "280.000 $"
+    ]
+   },
+   "lectura": [
+    "De cada 100 $ que entran, 28 a impuestos, 6 a deudas, 22 a vivienda, 9 a ahorro y 30 a gastos del día a día.",
+    "Después de todo, este año os sobran <b>15.032 $</b>."
+   ],
+   "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año."
   },
   {
    "nombre": "Deudas",
    "icon": "card",
    "nota": 76,
-   "puntos": "15/20"
+   "puntos": "15/20",
+   "resumen": [
+    [
+     "Deuda total",
+     "618.000 $, 5.420 $ al mes",
+     "ratios.indebtedness"
+    ],
+    [
+     "La más cara",
+     "Tarjeta: 18.000 $ al 24,9 %",
+     "debtManagement.listOfDebts"
+    ],
+    [
+     "Sin deudas en",
+     "agosto de 2047",
+     "ratios.currentDPD"
+    ]
+   ],
+   "detalle": [
+    [
+     "Hipoteca · Primary home mortgage",
+     "560.000 $ al 6,5 % · 4.100 $ al mes, 3.033 $ de intereses al mes",
+     "debtManagement.listOfDebts"
+    ],
+    [
+     "Préstamo del coche · Toyota Highlander loan",
+     "28.000 $ al 7,9 % · 620 $ al mes, 184 $ de intereses al mes",
+     "debtManagement.listOfDebts"
+    ],
+    [
+     "Tarjeta · Chase Sapphire",
+     "18.000 $ al 24,9 % · 450 $ al mes, 374 $ de intereses al mes",
+     "debtManagement.listOfDebts"
+    ],
+    [
+     "Préstamo de estudios · Student loan - Daniel",
+     "12.000 $ al 5,2 % · 250 $ al mes, 52 $ de intereses al mes",
+     "debtManagement.listOfDebts"
+    ],
+    [
+     "Parte de los ingresos que va a deudas",
+     "23,2 %",
+     "ratios.debtToIncome.debtOnlyDti"
+    ],
+    [
+     "Con los gastos de vivienda",
+     "27,3 % (los bancos miran el 36 %)",
+     "ratios.debtToIncome.ratio"
+    ],
+    [
+     "Vivienda sobre ingresos",
+     "21,6 %",
+     "ratios.housingRatio"
+    ],
+    [
+     "La tarjeta se acaba, a este ritmo",
+     "enero de 2034",
+     "ratios.creditCardDebt.ccPayoffDate"
+    ],
+    [
+     "Último pago de todas las deudas",
+     "agosto de 2047",
+     "ratios.currentDPD.debtLastPayment"
+    ]
+   ],
+   "graf": {
+    "tipo": "curva",
+    "titulo": "Lo que se debe, año a año",
+    "serie": [
+     [
+      2026,
+      618000
+     ],
+     [
+      2027,
+      595926
+     ],
+     [
+      2028,
+      572108
+     ],
+     [
+      2029,
+      546361
+     ],
+     [
+      2030,
+      518474
+     ],
+     [
+      2031,
+      493659
+     ],
+     [
+      2032,
+      471889
+     ],
+     [
+      2033,
+      447910
+     ],
+     [
+      2034,
+      426157
+     ],
+     [
+      2035,
+      404006
+     ],
+     [
+      2036,
+      380370
+     ],
+     [
+      2037,
+      355152
+     ],
+     [
+      2038,
+      328244
+     ],
+     [
+      2039,
+      299535
+     ],
+     [
+      2040,
+      268903
+     ],
+     [
+      2041,
+      236219
+     ],
+     [
+      2042,
+      201346
+     ],
+     [
+      2043,
+      164138
+     ],
+     [
+      2044,
+      124439
+     ],
+     [
+      2045,
+      82080
+     ],
+     [
+      2046,
+      36884
+     ],
+     [
+      2047,
+      0
+     ]
+    ],
+    "marca": [
+     2047,
+     "Sin deudas · agosto de 2047"
+    ],
+    "nota": "Cuenta nuestra con el saldo, el interés y el pago de cada deuda de hoy. La fecha final es la del plan."
+   },
+   "kpis": [
+    {
+     "lab": "Deuda total",
+     "val": "618 K$",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Pago al mes",
+     "val": "5.420 $",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Deudas sobre ingresos",
+     "val": "23,2 %",
+     "sub": "27,3 % con la vivienda",
+     "tono": ""
+    },
+    {
+     "lab": "Sin deudas en",
+     "val": "2047",
+     "sub": "agosto de 2047",
+     "tono": ""
+    }
+   ],
+   "desglose": {
+    "titulo": "Lo que se debe",
+    "filas": [
+     [
+      "Hipoteca · 6,5 %",
+      "560.000 $"
+     ],
+     [
+      "Préstamo del coche · 7,9 %",
+      "28.000 $"
+     ],
+     [
+      "Tarjeta · 24,9 %",
+      "18.000 $"
+     ],
+     [
+      "Préstamo de estudios · 5,2 %",
+      "12.000 $"
+     ]
+    ],
+    "total": [
+     "Total",
+     "618.000 $"
+    ]
+   },
+   "lectura": [
+    "La más cara es la tarjeta: <b>18.000 $</b> al <b>24,9 %</b>, <b>374 $</b> de intereses al mes.",
+    "Con la vivienda, los pagos se llevan el <b>27,3 %</b> de los ingresos. Los bancos se fijan a partir del 36 %.",
+    "Pagando como hasta ahora, la tarjeta se acaba en <b>enero de 2034</b>."
+   ],
+   "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla."
   },
   {
    "nombre": "Inversiones",
    "icon": "chart",
    "nota": 51,
-   "puntos": "8/15"
+   "puntos": "8/15",
+   "resumen": [
+    [
+     "Invertido",
+     "330.000 $",
+     "ratios.investableAssetLevel.investableAssets"
+    ],
+    [
+     "Rentabilidad últimos 3 años",
+     "13,7 % al año",
+     "investment-analysis · performanceAnalysis"
+    ],
+    [
+     "Peor caída en 3 años",
+     "10 %, recuperada en 61 días",
+     "investment-analysis · performanceAnalysis"
+    ]
+   ],
+   "detalle": [
+    [
+     "Perfil de riesgo de Daniel",
+     "dinámico",
+     "case.household.risk_profile"
+    ],
+    [
+     "Perfil de riesgo de Emily",
+     "equilibrado",
+     "case.household.risk_profile"
+    ],
+    [
+     "Patrimonio total",
+     "1,13 M$",
+     "totalAssetsAndEquity"
+    ],
+    [
+     "Patrimonio neto (lo que tenéis menos lo que debéis)",
+     "511.000 $",
+     "netWorthStatement.netWorth"
+    ],
+    [
+     "Efectivo",
+     "14.000 $ (1 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "Inversiones",
+     "330.000 $ (29 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "Vivienda",
+     "750.000 $ (66 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "Vehículos",
+     "35.000 $ (3 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "Otros",
+     "0 $ (0 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "En bolsa, de lo invertido",
+     "57 %",
+     "investment-analysis · concentrationAndDiversification.totals"
+    ],
+    [
+     "Reparto del hogar hoy (bolsa / resto)",
+     "54 / 46",
+     "investment-analysis · performanceAnalysis.household.currentEquityPct"
+    ],
+    [
+     "Reparto que propone el análisis",
+     "66 / 34",
+     "investment-analysis · targetAnalysis.assetAllocations"
+    ],
+    [
+     "Rentabilidad esperada al año, hoy y propuesta",
+     "6,63 % → 7,12 %",
+     "investment-analysis · portfolioAnalysis / targetAnalysis"
+    ],
+    [
+     "Cuánto se mueve al año, hoy y propuesto",
+     "8,12 % → 8,39 %",
+     "investment-analysis · volatility"
+    ],
+    [
+     "Sector con más peso",
+     "Tecnología: 36 % de la bolsa (normal)",
+     "investment-analysis · sectorConcentration"
+    ],
+    [
+     "Cómo le iría en: la subida tras 2009",
+     "51,3 %",
+     "investment-analysis · marketEnvironments"
+    ],
+    [
+     "Cómo le iría en: la crisis de 2008",
+     "-20,4 %",
+     "investment-analysis · marketEnvironments"
+    ],
+    [
+     "Cómo le iría en: la caída de bolsa de 2018",
+     "-6,6 %",
+     "investment-analysis · marketEnvironments"
+    ],
+    [
+     "Cómo le iría en: la caída del COVID (2020)",
+     "-12,6 %",
+     "investment-analysis · marketEnvironments"
+    ],
+    [
+     "Rentabilidad último año",
+     "6,9 %",
+     "investment-analysis · return1yAnnualized"
+    ],
+    [
+     "Rentabilidad acumulada 3 años",
+     "46,9 %",
+     "investment-analysis · return3yCumulative"
+    ],
+    [
+     "Cuánto se mueve (volatilidad 3 años)",
+     "8,1 %",
+     "investment-analysis · volatility3y"
+    ]
+   ],
+   "graf": {
+    "tipo": "barras",
+    "titulo": "Dónde está vuestro patrimonio",
+    "items": [
+     {
+      "lab": "Efectivo",
+      "v": 14000,
+      "txt": "14.000 $ · 1 %"
+     },
+     {
+      "lab": "Inversiones",
+      "v": 330000,
+      "txt": "330.000 $ · 29 %"
+     },
+     {
+      "lab": "Vivienda",
+      "v": 750000,
+      "txt": "750.000 $ · 66 %"
+     },
+     {
+      "lab": "Vehículos",
+      "v": 35000,
+      "txt": "35.000 $ · 3 %"
+     },
+     {
+      "lab": "Otros",
+      "v": 0,
+      "txt": "0 $ · 0 %"
+     }
+    ]
+   },
+   "kpis": [
+    {
+     "lab": "Invertido",
+     "val": "330 K$",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Patrimonio neto",
+     "val": "511 K$",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Rentabilidad",
+     "val": "13,7 %",
+     "sub": "al año, últimos 3 años",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Peor caída",
+     "val": "10 %",
+     "sub": "recuperada en 61 días",
+     "tono": "coste"
+    }
+   ],
+   "desglose": {
+    "titulo": "Dónde está vuestro patrimonio",
+    "filas": [
+     [
+      "Efectivo",
+      "14.000 $"
+     ],
+     [
+      "Inversiones",
+      "330.000 $"
+     ],
+     [
+      "Vivienda",
+      "750.000 $"
+     ],
+     [
+      "Vehículos",
+      "35.000 $"
+     ],
+     [
+      "Otros",
+      "0 $"
+     ]
+    ],
+    "total": [
+     "Total",
+     "1,13 M$"
+    ]
+   },
+   "lectura": [
+    "El <b>56,7 %</b> de lo invertido está en bolsa.",
+    "Contando el efectivo, el reparto hoy es <b>54 / 46</b> (bolsa / resto). El análisis propone <b>66 / 34</b>, con una rentabilidad esperada del 7,12 % en vez del 6,63 %.",
+    "En una crisis como la de 2008, esta cartera habría caído un <b>20,4 %</b>."
+   ],
+   "asesor": "Daniel es dinámico y Emily, equilibrado: decidir juntos cuánto riesgo queréis en la cartera."
   },
   {
    "nombre": "Colchón",
    "icon": "shield",
    "nota": 85,
-   "puntos": "13/15"
+   "puntos": "13/15",
+   "resumen": [
+    [
+     "Efectivo accesible",
+     "19.000 $",
+     "facts.cash.accessibleCash"
+    ],
+    [
+     "Cubre",
+     "1,4 meses de gastos básicos (el plan pide 8 a 9)",
+     "facts.cash.monthsCovered"
+    ],
+    [
+     "Falta",
+     "92.360 $ para la reserva y los gastos ya previstos",
+     "ratios.emergencyFund.shortfallToAdjustedMin"
+    ]
+   ],
+   "detalle": [
+    [
+     "Efectivo accesible",
+     "19.000 $",
+     "facts.cash.accessibleCash"
+    ],
+    [
+     "Gastos básicos al mes",
+     "13.358 $",
+     "ratios.emergencyFund.monthlyExpenses"
+    ],
+    [
+     "Meses que cubre hoy",
+     "1,4",
+     "facts.cash.monthsCovered"
+    ],
+    [
+     "Reserva que recomienda el plan",
+     "106.860 $ a 120.218 $ (8 a 9 meses)",
+     "facts.cash.emergencyReserve"
+    ],
+    [
+     "Meses tras apartar los gastos ya previstos",
+     "1,1",
+     "facts.cash.monthsCoveredAfterNearTermGoals"
+    ],
+    [
+     "Efectivo que pide el plan con los gastos ya previstos",
+     "111.360 $ a 124.718 $",
+     "facts.cash.totalCashNeeded"
+    ],
+    [
+     "Gasto ya previsto",
+     "4.500 $: vacaciones",
+     "facts.cash.nearTermGoals"
+    ],
+    [
+     "Lo que falta para la reserva y esos gastos",
+     "92.360 $",
+     "ratios.emergencyFund.shortfallToAdjustedMin"
+    ],
+    [
+     "Lo que rinde el efectivo al año",
+     "0 $; bien colocado, unos 625 $",
+     "investment-analysis · cashNeeds.summaryIncome"
+    ]
+   ],
+   "graf": {
+    "tipo": "rango",
+    "titulo": "Vuestro efectivo frente a lo recomendado",
+    "v": 19000,
+    "min": 106860,
+    "max": 120217.5,
+    "txt": "19.000 $",
+    "minTxt": "106.860 $",
+    "maxTxt": "120.218 $"
+   },
+   "kpis": [
+    {
+     "lab": "Efectivo",
+     "val": "19 K$",
+     "sub": "",
+     "tono": ""
+    },
+    {
+     "lab": "Cubre",
+     "val": "1,4 meses",
+     "sub": "de gastos básicos",
+     "tono": ""
+    },
+    {
+     "lab": "Recomendado",
+     "val": "8 a 9 meses",
+     "sub": "107 K$ a 120 K$",
+     "tono": ""
+    },
+    {
+     "lab": "Falta",
+     "val": "92 K$",
+     "sub": "para reserva y gastos previstos",
+     "tono": "coste"
+    }
+   ],
+   "desglose": {
+    "titulo": "Lo que pide el plan tener en efectivo",
+    "filas": [
+     [
+      "Reserva para imprevistos",
+      "106.860 $ a 120.218 $"
+     ],
+     [
+      "Gasto ya previsto: vacaciones",
+      "4.500 $"
+     ],
+     [
+      "Lo que tenéis",
+      "19.000 $"
+     ]
+    ],
+    "total": [
+     "Total que pide",
+     "111.360 $ a 124.718 $"
+    ]
+   },
+   "lectura": [
+    "Vuestro efectivo cubre <b>1,4 meses</b> de gastos básicos; el plan pide de 8 a 9.",
+    "Para la reserva y los gastos ya previstos faltan <b>92.360 $</b>.",
+    "Hoy ese efectivo rinde <b>0 $</b> al año; bien colocado, unos <b>625 $</b>."
+   ],
+   "asesor": "Cómo llegar a la reserva sin dejar de lado lo demás."
   },
   {
    "nombre": "Seguros",
    "icon": "heart",
    "nota": 0,
-   "puntos": "0/20"
+   "puntos": "0/20",
+   "resumen": [
+    [
+     "Vida · Daniel",
+     "250.000 $; el plan pide 1,6 M$ como mínimo",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "Vida · Emily",
+     "200.000 $; el plan pide 1,2 M$ como mínimo",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "Responsabilidad civil",
+     "0 $ de 1 M$ recomendados",
+     "ratios.umbrella"
+    ]
+   ],
+   "detalle": [
+    [
+     "Seguro de vida de Daniel",
+     "250.000 $",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "Recomendado para Daniel",
+     "1,6 M$ a 2,4 M$",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "A Daniel le falta como mínimo",
+     "1,35 M$",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "Seguro de vida de Emily",
+     "200.000 $",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "Recomendado para Emily",
+     "1,2 M$ a 1,8 M$",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "A Emily le falta como mínimo",
+     "1 M$",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "Responsabilidad civil (umbrella)",
+     "0 $ hoy, 1 M$ recomendado",
+     "ratios.umbrella"
+    ],
+    [
+     "Póliza · Incapacidad (largo plazo) · Daniel",
+     "en vigor, sin importe en el plan",
+     "profile.insurance"
+    ],
+    [
+     "Póliza · Vida (permanente) · Daniel",
+     "250.000 $",
+     "profile.insurance"
+    ],
+    [
+     "Póliza · Incapacidad (largo plazo) · Emily",
+     "en vigor, sin importe en el plan",
+     "profile.insurance"
+    ],
+    [
+     "Póliza · Vida (permanente) · Emily",
+     "200.000 $",
+     "profile.insurance"
+    ],
+    [
+     "Dependen de estos ingresos",
+     "Oliver (11) y Sophia (9)",
+     "case.household"
+    ]
+   ],
+   "graf": {
+    "tipo": "barras",
+    "titulo": "Lo que hay frente a lo recomendado",
+    "items": [
+     {
+      "lab": "Vida Daniel",
+      "v": 250000,
+      "ref": 1600000,
+      "txt": "250.000 $ de 1,6 M$",
+      "tono": "coste"
+     },
+     {
+      "lab": "Vida Emily",
+      "v": 200000,
+      "ref": 1200000,
+      "txt": "200.000 $ de 1,2 M$",
+      "tono": "coste"
+     },
+     {
+      "lab": "Resp. civil",
+      "v": 0,
+      "ref": 1000000,
+      "txt": "0 $ de 1 M$",
+      "tono": "coste"
+     }
+    ],
+    "leyenda": {
+     "coste": "Por debajo del mínimo",
+     "bueno": "Cubierto"
+    }
+   },
+   "kpis": [
+    {
+     "lab": "Vida · Daniel",
+     "val": "250 K$",
+     "sub": "pide 1,6 M$ como mínimo",
+     "tono": "coste"
+    },
+    {
+     "lab": "Vida · Emily",
+     "val": "200 K$",
+     "sub": "pide 1,2 M$ como mínimo",
+     "tono": "coste"
+    },
+    {
+     "lab": "Responsabilidad civil",
+     "val": "0 $",
+     "sub": "pide 1 M$",
+     "tono": "coste"
+    },
+    {
+     "lab": "Pólizas",
+     "val": "4",
+     "sub": "en el plan",
+     "tono": ""
+    }
+   ],
+   "desglose": {
+    "titulo": "Lo que hay y lo que falta",
+    "filas": [
+     [
+      "Vida · Daniel",
+      "250.000 $ de 1,6 M$"
+     ],
+     [
+      "Vida · Emily",
+      "200.000 $ de 1,2 M$"
+     ],
+     [
+      "Responsabilidad civil",
+      "0 $ de 1 M$"
+     ]
+    ],
+    "total": null
+   },
+   "lectura": [
+    "A Daniel le faltan como mínimo <b>1,35 M$</b> de seguro de vida.",
+    "A Emily le faltan como mínimo <b>1 M$</b> de seguro de vida.",
+    "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>.",
+    "Oliver y Sophia dependen de vuestros ingresos."
+   ],
+   "asesor": "Cuánto contratar y cuánto cuesta: el plan no trae precios."
   }
  ],
  "frases": [
@@ -356,6 +1258,327 @@
    "Dinámico",
    "Atrevido"
   ]
+ },
+ "roadmap": {
+  "resumen": [
+   [
+    "Jubilación",
+    "2044, a los 62 y 60",
+    "goals.chartGoals"
+   ],
+   [
+    "Los ingresos cubren",
+    "el 49 % del gasto en la jubilación",
+    "facts.retirement.incomeShareOfNeed"
+   ],
+   [
+    "Al final del plan quedan",
+    "260.272 $",
+    "facts.retirement.savingsLeftAtPlanEnd"
+   ]
+  ],
+  "detalle": [
+   [
+    "Vacaciones",
+    "4.500 $ cada año",
+    "goals.goalsSummary"
+   ],
+   [
+    "Universidad",
+    "60.000 $ por hijo",
+    "goals.goalsSummary"
+   ],
+   [
+    "Gasto al año en la jubilación",
+    "124.071 $",
+    "facts.retirement.spendingNeed"
+   ],
+   [
+    "Ingresos garantizados al año (pensiones y rentas)",
+    "59.466 $",
+    "facts.retirement.guaranteedIncome"
+   ],
+   [
+    "Lo que sale de los ahorros cada año",
+    "62.932 $",
+    "facts.retirement.spendingGap"
+   ],
+   [
+    "Retirada media de los ahorros",
+    "5,5 %",
+    "facts.retirement.withdrawalRateAverage"
+   ],
+   [
+    "Ahorro extra que pide la jubilación",
+    "34.165 $ al año",
+    "ratios.retirementSavings.requiredExtraSavings"
+   ],
+   [
+    "Universidad de Oliver",
+    "empieza en agosto de 2033; ahorrado 16.221 $, falta 50.742 $",
+    "ratios.educationSavings"
+   ],
+   [
+    "Universidad de Sophia",
+    "empieza en agosto de 2035; ahorrado 13.779 $, falta 55.810 $",
+    "ratios.educationSavings"
+   ],
+   [
+    "Falta para la universidad",
+    "106.552 $",
+    "facts.education.fundingGap"
+   ],
+   [
+    "Ahorro extra al año para la universidad",
+    "1.928 $",
+    "facts.education.extraYearlySaving"
+   ],
+   [
+    "Patrimonio neto hoy",
+    "511.000 $",
+    "netWorthStatement.netWorth"
+   ],
+   [
+    "Patrimonio neto al jubilaros (dólares de hoy)",
+    "1,81 M$",
+    "projections.yearly"
+   ]
+  ],
+  "kpis": [
+   {
+    "lab": "Jubilación",
+    "val": "2044",
+    "sub": "a los 62 y 60",
+    "tono": ""
+   },
+   {
+    "lab": "Los ingresos cubren",
+    "val": "49 %",
+    "sub": "del gasto en la jubilación",
+    "tono": ""
+   },
+   {
+    "lab": "Al final del plan quedan",
+    "val": "260 K$",
+    "sub": "en dólares de hoy",
+    "tono": "bueno"
+   },
+   {
+    "lab": "Patrimonio al jubilaros",
+    "val": "1,81 M$",
+    "sub": "en dólares de hoy",
+    "tono": ""
+   }
+  ],
+  "lectura": [
+   "En la jubilación gastaréis unos <b>124.071 $</b> al año; las pensiones y rentas cubren <b>59.466 $</b> y el resto sale de los ahorros.",
+   "Para la universidad faltan <b>106.552 $</b>: unos <b>1.928 $</b> más al año.",
+   "Para que la jubilación llegue, el plan pide ahorrar <b>34.165 $</b> más al año."
+  ],
+  "asesor": "Cómo encajar las metas (casa, coche, universidad) sin mover la jubilación.",
+  "serie": [
+   [
+    2026,
+    521128
+   ],
+   [
+    2027,
+    593364
+   ],
+   [
+    2028,
+    667727
+   ],
+   [
+    2029,
+    744265
+   ],
+   [
+    2030,
+    823061
+   ],
+   [
+    2031,
+    897980
+   ],
+   [
+    2032,
+    973134
+   ],
+   [
+    2033,
+    1036216
+   ],
+   [
+    2034,
+    1098166
+   ],
+   [
+    2035,
+    1143861
+   ],
+   [
+    2036,
+    1190179
+   ],
+   [
+    2037,
+    1255809
+   ],
+   [
+    2038,
+    1322899
+   ],
+   [
+    2039,
+    1407737
+   ],
+   [
+    2040,
+    1494842
+   ],
+   [
+    2041,
+    1584279
+   ],
+   [
+    2042,
+    1676637
+   ],
+   [
+    2043,
+    1771538
+   ],
+   [
+    2044,
+    1809749
+   ],
+   [
+    2045,
+    1746980
+   ],
+   [
+    2046,
+    1681336
+   ],
+   [
+    2047,
+    1611203
+   ],
+   [
+    2048,
+    1526847
+   ],
+   [
+    2049,
+    1441492
+   ],
+   [
+    2050,
+    1377023
+   ],
+   [
+    2051,
+    1335028
+   ],
+   [
+    2052,
+    1305106
+   ],
+   [
+    2053,
+    1274655
+   ],
+   [
+    2054,
+    1242503
+   ],
+   [
+    2055,
+    1208292
+   ],
+   [
+    2056,
+    1172546
+   ],
+   [
+    2057,
+    1144910
+   ],
+   [
+    2058,
+    1124037
+   ],
+   [
+    2059,
+    1104651
+   ],
+   [
+    2060,
+    1086755
+   ],
+   [
+    2061,
+    1070353
+   ],
+   [
+    2062,
+    1055455
+   ],
+   [
+    2063,
+    1042069
+   ],
+   [
+    2064,
+    1030207
+   ],
+   [
+    2065,
+    1019883
+   ],
+   [
+    2066,
+    1011114
+   ],
+   [
+    2067,
+    1003918
+   ],
+   [
+    2068,
+    998315
+   ],
+   [
+    2069,
+    994330
+   ],
+   [
+    2070,
+    991987
+   ],
+   [
+    2071,
+    991315
+   ],
+   [
+    2072,
+    992344
+   ],
+   [
+    2073,
+    996488
+   ],
+   [
+    2074,
+    1006722
+   ],
+   [
+    2075,
+    1011500
+   ]
+  ],
+  "jubila": 2044
  },
  "lectura": "A Daniel y Emily les mueve ante todo proteger a los niños y tener colchón líquido. Les preocupa cuánto cubren los seguros y cuánto aguanta su efectivo antes de tocarlo.",
  "porqueOrden": "Empezamos por la protección, luego la liquidez, el coste de la deuda y cerramos con la noticia sobre la jubilación.",
@@ -715,7 +1938,7 @@
   }
  ],
  "generado": {
-  "fecha": "2026-11-15",
+  "fecha": "2026-11-16",
   "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [

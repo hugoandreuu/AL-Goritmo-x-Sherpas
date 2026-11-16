@@ -41,7 +41,8 @@
     E.preguntas = E.preguntas.map(aBarra);
     QMAP = Object.fromEntries(E.preguntas.map(q => [q.id, q]));
     buildQuiz([]);
-    SLIDES = ['foto', ...E.frenos.map(id => 'f:' + id), 'pasos', 'camino', E.primer ? 'primer' : null, 'reunion'].filter(Boolean);
+    // Resumen tras el quiz: la nota, una tarjeta por cada uno de los 5 temas y el roadmap.
+    SLIDES = ['foto', ...temasPlan().map(x => 't:' + x.a.nombre), 'ruta'];
     S = fresh();
     if (!limpio) { try { const raw = localStorage.getItem(KEY()); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) { /* nada */ } }
     if (!E.fam.pl) S.who = 'a';
@@ -211,7 +212,7 @@
     clearTimeout(REVEAL_T);
     if (PEND !== id) return;
     PEND = null; JUST = true; render(); JUST = false; runSeq();
-    if (window.Fondo) { const q = QMAP[id]; Fondo.focus(false); Fondo.mood(q && q.tono === 'malo' ? -0.9 : 0.8); }
+    if (window.Fondo) { const q = QMAP[id]; Fondo.focus(false); Fondo.mood(q && q.tono === 'malo' ? -0.9 : 0.8); Fondo.tint(q && q.tono === 'malo' ? 'mal' : 'bien'); }
   }
 
   // Secuencia de la revelación. Un toque fuera de los botones la lleva al final.
@@ -375,6 +376,8 @@
   const nextQ = () => swipe(() => { S.qi = Math.min(S.qi + 1, QUIZ.length - 1); render(); });
   const advance = () => { clearTimeout(ADV_T); ADV_T = setTimeout(nextQ, 280); };
 
+  // ¿Ya ha contestado esta pantalla? Entonces el fondo deja el morado y toma color.
+  const quizAnswered = (step, a) => step === 'who' ? !!S.who : step === 'phrase' ? !!S.phrase : step === 'level' ? !!S.prefs.level : step === 'gain' ? !!S.gain : a.value != null;
   function renderQuiz() {
     const step = QUIZ[S.qi];
     clearTimeout(INTRO_T);
@@ -387,8 +390,8 @@
     let head = '', body = '', dk = '';
     if (step === 'who') {
       const ad = E.fam.adultos;
-      head = S.mode === 'solo' ? `<h2 class="q">¿Quién eres?</h2><p class="muted">Contestas por tu cuenta. Luego podéis verlo los dos juntos desde el inicio.</p>` : `<h2 class="q">¿Quién mira el plan?</h2>`;
-      body = (S.mode === 'solo' ? [] : [['juntos', 'Los dos juntos', 'heart']]).concat([['a', ad[0].nombre, 'eye'], ['b', ad[1].nombre, 'eye']]).map(([v, l, i], k) => `<button class="opt" style="--i:${k}" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${optBody(i, esc(l))}</button>`).join('');
+      head = `<h2 class="q">¿Quién mira el plan?</h2>`;
+      body = [['juntos', 'Los dos juntos', 'heart']].concat([['a', ad[0].nombre, 'eye'], ['b', ad[1].nombre, 'eye']]).map(([v, l, i], k) => `<button class="opt" style="--i:${k}" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${optBody(i, esc(l))}</button>`).join('');
     } else if (step === 'phrase') {
       head = `<h2 class="q">¿Qué es lo que más ${w('os ronda', 'te ronda')} la cabeza con el dinero?</h2><p class="muted">Con ${w('vuestras', 'tus')} palabras. También ${w('podéis', 'puedes')} dictarlo con el micrófono del teclado.</p>`;
       body = `<textarea id="worry" class="free" rows="3" maxlength="240" data-act="free-in" placeholder="${esc(E.fam.hijos.length ? `Por ejemplo: que a ${E.fam.hijos.map(k => k.nombre).join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilo a la jubilación')}">${esc(S.phrase || '')}</textarea>
@@ -417,7 +420,7 @@
       } else body = numWidget(q, a);
       dk = dock(q.tipo === 'anio' ? 'Ver la fecha' : q.tipo === 'opciones' ? 'Ver la respuesta' : 'Ver el dato', has, 'reveal');
     }
-    if (window.Fondo) { Fondo.mood(0); Fondo.focus(false); }
+    if (window.Fondo) { Fondo.mood(0); Fondo.focus(false); Fondo.tint(quizAnswered(step, a) ? 'pick' : null); }
     app.innerHTML = `<div class="narrow"><div class="qstage ${intro ? 'intro' : ''}">${progress()}<div class="qhead">${head}</div><div class="qbody">${body}</div>${dk}</div></div>`;
     if (intro) { window.scrollTo(0, 0); introQ(); }
   }
@@ -469,10 +472,20 @@
     if (id === 'foto') {
       LAST_SCORE = null;
       const ord = E.areas.slice().sort((a, b) => a.nota - b.nota), peor = ord[0];
-      return `<div class="kick">${w('Vuestra', 'Tu')} foto de hoy</div><h2>${E.nota.hoy} de 100. Lo que más pesa: ${esc(low1(peor.nombre))}.</h2>
+      return `<div class="kick">${w('Vuestra', 'Tu')} nota general</div><h2>${E.nota.hoy} de 100. Lo que más pesa: ${esc(low1(peor.nombre))}.</h2>
+        <button class="tm-open card-btn" data-act="tema" data-k="__nota" aria-label="Ver la nota a fondo">
         <div class="foto">${ring(E.nota.hoy, max)}<p class="muted small">${w('Vuestra', 'Tu')} nota de salud financiera${E.nota.banda ? `: <b>${esc(E.nota.banda)}</b>` : ''}. ${max > E.nota.hoy ? `Con ${w('vuestro', 'tu')} plan llega a <b>${max}</b>.` : ''}</p></div>
         <div class="areas">${E.areas.map((a, i) => `<div class="ar ${a.nota < 50 ? 'low' : a.nota < 75 ? 'mid' : 'hi'}" style="--i:${i}"><span class="ar-ic">${ic(a.icon, 18)}</span><b>${esc(a.nombre)}</b><div class="ar-b"><i style="width:${Math.max(3, a.nota)}%"></i></div><em>${a.nota}</em></div>`).join('')}</div>
-        <p class="tiny" style="margin:0">Las cinco áreas con las que ${w('vuestro', 'tu')} plan calcula la nota, de 0 a 100.</p>`;
+        <span class="tm-mas">${ic('chart', 15)} Ver a fondo</span></button>
+        <p class="tiny" style="margin:0">Las cinco áreas con las que ${w('vuestro', 'tu')} plan calcula la nota, de 0 a 100. En las siguientes tarjetas, una por tema.</p>`;
+    }
+    if (id.startsWith('t:')) {
+      const ts = temasPlan(), k = ts.findIndex(x => 't:' + x.a.nombre === id);
+      return `<div class="kick">Tema ${k + 1} de ${ts.length}</div>${temaCard(ts[k], 0, 'story')}`;
+    }
+    if (id === 'ruta') {
+      return `<div class="kick">${w('Vuestro', 'Tu')} roadmap</div><h2>De hoy a ${w('vuestra', 'tu')} jubilación, hito a hito.</h2>${lineaHtml()}
+        <button class="btn soft block" style="margin-top:14px" data-act="tema" data-k="__ruta">${ic('chart', 16)} Ver a fondo, con cifras y gráfico</button>`;
     }
     if (id.startsWith('f:')) {
       const q = QMAP[id.slice(2)], g = S.a[q.id], n = E.frenos.indexOf(q.id) + 1;
@@ -516,7 +529,7 @@
       <button class="askbox" data-act="whatif">${ic('pen', 18)}<span>Escribir otra pregunta para ${w('vuestro', 'tu')} asesor</span></button>
       ${S.booking ? bookedCard() : `<ul class="ticks" style="margin-top:6px"><li>${ic('check', 16)}${w('Salís', 'Sales')} con el orden de ${w('vuestros', 'tus')} pasos y respuesta a esto</li><li>${ic('check', 16)}${ns.mins} minutos, por videollamada</li><li>${ic('check', 16)}Sin preparar nada: ya tiene lo que ${w('habéis', 'has')} contestado</li></ul>
       <button class="btn block big-cta" data-act="book">${ic('cal')} Elegir día con ${w('vuestro', 'tu')} asesor</button>
-      <button class="link" style="width:100%" data-act="later">${S.later ? `${w('Os', 'Te')} avisamos dentro de una semana` : `Ahora no. ${w('Avisadnos', 'Avísame')} dentro de una semana`}</button>`}`;
+      <button class="link" style="width:100%" data-act="later">${window.__PREVIEW__ ? (S.later ? 'Sin prisa: el plan sigue aquí' : 'Ahora no') : S.later ? 'Recordatorio en el calendario, dentro de una semana' : `Ahora no. ${w('Recordádnoslo', 'Recuérdamelo')} en una semana`}</button>`}`;
   }
 
   let STORY_DIR = '';
@@ -536,6 +549,7 @@
     return { open, resolved, yes: v.filter(x => x === 'yes').length, no: v.filter(x => x === 'no').length, pending: v.filter(x => x == null).length, n: E.pasos.length };
   }
   function nextStep() {
+    if (S.stage === 'pareja' && pjDone()) return { title: 'Reunión para empezar vuestro plan', mins: 30, days: 5, text: `Con vuestro asesor: ${pjConLista()}. Ya tiene lo que habéis contestado; no hace falta preparar nada.` };
     const c = counts();
     if (c.yes === c.n && c.open === 0) return { title: w('Listos para empezar', 'Todo listo para empezar'), mins: 20, days: 2, text: `${w('Habéis', 'Has')} aceptado todos los pasos y no queda ninguna duda. Una reunión corta para arrancar.` };
     if (c.pending === c.n && c.open === 0) return { title: `Primero, ${w('decidid', 'decide')} los pasos`, mins: 30, days: 5, text: `${w('Contestad', 'Contesta')} «¿${w('Os', 'Te')} convence?» en cada paso. Cuantas más dudas queden resueltas aquí, más corta será la reunión.` };
@@ -544,28 +558,6 @@
   }
   const doubtLine = d => `<div class="doubt ${d.status === 'resolved' ? 'resolved' : 'advisor'}"><div class="spread"><b class="small">${esc(d.q)}</b>${d.status === 'resolved' ? '<span class="tag good">Resuelta</span>' : '<span class="tag acc">Para la reunión</span>'}</div></div>`;
 
-  function stepCard(p, i) {
-    const v = S.steps[p.key], mine = S.doubts.filter(d => d.paso === p.key);
-    let after = '';
-    if (E.primer && E.primer.key === p.key && v === 'yes') {
-      after = S.payDate
-        ? `<div class="datechip"><span class="dc-ic">${ic('cal', 22)}</span><div><small>Lo ${w('hacéis', 'haces')} el</small><b>${esc(S.payDate.label)}</b></div><button class="link small" data-act="cal" data-k="pay">Cambiar</button></div>
-           <details class="why"><summary>Cómo se hace, en tres pasos</summary><ol class="how">${E.primer.como.map(x => `<li>${esc(x)}</li>`).join('')}</ol>${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="ics" data-k="pay">Añadir al calendario</button>'}</details>`
-        : `<button class="btn block" style="margin-top:12px" data-act="cal" data-k="pay">${ic('cal')} Elegir día y hora</button>`;
-    } else if (v === 'yes') {
-      after = p.quien === 'asesor' ? `<div class="datechip soft"><span class="dc-ic">${ic('chat', 22)}</span><div><small>Este paso se hace con ${w('vuestro', 'tu')} asesor</small><b>Lo trae preparado a la reunión</b></div></div>` : '';
-    }
-    return `<div class="rstep ${v === 'yes' ? 'done' : ''}" id="step-${p.key}"><span class="rdot">${v === 'yes' ? ic('check', 18) : i + 1}</span>
-     <div class="card step">
-      <div class="spread" style="align-items:flex-start"><div class="kicker" style="margin:0">${quienTxt(p)} · esfuerzo ${esc(p.esfuerzo)}</div><span class="tag acc" title="Nota si solo se hace este paso">Solo: nota ${p.nota}</span></div>
-      <h3 style="margin:6px 0">${esc(pTitulo(p))}</h3>
-      ${p.porque ? `<p>${esc(p.porque)}</p>` : ''}
-      <p style="margin:14px 0 0;font-weight:600">¿${w('Os', 'Te')} convence?</p>
-      <div class="vote">${[['yes', 'Sí'], ['doubt', w('Tenemos dudas', 'Tengo dudas')], ['no', 'No']].map(([k, l]) => `<button class="chip" data-act="vote" data-s="${p.key}" data-v="${k}" aria-pressed="${v === k}">${l}</button>`).join('')}</div>
-      ${after}${mine.length ? `<div style="margin-top:10px">${mine.map(doubtLine).join('')}</div>` : ''}
-     </div></div>`;
-  }
-
   function believed() {
     return E.preguntas.filter(q => (S.a[q.id] || {}).revealed).map(q => [q.creian, fmtGuess(q, S.a[q.id].value), `${q.plan} ${q.unidad}`]);
   }
@@ -573,11 +565,6 @@
   function fold(id, n, title, sub, body, openDefault) {
     const open = S.fold[id] != null ? S.fold[id] : openDefault;
     return `<details class="fold" id="s-${id}" data-fold="${id}" ${open ? 'open' : ''}><summary><b class="n">${n}</b><span class="ft"><strong>${title}</strong><small>${sub}</small></span><i class="chev">${ic('arrow', 18)}</i></summary><div class="foldbody">${body}</div></details>`;
-  }
-  function goalsStrip() {
-    const g = E.linea.filter(x => x.c === 'goal' || x.c === 'end');
-    return g.length ? `<div class="rstep goal"><span class="rdot">${ic('flag', 16)}</span><div class="goals"><div class="kicker" style="margin:0 0 8px">A dónde lleva ${w('vuestro', 'tu')} plan</div>
-      <div class="goalrow">${g.map(x => `<div class="goalc"><span>${ic(x.icon, 20)}</span><b>${esc(x.cuando)}</b><small>${esc(x.t)}</small></div>`).join('')}</div></div></div>` : '';
   }
   function bookedCard() {
     const b = S.booking, d = fromIso(b.iso.slice(0, 10), b.time);
@@ -597,18 +584,225 @@
     return `Datos del plan: ${g.datos === 'mcp' ? 'MCP de Sherpas' : 'archivos del caso (los mismos que sirve el MCP de Sherpas)'}. Frases: ${String(g.textos || '').startsWith('llm') ? `escritas por el LLM de Sherpas (${esc(g.textos.slice(4))}) y comprobadas contra el plan` : 'plantilla, pendientes de pasar por el LLM de Sherpas'}.`;
   };
 
+
+  // ------------------------------------------------------------------ el plan en 5 temas
+  // El plan es la estructura: las cinco áreas con las que calcula la nota. Cada pregunta del quiz
+  // era una situación dentro de uno de estos temas, y cada paso del plan cae en uno de ellos.
+  // Las cifras de cada tema (resumen, detalle y gráfico) vienen del estudio, leídas del informe.
+  const TEMAS = {
+    'Ahorro': { sub: () => `Lo que ${w('ganáis, gastáis y guardáis', 'ganas, gastas y guardas')}`, temas: ['jubilacion'], pasos: ['savings', 'withdraw'] },
+    'Deudas': { sub: () => 'La tarjeta, la hipoteca y los préstamos', temas: ['tarjeta'], pasos: ['card'] },
+    'Inversiones': { sub: () => `Dónde está ${w('vuestro', 'tu')} patrimonio y cómo rinde`, temas: ['inversion'], pasos: ['growth', 'conc'] },
+    'Colchón': { sub: () => 'El efectivo para imprevistos', temas: ['colchon'], pasos: [] },
+    'Seguros': { sub: () => `Proteger a ${w('vuestra', 'tu')} familia y ${w('vuestra', 'tu')} casa`, temas: ['vida'], pasos: ['life', 'umbrella', 'cover'] }
+  };
+  const nivel = n => n < 50 ? 'low' : n < 75 ? 'mid' : 'hi';
+  const ESTADO = { low: 'A reforzar', mid: 'Mejorable', hi: 'Bien' };
+  function temasPlan() {
+    const usados = new Set();
+    const lista = E.areas.map(a => {
+      const t = TEMAS[a.nombre] || { sub: () => '', temas: [], pasos: [] };
+      const pasos = E.pasos.filter(p => t.pasos.includes(p.key));
+      pasos.forEach(p => usados.add(p.key));
+      const qs = E.preguntas.filter(q => t.temas.includes(q.tema));
+      return { a, t, pasos, qs };
+    });
+    // Pasos que el código aún no sabe colocar: al tema con peor nota, para que no se pierdan.
+    const sueltos = E.pasos.filter(p => !usados.has(p.key));
+    if (sueltos.length && lista.length) lista.slice().sort((x, y) => x.a.nota - y.a.nota)[0].pasos.push(...sueltos);
+    // Orden: primero los temas donde el plan pide algo, en el orden de sus pasos; luego el resto, de peor a mejor nota.
+    const primero = x => x.pasos.length ? Math.min(...x.pasos.map(p => E.pasos.indexOf(p))) : 99;
+    return lista.sort((x, y) => primero(x) - primero(y) || x.a.nota - y.a.nota);
+  }
+  const temaDe = nombre => temasPlan().find(x => x.a.nombre === nombre);
+  // Lo que pensaban frente a lo que dice el plan, en las preguntas de ese tema que contestaron.
+  const dijeron = x => x.qs.filter(q => (S.a[q.id] || {}).revealed).map(q => `<div class="memo">${ic('eye', 16)}<span>${w('Pensabais', 'Pensabas')} <b>${esc(low1(fmtGuess(q, S.a[q.id].value)))}</b>. El plan dice <b>${esc(q.plan)}</b> ${esc(q.unidad)}.</span></div>`).join('');
+  const filasTema = (rows, pro) => rows && rows.length ? `<ul class="tm-res">${rows.map(r => `<li><span class="tm-l">${esc(r[0])}</span><span>${esc(r[1])}${pro && PRO() && r[2] ? `<small class="tm-o">${esc(r[2])}</small>` : ''}</span></li>`).join('')}</ul>` : '';
+  const cabTema = (a, t, tag = 'h3') => `<header class="tm-h"><span class="ar-ic">${ic(a.icon, 18)}</span><div class="tm-ht"><${tag}>${esc(a.nombre)}</${tag}><small>${esc(t.sub())}</small></div>
+      <div class="tm-s"><em>${a.nota}<small>/100</small></em><span class="tm-e">${ESTADO[nivel(a.nota)]}</span></div></header>
+      <div class="ar-b"><i style="width:${Math.max(3, a.nota)}%"></i></div>`;
+
+  function pasoTema(p) {
+    const i = E.pasos.indexOf(p), v = S.steps[p.key], mine = S.doubts.filter(d => d.paso === p.key);
+    let after = '';
+    if (E.primer && E.primer.key === p.key && v === 'yes') {
+      after = S.payDate
+        ? `<div class="datechip"><span class="dc-ic">${ic('cal', 22)}</span><div><small>Lo ${w('hacéis', 'haces')} el</small><b>${esc(S.payDate.label)}</b></div><button class="link small" data-act="cal" data-k="pay">Cambiar</button></div>
+           <details class="why"><summary>Cómo se hace, en tres pasos</summary><ol class="how">${E.primer.como.map(x => `<li>${esc(x)}</li>`).join('')}</ol>${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="ics" data-k="pay">Añadir al calendario</button>'}</details>`
+        : `<button class="btn block" style="margin-top:12px" data-act="cal" data-k="pay">${ic('cal')} Elegir día y hora</button>`;
+    } else if (v === 'yes' && p.quien === 'asesor') after = `<p class="tiny" style="margin:8px 0 0">${ic('chat', 13)} ${w('Vuestro', 'Tu')} asesor lo trae preparado a la reunión.</p>`;
+    return `<div class="tm-paso ${v === 'yes' ? 'done' : ''}" id="step-${p.key}">
+      <div class="spread" style="align-items:flex-start"><span class="tiny"><b class="tm-n">${v === 'yes' ? ic('check', 13) : i + 1}</b>Paso ${i + 1} del plan · ${quienTxt(p)}</span><span class="tag acc" title="Nota si solo se hace este paso">Nota ${p.nota}</span></div>
+      <b class="tm-pt">${esc(pTitulo(p))}</b>${p.porque ? `<p class="small" style="margin:.2em 0 0">${esc(p.porque)}</p>` : ''}
+      <div class="vote sm"><span class="small">¿${w('Os', 'Te')} convence?</span>${[['yes', 'Sí'], ['doubt', 'Dudas'], ['no', 'No']].map(([k, l]) => `<button class="chip" data-act="vote" data-s="${p.key}" data-v="${k}" aria-pressed="${v === k}">${l}</button>`).join('')}</div>
+      ${after}${mine.length ? `<div style="margin-top:8px">${mine.map(doubtLine).join('')}</div>` : ''}</div>`;
+  }
+  const sinPaso = (x) => {
+    const salida = x.qs.find(q => q.salida);
+    return `<p class="small muted" style="margin:0">${salida ? esc(salida.salida) : nivel(x.a.nota) === 'hi' ? 'Está bien así: el plan no pide cambios en este tema.' : `El plan no propone un paso aquí por ahora. Si ${w('os', 'te')} preocupa, ${w('preguntadlo', 'pregúntalo')} en la reunión.`}</p>`;
+  };
+  // Tarjeta de tema. En el plan completo lleva los pasos con su voto; en el resumen tras el quiz, solo los títulos.
+  function temaCard(x, i, modo) {
+    const { a, t, pasos } = x, story = modo === 'story';
+    const plan = pasos.length
+      ? (story ? `<ul class="tm-pl">${pasos.map(p => `<li><b class="tm-n">${E.pasos.indexOf(p) + 1}</b>${esc(pTitulo(p))}</li>`).join('')}</ul>` : pasos.map(pasoTema).join(''))
+      : sinPaso(x);
+    const men = x.qs.some(q => (S.match || []).includes(q.id)) ? `<span class="porque tm-men">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
+    return `<article class="tema ${nivel(a.nota)}" style="--i:${i}">${men}
+      <button class="tm-open" data-act="tema" data-k="${esc(a.nombre)}" aria-label="Ver ${esc(a.nombre)} a fondo">${cabTema(a, t)}${filasTema(a.resumen)}
+        <span class="tm-mas">${ic('arrow', 15)} Abrir la página del tema</span></button>
+      ${story ? dijeron(x) : ''}
+      <div class="tm-plan"><div class="kicker" style="margin:0 0 6px">${pasos.length ? `Lo que propone ${w('vuestro', 'tu')} plan` : `${w('Vuestro', 'Tu')} plan`}</div>${plan}</div>
+    </article>`;
+  }
+
+  // --- gráficos (sin librerías). Reglas: todo empieza en cero sobre un eje con marcas redondas,
+  // rejilla fina y discreta, un solo color por gráfico salvo cuando el color significa algo (y entonces
+  // hay leyenda), textos siempre del mismo tamaño y nunca encima de la marca ni cortados.
+  const ejeTxt = v => { const a = Math.abs(v); return a === 0 ? '0' : a >= 1e6 ? dec(v / 1e6, 1) + ' M$' : a >= 1e3 ? dec(v / 1e3, 0) + ' K$' : Math.round(v) + ' $'; };
+  function marcas(lo, hi, n = 4) { // marcas redondas (1, 2, 2,5, 5 × 10^k) que cubren [lo, hi]
+    const r = (hi - lo) || Math.abs(hi) || 1, raw = r / n, e = Math.pow(10, Math.floor(Math.log10(raw)));
+    const paso = [1, 2, 2.5, 5, 10].map(m => m * e).find(m => m >= raw);
+    const a = Math.floor(lo / paso) * paso, b = Math.ceil(hi / paso) * paso, t = [];
+    for (let v = a; v <= b + paso / 2; v += paso) t.push(Math.round(v * 100) / 100);
+    return t;
+  }
+  const leyenda = items => items.length ? `<div class="gx-leg">${items.map(([c, t]) => `<span><i class="${c}"></i>${esc(t)}</span>`).join('')}</div>` : '';
+  // Barras horizontales: nombre y cifra en una línea encima de cada barra, eje común abajo.
+  function barrasHtml(titulo, items, extra = {}) {
+    const top = Math.max(...items.map(it => Math.max(it.v || 0, it.ref || 0)), extra.zona ? extra.zona[1] : 0) || 1;
+    const t = marcas(0, top), mx = t[t.length - 1], pc = v => Math.max(0, Math.min(100, v / mx * 100));
+    const leg = [];
+    if (items.some(it => it.tono === 'coste')) leg.push(['coste', extra.costeTxt || 'A vigilar']);
+    if (items.some(it => it.tono === 'bueno')) leg.push(['bueno', extra.buenoTxt || 'A favor']);
+    if (items.some(it => it.ref)) leg.push(['ref', 'Mínimo que recomienda el plan']);
+    if (extra.zona) leg.push(['zona', `Recomendado: ${extra.zona[2]}`]);
+    return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><div class="gx">
+      <div class="gx-plot">${t.map(v => `<i class="gx-g${v === 0 ? ' z' : ''}" style="left:${pc(v)}%"></i>`).join('')}${extra.zona ? `<i class="gx-zona" style="left:${pc(extra.zona[0])}%;width:${pc(extra.zona[1]) - pc(extra.zona[0])}%"></i>` : ''}
+      ${items.map((it, k) => `<div class="gx-row ${it.tono || ''}" style="--i:${k}"><div class="gx-h"><span class="gx-l" title="${esc(it.lab)}">${esc(it.lab)}</span><span class="gx-v">${esc(it.txt || M(it.v))}</span></div>
+        <div class="gx-bar">${it.v > 0 ? `<i style="width:${Math.max(0.8, pc(it.v))}%"></i>` : ''}${it.ref ? `<b class="gx-ref" style="left:${pc(it.ref)}%"></b>` : ''}</div></div>`).join('')}</div>
+      <div class="gx-ax">${t.map((v, k) => `<span class="${k === 0 ? 'ini' : k === t.length - 1 ? 'fin' : ''}" style="left:${pc(v)}%">${ejeTxt(v)}</span>`).join('')}</div></div>${leyenda(leg)}</figure>`;
+  }
+  function graf(g) {
+    if (!g) return '';
+    if (g.tipo === 'barras') return barrasHtml(g.titulo, g.items, { costeTxt: g.leyenda && g.leyenda.coste, buenoTxt: g.leyenda && g.leyenda.bueno });
+    if (g.tipo === 'rango') return barrasHtml(g.titulo, [{ lab: 'Hoy', v: g.v, txt: g.txt, tono: g.v < g.min ? 'coste' : 'bueno' }], { zona: [g.min, g.max, `${g.minTxt} a ${g.maxTxt}`], costeTxt: 'Por debajo de lo recomendado', buenoTxt: 'Dentro o por encima' });
+    if (g.tipo === 'curva') return svgLinea(g.serie, g.marca, g.titulo, g.nota);
+    return '';
+  }
+  // Línea en el tiempo (patrimonio del roadmap o curva de la deuda) con ejes X (años) e Y (dólares).
+  // Se dibuja al ancho real de la página para que los textos salgan a su tamaño, ni más grandes ni más pequeños.
+  function svgLinea(s, marca, titulo, nota) {
+    if (!s || s.length < 2) return '';
+    const W = Math.round(Math.max(280, Math.min(640, window.innerWidth) - 60)), H = 190;
+    const vs = s.map(p => p[1]), yt = marcas(Math.min(0, ...vs), Math.max(...vs)), y0 = yt[0], y1 = yt[yt.length - 1];
+    const L = Math.max(...yt.map(v => ejeTxt(v).length)) * 6.6 + 10, R = 10, T = 26, B = 24, pw = W - L - R, ph = H - T - B;
+    const x0 = s[0][0], x1 = s[s.length - 1][0], span = (x1 - x0) || 1;
+    const X = y => L + (y - x0) / span * pw, Y = v => T + ph - (v - y0) / ((y1 - y0) || 1) * ph;
+    const pasoX = [1, 2, 5, 10, 20, 25].find(p => span / p <= Math.max(3, Math.floor(pw / 62))) || 50;
+    const xt = [x0]; for (let y = Math.ceil(x0 / pasoX) * pasoX; y <= x1; y += pasoX) if ((X(y) - X(x0)) > 52 && (X(x1) - X(y)) > 52) xt.push(y);
+    xt.push(x1); // primer y último año siempre a la vista
+    const pts = s.map(p => `${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ');
+    const j = marca && s.find(p => p[0] === marca[0]);
+    let anot = '';
+    if (j) { // rótulo arriba, encajado dentro del gráfico
+      const tw = marca[1].length * 6.4, cx = X(j[0]), lx = Math.max(L, Math.min(W - R - tw, cx - tw / 2));
+      anot = `<line x1="${cx}" x2="${cx}" y1="${T - 6}" y2="${T + ph}" class="gl-j"/><circle cx="${cx}" cy="${Y(j[1])}" r="4.5" class="gl-p"/><text x="${lx}" y="${T - 10}" class="gl-m">${esc(marca[1])}</text>`;
+    }
+    const resumen = `${x0}: ${M(Math.round(s[0][1]))} · ${x1}: ${M(Math.round(s[s.length - 1][1]))}`;
+    return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><div class="gl-w"><svg class="gl" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(titulo)}. ${esc(resumen)}" data-s='${JSON.stringify(s.map(p => [p[0], Math.round(p[1])]))}' data-g="${[L, T, pw, ph, x0, span, y0, y1 - y0].join(',')}">
+      ${yt.map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" class="gl-g${v === 0 ? ' z' : ''}"/><text x="${L - 8}" y="${Y(v) + 4}" class="gl-t" text-anchor="end">${ejeTxt(v)}</text>`).join('')}
+      ${xt.map((y, k) => `<line x1="${X(y)}" x2="${X(y)}" y1="${T + ph}" y2="${T + ph + 4}" class="gl-g z"/><text x="${X(y)}" y="${H - 4}" class="gl-t" text-anchor="${k === 0 ? 'start' : k === xt.length - 1 ? 'end' : 'middle'}">${y}</text>`).join('')}
+      <polygon points="${X(x0)},${Y(Math.max(0, y0))} ${pts} ${X(x1)},${Y(Math.max(0, y0))}" class="gl-a"/><polyline points="${pts}" class="gl-l"/>${anot}
+      <g class="gl-hv"><line class="gl-hl" y1="${T}" y2="${T + ph}"/><circle r="4.5" class="gl-hp"/></g></svg><div class="gl-tip" aria-hidden="true"></div></div>
+      <p class="gl-res">${esc(resumen)}</p><details class="gl-tab"><summary>Ver los datos</summary><div><table><tr><th>Año</th><th>Dólares</th></tr>${s.map(p => `<tr><td>${p[0]}</td><td>${M(Math.round(p[1]))}</td></tr>`).join('')}</table></div></details>${nota ? `<p class="tiny" style="margin:4px 0 0">${esc(nota)}</p>` : ''}</figure>`;
+  }
+  // Al pasar el dedo o el ratón por una línea: año y cifra de ese punto.
+  function lineaHover(e) {
+    const sv = e.target.closest && e.target.closest('svg.gl'); if (!sv) return;
+    const s = JSON.parse(sv.dataset.s), [L, T, pw, ph, x0, span, y0, yr] = sv.dataset.g.split(',').map(Number);
+    const r = sv.getBoundingClientRect(), k = r.width / sv.viewBox.baseVal.width, xv = (e.clientX - r.left) / k;
+    const yr0 = x0 + (xv - L) / pw * span, p = s.reduce((a, b) => Math.abs(b[0] - yr0) < Math.abs(a[0] - yr0) ? b : a);
+    const cx = L + (p[0] - x0) / span * pw, cy = T + ph - (p[1] - y0) / (yr || 1) * ph;
+    const g = sv.querySelector('.gl-hv'), tip = sv.parentNode.querySelector('.gl-tip');
+    g.style.opacity = 1; g.querySelector('line').setAttribute('x1', cx); g.querySelector('line').setAttribute('x2', cx);
+    g.querySelector('circle').setAttribute('cx', cx); g.querySelector('circle').setAttribute('cy', cy);
+    tip.innerHTML = `<b>${p[0]}</b> ${M(p[1])}`; tip.style.opacity = 1;
+    const tw = tip.offsetWidth; tip.style.left = Math.max(0, Math.min(r.width - tw, cx * k - tw / 2)) + 'px'; tip.style.top = Math.max(0, cy * k - 44) + 'px';
+  }
+  function lineaFuera(e) {
+    const w = e.target.closest && e.target.closest('.gl-w'); if (!w) return;
+    w.querySelector('.gl-hv').style.opacity = 0; w.querySelector('.gl-tip').style.opacity = 0;
+  }
+  function grafLinea(r) {
+    const j = r.jubila && (r.serie || []).find(p => p[0] === r.jubila);
+    return svgLinea(r.serie, j ? [j[0], `Jubilación ${j[0]} · ${M(Math.round(j[1]))}`] : null, 'Patrimonio neto, en dólares de hoy');
+  }
+
+  // --- página de un tema (al tocar una tarjeta, en el resumen o en el plan completo).
+  // Misma estructura que su sección en el informe: cifras clave, desglose con total y gráfico,
+  // qué significa, lo que propone el plan, para hablar con el asesor y, al final, todas las cifras.
+  const kpisHtml = ks => ks && ks.length ? `<div class="kpis">${ks.map((x, i) => `<div class="kpi ${x.tono || ''}" style="--i:${i}"><small>${esc(x.lab)}</small><b>${esc(x.val)}</b>${x.sub ? `<span>${esc(x.sub)}</span>` : ''}</div>`).join('')}</div>` : '';
+  const desgloseHtml = d => d ? `<div class="dsg"><div class="dsg-t">${esc(d.titulo)}</div><table>${d.filas.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}${d.total ? `<tr class="tot"><td>${esc(d.total[0])}</td><td>${esc(d.total[1])}</td></tr>` : ''}</table></div>` : '';
+  const lecturaHtml = ls => ls && ls.length ? `<ul class="lect">${ls.map(l => `<li>${l}</li>`).join('')}</ul>` : '';
+  const asesorHtml = t => t ? `<div class="asesor">${ic('chat', 18)}<div><b>Para hablar con ${w('vuestro', 'tu')} asesor</b><p>${esc(t)}</p><button class="link small" data-act="whatif">Apuntar una pregunta</button></div></div>` : '';
+  const sec = (n, t, body) => body ? `<section class="tp-sec"><div class="kicker"><b>${n}</b>${t}</div>${body}</section>` : '';
+  function abrirTema(k) { S.temaFrom = S.stage === 'tema' ? S.temaFrom : S.stage; S.temaY = window.scrollY; S.temaK = k; S.stage = 'tema'; render(); window.scrollTo(0, 0); }
+  function volverTema(dest) {
+    const from = dest || S.temaFrom || 'plan', y = from === S.temaFrom ? S.temaY : 0;
+    S.stage = from; S.temaK = null; render(); window.scrollTo(0, y || 0);
+  }
+  function renderTema() {
+    const k = S.temaK, desdeResumen = S.temaFrom === 'story';
+    let html = '';
+    if (k === '__nota') {
+      html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
+        <div class="foto">${ring(E.nota.hoy, E.nota.max)}</div>
+        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })) }) + `<div class="tp-links">${E.areas.map(a => `<button class="chip sm" data-act="tema" data-k="${esc(a.nombre)}">${esc(a.nombre)}</button>`).join('')}</div>`)}
+        ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s => (paso(s) || {}).titulo || s).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}`;
+    } else if (k === '__ruta') {
+      const r = E.roadmap || {};
+      html = `<header class="tp-h"><div class="kicker">${w('Vuestro', 'Tu')} roadmap</div><h1>De hoy a ${w('vuestra', 'tu')} jubilación</h1></header>
+        ${kpisHtml(r.kpis)}
+        ${sec(1, 'El camino, hito a hito', lineaHtml())}
+        ${sec(2, `Cómo crece ${w('vuestro', 'tu')} patrimonio`, grafLinea(r))}
+        ${sec(3, 'Qué significa', lecturaHtml(r.lectura))}
+        ${asesorHtml(r.asesor)}
+        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(r.detalle, true)}</details>`;
+    } else {
+      const x = temaDe(k); if (!x) { volverTema(); return; }
+      const { a, t, pasos } = x;
+      html = `<header class="tp-h tema-big ${nivel(a.nota)}">${cabTema(a, t, 'h1')}</header>
+        ${kpisHtml(a.kpis)}
+        ${sec(1, 'El desglose', desgloseHtml(a.desglose) + graf(a.graf))}
+        ${sec(2, 'Qué significa', lecturaHtml(a.lectura) + dijeron(x))}
+        ${sec(3, `Lo que propone ${w('vuestro', 'tu')} plan`, pasos.length ? pasos.map(pasoTema).join('') : sinPaso(x))}
+        ${asesorHtml(a.asesor)}
+        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(a.detalle, true)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></details>`;
+    }
+    app.innerHTML = `<div class="narrow tpage"><button class="link tp-back" data-act="temaback">${ic('arrow', 16).replace('<svg', '<svg style="transform:rotate(180deg)"')} ${desdeResumen ? 'Volver al resumen' : 'Volver al plan completo'}</button>${html}
+      <p class="foot">Cifras del informe de ${w('vuestro', 'tu')} plan. ${fuente()}</p></div>
+      <div class="cta-bar"><div class="cta-in">${desdeResumen ? `<button class="btn ghost grow" data-act="temaback">Volver al resumen</button><button class="btn grow" data-act="temaback" data-v="plan">Plan completo</button>` : `<button class="btn grow" data-act="temaback">Volver al plan completo</button>`}</div></div>`;
+    if (k === '__nota') animateRing();
+  }
+  // Roadmap: el camino de hitos, de hoy a la jubilación.
+  function rutaCard() {
+    return `<article class="tema ruta"><header class="tm-h"><span class="ar-ic">${ic('flag', 18)}</span><div class="tm-ht"><h3>${w('Vuestro', 'Tu')} roadmap</h3><small>El camino de hitos, de hoy a la jubilación</small></div></header>
+      ${lineaHtml()}<button class="btn soft block" style="margin-top:12px" data-act="tema" data-k="__ruta">${ic('chart', 16)} Ver a fondo, con cifras y gráfico</button></article>`;
+  }
+
   function renderPlan() {
-    const ns = nextStep(), c = counts(), rows = believed(), acc = accepted(), sc = scoreFor(acc), max = E.nota.max, openAll = window.innerWidth >= 1000;
+    const ns = nextStep(), c = counts(), acc = accepted(), sc = scoreFor(acc), max = E.nota.max;
     let main = `<section class="planhero"><div class="kicker" style="margin:0">Plan de ${esc(E.fam.titulo)}</div>
       <h1>«${esc(S.phrase || `${w('Vuestro', 'Tu')} plan`)}»</h1>
       <div class="heroscore">${ring(sc.v, max)}
         <div><b class="hs-t">${acc.length ? `${w('Vuestra', 'Tu')} nota con lo que ${w('habéis', 'has')} aceptado` : `${w('Vuestra', 'Tu')} nota de salud financiera, hoy`}</b>
         <p class="muted small" style="margin:.3em 0 0">${max > E.nota.hoy ? `Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${max}</b>. ` : ''}${w('Lleváis', 'Llevas')} ${acc.length} de ${c.n}.${sc.parcial ? ' El plan da la nota de cada paso por separado.' : ''}</p></div></div></section>`;
 
-    main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestra', 'Tu')} hoja de ruta</div>
-      <p class="muted" style="margin-top:-2px">${c.n} ${c.n === 1 ? 'paso' : 'pasos'}, en el orden del plan. ${w('Decid', 'Di')} en cada uno si ${w('os', 'te')} convence.</p>
-      <div class="road"><div class="rstep start"><span class="rdot">${ic('flag', 16)}</span><div class="startc"><b>Hoy · nota ${E.nota.hoy}</b>${E.nota.banda ? `<small>${esc(E.nota.banda.replace(/^./, x => x.toUpperCase()))}, según ${w('vuestro', 'tu')} plan</small>` : ''}</div></div>
-      ${E.pasos.map(stepCard).join('')}${goalsStrip()}</div></div>`;
+    const temas = temasPlan();
+    main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestro', 'Tu')} plan en ${temas.length} temas</div>
+      <p class="muted" style="margin-top:-2px">Son las ${temas.length} partes con las que ${w('vuestro', 'tu')} plan calcula la nota. Lo que ${w('habéis', 'has')} contestado eran situaciones de estos temas. ${w('Tocad', 'Toca')} uno para verlo a fondo.</p>
+      <div class="temas">${temas.map((x, i) => temaCard(x, i, 'plan')).join('')}${rutaCard()}</div></div>`;
 
     main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Vuestro', 'Tu')} siguiente paso</div>
       <div class="card close"><div class="meter">
@@ -625,11 +819,7 @@
       ${E.primer && (S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>Cómo comprobamos que el primer paso está hecho</small></span>${ic('arrow', 18)}</button>` : ''}
       ${S.booking ? fold('hoja', ic('list', 16), `Lo que recibe ${w('vuestro', 'tu')} asesor`, `La hoja con ${w('vuestras', 'tus')} respuestas y dudas`, advisorSheet(), false) : ''}</div>`;
 
-    main += `<div class="section"><div class="kicker"><b>3</b>Más sobre ${w('vuestro', 'tu')} plan</div>`;
-    if (rows.length) main += fold('creiais', ic('eye', 16), `Lo que ${w('creíais', 'creías')} y lo que dice el plan`, `${rows.length} respuestas comparadas`, `<div class="card">${tbl(rows)}</div>`, openAll);
-    main += fold('linea', ic('flag', 16), `De hoy a ${w('vuestra', 'tu')} jubilación`, 'Los pasos, las compras y las fechas del plan en una línea', lineaHtml(), openAll);
-    main += fold('areas', ic('chart', 16), `${w('Vuestra', 'Tu')} nota por áreas`, 'Las cinco áreas con las que el plan calcula la nota', `<div class="card">${rowsTbl(E.areas.map(a => [a.nombre, `${a.nota} de 100`]))}</div>`, openAll);
-    main += `</div><p class="foot">Esto ayuda a entender el plan del asesor. No es consejo nuevo ni lo cambia. Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor. Caso de ejemplo del reto. ${fuente()}</p>`;
+    main += `<p class="foot">Esto ayuda a entender el plan del asesor. No es consejo nuevo ni lo cambia. Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor. Caso de ejemplo del reto. ${fuente()}</p>`;
 
     app.innerHTML = `<div class="plan-grid solo"><div>${main}</div></div>
       <div class="cta-bar"><div class="cta-in"><button class="btn ghost" data-act="whatif">${ic('pen', 16)} Preguntar</button>${S.booking
@@ -742,7 +932,7 @@
       let day = null, time = kind === 'pay' ? '19:00' : '18:30';
       if (prev && days.some(x => x.ok && x.iso === prev.iso.slice(0, 10))) { day = prev.iso.slice(0, 10); time = prev.time || time; }
       if (!day) { const pick = kind === 'pay' ? days.find(x => x.ok && x.d.getDay() === 1) : null; day = (pick || days.find(x => x.ok)).iso; }
-      CAL = { kind, day, time };
+      CAL = { kind, day, time, pact: {} };
     }
     const sel = fromIso(CAL.day, CAL.time);
     const months = [...new Set(days.map(x => x.d.toLocaleDateString('es-ES', { month: 'long' })))];
@@ -755,16 +945,19 @@
         ${days.map(x => `<button class="day ${x.today ? 'today' : ''}" data-act="calday" data-v="${x.iso}" aria-pressed="${x.iso === CAL.day}" ${x.ok ? '' : 'disabled'} aria-label="${x.d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}">${x.d.getDate()}</button>`).join('')}</div></div>
       <div class="times">${CAL_TIMES[kind].map(t => `<button class="chip" data-act="caltime" data-v="${t}" aria-pressed="${t === CAL.time}">${t}</button>`).join('')}</div>
       <div class="cal-sum"><span class="dc-ic">${ic(kind === 'pay' ? 'card' : 'chat', 22)}</span><div><small>${kind === 'pay' ? `Lo ${w('hacéis', 'haces')} el` : `${w('Vuestra', 'Tu')} reunión`}</small><b>${fmtLong(sel)}</b></div></div>
-      <button class="btn block" data-act="calok">${kind === 'pay' ? 'Apuntar este día' : 'Pedir esta reunión'}</button>
+      ${S.stage === 'pareja' ? pjPact() : ''}
+      <button class="btn block" data-act="calok" ${S.stage === 'pareja' && !(CAL.pact && CAL.pact.a && CAL.pact.b) ? 'disabled' : ''}>${kind === 'pay' ? 'Apuntar este día' : 'Pedir esta reunión'}</button>
       <p class="tiny" style="margin-top:10px;text-align:center">${kind === 'pay' ? `Nada mueve dinero desde aquí: el pago lo ${w('hacéis vosotros', 'haces tú')}.` : `Al confirmar, ${w('vuestro', 'tu')} asesor recibe los pasos y las dudas. En este prototipo no se envía nada.`}</p>`);
   }
 
   // Una semana después: se pide el saldo, no un "ya lo hice".
   const WEEK_REASONS = () => [w('Tenemos dudas', 'Tengo dudas'), w('No sabemos cómo hacerlo', 'No sé cómo hacerlo'), 'Ahora no es prioridad', E.fam.pl ? 'No lo vemos igual los dos' : 'Prefiero hablarlo antes'];
-  function weekSheet() {
+  // real: se abre desde el enlace de la cita del calendario (?semana=1). Si no, es la vista previa.
+  function weekSheet(real) {
     const p = E.primer;
-    sheet(`<div class="kicker">Una semana después · vista previa</div><h2>${esc(p.semana.q)}</h2>
-      <p class="muted small">Esto llegaría a los siete días. Se mira en la app del banco y se escribe aquí.</p>
+    sheet(`<div class="kicker">Una semana después${real ? '' : ' · vista previa'}</div><h2>${esc(p.semana.q)}</h2>
+      ${S.phrase ? `<p class="week-why">${w('Lo que os movía', 'Lo que te movía')} hace una semana: <b>«${esc(S.phrase)}»</b></p>` : ''}
+      <p class="muted small">${real ? `${w('Miradlo', 'Míralo')} en la app del banco y ${w('escribidlo', 'escríbelo')} aquí.` : 'Esto llegaría a los siete días, con la cita del calendario. Se mira en la app del banco y se escribe aquí.'}</p>
       <div class="moneyin"><input id="bal" type="number" inputmode="numeric" min="0" step="100" placeholder="0" aria-label="Saldo de la tarjeta"><span>$</span></div>
       <div class="chips" style="margin:10px 0 16px"><button class="chip" data-act="weekfill" data-v="${p.despues}">${p.despuesTxt}</button><button class="chip" data-act="weekfill" data-v="${p.hoy}">${p.hoyTxt}, sigue igual</button></div>
       <button class="btn block" data-act="weekok">Comprobar</button>`);
@@ -784,43 +977,82 @@
   // Como hacen los asesores con el perfil de riesgo de una pareja: cada uno contesta en privado,
   // en el mismo móvil, y después se comparan las respuestas entre sí y con el plan.
   // Cifras: la del plan, el perfil de riesgo que indicó cada uno y la peor caída real de sus inversiones.
-  const PJ_STEPS = ['intro', 'level', 'pass:a', 'money:a', 'pass:b', 'money:b', 'rev:money', 'pass:a', 'risk:a', 'guess:a', 'vote:a', 'pass:b', 'risk:b', 'guess:b', 'vote:b', 'rev:risk', 'profile', 'map'];
-  const RISK = [['sell_all', 'Lo vendería todo', 1, 'x'], ['sell_part', 'Vendería una parte', 2, 'scale'], ['hold', 'No tocaría nada', 3, 'clock'], ['buy', 'Invertiría más', 4.5, 'seed']];
-  const PERFIL_EN = { 'Muy prudente': 'Income', Prudente: 'Conservative', Equilibrado: 'Moderate', 'Dinámico': 'Growth', Atrevido: 'Aggressive' };
-  const pjFresh = () => ({ step: 0, money: { a: null, b: null }, risk: { a: null, b: null }, guess: { a: null, b: null }, vote: { a: null, b: null } });
+  // Tres partes, cada una con su comparación en cuanto termina: el dinero (en privado), el riesgo (en privado)
+  // y, como momento final, los hijos (juntos), contado sin miedo y con lo que recomienda el plan.
+  const PJ_ALL = ['intro', 'frase:a', 'money:a', 'risk:a', 'pass:b', 'frase:b', 'money:b', 'risk:b', 'rev:frase', 'rev:money', 'rev:risk', 'vida', 'rev:vida', 'nota', 'rev:nota', 'map'];
+  const RISK = [['sell_all', 'Lo vendería todo', 1, 'x', 'Venderlo todo'], ['sell_part', 'Vendería una parte', 2, 'scale', 'Vender una parte'], ['hold', 'No tocaría nada', 3, 'clock', 'No tocar nada'], ['buy', 'Invertiría más', 4.5, 'seed', 'Invertir más']];
+  const pjFresh = () => ({ v: 7, step: 0, frase: { a: null, b: null }, money: { a: null, b: null }, vida: null, nota: null, risk: { a: null, b: null }, guess: { a: null, b: null } });
   const pIdx = x => (x === 'b' ? 1 : 0), other = x => (x === 'a' ? 'b' : 'a');
   const pName = x => E.fam.adultos[pIdx(x)].nombre;
   const pAv = (x, sz = '') => `<span class="pj-av ${x} ${sz}" aria-hidden="true">${esc(pName(x).charAt(0))}</span>`;
+  const pDuo = (sz = 'sm') => `<span class="pj-duo ${sz}">${pAv('a')}${pAv('b')}</span>`;
   const riskOpt = id => RISK.find(r => r[0] === id) || null;
   const perfil = x => (E.pareja && E.pareja.perfiles[pIdx(x)]) || null;
   const pLab = p => !p ? 'sin dato' : PRO() ? `${p.etiqueta} (${p.riesgo})` : p.etiqueta;
   const escala = () => (E.pareja && E.pareja.escala) || ['Muy prudente', 'Prudente', 'Equilibrado', 'Dinámico', 'Atrevido'];
-  const moneyQ = () => E.preguntas.find(q => q.id === 'tarjeta_interes') || E.preguntas.find(q => q.tipo !== 'opciones');
+  // La pregunta de dinero sigue al estudio: el primer freno con cifra (Weah, la tarjeta; Johnson, el colchón).
+  const numQ = q => q && q.tipo !== 'opciones' && q.id !== 'vida' && q.id !== 'nota' && q.min != null;
+  // Entre las preguntas con cifra, la del área que peor va (no se elige un tema cuya área va bien); a igualdad, el orden de frenos del estudio.
+  const AREA_DE = { tarjeta_interes: 'Deudas', colchon: 'Colchón' };
+  const areaNota = q => { const a = (E.areas || []).find(x => x.nombre === AREA_DE[q.id]); return a ? a.nota : 50; };
+  const moneyQ = () => { const fr = E.frenos || [], c = E.preguntas.filter(numQ); if (!c.length) return null;
+    const rk = q => (fr.indexOf(q.id) < 0 ? 99 : fr.indexOf(q.id));
+    return c.slice().sort((x, y) => areaNota(x) - areaNota(y) || rk(x) - rk(y))[0]; };
+  // La pregunta de los hijos llega como opciones; aBarra la pasa a la edad del hijo mayor con las cifras del estudio.
+  const vidaQ = () => { const q = E.preguntas.find(p => p.id === 'vida'); return q ? aBarra(q) : null; };
+  // La nota de salud financiera la adivinan juntos justo antes del final: el anillo llega con su marca.
+  const notaQ = () => (E.nota && E.nota.hoy != null ? { id: 'nota', tipo: 'num', min: 0, max: 100, step: 1, sufijo: '', real: E.nota.hoy, q: 'Del 0 al 100, ¿qué nota de salud financiera creéis que os pone vuestro plan?', sub: 'La calcula con vuestro ahorro, deudas, inversiones, colchón y seguros.' } : null);
+  const pjSteps = () => PJ_ALL.filter(s => (vidaQ() || !/vida/.test(s)) && (notaQ() || !/nota/.test(s)));
+  const pjAt = () => pjSteps()[S.pj.step];
+  const pjDone = () => !!(S.pj && S.pj.v === 7 && pjAt() === 'map');
+  const kidsTxt = () => { const n = E.fam.hijos.map(k => k.nombre); return n.length > 1 ? n.slice(0, -1).join(', ') + ' y ' + n[n.length - 1] : n[0] || ''; };
+  const partVida = () => (E.fam.hijos.length ? (E.fam.hijos.length > 1 ? 'Vuestros hijos' : kidsTxt()) : 'Vuestra familia');
+  const isClose = (q, v) => Math.abs(v - q.real) <= (q.tipo === 'importe' ? q.cerca * q.real : q.cerca);
+  const moneyClose = x => isClose(moneyQ(), S.pj.money[x]);
+  const vidaClose = () => isClose(vidaQ(), S.pj.vida);
   // Distancia entre lo que haría ante una caída y el perfil que indicó en el plan (escala de Sherpas, 1 a 5).
   const encaje = x => { const p = perfil(x), r = riskOpt(S.pj.risk[x]); if (!p || !p.nivel || !r) return 'ok'; const d = r[2] - p.nivel; return d <= -1.5 ? 'prudente' : d >= 1.5 ? 'arriesgado' : 'ok'; };
   const ENCAJE = { ok: () => 'Encaja con su perfil', prudente: () => 'Más prudente que su perfil', arriesgado: () => 'Más arriesgado que su perfil' };
-  const masRiesgo = () => { const pa = perfil('a'), pb = perfil('b'); if (!pa || !pb || pa.nivel === pb.nivel) return 'igual'; return pa.nivel > pb.nivel ? 'a' : 'b'; };
-  const voteLab = v => v === 'igual' ? 'los dos lo mismo' : pName(v);
-  const aciertos = () => ['a', 'b'].reduce((n, x) => n + (S.pj.guess[x] && S.pj.guess[x] === S.pj.risk[other(x)] ? 1 : 0) + (S.pj.vote[x] === masRiesgo() ? 1 : 0), 0);
-  const pjGo = () => swipe(() => { S.pj.step = Math.min(S.pj.step + 1, PJ_STEPS.length - 1); if (PJ_STEPS[S.pj.step] === 'map') pjAgenda(); render(); window.scrollTo(0, 0); });
-  function moneyClose(x) { const q = moneyQ(), tol = q.tipo === 'importe' ? q.cerca * q.real : q.cerca; return Math.abs(S.pj.money[x] - q.real) <= tol; }
+  const aciertos = () => ['a', 'b'].reduce((n, x) => n + (S.pj.guess[x] && S.pj.guess[x] === S.pj.risk[other(x)] ? 1 : 0), 0);
+  const pjGo = () => swipe(() => { S.pj.step = Math.min(S.pj.step + 1, pjSteps().length - 1); if (pjAt() === 'map') pjAgenda(); render(); window.scrollTo(0, 0); });
+  const titMoney = () => { const ca = moneyClose('a'), cb = moneyClose('b'); return ca && cb ? 'Los dos lo teníais claro' : !ca && !cb ? 'A los dos se os escapaba' : 'Lo veíais distinto'; };
+  // Con la edad del hijo mayor (aBarra) se dice «hasta los X años de Liam»; si no, la cifra tal cual.
+  const vidaK = () => { const q = vidaQ(), k = E.fam.hijos[0]; return q && q.vis && q.vis.base != null && k ? k.nombre : null; };
+  const vidaDijo = (v, html) => { const q = vidaQ(), k = vidaK(), B = t => (html ? `<b>${t}</b>` : t);
+    return k ? `creíais que el seguro llegaba hasta los ${v} años de ${esc(k)}; llega hasta los ${B(q.real)}` : `decíais ${esc(showV(q, v))}; el plan dice ${B(esc(q.plan))}`; };
+  // Una sola medida por frase: la edad del hijo para lo que creían y lo que hay; años de gastos para lo que recomienda el plan.
+  const vidaFound = () => { const q = vidaQ(), v = q.vis || {}, k = vidaK();
+    if (!k) return `${cap1(vidaDijo(S.pj.vida, true))}.${vidaRec() ? ` Lo que recomienda el plan: ${esc(vidaRec())}.` : ''}`;
+    const rec = v.total ? ` El plan recomienda <b>${v.total} años</b> de gastos${v.base + v.total <= 25 ? `, hasta los ${v.base + v.total} de ${esc(k)}` : ''}; hoy son ${v.on}.` : '';
+    return `Creíais que el seguro llegaba hasta los ${S.pj.vida} años de ${esc(k)}; llega hasta los <b>${q.real}</b>.${rec}`; };
+  const vidaJunto = () => { const q = vidaQ(), k = vidaK(); return k ? `creían que cubría hasta los ${S.pj.vida} años de ${k} (plan: hasta los ${q.real})` : `${showV(q, S.pj.vida)} (plan: ${q.plan})`; };
+  const cap1 = t => t.charAt(0).toUpperCase() + t.slice(1);
+  const titVida = () => { const q = vidaQ(), k = vidaK(); return k ? `Hoy, hasta los ${q.real} años de ${k}` : `Hoy, ${q.plan}`; };
+  // Lo mínimo que recomienda el plan (vis.total = cobertura mínima recomendada / gastos de casa, en años).
+  const vidaRec = () => { const v = vidaQ().vis || {}, k = vidaK(); if (!v.total) return '';
+    return k && v.base + v.total <= 25 ? `hasta los ${v.base + v.total} años de ${k}` : `${v.total} años de gastos de casa (hoy, ${v.on})`; };
+
+  // Qué propone el plan para cada dato: su paso si lo tiene; si no, lo que dice la línea del plan y se pregunta al asesor.
+  const PASO_DE = { tarjeta_interes: 'card', vida: 'life' };
+  function planPara(qid) {
+    const key = PASO_DE[qid], p = key && E.pasos.find(s => s.key === key);
+    if (p) return { tit: `Paso ${p.n} de ${E.pasos.length}: ${p.titulo}`, txt: p.porque, quien: p.quien };
+    const q = E.preguntas.find(x => x.id === qid), v = q && q.vis;
+    if (v && v.t === 'meses' && v.min) return { lab: 'Lo que recomienda vuestro plan', tit: `De ${v.min} a ${v.max} meses de colchón`, txt: `No es uno de los pasos del plan: lo veis con vuestro asesor.` };
+    const wl = key && (E.linea || []).find(l => l.c === 'warn' && l.key === key);
+    if (wl) return { lab: 'En vuestro plan', tit: 'Aún no es uno de sus pasos', txt: (/hasta aquí/.test(wl.t) ? wl.t.replace('hasta aquí', 'hasta ' + wl.anio) : `${wl.t} (${wl.anio})`) + '. Lo vemos con vuestro asesor.', sin: wl };
+    return null;
+  }
 
   // Temas para la reunión que salen de la comparación. Se apuntan como preguntas abiertas para el asesor.
   function pjTemas() {
-    const pa = perfil('a'), pb = perfil('b'), q = moneyQ(), t = [];
+    const pa = perfil('a'), pb = perfil('b'), q = moneyQ(), vq = vidaQ(), t = [];
     if (pa && pb && pa.nivel !== pb.nivel) t.push(`Cuánto riesgo queremos como familia: ${pa.nombre} indicó ${low1(pa.etiqueta)} y ${pb.nombre}, ${low1(pb.etiqueta)}.`);
     ['a', 'b'].forEach(x => { const e = encaje(x), r = riskOpt(S.pj.risk[x]); if (e !== 'ok') t.push(`${pName(x)} indicó un perfil ${low1(perfil(x).etiqueta)}, pero ante una caída ${low1(r[1])}.`); });
     if (S.pj.risk.a && S.pj.risk.b && S.pj.risk.a !== S.pj.risk.b) t.push(`Ante una caída no haríamos lo mismo: ${pName('a')} ${low1(riskOpt(S.pj.risk.a)[1])} y ${pName('b')} ${low1(riskOpt(S.pj.risk.b)[1])}.`);
     if (!moneyClose('a') && !moneyClose('b')) t.push(`Ninguno de los dos sabía este dato del plan: ${low1(q.creian || q.q)} (${q.plan}).`);
-    return t;
-  }
-  function pjComun() {
-    const t = [];
-    const PLURAL = { sell_all: 'lo venderíais todo', sell_part: 'venderíais una parte', hold: 'no tocaríais nada', buy: 'invertiríais más' };
-    if (S.pj.risk.a && S.pj.risk.a === S.pj.risk.b) t.push(`Ante una caída, los dos ${PLURAL[S.pj.risk.a]}.`);
-    if (moneyClose('a') && moneyClose('b')) t.push('Los dos teníais claro lo que dice el plan sobre el dinero.');
-    if (S.pj.vote.a === S.pj.vote.b && S.pj.vote.a === masRiesgo()) t.push('Los dos sabéis quién acepta más riesgo.');
-    ['a', 'b'].forEach(x => { if (S.pj.guess[other(x)] === S.pj.risk[x]) t.push(`${pName(other(x))} sabía lo que haría ${pName(x)}.`); });
+    const pm = planPara(q.id); if (pm && pm.sin) t.push(`¿Qué hacemos con la tarjeta? ${pm.txt.replace(' Lo vemos con vuestro asesor.', '')}`);
+    if (vq && S.pj.vida != null && !vidaClose()) t.push(`Seguro de vida: ${vidaDijo(S.pj.vida, false).replace('creíais', 'creíamos')}.`);
     return t;
   }
   function pjAgenda() {
@@ -828,14 +1060,14 @@
     pjTemas().forEach((q, i) => S.doubts.push({ id: 'pj-' + i, topic: 'otra', q, covered: 'no', status: 'open' }));
   }
 
-  const pjPart = (n, name) => `<div class="pj-round"><span>Parte ${n} de 2</span><b>${name}</b></div>`;
+  const pjParts = () => ['frase', 'money', 'risk', ...(vidaQ() ? ['vida'] : []), ...(notaQ() ? ['nota'] : [])];
+  const pjPart = (k, name) => `<div class="pj-round"><span>Parte ${pjParts().indexOf(k) + 1} de ${pjParts().length}</span><b>${esc(name)}</b></div>`;
   function pjPass(x) {
-    const first = PJ_STEPS.indexOf('pass:a') === S.pj.step;
     return `<div class="pj-pass ${x}"><div class="pj-pass-in">
       ${pAv(x, 'xl')}
-      <p class="pj-kick dark">${first ? 'Empieza' : 'Turno de'}</p>
+      <p class="pj-kick dark">Turno de</p>
       <h2>${esc(pName(x))}</h2>
-      <p class="pj-hide">${ic('lock', 16)} ${first ? `Contesta en privado. ${esc(pName(other(x)))} lo verá al final.` : `Las respuestas de ${esc(pName(other(x)))} quedan ocultas.`}</p>
+      <p class="pj-hide">${ic('lock', 16)} ${x === 'a' ? `Contesta en privado. Lo veréis juntos al terminar.` : `Las respuestas de ${esc(pName(other(x)))} quedan ocultas.`}</p>
       <button class="btn block pj-btn ${x}" data-act="pjgo">Soy ${esc(pName(x))}, continuar</button>
     </div></div>`;
   }
@@ -843,28 +1075,70 @@
     return `<div class="narrow pj-turn ${x}"><div class="pj-who">${pAv(x)}<span>Respuesta privada de <b>${esc(pName(x))}</b></span>${ic('lock', 16)}</div>
       ${part}<div class="pj-card">${body}</div>${foot || ''}</div>`;
   }
-  function pjMoney(x) {
-    const q = moneyQ(), v = S.pj.money[x], st = q.step || 1, mid = Math.round((q.min + q.max) / 2 / st) * st, has = v != null;
-    return pjCard(x, pjPart(1, 'Vuestro dinero'), `<h2 class="q">${esc(q.q)}</h2>
+  function pjSlider(q, v, key) {
+    const st = q.step || 1, mid = Math.round((q.min + q.max) / 2 / st) * st, has = v != null;
+    return `<h2 class="q">${esc(q.q)}</h2>${q.sub ? `<p class="muted small pj-qsub">${esc(q.sub)}</p>` : ''}
       <div class="numw"><div class="nw-val ${has ? '' : 'empty'}" id="pjamt">${has ? showV(q, v) : '?'}</div>
-      <div class="nw-track"><input type="range" min="${q.min}" max="${q.max}" step="${st}" value="${has ? v : mid}" class="${has ? '' : 'untouched'}" data-act="pjrange" data-k="${x}" aria-label="${esc(q.q)}">${has ? '' : '<i class="nw-hint" aria-hidden="true"></i>'}</div>
-      <div class="spread tiny"><span>${showV(q, q.min)}</span><span>${showV(q, q.max)}</span></div></div>`,
+      <div class="nw-track"><input type="range" min="${q.min}" max="${q.max}" step="${st}" value="${has ? v : mid}" class="${has ? '' : 'untouched'}" data-act="pjrange" data-k="${key}" aria-label="${esc(q.q)}">${has ? '' : '<i class="nw-hint" aria-hidden="true"></i>'}</div>
+      <div class="spread tiny"><span>${showV(q, q.min)}</span><span>${showV(q, q.max)}</span></div></div>`;
+  }
+  function pjMoney(x) {
+    const has = S.pj.money[x] != null;
+    return pjCard(x, pjPart('money', 'Vuestro dinero'), pjSlider(moneyQ(), S.pj.money[x], x),
       `<div class="dock"><button class="btn block pj-btn ${x}" data-act="pjgo" id="pjsave" ${has ? '' : 'disabled'}>Guardar respuesta</button></div>`);
   }
-  function pjOpts(x, kind, list) {
-    return list.map(([v, l, , i], k) => `<button class="opt pj-opt ${x}" style="--i:${k}" data-act="pjpick" data-k="${kind}" data-x="${x}" data-v="${v}" aria-pressed="${S.pj[kind][x] === v}">${optBody(i, esc(l))}</button>`).join('');
+  // Como en el quiz abierto: primero sus palabras. Aquí cada uno por separado, en privado.
+  function pjFrase(x) {
+    const f = S.pj.frase[x], kids = E.fam.hijos.map(k => k.nombre);
+    return pjCard(x, pjPart('frase', 'Lo que te ronda la cabeza'), `<h2 class="q">¿Qué es lo que más te ronda la cabeza con el dinero?</h2>
+      <p class="muted small pj-qsub">Con tus palabras. ${esc(pName(other(x)))} lo verá cuando lo destapéis juntos.</p>
+      <textarea id="pjfrase" class="free" rows="3" maxlength="240" data-x="${x}" placeholder="${esc(kids.length ? `Por ejemplo: que a ${kids.join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilos a la jubilación')}">${esc(f || '')}</textarea>
+      <p class="tiny sugg-t">O empieza con una de estas y cámbiala a tu gusto:</p>
+      <div class="sugg">${E.frases.map((p, i) => `<button class="chip sm" style="--i:${i}" data-act="pjfsugg" data-v="${esc(p)}">${esc(p)}</button>`).join('')}</div>`,
+      `<div class="dock"><button class="btn block pj-btn ${x}" data-act="pjfrase" data-x="${x}" id="pjfsave" ${f ? '' : 'disabled'}>Guardar en secreto</button><button class="link block skipw" data-act="pjfrase" data-x="${x}" data-v="skip">Prefiero no escribir</button></div>`);
+  }
+  // Las dos frases se destapan a la vez; si tocan el mismo tema, se dice.
+  const fTemas = t => [...new Set(temasDe(t || '').map(id => QMAP[id] && TEMA_LAB[QMAP[id].tema]).filter(Boolean))];
+  function pjRevFrase() {
+    const fa = S.pj.frase.a, fb = S.pj.frase.b, ta = fTemas(fa), tb = fTemas(fb), com = ta.filter(t => tb.includes(t));
+    const tit = fa && fb ? (com.length ? `A los dos os ronda ${esc(com[0])}` : 'Cada uno piensa en algo distinto') : fa || fb ? `Lo que le ronda a ${esc(pName(fa ? 'a' : 'b'))}` : 'Lo que os ronda la cabeza';
+    const said = x => `<div class="${x}">${pAv(x)}<small>${esc(pName(x))}</small><b class="pj-fq">${S.pj.frase[x] ? `«${esc(S.pj.frase[x])}»` : '<i>Prefirió no escribir</i>'}</b></div>`;
+    return `<div class="narrow pj-rev pj-revf">${pjPart('frase', 'Lo que os ronda la cabeza')}
+      <h2 class="pj-tit">${tit}</h2>
+      <div class="pj-says pj-frases">${said('a')}${said('b')}</div>
+      <p class="small pj-note">${ic('chat', 16)} ${fa || fb ? 'Vuestro asesor lo tendrá con vuestras palabras, y el plan se fija en eso.' : 'Lo podéis contar en la reunión con el asesor.'}</p>
+      ${dock('Seguir: vuestro dinero', true, 'pjgo')}</div>`;
+  }
+  // Las dos frases forman la de la pareja: portada del plan, cuaderno y cita del calendario.
+  function pjFraseSet() {
+    const fa = S.pj.frase.a, fb = S.pj.frase.b;
+    S.phrase = fa && fb ? (sinTilde(fa) === sinTilde(fb) ? fa : `${fa} · ${fb}`) : fa || fb || null;
+    S.match = temasDe(S.phrase || '');
+    S.doubts = S.doubts.filter(d => !/^nota-ronda/.test(d.id));
+    ['a', 'b'].forEach(x => { if (S.pj.frase[x]) S.doubts.push({ id: 'nota-ronda-' + x, topic: 'otra', q: `Lo que le ronda la cabeza a ${pName(x)}: «${S.pj.frase[x]}»`, covered: 'no', status: 'open' }); });
+  }
+  function pjVida() {
+    const has = S.pj.vida != null;
+    return `<div class="narrow pj-turn duo"><div class="pj-who">${pDuo()}<span>Esta la <b>contestáis juntos</b></span></div>
+      ${pjPart('vida', partVida())}<div class="pj-card">${pjSlider(vidaQ(), S.pj.vida, 'vida')}</div>
+      <div class="dock"><button class="btn block" data-act="pjgo" id="pjsave" ${has ? '' : 'disabled'}>Ver lo que dice el plan</button></div></div>`;
+  }
+  function pjNota() {
+    const has = S.pj.nota != null;
+    return `<div class="narrow pj-turn duo"><div class="pj-who">${pDuo()}<span>Una última, <b>juntos</b></span></div>
+      <div class="pj-card">${pjSlider(notaQ(), S.pj.nota, 'nota')}</div>
+      <div class="dock"><button class="btn block" data-act="pjgo" id="pjsave" ${has ? '' : 'disabled'}>Ver vuestra nota</button></div></div>`;
+  }
+  function pjTiles(x, kind) {
+    return `<div class="pj-tiles" role="group">${RISK.map(([v, , , i, s], k) => `<button class="pj-tile ${x}" style="--i:${k}" data-act="pjpick" data-k="${kind}" data-x="${x}" data-v="${v}" aria-pressed="${S.pj[kind][x] === v}">${ic(i, 20)}<span>${s}</span></button>`).join('')}</div>`;
   }
   function pjRisk(x) {
-    const c = E.pareja && E.pareja.caida;
-    const head = c ? `En los últimos 3 años, vuestras inversiones llegaron a caer un <b>${esc(c.txt)}</b>. Si mañana volviera a pasar, ¿qué harías tú?` : `Si mañana vuestras inversiones cayeran de golpe, ¿qué harías tú?`;
-    return pjCard(x, pjPart(2, 'Vuestro riesgo'), `<h2 class="q">${head}</h2>${PRO() && c ? `<p class="tiny">Caída máxima de la cartera del hogar en 3 años, según el análisis de inversiones de vuestro plan.</p>` : ''}${pjOpts(x, 'risk', RISK)}`);
-  }
-  function pjGuess(x) {
-    return pjCard(x, pjPart(2, 'Vuestro riesgo'), `<h2 class="q">¿Y qué crees que haría <span class="pj-name ${other(x)}">${esc(pName(other(x)))}</span>?</h2>${pjOpts(x, 'guess', RISK)}`);
-  }
-  function pjVote(x) {
-    const opts = [['a', pName('a'), 0, 'eye'], ['b', pName('b'), 0, 'eye'], ['igual', 'Los dos lo mismo', 0, 'scale']];
-    return pjCard(x, pjPart(2, 'Vuestro riesgo'), `<h2 class="q">Al hacer el plan, cada uno indicó cuánto riesgo acepta. ¿Quién indicó más?</h2>${pjOpts(x, 'vote', opts)}`);
+    const c = E.pareja && E.pareja.caida, done = S.pj.risk[x] && S.pj.guess[x];
+    const head = c ? `En los últimos 3 años, vuestras inversiones llegaron a caer un <b>${esc(c.txt)}</b>. Si mañana volviera a pasar:` : 'Si mañana vuestras inversiones cayeran de golpe:';
+    return pjCard(x, pjPart('risk', 'Vuestro riesgo'), `<p class="pj-lead">${head}</p>${PRO() && c ? `<p class="tiny">Caída máxima de la cartera del hogar en 3 años, según el análisis de inversiones de vuestro plan.</p>` : ''}
+      <h3 class="pj-sub">¿Qué harías tú?</h3>${pjTiles(x, 'risk')}
+      <h3 class="pj-sub">¿Y qué haría <span class="pj-name ${other(x)}">${esc(pName(other(x)))}</span>?</h3>${pjTiles(x, 'guess')}`,
+      `<div class="dock"><button class="btn block pj-btn ${x}" data-act="pjgo" id="pjsave" ${done ? '' : 'disabled'}>Guardar respuesta</button></div>`);
   }
   function pjTrack(q) {
     const va = S.pj.money.a, vb = S.pj.money.b, lo = Math.min(q.min, va, vb, q.real), hi = Math.max(q.max, va, vb, q.real), P = v => (v - lo) / (hi - lo || 1) * 100;
@@ -875,16 +1149,31 @@
     const gap = (c, v) => `<span class="pj-gap ${c}" style="left:${Math.min(P(v), P(q.real))}%;width:${Math.abs(P(v) - P(q.real))}%"></span>`;
     return `<div class="pj-track" aria-hidden="true"><div class="pj-line"></div>${gap('a', va)}${gap('b', vb)}${mk('plan', q.real, 'Plan')}${mk('a' + (win === 'a' ? ' win' : ''), va, esc(pName('a')))}${mk('b' + (win === 'b' ? ' win' : ''), vb, esc(pName('b')))}</div>`;
   }
+  // Qué propone el plan, en la misma revelación del dato.
+  const pjPropLine = (prop, extra) => !prop ? '' : `<div class="pj-prop pj-prop-r"><small>${prop.lab || 'Vuestro plan propone'}</small><b>${esc(prop.tit)}</b>${extra ? `<span>${esc(extra)}</span>` : prop.quien ? `<span>${prop.quien === 'familia' ? 'Lo podéis hacer vosotros' : 'Con vuestro asesor'}</span>` : prop.txt ? `<span>${esc(prop.txt)}</span>` : ''}</div>`;
+  // Riesgo: no es un paso del plan; se revisa con el asesor si no encaja o si cada uno indicó un perfil distinto.
+  const riskProp = () => { const pa = perfil('a'), pb = perfil('b'); if (!pa || !pb) return null; const off = ['a', 'b'].filter(x => encaje(x) !== 'ok');
+    return { lab: 'Lo veis con vuestro asesor', tit: off.length ? `Revisar el perfil de ${off.map(pName).join(' y ')}` : pa.nivel !== pb.nivel ? 'Decidir juntos cuánto riesgo queréis' : 'Seguir con el perfil que indicasteis', revisar: !!off.length || pa.nivel !== pb.nivel }; };
   function pjRevMoney() {
-    const q = moneyQ(), ca = moneyClose('a'), cb = moneyClose('b');
-    const tit = ca && cb ? 'Los dos lo teníais claro' : !ca && !cb ? 'Ninguno de los dos lo sabía' : `${ca ? pName('a') : pName('b')} lo tenía más claro`;
-    return `<div class="narrow pj-rev">${pjPart(1, 'Vuestro dinero')}
-      <h2 class="pj-tit">${esc(tit)}</h2>
+    const q = moneyQ();
+    return `<div class="narrow pj-rev">${pjPart('money', 'Vuestro dinero')}
+      <h2 class="pj-tit">${esc(titMoney())}</h2>
       <div class="pj-says"><div class="a">${pAv('a')}<small>${esc(pName('a'))}</small><b>${esc(showV(q, S.pj.money.a))}</b></div><div class="b">${pAv('b')}<small>${esc(pName('b'))}</small><b>${esc(showV(q, S.pj.money.b))}</b></div></div>
       <div class="rv-box pj-plan"><small>Vuestro plan dice</small><b class="big">${esc(q.plan)}</b><em>${esc(q.unidad)}</em></div>
       ${pjTrack(q)}
+      ${pjPropLine(planPara(q.id))}
       ${q.siente ? `<p class="rv-feel on">${q.siente}</p>` : ''}
       ${dock('Seguir: vuestro riesgo', true, 'pjgo')}</div>`;
+  }
+  function pjRevVida() {
+    const q = vidaQ(), rec = vidaRec();
+    return `<div class="narrow pj-rev pj-revv">${pjPart('vida', partVida())}
+      <div class="pj-says one"><div>${pDuo()}<small>Decíais</small><b>${esc(showV(q, S.pj.vida))}</b></div></div>
+      <div class="rv-box pj-plan"><small>Vuestro plan dice</small><b class="big">${esc(q.plan)}</b><em>${esc(q.unidad)}</em></div>
+      <h2 class="pj-tit">${esc(titVida())}</h2>
+      ${pjPropLine(planPara('vida'), rec ? `Lo que recomienda: ${rec}` : '')}
+      <div class="rv-vis pj-vis">${vis(q)}</div>
+      ${dock(notaQ() ? 'Una última pregunta' : 'Ver qué propone vuestro plan', true, 'pjgo')}</div>`;
   }
   function pjScale(rows) {
     const L = escala();
@@ -893,85 +1182,160 @@
       <div class="pj-sc-lab"><span>${L[0]}</span><span>${L[L.length - 1]}</span></div></div>`;
   }
   function pjRevRisk() {
-    const c = E.pareja && E.pareja.caida, ga = S.pj.guess.a === S.pj.risk.b, gb = S.pj.guess.b === S.pj.risk.a;
-    const col = x => { const r = riskOpt(S.pj.risk[x]), g = riskOpt(S.pj.guess[other(x)]), ok = S.pj.guess[other(x)] === S.pj.risk[x];
-      return `<div class="pj-col ${x}">${pAv(x)}<small>${esc(pName(x))}</small><b>${esc(r ? r[1] : '')}</b>
-        <p class="pj-thought ${ok ? 'ok' : 'ko'}">${ic(ok ? 'check' : 'x', 16)} ${esc(pName(other(x)))} creía: ${esc(g ? low1(g[1]) : '')}</p></div>`; };
-    return `<div class="narrow pj-rev">${pjPart(2, 'Vuestro riesgo')}
-      <h2 class="pj-tit">${ga && gb ? 'Sabéis lo que haría el otro' : !ga && !gb ? 'Ninguno acertó lo que haría el otro' : 'Uno de los dos acertó lo que haría el otro'}</h2>
-      <div class="pj-cols">${col('a')}${col('b')}</div>
-      ${pjScale([['a ring', riskOpt(S.pj.risk.a)[2], esc(pName('a')), 0], ['b ring', riskOpt(S.pj.risk.b)[2], esc(pName('b')), 1]])}
-      ${c && c.dias ? `<div class="pj-fact">${ic('clock', 22)}<p>Aquella caída del <b>${esc(c.txt)}</b> se recuperó en <b>${c.dias} días</b>. Quien vendió, se perdió la recuperación.</p></div>` : ''}
-      ${dock('Ver lo que indicasteis en el plan', true, 'pjgo')}</div>`;
-  }
-  function pjProfile() {
-    const t = masRiesgo();
-    const card = (x, k) => { const p = perfil(x), r = riskOpt(S.pj.risk[x]), e = encaje(x);
-      return `<div class="pj-pcard ${x}" style="--k:${k}">${pAv(x, 'lg')}<h3>${esc(pName(x))}</h3>
-        <p><small>En el plan indicó</small><b>${esc(pLab(p))}</b></p>
-        <p><small>Ante una caída</small><b>${esc(r ? r[1] : '')}</b></p>
-        <span class="pj-chip ${e}">${ic(e === 'ok' ? 'check' : 'help', 14)} ${ENCAJE[e]()}</span></div>`; };
-    const anyOff = encaje('a') !== 'ok' || encaje('b') !== 'ok';
-    const votes = ['a', 'b'].map(x => `<li>${pAv(x)} ${esc(pName(x))} dijo: <b>${esc(voteLab(S.pj.vote[x]))}</b> ${S.pj.vote[x] === t ? `<span class="ok">${ic('check', 16)}</span>` : `<span class="ko">${ic('x', 16)}</span>`}</li>`).join('');
-    return `<div class="narrow pj-rev">
-      <h2 class="pj-tit">Lo que indicasteis en el plan</h2>
-      <p class="muted small">El perfil de riesgo se indica en frío. Una caída se vive en caliente. Por eso los asesores lo miran por separado en cada persona.</p>
-      <div class="pj-pcards">${card('a', 0)}${card('b', 1)}</div>
-      <div class="pj-verdict" style="--k:2">
-        <p class="small">Quién indicó más riesgo en el plan: <b>${esc(voteLab(t))}</b>.</p><ul class="pj-votes">${votes}</ul>
-        ${anyOff ? `<p class="small" style="margin-top:10px">Cuando lo que se indica y lo que se haría no coinciden, conviene revisarlo con el asesor antes de decidir.</p>` : ''}</div>
-      ${dock('Ver lo que habéis descubierto', true, 'pjgo')}</div>`;
-  }
-  function pjMap() {
-    const n = aciertos(), pa = perfil('a'), pb = perfil('b'), ra = riskOpt(S.pj.risk.a), rb = riskOpt(S.pj.risk.b), comun = pjComun(), temas = pjTemas();
-    const rows = [];
+    const c = E.pareja && E.pareja.caida, n = aciertos();
+    const col = x => { const r = riskOpt(S.pj.risk[x]), g = riskOpt(S.pj.guess[other(x)]), ok = S.pj.guess[other(x)] === S.pj.risk[x], p = perfil(x), e = encaje(x);
+      return `<div class="pj-col ${x}">${pAv(x)}<small>${esc(pName(x))} haría</small><b>${esc(r ? r[1] : '')}</b>
+        <p class="pj-thought ${ok ? 'ok' : 'ko'}">${ic(ok ? 'check' : 'x', 16)} ${esc(pName(other(x)))} creía: ${esc(g ? low1(g[1]) : '')}</p>
+        ${p ? `<span class="pj-chip ${e}">${ic(e === 'ok' ? 'check' : 'help', 14)} ${ENCAJE[e]()}: ${esc(low1(pLab(p)))}</span>` : ''}</div>`; };
+    const pa = perfil('a'), pb = perfil('b'), rows = [];
     if (pa && pa.nivel) rows.push(['a fill', pa.nivel, esc(pName('a')), 0]);
     if (pb && pb.nivel) rows.push(['b fill', pb.nivel, esc(pName('b')), 1]);
-    if (ra) rows.push(['a ring', ra[2], '', 2]);
-    if (rb) rows.push(['b ring', rb[2], '', 3]);
+    rows.push(['a ring', riskOpt(S.pj.risk.a)[2], '', 2], ['b ring', riskOpt(S.pj.risk.b)[2], '', 3]);
+    return `<div class="narrow pj-rev">${pjPart('risk', 'Vuestro riesgo')}
+      <h2 class="pj-tit">${n === 2 ? 'Sabéis lo que haría el otro' : 'Ante una caída, no siempre sabéis qué haría el otro'}</h2>
+      <div class="pj-cols">${col('a')}${col('b')}</div>
+      <div class="card pj-mapcard">${pjScale(rows)}<p class="tiny"><span class="pj-key fill"></span> indicado en el plan &nbsp; <span class="pj-key ring"></span> lo que haría ante una caída</p></div>
+      ${pjPropLine(riskProp())}
+      ${c && c.dias ? `<p class="small pj-note">${ic('clock', 16)} Aquella caída del ${esc(c.txt)} se recuperó en ${c.dias} días.</p>` : ''}
+      ${dock(vidaQ() ? `Seguir: ${esc(partVida().replace(/^Vuestr/, 'vuestr'))}` : notaQ() ? 'Una última pregunta' : 'Ver qué propone vuestro plan', true, 'pjgo')}</div>`;
+  }
+  // La fecha la confirman los dos antes de apuntarla.
+  const pjPact = () => `<div class="pj-pact"><small>Lo confirmáis los dos</small><div>${['a', 'b'].map(x => `<button class="pj-thumb ${x}" data-act="pjpact" data-x="${x}" aria-pressed="${!!(CAL && CAL.pact && CAL.pact[x])}">${pAv(x)} ${esc(pName(x))} ${ic('check', 16)}</button>`).join('')}</div></div>`;
+  const pjCalBtn = k => (window.__PREVIEW__ ? '' : `<button class="btn block ghost-w" data-act="ics" data-k="${k}">${ic('cal', 18)} Añadir al calendario del móvil</button>`);
+  // La nota: revelación propia, con la marca de lo que dijeron y su porqué (las cinco áreas).
+  function pjRevNota() {
+    const n = E.nota, g = S.pj.nota, ar = E.areas || [], low = ar.length ? ar.reduce((m, x) => (x.nota < m.nota ? x : m)) : null;
+    return `<div class="narrow pj-rev pj-revn">${pjPart('nota', 'Vuestra nota')}
+      <div class="pj-says one"><div>${pDuo()}<small>Decíais</small><b>${g}</b></div></div>
+      <div class="pj-salud"><div class="pj-ringw">${ring(n.hoy, n.max, true)}<i class="pj-guess" style="--a:${g / 100 * 360}deg" aria-hidden="true"></i></div>
+        <div><small>Vuestro plan dice</small><b class="pj-big">${n.hoy} de 100</b></div></div>
+      ${ar.length ? `<div class="pj-areas">${ar.map(x => `<div class="pj-ar ${x === low ? 'low' : ''}"><span>${esc(x.nombre)}</span><i><b style="width:${x.nota}%"></b></i><em>${x.nota}</em></div>`).join('')}</div>` : ''}
+      ${low ? `<h2 class="pj-tit sm">Lo que más baja vuestra nota: ${esc(low1(low.nombre))}</h2>` : ''}
+      ${dock('Ver qué propone vuestro plan', true, 'pjgo')}</div>`;
+  }
+  // Todos los pasos del plan: la nota que deja cada uno (combos), lo que suma y quién lo hace.
+  function pjLadder(mine) {
+    const P = E.pasos || [], n = E.nota; if (!P.length || !n) return { html: '', total: 0, asesor: 0 };
+    let prev = n.hoy, asesor = 0;
+    const rows = P.map((p, i) => { const key = P.slice(0, i + 1).map(x => x.key).sort().join('|'), v = i === 0 ? p.nota : (E.combos || {})[key];
+      const nota = v != null ? v : prev, gain = nota - prev; if (p.quien === 'asesor') asesor += gain; prev = nota;
+      const jub = /retire/i.test((p.plan && p.plan.action) || '');
+      return `<li class="${mine && mine.steps.has(p.key) ? 'mine' : ''}"><span class="pj-ln">${i + 1}</span><div><b>${esc(PRO() && p.tituloPro ? p.tituloPro : p.titulo)}</b><small>${mine && mine.steps.has(p.key) ? '<i>Vuestro motivo</i> · ' : ''}${p.quien === 'familia' ? 'Lo podéis hacer vosotros' : 'Con vuestro asesor'}${gain === 0 ? ` · No cambia la nota de hoy${jub ? ': es ahorro para la jubilación' : ''}` : ''}</small></div><em>${nota}<small>${gain > 0 ? '+' + gain : '='}</small></em></li>`; }).join('');
+    return { html: `<ol class="pj-ladder"><li class="now"><span class="pj-ln">${ic('flag', 14)}</span><div><b>Hoy</b></div><em>${n.hoy}</em></li>${rows}</ol>`, total: prev - n.hoy, asesor };
+  }
+  // Objetivos de la línea del plan, con su año e importe; la jubilación siempre (es la que trae dato).
+  // Lo que su frase toca: objetivos de la línea cuyo nombre aparece en ella y pasos del plan de sus temas.
+  const TEMA_LAB = { tarjeta: 'qué hacer con la tarjeta', vida: 'vuestro seguro de vida', colchon: 'vuestro colchón', jubilacion: 'vuestra jubilación', inversion: 'vuestras inversiones' };
+  function pjMine() {
+    const f = S.phrase ? sinTilde(S.phrase) : '', goals = new Set(), steps = new Set(); if (!f) return { goals, steps, extra: [] };
+    (E.linea || []).forEach(l => { const w0 = sinTilde(l.t).replace(/^(el|la|los|las)\s+/, '').split(/\s+/)[0]; if (w0.length > 3 && f.includes(w0)) goals.add(l); });
+    const keys = new Set((E.pasos || []).map(x => x.key)), extra = [];
+    temasDe(S.phrase).forEach(id => { const k = PASO_DE[id], q = QMAP[id];
+      if (k && keys.has(k)) steps.add(k); else if (q && TEMA_LAB[q.tema] && !extra.includes(TEMA_LAB[q.tema])) extra.push(TEMA_LAB[q.tema]); });
+    return { goals, steps, extra };
+  }
+  function pjGoals(mine) {
+    const L = E.linea || [], g = L.filter(l => l.c === 'goal' && !/^Universidad/.test(l.t)).slice(0, 3), end = L.find(l => l.c === 'end');
+    const all = [...g, ...(end ? [end] : [])]; if (!all.length) return '';
+    return `<div class="pj-goals"><small>Vuestros objetivos en el plan</small><div>${all.map(l => `<span class="${mine.goals.has(l) ? 'mine' : ''}">${ic(l.icon, 14)} ${esc(l.t)} · ${l.anio}${l.s ? ` · ${esc(l.s)}` : ''}${mine.goals.has(l) ? ' · <b>vuestro motivo</b>' : ''}</span>`).join('')}</div></div>`;
+  }
+  // Lo que se hace con el asesor: sus pasos y, si hace falta, revisar el perfil de riesgo.
+  function pjConLista() {
+    const rp = riskProp(), con = (E.pasos || []).filter(x => x.quien === 'asesor').map(x => low1(x.titulo)).concat(rp && rp.revisar ? ['revisar vuestro perfil de riesgo'] : [], pjMine().extra.map(t => t + ' (vuestro motivo)'));
+    return con.length > 1 ? con.slice(0, -1).join(', ') + ' y ' + con[con.length - 1] : con[0] || 'revisar el plan';
+  }
+  // Lo que el asesor ya sabe de ellos: su motivo, lo que creía cada uno frente al plan y lo que no encaja.
+  function pjGets() {
+    const q = moneyQ(), vq = vidaQ(), n = E.nota, out = [], pa = perfil('a'), pb = perfil('b');
+    if (S.pj && S.pj.frase && (S.pj.frase.a || S.pj.frase.b)) ['a', 'b'].forEach(x => { if (S.pj.frase[x]) out.push(`Lo que le ronda la cabeza a ${pName(x)}: «${S.pj.frase[x]}»`); });
+    else if (S.phrase) out.push(`Lo que os ronda la cabeza: «${S.phrase}»`);
+    if (q) { const va = showV(q, S.pj.money.a), vb = showV(q, S.pj.money.b);
+      out.push(`${q.creian || 'Vuestro dato'}: ${va === vb ? `los dos creíais ${va}` : `${pName('a')} creía ${va} y ${pName('b')}, ${vb}`}; el plan dice ${q.plan}.`); }
+    if (vq && S.pj.vida != null) { const k = vidaK(); out.push(`Seguro de vida: ${k ? `creíais que cubría hasta los ${S.pj.vida} años de ${k}; el plan dice hasta los ${vq.real}` : `creíais ${showV(vq, S.pj.vida)}; el plan dice ${vq.plan}`}.`); }
+    if (n && S.pj.nota != null) out.push(`Nota de salud financiera: creíais ${S.pj.nota}; el plan dice ${n.hoy}.`);
+    const ra = riskOpt(S.pj.risk.a), rb = riskOpt(S.pj.risk.b);
+    const mq = pjMyQs(); if (mq.length) out.push(`Lo que queréis que os conteste: ${mq.map(d => `«${d.q}»`).join('; ')}.`);
+    if (ra && rb) out.push(`Ante una caída: ${pName('a')} ${low1(ra[1])}${pa ? ` (perfil ${low1(pa.etiqueta)})` : ''}; ${pName('b')} ${low1(rb[1])}${pb ? ` (perfil ${low1(pb.etiqueta)})` : ''}. ${aciertos() === 2 ? 'Los dos sabíais lo que haría el otro.' : `Acertasteis ${aciertos()} de 2 sobre el otro.`}`);
+    return out.map(t => t.replace(/(\d) (\$|%|años|meses)/g, '$1\u00a0$2'));
+  }
+  const pjMyQs = () => S.doubts.filter(d => /^pjq-/.test(d.id));
+  function pjBooked(back) {
+    const cats = (E.dudas || []).filter(c => c.id !== 'otra'), g = (E.linea || []).find(l => l.c === 'goal' && !/^Universidad/.test(l.t)), mq = pjMyQs();
+    const eg = g ? `si adelantamos ${low1(g.t)}, ¿afecta a la jubilación?` : 'si nos compramos un coche, ¿nos cargamos la jubilación?';
+    sheet(`${back ? `<div class="kicker">Vuestra reunión</div><h2>${esc(S.booking.label)}</h2>` : `<div class="celebrate"><div class="burst">${ic('check', 40)}</div><div class="kicker">Reunión pedida</div><h2>${esc(S.booking.label)}</h2>`}
+      <p>Con vuestro asesor: ${esc(pjConLista())}.</p>${back ? '' : '</div>'}
+      <div class="pj-myq"><label class="pj-h3" for="pjq">¿Qué queréis que os conteste ese día? <i>(opcional)</i></label>
+        ${cats.length ? `<div class="pj-qcats" role="group" aria-label="Tema">${cats.map(c => `<button class="chip" data-act="pjqcat" data-v="${c.id}" aria-pressed="${S.cat === c.id}">${ic(c.icon, 14)} ${esc(c.label)}</button>`).join('')}</div>` : ''}
+        <div class="pj-whyw"><input id="pjq" maxlength="160" placeholder="Vuestra pregunta" value="${esc(DRAFT)}"><button class="btn" data-act="pjq">Apuntar</button></div>
+        <p class="small muted">${mq.length ? `Apuntadas: ${mq.length}. Podéis añadir más hasta el día de la reunión.` : `Por ejemplo: «${esc(cap1(eg))}»`}</p></div>
+      <h3 class="pj-h3">Lo que vuestro asesor ya sabe de vosotros</h3><ul class="pj-knows">${pjGets().map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+      ${pjCalBtn('meet').replace('ghost-w', 'soft')}
+      <button class="btn ghost block" data-act="close" style="margin-top:8px">Seguir</button>`);
+  }
+  // Cierre: lo que propone el plan y una sola acción, la reunión, con el botón fijo abajo.
+  function pjMap() {
+    const temas = pjTemas(), p = E.primer, lista = pjConLista(), mine = pjMine(), lad = pjLadder(mine);
     return `<div class="narrow pj-rev pj-map">
-      <p class="pj-kick dark">Lo que habéis descubierto</p>
-      <h2 class="pj-tit">${n >= 3 ? 'Os conocéis bien' : n === 2 ? 'Habéis descubierto cosas del otro' : 'Tenéis mucho que descubrir juntos'}</h2>
-      <p class="muted small">Acertasteis <b>${n} de 4</b> respuestas sobre el otro.</p>
-      <div class="card pj-mapcard"><h3>Cuánto riesgo acepta cada uno</h3>${pjScale(rows)}
-        <p class="tiny"><span class="pj-key fill"></span> indicado en el plan &nbsp; <span class="pj-key ring"></span> lo que haría ante una caída</p></div>
-      ${comun.length ? `<div class="pj-list good"><h3>${ic('check', 18)} En lo que coincidís</h3><ul>${comun.map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}
-      ${temas.length ? `<div class="pj-list talk"><h3>${ic('chat', 18)} Para hablar con vuestro asesor</h3><ul>${temas.map(t => `<li>${esc(t)}</li>`).join('')}</ul><p class="tiny">Ya están apuntados en vuestras preguntas para la reunión.</p></div>` : ''}
-      <div class="pj-cta">
-        <p>El asesor no decide por vosotros: os enseña las opciones con las cifras de vuestro plan y decidís juntos.</p>
-        <button class="btn block" data-act="book">${ic('cal', 18)} Pedir reunión con el asesor</button>
-        <button class="btn ghost block" data-act="pjplan">Ver vuestro plan ${ic('arrow', 18)}</button>
-        <button class="link block" data-act="pjagain">Volver a empezar</button>
-      </div></div>`;
+      <p class="pj-kick dark">Lo que propone vuestro plan</p>
+      <h2 class="pj-tit">De ${E.nota.hoy} a ${E.nota.max}${lad.total > 0 && lad.asesor ? `: ${lad.asesor} de los ${lad.total} puntos llegan con vuestro asesor` : ''}</h2>
+      ${lad.html}
+      ${pjGoals(mine)}
+      <div class="pj-meet"><small>${ic('chat', 16)} El siguiente paso: la reunión</small>
+        <p>Con vuestro asesor: ${esc(lista)}. Ya tendrá lo que habéis contestado${S.phrase ? ' y lo que os ronda la cabeza, con vuestras palabras' : ''}.</p>
+        ${S.booking ? `<button class="link pj-addq" data-act="pjbooked">${ic('pen', 16)} ${pjMyQs().length ? `Vuestras preguntas para ese día: ${pjMyQs().length} · añadir` : 'Apuntar lo que queréis que os conteste'}</button>${pjCalBtn('meet').replace('ghost-w', 'ghost')}` : ''}</div>
+      ${p ? `<div class="pj-before"><small>Antes de ir, si queréis</small><h3>${esc(p.titulo)}</h3>
+        <p class="small">${p.urgencia}</p>
+        ${S.payDate ? `<div class="datechip"><span class="dc-ic">${ic('cal', 22)}</span><div><small>Lo hacéis el</small><b>${esc(S.payDate.label)}</b></div><button class="link small" data-act="cal" data-k="pay">Cambiar</button></div>
+          ${pjCalBtn('pay').replace('ghost-w', 'ghost')}
+          <button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>El calendario os lo recuerda y el enlace abre la comprobación del saldo</small></span>${ic('arrow', 18)}</button>`
+          : `<button class="btn ghost block" data-act="cal" data-k="pay">${ic('cal', 18)} Elegir el día</button>`}</div>` : ''}
+      <details class="pj-gets"><summary>${ic('chat', 14)} Lo que vuestro asesor ya sabe de vosotros</summary><ul>${pjGets().map(t => `<li>${esc(t)}</li>`).join('')}</ul></details>
+      <div class="pj-cta"><button class="btn ghost block" data-act="pjplan">Ver vuestro plan ${ic('arrow', 18)}</button><button class="link block" data-act="pjagain">Volver a empezar</button></div>
+      <div class="dock pj-dock">${S.booking ? `<div class="datechip"><span class="dc-ic">${ic('chat', 22)}</span><div><small>Vuestra reunión</small><b>${esc(S.booking.label)}</b></div><button class="link small" data-act="book">Cambiar</button></div>`
+        : `<button class="btn block pj-bigbtn" data-act="book">${ic('cal', 18)} Pedir reunión con el asesor</button>`}</div></div>`;
   }
   function pjIntro() {
     return `<div class="narrow pj-intro"><div class="pj-duo">${pAv('a', 'xl')}${pAv('b', 'xl')}</div>
       <h1 class="pj-h1">Vuestro dinero,<br>visto por los dos</h1>
-      <p class="muted">Descubrid cómo ve cada uno el dinero y el riesgo, cuánto conocéis al otro y qué dice vuestro plan.</p>
-      <ol class="pj-rules"><li><span>1</span><p><b>Respuestas privadas</b>, en este mismo móvil. Unos 4 minutos.</p></li><li><span>2</span><p>Las comparamos entre sí y con <b>las cifras de vuestro plan</b>.</p></li><li><span>3</span><p>Lo que no coincida se lo preparamos a <b>vuestro asesor</b> para la reunión.</p></li></ol>
-      <p class="tiny pj-trust">${ic('shield', 14)} Sin cuentas ni datos bancarios. Solo vuestro plan de Sherpas.</p>
-      ${dock('Empezar', true, 'pjgo')}</div>`;
-  }
-  function pjLevel() {
-    return `<div class="narrow pj-turn"><h2 class="q" style="margin-top:12px">¿Cómo os manejáis con las finanzas?</h2><p class="muted">Cambia cómo os lo contamos, no las cifras. Se puede cambiar después.</p>
-      <div class="seg2" role="group" aria-label="Nivel">
-        <button class="segb" data-act="pjlevel" data-v="new" aria-pressed="${S.prefs.level === 'new'}">${ic('seed', 22)}<b>Somos nuevos en esto</b><span>Sin tecnicismos y paso a paso</span></button>
-        <button class="segb" data-act="pjlevel" data-v="pro" aria-pressed="${S.prefs.level === 'pro'}">${ic('chart', 22)}<b>Sabemos de finanzas</b><span>Con los términos y el origen de cada cifra</span></button></div></div>`;
+      <p class="muted">Antes de ir a las cifras, cada uno os cuenta lo suyo. Unos 4 minutos.</p>
+      <ol class="pj-rules"><li><span>1</span><p>Cada uno, <b>en privado</b>: qué le ronda la cabeza con el dinero, con sus palabras.</p></li>
+        <li><span>2</span><p>Después, qué creéis de unas cifras de vuestro plan y qué haríais ante una caída.</p></li>
+        <li><span>3</span><p>Lo destapáis <b>juntos</b> y lo comparáis con el plan.</p></li></ol>
+      <p class="tiny pj-trust">${ic('lock', 14)} Empieza ${esc(pName('a'))}. ${esc(pName('b'))}, no mires hasta que te toque.</p>
+      ${dock(`Empieza ${esc(pName('a'))}`, true, 'pjgo')}</div>`;
   }
   function renderPareja() {
-    if (!S.pj) S.pj = pjFresh();
-    const [kind, x] = PJ_STEPS[S.pj.step].split(':');
-    const prog = `<div class="progress thin"><div class="bar"><i style="width:${S.pj.step / (PJ_STEPS.length - 1) * 100}%"></i></div></div>`;
-    const V = { intro: pjIntro, level: pjLevel, pass: () => pjPass(x), money: () => pjMoney(x), rev: () => (x === 'money' ? pjRevMoney() : pjRevRisk()), risk: () => pjRisk(x), guess: () => pjGuess(x), vote: () => pjVote(x), profile: pjProfile, map: pjMap }[kind];
+    if (!S.pj || S.pj.v !== 7) S.pj = pjFresh();
+    const steps = pjSteps(), [kind, x] = steps[S.pj.step].split(':');
+    const prog = `<div class="progress thin"><div class="bar"><i style="width:${S.pj.step / (steps.length - 1) * 100}%"></i></div></div>`;
+    const V = { intro: pjIntro, frase: () => pjFrase(x), pass: () => pjPass(x), money: () => pjMoney(x), vida: pjVida, nota: pjNota, rev: () => (x === 'frase' ? pjRevFrase() : x === 'money' ? pjRevMoney() : x === 'vida' ? pjRevVida() : x === 'nota' ? pjRevNota() : pjRevRisk()), risk: () => pjRisk(x), map: pjMap }[kind];
     app.innerHTML = (kind === 'pass' ? '' : prog) + V();
-    // El fondo es de quien contesta; en lo que se ve juntos vuelve al morado de los dos.
+    // El fondo toma el color de quien contesta: azul uno, teja el otro; neutro cuando lo veis juntos.
+    if (x === 'a' || x === 'b') document.body.dataset.pj = x; else delete document.body.dataset.pj;
+    if (kind === 'rev' && x === 'nota') animateRing();
+    // El fondo animado también es de quien contesta; en lo que veis juntos vuelve al morado de los dos.
     if (window.Fondo) Fondo.who(x === 'a' ? -1 : x === 'b' ? 1 : 0);
+    pjTint(kind, x);
+  }
+  // Al contestar, el fondo cambia de color: el del que contesta se aviva y, al destapar, verde si acertáis o coral si no.
+  function pjTint(kind, x) {
+    if (!window.Fondo) return;
+    let t = null;
+    if (kind === 'frase') t = S.pj.frase[x] ? 'pick' : null;
+    else if (kind === 'money') t = S.pj.money[x] != null ? 'pick' : null;
+    else if (kind === 'risk') t = S.pj.risk[x] && S.pj.guess[x] ? 'pick' : null;
+    else if (kind === 'vida') t = S.pj.vida != null ? 'pick' : null;
+    else if (kind === 'nota') t = S.pj.nota != null ? 'pick' : null;
+    else if (kind === 'rev') {
+      const ok = x === 'money' ? [moneyClose('a'), moneyClose('b')].filter(Boolean).length : x === 'risk' ? aciertos() : x === 'vida' ? (vidaClose() ? 2 : 0) : x === 'nota' ? (Math.abs(S.pj.nota - E.nota.hoy) <= 10 ? 2 : 0) : 1;
+      t = x === 'frase' ? 'pick' : ok === 2 ? 'bien' : ok === 0 ? 'mal' : 'pick';
+    }
+    Fondo.tint(t);
   }
   // Al terminar su turno, la carta se da la vuelta (queda boca abajo, con candado) y sale como una carta pasada.
   function pjSeal(then) {
-    const nx = PJ_STEPS[S.pj.step + 1] || '', card = app.querySelector('.pj-turn .pj-card');
-    if (!card || !(nx.startsWith('pass') || nx.startsWith('rev')) || REDUCED() || !card.animate) { then(); return; }
-    const x = PJ_STEPS[S.pj.step].split(':')[1];
+    const steps = pjSteps(), nx = steps[S.pj.step + 1] || '', x = steps[S.pj.step].split(':')[1], card = app.querySelector('.pj-turn .pj-card');
+    if (!card || (x !== 'a' && x !== 'b') || !(nx.startsWith('pass') || nx.startsWith('rev')) || REDUCED() || !card.animate) { then(); return; }
     card.style.position = 'relative';
     const back = document.createElement('div');
     back.className = 'pj-seal ' + x; back.innerHTML = `${ic('lock', 30)}<b>Guardado en secreto</b>`;
@@ -983,11 +1347,11 @@
     };
   }
   function pjSheetBlock() {
-    if (!S.pj || S.pj.step < PJ_STEPS.indexOf('map')) return '';
-    const q = moneyQ();
+    if (!pjDone()) return '';
+    const q = moneyQ(), vq = vidaQ();
     const row = x => { const p = perfil(x), r = riskOpt(S.pj.risk[x]), g = riskOpt(S.pj.guess[other(x)]);
       return `<li><b>${esc(pName(x))}</b>: perfil en el plan ${esc(p ? `${low1(p.etiqueta)} (${p.riesgo})` : 'sin dato')}; ante una caída, «${esc(r ? low1(r[1]) : '')}» (${esc(low1(ENCAJE[encaje(x)]()))}). Su pareja creía: «${esc(g ? low1(g[1]) : '')}». Sobre el dinero decía ${esc(showV(q, S.pj.money[x]))} (plan: ${esc(q.plan)}).</li>`; };
-    return `<h3>Perfil en pareja</h3><ul>${row('a')}${row('b')}<li>Quién indicó más riesgo, según cada uno: ${esc(pName('a'))} → ${esc(voteLab(S.pj.vote.a))}, ${esc(pName('b'))} → ${esc(voteLab(S.pj.vote.b))}. Aciertos sobre el otro: ${aciertos()} de 4.</li></ul>`;
+    return `<h3>Perfil en pareja</h3><ul>${row('a')}${row('b')}${vq ? `<li>Seguro de vida, contestado juntos: ${esc(vidaJunto())}.</li>` : ''}${S.pj.nota != null ? `<li>Nota de salud financiera que creían: ${S.pj.nota} (plan: ${E.nota.hoy}).</li>` : ''}<li>Aciertos sobre lo que haría el otro: ${aciertos()} de 2.</li></ul>`;
   }
 
   // ------------------------------------------------------------------ barra superior y portada
@@ -1006,9 +1370,9 @@
     const ad = E.fam.adultos, enPareja = S.mode === 'pareja' && S.pj && S.pj.step > 0, enSolo = S.mode === 'solo' && S.qi > 0;
     return `<div class="doors"><p class="d-q">¿Quién va a ver el plan?</p>
       <button class="door duo" data-act="mode" data-v="pareja"><span class="pj-duo sm">${pAv('a')}${pAv('b')}</span>
-        <span class="d-tx"><b>${enPareja ? 'Seguir donde lo dejasteis' : 'Los dos juntos'}</b><span>En pareja, con un solo móvil. Cada uno contesta en privado.</span><small>Unos 4 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button>
+        <span class="d-tx"><b>${enPareja ? 'Seguir donde lo dejasteis' : 'Los dos juntos'}</b><span>En pareja, con un solo móvil. Cada uno contesta en privado.</span><small>Unos 3 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button>
       <button class="door solo" data-act="mode" data-v="solo"><span class="d-ic">${ic('eye', 22)}</span>
-        <span class="d-tx"><b>${enSolo ? 'Seguir donde lo dejé' : 'Uno de los dos'}</b><span>${esc(ad[0].nombre)} o ${esc(ad[1].nombre)}, por su cuenta.</span><small>Unos 5 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button></div>`;
+        <span class="d-tx"><b>${enSolo ? 'Seguir donde lo dejasteis' : 'Solo el quiz'}</b><span>Sin juego. Juntos, o ${esc(ad[0].nombre)} o ${esc(ad[1].nombre)} por su cuenta.</span><small>Unos 5 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button></div>`;
   }
   // --- A. Portada: vuestros nombres, una frase y un botón. Al pulsar, barrido y frase puente.
   function renderHome() {
@@ -1041,10 +1405,12 @@
   function render() {
     renderTop();
     if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz' || S.stage === 'pareja');
+    if (S.stage !== 'pareja') delete document.body.dataset.pj;
     if (S.stage === 'home') renderHome();
     else if (S.stage === 'quiz') renderQuiz();
     else if (S.stage === 'pareja') renderPareja();
     else if (S.stage === 'story') renderStory();
+    else if (S.stage === 'tema') renderTema();
     else renderPlan();
     save();
   }
@@ -1057,19 +1423,22 @@
   }, true);
   document.addEventListener('input', e => {
     const t = e.target;
-    if (t.id === 'free') { DRAFT = t.value; return; }
+    if (t.id === 'free' || t.id === 'pjq') { DRAFT = t.value; return; }
+    if (t.id === 'pjfrase') { if (window.Fondo) { Fondo.pulse(); Fondo.tint(t.value.trim() ? 'pick' : null); } const bt = document.getElementById('pjfsave'); if (bt) bt.disabled = !t.value.trim(); return; }
     if (t.dataset.act === 'pjrange') {
-      const q = moneyQ(), x = t.dataset.k;
-      t.classList.remove('untouched'); S.pj.money[x] = +t.value;
+      const x = t.dataset.k, q = x === 'vida' ? vidaQ() : x === 'nota' ? notaQ() : moneyQ();
+      t.classList.remove('untouched'); if (x === 'vida' || x === 'nota') S.pj[x] = +t.value; else S.pj.money[x] = +t.value;
       const v = document.getElementById('pjamt'); v.textContent = showV(q, +t.value); v.classList.remove('empty');
       app.querySelectorAll('.nw-hint').forEach(el => el.remove());
       const bt = document.getElementById('pjsave'); if (bt) bt.disabled = false;
+      if (window.Fondo) Fondo.tint('pick');
       save(); return;
     }
     if (t.id === 'worry' || t.id === 'note') {
       if (window.Fondo) Fondo.pulse();
       const bt = t.id === 'worry' ? app.querySelector('[data-act="worry"]:not([data-v])') : app.querySelector('.savebtn');
       if (bt) bt.disabled = !t.value.trim();
+      if (window.Fondo && t.id === 'worry') Fondo.tint(t.value.trim() ? 'pick' : null);
       return;
     }
     if (t.dataset.act === 'range') {
@@ -1079,6 +1448,7 @@
       const v = document.getElementById('amt'); v.textContent = showV(q, +t.value); v.classList.remove('empty');
       app.querySelectorAll('.nw-hint, .nw-tip').forEach(x => x.remove());
       const btn = document.querySelector('[data-act="reveal"]'); if (btn) btn.disabled = false;
+      if (window.Fondo) Fondo.tint('pick');
       const bk = Math.floor((+t.value - q.min) / ((q.max - q.min) || 1) * 12);
       if (BUCKET !== null && bk !== BUCKET) { try { if (navigator.vibrate) navigator.vibrate(4); } catch (er) { /* sin vibración */ } }
       BUCKET = bk;
@@ -1094,6 +1464,9 @@
   }
   const toPlan = () => { S.stage = 'plan'; S.prefs.level = S.prefs.level || 'new'; };
 
+  document.addEventListener('pointermove', lineaHover);
+  document.addEventListener('pointerdown', lineaHover);
+  document.addEventListener('pointerout', e => { if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('svg.gl')) lineaFuera(e); });
   document.addEventListener('click', async e => {
     if (app.contains(e.target) && !e.target.closest('[data-act], summary, a')) {
       if (app.querySelector('.qstage.think')) { settleQ(); return; }
@@ -1107,20 +1480,24 @@
       case 'start': if (S.qi > 0) swipe(() => { S.stage = 'quiz'; render(); }); else swipe(bridge); break;
       case 'bridge': endBridge(); break;
       case 'mode':
-        if (v === 'pareja') { if (S.mode !== 'pareja' || !S.pj) S.pj = pjFresh(); S.mode = 'pareja'; S.who = 'juntos'; swipe(() => { S.stage = 'pareja'; render(); window.scrollTo(0, 0); }); }
+        if (v === 'pareja') { if (S.mode !== 'pareja' || !S.pj || S.pj.v !== 7) S.pj = pjFresh(); S.mode = 'pareja'; S.who = 'juntos'; swipe(() => { S.stage = 'pareja'; render(); window.scrollTo(0, 0); }); }
         else { if (S.mode !== 'solo') { S.qi = 0; S.who = null; } S.mode = 'solo'; if (S.qi > 0) swipe(() => { S.stage = 'quiz'; render(); }); else swipe(bridge); }
         break;
-      case 'pjgo': if (b.id === 'pjsave') { b.disabled = true; pjSeal(pjGo); } else pjGo(); break;
-      case 'pjpick': { const kind = k, x = b.dataset.x; S.pj[kind][x] = v; render(); clearTimeout(ADV_T); ADV_T = setTimeout(() => pjSeal(pjGo), 320); break; }
-      case 'pjplan': {
-        // El modo pareja ya es el quiz para dos: del quiz abierto solo se pide la frase, y de ahí al plan.
-        S.prefs.level = S.prefs.level || 'new';
-        if (S.phrase != null) { preparePlan(); break; }
-        S.who = 'juntos'; S.pjFrase = true; S.qi = Math.max(0, QUIZ.indexOf('phrase'));
-        swipe(() => { S.stage = 'quiz'; render(); window.scrollTo(0, 0); }); break;
+      case 'pjgo': if (b.id === 'pjsave') { b.disabled = true; if (window.Fondo) Fondo.pulse(); pjSeal(pjGo); } else pjGo(); break;
+      case 'pjfsugg': { const t = document.getElementById('pjfrase'); if (!t) break; t.value = v; t.focus(); const bt = document.getElementById('pjfsave'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } break; }
+      case 'pjfrase': {
+        const x = b.dataset.x, t = document.getElementById('pjfrase'), txt = v === 'skip' ? '' : (t ? t.value.trim() : '');
+        S.pj.frase[x] = txt || null; pjFraseSet(); save();
+        if (txt) { if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } renderTop(); fly(t, txt); }
+        b.disabled = true; setTimeout(pjGo, txt ? 500 : 0); break;
       }
+      case 'pjpact': CAL.pact = CAL.pact || {}; CAL.pact[b.dataset.x] = !CAL.pact[b.dataset.x]; calSheet(CAL.kind, true); break;
+      case 'pjpick': { const kind = k, x = b.dataset.x; S.pj[kind][x] = v; save();
+        app.querySelectorAll(`[data-act="pjpick"][data-k="${kind}"][data-x="${x}"]`).forEach(el => el.setAttribute('aria-pressed', el.dataset.v === v));
+        const bt = document.getElementById('pjsave'); if (bt) bt.disabled = !(S.pj.risk[x] && S.pj.guess[x]); if (window.Fondo) { Fondo.pulse(); if (S.pj.risk[x] && S.pj.guess[x]) Fondo.tint('pick'); } break; }
+      case 'pjplan': S.prefs.level = S.prefs.level || 'new'; preparePlan(); break;
       case 'pjagain': S.pj = pjFresh(); S.doubts = S.doubts.filter(d => !/^pj-/.test(d.id)); render(); window.scrollTo(0, 0); break;
-      case 'pjlevel': S.prefs.level = v; render(); clearTimeout(ADV_T); ADV_T = setTimeout(pjGo, 320); break;
+      case 'pjlevel': S.prefs.level = v; save(); app.querySelectorAll('[data-act="pjlevel"]').forEach(el => el.setAttribute('aria-pressed', el.dataset.v === v)); break;
       case 'help': S.help[k] = true; keep(); { const ex = document.getElementById('rv-exit'); if (ex) ex.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break;
       case 'skip': toPlan(); render(); window.scrollTo(0, 0); break;
       case 'caso': closeSheet(); await abrirCaso(v); render(); window.scrollTo(0, 0); break;
@@ -1138,7 +1515,7 @@
         if (document.startViewTransition) { document.startViewTransition(() => playReveal(q)); break; }
         const st = app.querySelector('.qstage'); if (st) st.classList.add('fade-out'); setTimeout(() => playReveal(q), 300); break;
       }
-      case 'sugg': { const t = document.getElementById('worry'); t.value = v; t.focus(); const bt = app.querySelector('[data-act="worry"]:not([data-v])'); if (bt) bt.disabled = false; if (window.Fondo) Fondo.pulse(); break; }
+      case 'sugg': { const t = document.getElementById('worry'); t.value = v; t.focus(); const bt = app.querySelector('[data-act="worry"]:not([data-v])'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } break; }
       case 'worry': {
         const t = document.getElementById('worry'), txt = v === 'skip' ? '' : (t ? t.value.trim() : '');
         S.phrase = txt; S.match = temasDe(txt); buildQuiz(S.match);
@@ -1165,7 +1542,7 @@
       case 'story': S.stage = 'story'; S.slide = 0; render(); window.scrollTo(0, 0); break;
       case 'tog': { const s = b.dataset.s; S.steps[s] = S.steps[s] === 'yes' ? null : 'yes'; keep(); break; }
       case 'oq': { const id = b.dataset.id; S.openQ = S.openQ.includes(id) ? S.openQ.filter(x => x !== id) : S.openQ.concat(id); keep(); break; }
-      case 'later': S.later = true; keep(); toast(`Hecho. ${w('Os', 'Te')} avisamos dentro de una semana`); break;
+      case 'later': S.later = true; keep(); if (window.__PREVIEW__) toast('Sin prisa. El plan sigue aquí'); else { laterIcs(); toast('Recordatorio para dentro de una semana'); } break;
       case 'vote': {
         const s = b.dataset.s, before = scoreFor(accepted()).v;
         S.steps[s] = S.steps[s] === v ? null : v; keep();
@@ -1176,6 +1553,8 @@
         break;
       }
       case 'noreason': S.doubts.push({ id: 'no-' + b.dataset.s + '-' + Date.now(), topic: 'otra', paso: b.dataset.s, q: `No a «${low1(paso(b.dataset.s).titulo)}»: ${v}`, covered: 'no', status: 'open' }); closeSheet(); keep(); toast('Apuntado para la reunión'); break;
+      case 'tema': abrirTema(k); break;
+      case 'temaback': volverTema(v); break;
       case 'whatif': askSheet(null); break;
       case 'cat': { const veil = document.getElementById('veil'); S.cat = S.cat === v ? null : v; save(); askSheet(veil ? veil.dataset.paso : null); break; }
       case 'ask': answerSheet(b.dataset.t, b.dataset.id); break;
@@ -1186,6 +1565,13 @@
         if (!txt) { el.focus(); el.parentNode.classList.add('shake'); setTimeout(() => el.parentNode.classList.remove('shake'), 400); return; }
         S.doubts.push({ id: 'free-' + Date.now(), topic: S.cat || 'otra', paso: b.dataset.p || null, q: txt, covered: 'no', status: 'open' }); DRAFT = ''; keep(); askSheet(null); toast('Apuntada para la reunión'); break;
       }
+      case 'pjqcat': S.cat = S.cat === v ? null : v; pjBooked(true); break;
+      case 'pjq': {
+        const el = document.getElementById('pjq'), txt = (el.value || '').trim();
+        if (!txt) { el.focus(); el.parentNode.classList.add('shake'); setTimeout(() => el.parentNode.classList.remove('shake'), 400); return; }
+        S.doubts.push({ id: 'pjq-' + Date.now(), topic: S.cat || 'otra', q: txt, covered: 'no', status: 'open' }); DRAFT = ''; S.cat = null; keep(); render(); pjBooked(true); toast('Apuntada para la reunión'); break;
+      }
+      case 'pjbooked': pjBooked(true); break;
       case 'close': closeSheet(); break;
       case 'talk': talkSheet(); break;
       case 'settings': settingsSheet(); break;
@@ -1196,8 +1582,8 @@
       case 'caltime': CAL.time = v; calSheet(CAL.kind, true); break;
       case 'calok': {
         const dt = fromIso(CAL.day, CAL.time), kind = CAL.kind;
-        if (kind === 'pay') { S.payDate = { iso: CAL.day, time: CAL.time, label: fmtLong(dt) }; S.steps[E.primer.key] = 'yes'; closeSheet(); keep(); toast(`Apuntado. Con ese paso, la nota pasa a ${E.primer.nota}`); }
-        else { S.booking = { iso: CAL.day, time: CAL.time, label: fmtSlot(dt), short: fmtSlot(dt), mins: nextStep().mins }; syncOpenQ(); closeSheet(); if (S.stage === 'plan') { render(); const sc = document.getElementById('s-cierre'); if (sc) sc.scrollIntoView({ behavior: 'smooth' }); } else keep(); toast('Reunión pedida'); }
+        if (kind === 'pay') { S.payDate = { iso: CAL.day, time: CAL.time, label: fmtLong(dt) }; S.steps[E.primer.key] = 'yes'; closeSheet(); keep(); if (S.stage === 'pareja') render(); toast(`Apuntado. Con ese paso, la nota pasa a ${E.primer.nota}`); }
+        else { S.booking = { iso: CAL.day, time: CAL.time, label: fmtSlot(dt), short: fmtSlot(dt), mins: nextStep().mins }; syncOpenQ(); closeSheet(); if (S.stage === 'plan') { render(); const sc = document.getElementById('s-cierre'); if (sc) sc.scrollIntoView({ behavior: 'smooth' }); } else { keep(); if (S.stage === 'pareja') { render(); pjBooked(); } } if (S.stage !== 'pareja') toast('Reunión pedida'); }
         break;
       }
       case 'gocierre': document.getElementById('s-cierre').scrollIntoView({ behavior: 'smooth' }); break;
@@ -1213,17 +1599,40 @@
     }
   });
 
+  // Cita al calendario con alarma, el objetivo de la familia en el título y un enlace de vuelta.
+  // El pago lleva una segunda cita a la semana que abre la comprobación del saldo (?semana=1).
+  const icsZ = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const icsTx = t => String(t).replace(/[\\,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
+  const icsBase = () => location.origin + location.pathname + '?caso=' + encodeURIComponent(E.slug || '');
+  const icsEv = (uid, st, en, sum, desc, url, alarm) => ['BEGIN:VEVENT', 'UID:' + uid + '@plan', 'DTSTAMP:' + icsZ(new Date()), 'DTSTART:' + icsZ(st), 'DTEND:' + icsZ(en),
+    'SUMMARY:' + icsTx(sum), 'DESCRIPTION:' + icsTx(desc + '\n' + url), 'URL:' + url, 'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsTx(sum), 'TRIGGER:' + alarm, 'END:VALARM', 'END:VEVENT'];
+  function icsSave(evs, name) {
+    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//plan//es', ...evs, 'END:VCALENDAR'].join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = name; a.click();
+  }
+  // «Ahora no»: una cita dentro de una semana, a las 19:00, que devuelve al plan.
+  function laterIcs() {
+    const d = new Date(); d.setDate(d.getDate() + 7); d.setHours(19, 0, 0, 0);
+    icsSave(icsEv(Date.now(), d, new Date(d.getTime() + 15 * 60000), 'Volver a vuestro plan' + (S.phrase ? ` · ${S.phrase}` : ''), 'Mirad vuestro plan y elegid el día para hablarlo con el asesor.', icsBase(), '-PT0M'), 'volver-al-plan.ics');
+  }
   function downloadIcs(kind) {
     const pay = kind === 'pay', b = pay ? S.payDate : S.booking; if (!b) return;
     const s = fromIso(b.iso.slice(0, 10), b.time), e2 = new Date(s.getTime() + (pay ? 15 : b.mins) * 60000);
-    const z = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//plan//es', 'BEGIN:VEVENT', 'UID:' + Date.now() + '@plan', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(s), 'DTEND:' + z(e2),
-      'SUMMARY:' + (pay ? E.primer.titulo : 'Reunión con el asesor: empezar el plan'), 'DESCRIPTION:' + (pay ? `Primer paso del plan. Después, el saldo de la tarjeta queda en ${E.primer.despuesTxt}.` : summaryText().replace(/\n/g, '\\n')), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = pay ? 'primer-paso.ics' : 'reunion-plan.ics'; a.click();
+    const base = icsBase(), why = S.phrase ? ` · ${S.phrase}` : '', ev = icsEv;
+    let evs;
+    if (pay) {
+      const w1 = new Date(s.getTime() + 7 * 864e5), w2 = new Date(w1.getTime() + 10 * 60000);
+      evs = [...ev(Date.now(), s, e2, E.primer.titulo + why, `Primer paso de vuestro plan. Después, el saldo de la tarjeta queda en ${E.primer.despuesTxt} y la nota pasa a ${E.primer.nota}.`, base, '-PT15M'),
+        ...ev(Date.now() + 1, w1, w2, 'Comprobar el saldo de la tarjeta' + why, `Mirad el saldo en la app del banco y escribidlo en vuestro plan.`, base + '&semana=1', '-PT0M')];
+    } else if (S.stage === 'pareja' && pjDone()) evs = ev(Date.now(), s, e2, 'Reunión con el asesor' + why, pjIcsText(), base + '&reunion=1', '-PT1H');
+    else evs = ev(Date.now(), s, e2, 'Reunión con el asesor' + why, summaryText(), base, '-PT1H');
+    icsSave(evs, pay ? 'primer-paso.ics' : 'reunion-plan.ics');
   }
+  // La cita de la pareja es suya: con quién se ve cada cosa y lo que el asesor ya sabe de ellos (sin la hoja interna).
+  const pjIcsText = () => `Con vuestro asesor: ${pjConLista()}.\nLo que vuestro asesor ya sabe de vosotros:\n${pjGets().map(t => '- ' + t).join('\n')}\nPara añadir otra pregunta antes de ir, abrid el enlace.`;
   function summaryText() {
     const acc = E.pasos.filter(p => S.steps[p.key] === 'yes').map(p => '- ' + p.titulo), open = S.doubts.filter(d => d.status === 'open').map(d => '- ' + d.q);
-    return `${E.fam.titulo}. Reunión: ${S.booking ? S.booking.label + ' (' + S.booking.mins + ' min)' : 'sin fecha'}${S.phrase ? '\nLo que más importa: ' + S.phrase : ''}${S.gain ? '\nQué cambiaría en casa: ' + S.gain : ''}${S.pj && S.pj.step >= PJ_STEPS.indexOf('map') ? `\nPerfil en pareja: ${['a', 'b'].map(x => `${pName(x)} (plan: ${perfil(x) ? low1(perfil(x).etiqueta) : 'sin dato'}; ante una caída: ${riskOpt(S.pj.risk[x]) ? low1(riskOpt(S.pj.risk[x])[1]) : '-'})`).join(', ')}. Aciertos: ${aciertos()} de 4` : ''}\nNivel: ${PRO() ? 'sabe de finanzas' : 'nuevo en esto'}${S.payDate ? '\nPrimer paso con fecha: ' + S.payDate.label : ''}\nPasos aceptados:\n${acc.join('\n') || '- ninguno'}\nPreguntas para la reunión:\n${open.join('\n') || '- ninguna'}`;
+    return `${E.fam.titulo}. Reunión: ${S.booking ? S.booking.label + ' (' + S.booking.mins + ' min)' : 'sin fecha'}${S.phrase ? '\nLo que más importa: ' + S.phrase : ''}${S.gain ? '\nQué cambiaría en casa: ' + S.gain : ''}${pjDone() ? `\nLo que habéis contestado:\n${pjGets().filter(t => !/^Lo que (queréis que os conteste|le ronda|os ronda)/.test(t)).map(t => '- ' + t).join('\n')}` : ''}\nNivel: ${PRO() ? 'sabe de finanzas' : 'nuevo en esto'}${S.payDate ? '\nPrimer paso con fecha: ' + S.payDate.label : ''}\nPasos aceptados:\n${acc.join('\n') || '- ninguno'}\nPreguntas para la reunión:\n${open.join('\n') || '- ninguna'}`;
   }
   function copySummary() { const t = summaryText(); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Resumen copiado'), () => toast('No se ha podido copiar')); }
 
@@ -1237,6 +1646,8 @@
       await abrirCaso(slug, q.has('reset'));
       if (q.get('demo') === 'plan' || q.get('demo') === 'story') { S.stage = q.get('demo'); S.prefs.level = q.get('l') === 'pro' ? 'pro' : 'new'; S.phrase = S.phrase || E.frases[0]; if (q.get('s')) S.slide = +q.get('s'); }
       render();
+      if (q.get('semana') && E.primer && S.payDate && !S.week) weekSheet(true);
+      else if (q.get('reunion') && S.booking && S.stage === 'pareja' && pjDone()) pjBooked(true);
     } catch (err) {
       console.error(err);
       app.innerHTML = `<div class="narrow card"><h2>No hemos podido cargar el plan.</h2><p>Arranca la web con <code>npm start</code> desde la raíz del repo. Si faltan los estudios, se generan con <code>npm run estudio</code>.</p><button class="btn" onclick="location.reload()">Reintentar</button></div>`;
