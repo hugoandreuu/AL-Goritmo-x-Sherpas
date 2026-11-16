@@ -472,10 +472,10 @@
       LAST_SCORE = null;
       const ord = E.areas.slice().sort((a, b) => a.nota - b.nota), peor = ord[0];
       return `<div class="kick">${w('Vuestra', 'Tu')} nota general</div><h2>${E.nota.hoy} de 100. Lo que más pesa: ${esc(low1(peor.nombre))}.</h2>
-        <button class="tm-open card-btn" data-act="tema" data-k="__nota" aria-label="Ver la nota a fondo">
+        <div class="card-btn">
         <div class="foto">${ring(E.nota.hoy, max)}<p class="muted small">${w('Vuestra', 'Tu')} nota de salud financiera${E.nota.banda ? `: <b>${esc(E.nota.banda)}</b>` : ''}. ${max > E.nota.hoy ? `Con ${w('vuestro', 'tu')} plan llega a <b>${max}</b>.` : ''}</p></div>
         <div class="areas">${E.areas.map((a, i) => `<div class="ar ${a.nota < 50 ? 'low' : a.nota < 75 ? 'mid' : 'hi'}" style="--i:${i}"><span class="ar-ic">${ic(a.icon, 18)}</span><b>${esc(a.nombre)}</b><div class="ar-b"><i style="width:${Math.max(3, a.nota)}%"></i></div><em>${a.nota}</em></div>`).join('')}</div>
-        <span class="tm-mas">${ic('chart', 15)} Ver a fondo</span></button>
+        </div>
         <p class="tiny" style="margin:0">Las cinco áreas con las que ${w('vuestro', 'tu')} plan calcula la nota, de 0 a 100. En las siguientes tarjetas, una por tema.</p>`;
     }
     if (id.startsWith('t:')) {
@@ -483,8 +483,7 @@
       return `<div class="kick">Tema ${k + 1} de ${ts.length}</div>${temaCard(ts[k], 0, 'story')}`;
     }
     if (id === 'ruta') {
-      return `<div class="kick">${w('Vuestro', 'Tu')} roadmap</div><h2>De hoy a ${w('vuestra', 'tu')} jubilación, hito a hito.</h2>${lineaHtml()}
-        <button class="btn soft block" style="margin-top:14px" data-act="tema" data-k="__ruta">${ic('chart', 16)} Ver a fondo, con cifras y gráfico</button>`;
+      return `<div class="kick">${w('Vuestro', 'Tu')} roadmap</div><h2>De hoy a ${w('vuestra', 'tu')} jubilación, hito a hito.</h2>${lineaHtml()}`;
     }
     if (id.startsWith('f:')) {
       const q = QMAP[id.slice(2)], g = S.a[q.id], n = E.frenos.indexOf(q.id) + 1;
@@ -648,8 +647,7 @@
       : sinPaso(x);
     const men = x.qs.some(q => (S.match || []).includes(q.id)) ? `<span class="porque tm-men">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
     return `<article class="tema ${nivel(a.nota)}" style="--i:${i}">${men}
-      <button class="tm-open" data-act="tema" data-k="${esc(a.nombre)}" aria-label="Ver ${esc(a.nombre)} a fondo">${cabTema(a, t)}${filasTema(a.resumen)}
-        <span class="tm-mas">${ic('arrow', 15)} Abrir la página del tema</span></button>
+      <div class="tm-open">${cabTema(a, t)}${filasTema(a.resumen)}</div>
       ${story ? dijeron(x) : ''}
       <div class="tm-plan"><div class="kicker" style="margin:0 0 6px">${pasos.length ? `Lo que propone ${w('vuestro', 'tu')} plan` : `${w('Vuestro', 'Tu')} plan`}</div>${plan}</div>
     </article>`;
@@ -787,7 +785,7 @@
   // Roadmap: el camino de hitos, de hoy a la jubilación.
   function rutaCard() {
     return `<article class="tema ruta"><header class="tm-h"><span class="ar-ic">${ic('flag', 18)}</span><div class="tm-ht"><h3>${w('Vuestro', 'Tu')} roadmap</h3><small>El camino de hitos, de hoy a la jubilación</small></div></header>
-      ${lineaHtml()}<button class="btn soft block" style="margin-top:12px" data-act="tema" data-k="__ruta">${ic('chart', 16)} Ver a fondo, con cifras y gráfico</button></article>`;
+      ${lineaHtml()}</article>`;
   }
 
   function renderPlan() {
@@ -800,7 +798,7 @@
 
     const temas = temasPlan();
     main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestro', 'Tu')} plan en ${temas.length} temas</div>
-      <p class="muted" style="margin-top:-2px">Son las ${temas.length} partes con las que ${w('vuestro', 'tu')} plan calcula la nota. Lo que ${w('habéis', 'has')} contestado eran situaciones de estos temas. ${w('Tocad', 'Toca')} uno para verlo a fondo.</p>
+      <p class="muted" style="margin-top:-2px">Son las ${temas.length} partes con las que ${w('vuestro', 'tu')} plan calcula la nota. Lo que ${w('habéis', 'has')} contestado eran situaciones de estos temas.</p>
       <div class="temas">${temas.map((x, i) => temaCard(x, i, 'plan')).join('')}${rutaCard()}</div></div>`;
 
     main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Vuestro', 'Tu')} siguiente paso</div>
@@ -1387,8 +1385,7 @@
     else if (S.stage === 'quiz') renderQuiz();
     else if (S.stage === 'pareja') renderPareja();
     else if (S.stage === 'story') renderStory();
-    else if (S.stage === 'tema') renderTema();
-    else renderPlan();
+        else renderPlan();
     save();
   }
   function keep() { const y = window.scrollY; render(); window.scrollTo(0, y); }

@@ -1198,9 +1198,7 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 @media (max-width: 380px) { .tm-res li { grid-template-columns: 1fr; gap: 0; } }
 @media (min-width: 1000px) { .temas { grid-template-columns: 1fr 1fr; } }
 
-.tm-open { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; border-radius: 14px; }
-.tm-open:focus-visible { outline: 3px solid var(--sky); outline-offset: 4px; }
-.tm-mas { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; color: var(--accent); font-weight: 600; font-size: 14.5px; min-height: 32px; }
+.tm-open { display: block; }
 .card-btn { margin-bottom: 12px; }
 .tm-o { display: block; color: var(--ink-3); font-size: 11.5px; font-family: ui-monospace, monospace; }
 .tm-pl { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
