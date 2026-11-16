@@ -31,18 +31,15 @@ Las pocas cuentas propias (por ejemplo, años de gastos que cubre el seguro) las
 
 Si el plan es de dos adultos, la portada pregunta **¿Quién va a ver el plan?**: *Los dos juntos* (modo pareja) o *Uno de los dos* (el cuestionario de siempre).
 
-Funciona como el perfil de riesgo de pareja de los asesores: cada uno contesta en privado en el mismo móvil y luego se compara entre sí y con el plan. No hay ganadores ni "impostores": el objetivo es que la pareja se conozca mejor con el dinero, sin señalar a ninguno. Son 12 pantallas. Cuando contesta uno, el fondo toma su color (azul o teja); cuando lo veis juntos, vuelve a neutro.
+Funciona como el perfil de riesgo de pareja de los asesores: cada uno contesta en privado en el mismo móvil y luego se compara entre sí y con el plan. No hay ganadores ni "impostores": el objetivo es que la pareja se conozca mejor con el dinero, sin señalar a ninguno. Son 13 pantallas. Cuando contesta uno, el fondo toma su color (azul o teja); cuando lo veis juntos, vuelve a neutro.
 
-1. **Turno privado de cada uno**: el dato de dinero y, en la misma tarjeta de riesgo, qué haría ante la peor caída real de sus inversiones (`investment-analysis`) y qué haría el otro. El dato de dinero sigue al estudio: el primer freno con cifra (`frenos`; en Weah la tarjeta, en Johnson el colchón).
-2. **Vuestro dinero**: las dos marcas y la del plan, la frase del estudio y, en la misma pantalla, lo que propone el plan (su paso, o lo que recomienda si no es paso).
-3. **Vuestro riesgo**: qué haría cada uno, si el otro lo sabía y si encaja con el perfil que indicó en el plan.
-4. **Vuestros hijos** (juntos): hasta qué edad del hijo mayor cubre el seguro de vida (pregunta `vida` pasada a edad con `aBarra`). Se revela por partes, sin miedo, con lo que recomienda el plan y su paso.
-5. **Vuestra nota** (juntos): adivinan del 0 al 100 la nota de salud financiera.
-6. **Cierre**, en tres bloques:
-   - La nota con la marca de lo que dijeron y su porqué: las cinco áreas (`areas`), con la que más baja.
-   - Lo que propone el plan: todos los pasos con la nota que deja cada uno (`combos`), quién lo hace y cuántos puntos llegan con el asesor, más los objetivos de la familia de la línea del plan (coche, casa, universidad, jubilación).
-   - Una sola acción principal: pedir la reunión, con la frase "¿para qué lo hacéis?" (frases del estudio o sus palabras), la fecha confirmada por los dos y la cita al calendario (`.ics` con alarma, la frase en el título y enlace de vuelta). Si hay un primer paso que pueden hacer solos (`primer`), va debajo como "antes de ir", con su fecha y una segunda cita a la semana cuyo enlace (`?semana=1`) abre la comprobación del saldo y recuerda su frase.
-   - Lo que recibe el asesor, plegado: su frase y lo que no coincidió, que también pasa a la hoja del asesor.
+0. **Entrada**: cómo funciona y, opcional, "¿para qué hacéis esto?" (frases del estudio o sus palabras). La frase acompaña al recordatorio del calendario, a la vuelta y a la hoja del asesor.
+1. **Turno privado de cada uno**: el dato de dinero y, en la misma tarjeta de riesgo, qué haría ante la peor caída real de sus inversiones (`investment-analysis`) y qué haría el otro. El dato de dinero es la pregunta con cifra del área que peor va (`areas`; a igualdad, el orden de `frenos`), para no elegir un tema que va bien.
+2. **Vuestro dinero**: las dos marcas, la del plan y, a primera vista, lo que propone el plan (su paso, o lo que recomienda si no es paso).
+3. **Vuestro riesgo**: qué haría cada uno, si el otro lo sabía, si encaja con el perfil que indicó en el plan y qué se revisa con el asesor.
+4. **Vuestros hijos** (juntos): hasta qué edad del hijo mayor cubre el seguro de vida (pregunta `vida` pasada a edad con `aBarra`), con el paso del plan y lo que recomienda.
+5. **Vuestra nota** (juntos): la adivinan y la revelación enseña el anillo con su marca y las cinco áreas, con la que más baja.
+6. **Lo que propone vuestro plan**: todos los pasos con la nota que deja cada uno (`combos`), lo que suma, quién lo hace (y por qué, si no cambia la nota) y cuántos puntos llegan con el asesor; los objetivos de la línea del plan con año e importe; la reunión como única acción principal, con el botón fijo abajo, la fecha confirmada por los dos y la cita al calendario (`.ics` con alarma, su frase y enlace de vuelta). Si hay un primer paso que pueden hacer solos (`primer`), va como "antes de ir", con fecha y una segunda cita a la semana cuyo enlace (`?semana=1`) abre la comprobación del saldo. Lo que recibe el asesor va plegado.
 
 Datos del estudio: `pareja.perfiles` (perfil de riesgo de cada uno) y `pareja.caida` (peor caída en 3 años y días hasta recuperarse).
 

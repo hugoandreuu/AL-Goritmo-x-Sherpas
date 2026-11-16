@@ -1047,6 +1047,27 @@ body[data-pj] .dock { background: none; }
 .pj-gets { margin: 0 0 12px; font-size: 14px; }
 .pj-gets summary { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--ink-2); font-weight: 600; }
 .pj-gets ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; color: var(--ink-2); }
+.pj-why > small i { font-style: normal; opacity: .7; }
+.pj-why.light { margin: 14px 0 0; }
+.pj-why.light > small { color: var(--ink-2); font-size: 14px; }
+.pj-why.light .pj-whyc .chip { background: var(--surface); border-color: var(--line); color: var(--ink); }
+.pj-why.light .pj-whyw input { background: var(--surface); border-color: var(--line); color: var(--ink); }
+.pj-why.light .pj-whyw input::placeholder { color: var(--ink-3); }
+.pj-why.light .pj-whyw .btn { background: var(--plan); color: #fff; }
+.pj-why.light .pj-quote { color: var(--ink); }
+.pj-why.light .pj-quote .link { color: var(--accent); }
+.pj-big { font-family: var(--head); font-size: 30px; line-height: 1.1; color: var(--plan); }
+.pj-revn .pj-salud { margin-top: 4px; }
+.pj-tit.sm { font-size: clamp(20px, 5.4vw, 24px); margin-top: 6px; }
+.pj-ladder em { display: grid; justify-items: end; line-height: 1; }
+.pj-ladder em small { font-family: var(--font); font-size: 12px; font-weight: 700; color: var(--good); margin-top: 3px; }
+.pj-goals { margin: 12px 0; }
+.pj-meet { border-radius: 18px; background: var(--plan); color: #fff; padding: 14px 16px; margin: 12px 0; display: grid; gap: 6px; }
+.pj-meet > small { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; opacity: .85; }
+.pj-meet p { margin: 0; font-size: 15.5px; line-height: 1.4; }
+.pj-meet .btn.ghost { color: #fff; border-color: rgba(255,255,255,.4); background: transparent; }
+.pj-dock .pj-bigbtn { min-height: 56px; font-size: 17px; }
+.pj-dock .datechip { margin: 0; }
 /* los hijos: primero lo que decíais, luego el plan y por último los años, con pausa para la intriga */
 .pj-revv .pj-plan { animation-delay: .7s; }
 .pj-revv .rv-box .big { color: var(--plan); }
