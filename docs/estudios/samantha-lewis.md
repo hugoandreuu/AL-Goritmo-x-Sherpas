@@ -3,7 +3,7 @@
 - Caso: `samantha-lewis`
 - Datos: archivos de `cases/` (los mismos JSON que sirve el MCP)
 - Frases: escritas por el LLM de Sherpas (`gpt-5-mini`, el 2026-11-14), con control de cifras
-- Generado: 2026-11-15
+- Generado: 2026-11-16
 
 ## Lo que lee el LLM de esta familia
 
