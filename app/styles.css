@@ -1381,3 +1381,78 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 @keyframes fdOut { to { opacity: 0; transform: translateY(-14px); filter: blur(4px); } }
 .fd-in { animation: pjFade .45s var(--soft) both; }
 .sealing .dock { opacity: 0; transition: opacity .2s; pointer-events: none; }
+
+/* ===== Resumen: ruleta 3D de tarjetas ===== */
+.rul-wrap { overflow-x: clip; padding-bottom: 96px; }
+.rul-stage { position: relative; perspective: 1500px; perspective-origin: 50% -30%; margin: 34px 0 0; transition: height .5s var(--ease); touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; }
+.rul-stage.dragging { cursor: grabbing; }
+.rul-ring { position: absolute; left: 50%; top: 0; width: var(--w, 340px); margin-left: calc(var(--w, 340px) / -2); height: 100%; transform-style: preserve-3d; }
+.rul-ring.anim { transition: transform .95s cubic-bezier(.22, 1.18, .36, 1); }
+.rul-card { --d: 0; position: absolute; left: 0; top: 0; width: 100%; transform-style: preserve-3d;
+  filter: blur(calc(min(var(--d), 3) * 2.6px)) saturate(calc(1 - min(var(--d), 3) * .18)); opacity: calc(1 - min(var(--d), 3) * .2);
+  transition: filter .7s var(--ease), opacity .7s var(--ease); }
+.rul-stage.dragging .rul-card { transition: none; }
+.rul-in { display: flex; flex-direction: column; background: var(--surface, #fff); border: 1px solid var(--line); border-radius: 24px; padding: 20px 18px 16px; box-shadow: 0 18px 50px rgba(27,36,55,.16), 0 2px 6px rgba(27,36,55,.06); animation: none; }
+.rul-card:not(.front) .rul-in { pointer-events: none; }
+.rul-card:not(.front) { cursor: pointer; }
+.rul-card.front .rul-in { box-shadow: 0 26px 70px rgba(27,36,55,.22), 0 2px 8px rgba(27,36,55,.08); }
+.rul-stage.spin .rul-card.front .rul-in { animation: rulpop .95s var(--ease) both; }
+@keyframes rulpop { 0% { transform: scale(.94); } 55% { transform: scale(1.025); } 100% { transform: none; } }
+.rul-in .tema { box-shadow: none; border: 0; padding: 0; margin: 0; }
+.rul-abrir { margin-top: auto !important; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 4px; min-height: 46px; border-radius: 14px; border: 1.5px dashed var(--accent); background: var(--accent-soft); color: var(--accent); font: 600 15.5px/1 var(--font); cursor: pointer; transition: transform .15s, background .15s; }
+.rul-abrir:hover { background: #e3e9ff; } .rul-abrir:active { transform: scale(.98); }
+.rul-wrap .segs { position: relative; z-index: 5; }
+.rul-stage { z-index: 1; }
+.rul-nav { position: sticky; z-index: 6; background: linear-gradient(to top, var(--bg) 55%, rgba(255,255,255,0)); padding-top: 14px !important; padding-bottom: 6px !important; bottom: calc(78px + env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px; padding: 0 4px; }
+.rul-arr { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; max-width: 44%; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface, #fff); color: var(--ink); font: 600 15px/1.2 var(--font); cursor: pointer; box-shadow: var(--shadow); transition: transform .15s, border-color .15s; }
+.rul-arr span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rul-arr:hover { border-color: var(--accent); color: var(--accent); } .rul-arr:active { transform: scale(.96); }
+.rul-arr svg { flex: none; }
+.rul-pos { font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+/* Abrir página: la tarjeta crece hasta la pantalla completa */
+.rul-full { position: fixed; inset: 0; z-index: 40; background: var(--bg); overflow-y: auto; overscroll-behavior: contain; padding-bottom: 96px; transition: clip-path .5s cubic-bezier(.3, .9, .3, 1); }
+.rul-full .rul-full-in { opacity: 0; transform: translateY(14px); transition: opacity .35s .15s, transform .45s .1s var(--ease); }
+.rul-full.open .rul-full-in { opacity: 1; transform: none; }
+.rul-full.closing { transition: clip-path .4s cubic-bezier(.5, 0, .7, .4); }
+.rul-full.closing .rul-full-in { opacity: 0; transition: opacity .2s; }
+.rul-full-bar { position: sticky; top: 0; z-index: 2; background: rgba(255,255,255,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: 6px 16px; }
+.rul-full .tpage { padding: 8px 16px 0; }
+body.rul-lock { overflow: hidden; }
+body.rul-lock .cta-bar { z-index: 50; }
+/* «Todas las cifras» en mini tarjetas */
+.cf-bar { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 6px 0 4px; padding-bottom: 2px; }
+.cf-bar::-webkit-scrollbar { display: none; }
+.cf-chip { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 5px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface, #fff); color: var(--ink-2); font: 500 14px/1.2 var(--font); cursor: pointer; }
+.cf-chip em { font-style: normal; font-size: 12px; padding: 0 6px; border-radius: 999px; background: var(--bg-2); color: var(--ink-3); }
+.cf-chip[aria-pressed="true"] { background: var(--navy, #1b2437); border-color: var(--navy, #1b2437); color: #fff; font-weight: 600; }
+.cf-chip[aria-pressed="true"] em { background: rgba(255,255,255,.18); color: #fff; }
+.cf-h { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-3); margin: 14px 0 -4px; }
+.itiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 12px 0 4px; }
+.itile { background: var(--surface, #fff); border: 1px solid var(--line); border-radius: 14px; padding: 10px 11px; display: grid; gap: 3px; align-content: start; animation: rise .35s var(--ease) both; animation-delay: calc(var(--i) * 30ms); }
+.itile.ancha { grid-column: 1 / -1; }
+.itile small { font-size: 12px; color: var(--ink-3); line-height: 1.3; overflow-wrap: anywhere; }
+.itile > b { font: 700 16px/1.3 var(--head); color: var(--ink); overflow-wrap: anywhere; }
+.itile.ancha > b { font: 600 14.5px/1.4 var(--font); }
+.itile b.n { font-weight: inherit; color: inherit; }
+@media (prefers-reduced-motion: reduce) { .rul-ring.anim { transition-duration: .2s; } .rul-card { transition: none; } .rul-stage.spin .rul-card.front .rul-in { animation: none; } .rul-full, .rul-full-in { transition: none !important; } }
+body.fondo-on .rul-nav { background: none; }
+body.fondo-on .rul-arr { background: rgba(255,255,255,.85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+/* Tarjeta de la nota general más compacta dentro de la ruleta, para que todas tengan una altura parecida */
+.rul-in h2 { font-size: clamp(21px, 5.4vw, 26px); }
+.rul-in.slide { gap: 10px; }
+.rul-in .foto { padding: 10px 14px; gap: 12px; border-radius: 18px; }
+.rul-in .ring { width: 96px; height: 96px; }
+.rul-in .ring svg { width: 96px; height: 96px; }
+.rul-in .rg-num b { font-size: 30px; }
+.rul-in .areas { gap: 5px; }
+.rul-in .ar { padding: 4px 9px; border-radius: 12px; }
+.rul-in .ar-ic { width: 28px; height: 28px; }
+.rul-in .card-btn > .foto + .areas { margin-top: 8px; }
+.rul-in > p.tiny { font-size: 12px; }
+@media (min-width: 700px) {
+  .rul-in .card-btn { display: grid; grid-template-columns: 138px 1fr; gap: 12px; align-items: stretch; }
+  .rul-in .card-btn > .foto { grid-template-columns: 1fr; justify-items: center; text-align: center; align-content: center; padding: 12px 10px; }
+  .rul-in .card-btn > .foto p { font-size: 13px; }
+  .rul-in .card-btn > .foto + .areas { margin-top: 0; }
+  .rul-in .ar { grid-template-columns: 28px 1fr 70px 28px; gap: 8px; }
+}

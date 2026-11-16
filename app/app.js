@@ -42,7 +42,7 @@
     QMAP = Object.fromEntries(E.preguntas.map(q => [q.id, q]));
     buildQuiz([]);
     // Resumen tras el quiz: la nota, una tarjeta por cada uno de los 5 temas y el roadmap.
-    SLIDES = ['foto', ...temasPlan().map(x => 't:' + x.a.nombre), 'ruta'];
+    SLIDES = ['foto', ...temasPlan().map(x => 't:' + x.a.nombre)]; // el roadmap sale en el plan completo
     S = fresh();
     if (!limpio) { try { const raw = localStorage.getItem(KEY()); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) { /* nada */ } }
     if (!E.fam.pl) S.who = 'a';
@@ -85,6 +85,7 @@
     chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
     flag: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
     lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
     home: '<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/>',
@@ -539,14 +540,116 @@
   }
 
   let STORY_DIR = '';
+  // ------------------------------------------------------------------ resumen: la ruleta de tarjetas
+  // Las tarjetas del resumen (nota general, los temas y el roadmap) van en una rueda 3D. La del centro
+  // se lee; las demás quedan detrás, desenfocadas. Se gira deslizando o con las flechas, y al girar
+  // todas cambian de sitio a la vez. «Abrir página» agranda la tarjeta del centro con todo su detalle.
+  const RUL = { rot: null, drag: null, ovY: 0 };
+  const rulN = () => SLIDES.length;
+  const rulMod = x => ((Math.round(x) % rulN()) + rulN()) % rulN();
+  const rulName = id => id === 'foto' ? 'Nota general' : id === 'ruta' ? 'Roadmap' : id.startsWith('t:') ? id.slice(2) : id;
+  const rulKey = id => id === 'foto' ? '__nota' : id === 'ruta' ? '__ruta' : id.startsWith('t:') ? id.slice(2) : null;
   function renderStory() {
-    const i = Math.max(0, Math.min(S.slide, SLIDES.length - 1)), id = SLIDES[i], last = i === SLIDES.length - 1;
-    app.innerHTML = `<div class="narrow storyw"><div class="segs" aria-label="Pantalla ${i + 1} de ${SLIDES.length}">${SLIDES.map((_, k) => `<button data-act="goslide" data-v="${k}" class="${k < i ? 'past' : k === i ? 'cur' : ''}" aria-label="Ir a la pantalla ${k + 1}"></button>`).join('')}</div>
-      <div class="slide ${STORY_DIR}" data-id="${id}">${slideHtml(id)}</div></div>
-      <div class="cta-bar"><div class="cta-in">${i > 0 ? `<button class="btn ghost" data-act="prev" aria-label="Atrás">${ic('arrow', 18).replace('<svg', '<svg style="transform:rotate(180deg)"')}</button>` : ''}
-        <button class="btn grow ${last || (id === 'primer' && !S.payDate) ? 'soft' : ''}" data-act="${last ? 'fullplan' : 'nextslide'}">${last ? 'Ver el plan completo' : id === 'primer' && !S.payDate ? 'Ahora no' : 'Siguiente'}</button></div></div>`;
-    animateRing(); STORY_DIR = '';
+    if (RUL.rot == null || rulMod(RUL.rot) !== S.slide) RUL.rot = Math.max(0, Math.min(S.slide || 0, rulN() - 1));
+    const i = rulMod(RUL.rot), id = SLIDES[i], n = rulN(), prev = SLIDES[(i + n - 1) % n], next = SLIDES[(i + 1) % n];
+    const back = ic('arrow', 18).replace('<svg', '<svg style="transform:rotate(180deg)"');
+    const open = S.rulOpen != null ? SLIDES.find(x => rulKey(x) === S.rulOpen) : null;
+    app.innerHTML = `<div class="rul-wrap"><div class="narrow"><div class="segs" aria-label="Tarjeta ${i + 1} de ${n}">${SLIDES.map((x, k) => `<button data-act="goslide" data-v="${k}" class="${k === i ? 'cur' : ''}" aria-label="Ir a ${esc(rulName(x))}"></button>`).join('')}</div></div>
+      <div class="rul-stage" data-rul aria-roledescription="carrusel" aria-label="Resumen de ${w('vuestro', 'tu')} plan"><div class="rul-ring">${SLIDES.map((x, k) => `<section class="rul-card" data-i="${k}" aria-label="${esc(rulName(x))}" ${k === i ? '' : 'aria-hidden="true"'}><div class="rul-in slide">${slideHtml(x)}
+        ${rulKey(x) ? `<button class="rul-abrir" data-act="rulopen" data-v="${esc(rulKey(x))}">${ic('plus', 16)}<span>Abrir página</span></button>` : ''}</div></section>`).join('')}</div></div>
+      <div class="narrow rul-nav"><button class="rul-arr" data-act="rulgo" data-v="-1" aria-label="Anterior: ${esc(rulName(prev))}">${back}<span>${esc(rulName(prev))}</span></button><span class="rul-pos">${i + 1} / ${n}</span><button class="rul-arr nx" data-act="rulgo" data-v="1" aria-label="Siguiente: ${esc(rulName(next))}"><span>${esc(rulName(next))}</span>${ic('arrow', 18)}</button></div></div>
+      ${open ? `<div class="rul-full open" role="dialog" aria-modal="true" aria-label="${esc(rulName(open))}"><div class="rul-full-in"><div class="rul-full-bar"><button class="link tp-back" data-act="rulclose">${back} Volver a la ruleta</button></div><div class="narrow tpage">${temaBody(S.rulOpen)}<p class="foot">Cifras del informe de ${w('vuestro', 'tu')} estudio. ${fuente()}</p></div></div></div>` : ''}
+      <div class="cta-bar"><div class="cta-in">${open ? `<button class="btn ghost grow" data-act="rulclose">Volver a la ruleta</button>` : ''}<button class="btn grow" data-act="fullplan">Ver el plan completo</button></div></div>`;
+    rulLayout(false);
+    document.body.classList.toggle('rul-lock', !!open);
+    if (open) { const f = app.querySelector('.rul-full'); f.scrollTop = RUL.ovY; f.addEventListener('scroll', () => { RUL.ovY = f.scrollTop; }, { passive: true }); if (S.rulOpen === '__nota') animateRing(); }
+    else animateRing();
+    requestAnimationFrame(() => rulLayout(false));
   }
+  // Coloca la rueda: cada tarjeta en su ángulo; la rueda gira con RUL.rot (sin límite, para que nunca dé la vuelta entera al pasar de la última a la primera).
+  function rulLayout(anim) {
+    const st = app.querySelector('[data-rul]'); if (!st) return;
+    const ring = st.querySelector('.rul-ring'), cards = [...ring.children], n = cards.length, a = 360 / n;
+    // En pantallas estrechas la rueda se cierra un poco para que asomen las tarjetas de los lados.
+    const sw = st.clientWidth, W = Math.min(sw < 700 ? sw * 0.76 : sw - 32, 460), R = Math.round(W / 2 / Math.tan(Math.PI / n) + 24);
+    st.style.setProperty('--w', W + 'px');
+    ring.classList.toggle('anim', !!anim);
+    ring.style.transform = `translateZ(${-R}px) rotateY(${-RUL.rot * a}deg)`;
+    const cur = rulMod(RUL.rot);
+    cards.forEach((c, k) => {
+      let d = Math.abs(k - RUL.rot) % n; d = Math.min(d, n - d);
+      c.style.transform = `rotateY(${k * a}deg) translateZ(${R}px)`;
+      c.style.setProperty('--d', d.toFixed(3));
+      c.classList.toggle('front', k === cur && d < .5);
+    });
+    if (!anim) { // todas las tarjetas con la misma altura, la de la más alta
+      cards.forEach(c => { c.firstElementChild.style.minHeight = ''; });
+      const hMax = Math.max(...cards.map(c => c.firstElementChild.offsetHeight));
+      cards.forEach(c => { c.firstElementChild.style.minHeight = hMax + 'px'; });
+    }
+    const f = cards[cur]; if (f) st.style.height = f.offsetHeight + 'px';
+  }
+  // Barra de arriba, flechas y posición, sin volver a pintar las tarjetas (así el giro no se corta).
+  function rulUi() {
+    const n = rulN(), i = rulMod(RUL.rot), prev = SLIDES[(i + n - 1) % n], next = SLIDES[(i + 1) % n];
+    app.querySelectorAll('.segs button').forEach((b, k) => b.classList.toggle('cur', k === i));
+    const pos = app.querySelector('.rul-pos'); if (pos) pos.textContent = `${i + 1} / ${n}`;
+    const [pa, na] = app.querySelectorAll('.rul-arr');
+    if (pa) { pa.querySelector('span').textContent = rulName(prev); pa.setAttribute('aria-label', `Anterior: ${rulName(prev)}`); }
+    if (na) { na.querySelector('span').textContent = rulName(next); na.setAttribute('aria-label', `Siguiente: ${rulName(next)}`); }
+    app.querySelectorAll('.rul-card').forEach((c, k) => { if (k === i) c.removeAttribute('aria-hidden'); else c.setAttribute('aria-hidden', 'true'); });
+  }
+  function rulTo(target, dir) {
+    const n = rulN(), cur = Math.round(RUL.rot);
+    let k = target;
+    if (dir == null) { let d = ((target - rulMod(cur)) % n + n) % n; if (d > n / 2) d -= n; k = cur + d; }
+    RUL.rot = k; S.slide = rulMod(k); save();
+    const st = app.querySelector('[data-rul]');
+    if (st) { st.classList.remove('spin'); void st.offsetWidth; st.classList.add('spin'); }
+    rulLayout(true);
+    rulUi();
+  }
+  // Abrir página: la tarjeta del centro crece hasta ocupar la pantalla (y vuelve a su sitio al cerrar).
+  function rulOpen(k) {
+    const card = app.querySelector('.rul-card.front'), r = card ? card.getBoundingClientRect() : null;
+    S.rulOpen = k; RUL.ovY = 0; render();
+    const f = app.querySelector('.rul-full'); if (!f || !r || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    f.classList.remove('open'); f.style.clipPath = `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 24px)`;
+    requestAnimationFrame(() => requestAnimationFrame(() => { f.classList.add('open'); f.style.clipPath = 'inset(0 0 0 0 round 0)'; }));
+  }
+  function rulClose() {
+    const f = app.querySelector('.rul-full'), done = () => { S.rulOpen = null; render(); };
+    if (!f || matchMedia('(prefers-reduced-motion: reduce)').matches) return done();
+    const card = app.querySelector('.rul-card.front'), r = card.getBoundingClientRect();
+    f.classList.add('closing'); f.style.clipPath = `inset(${Math.max(0, r.top)}px ${innerWidth - r.right}px ${Math.max(0, innerHeight - r.bottom)}px ${r.left}px round 24px)`;
+    setTimeout(done, 420);
+  }
+  // Deslizar con el dedo o el ratón: la rueda sigue al dedo y, al soltar, se queda en la tarjeta más cercana (con inercia).
+  function rulDown(e) {
+    const st = e.target.closest && e.target.closest('[data-rul]'); if (!st || S.rulOpen != null || e.button > 0) return;
+    RUL.drag = { x: e.clientX, y: e.clientY, r0: RUL.rot, t: performance.now(), v: 0, lx: e.clientX, lt: performance.now(), moved: false, id: e.pointerId, st };
+  }
+  function rulMove(e) {
+    const d = RUL.drag; if (!d || e.pointerId !== d.id) return;
+    const dx = e.clientX - d.x;
+    if (!d.moved) { if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(e.clientY - d.y)) { if (Math.abs(e.clientY - d.y) > 10) RUL.drag = null; return; } d.moved = true; d.st.setPointerCapture(d.id); d.st.classList.add('dragging'); }
+    const W = parseFloat(d.st.style.getPropertyValue('--w')) || 340, now = performance.now();
+    RUL.rot = d.r0 - dx / (W * 0.9);
+    d.v = (e.clientX - d.lx) / Math.max(1, now - d.lt); d.lx = e.clientX; d.lt = now;
+    rulLayout(false);
+  }
+  function rulUp(e) {
+    const d = RUL.drag; if (!d || e.pointerId !== d.id) return; RUL.drag = null;
+    if (!d.moved) { // un toque en una tarjeta lateral la trae al centro
+      const c = e.target.closest && e.target.closest('.rul-card'); if (c && !c.classList.contains('front')) rulTo(+c.dataset.i);
+      return;
+    }
+    d.st.classList.remove('dragging');
+    const W = parseFloat(d.st.style.getPropertyValue('--w')) || 340;
+    RUL.rot = Math.round(RUL.rot - d.v * 260 / (W * 0.9)); RUL.justDragged = true; setTimeout(() => { RUL.justDragged = false; }, 50);
+    rulTo(RUL.rot, 0);
+  }
+
 
   // ------------------------------------------------------------------ plan completo
   function counts() {
@@ -656,7 +759,6 @@
     const men = x.qs.some(q => (S.match || []).includes(q.id)) ? `<span class="porque tm-men">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
     return `<article class="tema ${nivel(a.nota)}" style="--i:${i}">${men}
       <div class="tm-open">${cabTema(a, t)}${filasTema(a.resumen)}</div>
-      ${story ? dijeron(x) : ''}
       <div class="tm-plan"><div class="kicker" style="margin:0 0 6px">${pasos.length ? `Lo que propone ${w('vuestro', 'tu')} plan` : `${w('Vuestro', 'Tu')} plan`}</div>${plan}</div>
     </article>`;
   }
@@ -757,8 +859,35 @@
     const from = dest || S.temaFrom || 'plan', y = from === S.temaFrom ? S.temaY : 0;
     S.stage = from; S.temaK = null; render(); window.scrollTo(0, y || 0);
   }
-  function renderTema() {
-    const k = S.temaK, desdeResumen = S.temaFrom === 'story';
+  // «Todas las cifras»: mini tarjetas como las KPI, agrupadas por bloque (según el origen de cada cifra) y con chips para filtrar.
+  const CF_SEL = {};
+  const numHi = h => h.replace(/(-?\d[\d.]*(?:,\d+)?(?:[–-]\d[\d.]*(?:,\d+)?)?\s?(?:%|M\$|\$))/g, '<b class="n">$1</b>');
+  const CF_GRUPOS = [
+    [/incomes|savingsLevel|investableAssetLevel|IncomePercentile|matchGap/, 'Ingresos y ahorro'], [/outflow|cashflowStatement|netCashFlow/, 'A dónde va el dinero'],
+    [/listOfDebts/, 'Cada deuda'], [/debtToIncome|housingRatio|creditCard|DPD/, 'Ratios y plazos'],
+    [/marketEnvironments/, 'En crisis'], [/return\d|volatility3y/, 'Rentabilidad'],
+    [/allocation|GlidePath|concentration|EquityPct|targetAnalysis|portfolioAnalysis|volatility|sector/, 'Reparto y riesgo'],
+    [/risk_profile|totalAssets|netWorth|listOfAssets/, 'Patrimonio'],
+    [/cashNeeds/, 'Rentabilidad del efectivo'], [/nearTerm|totalCashNeeded|shortfall|cashAbove|AfterNearTerm/, 'Con los gastos previstos'], [/facts\.cash|emergencyFund/, 'El colchón hoy'],
+    [/lifeInsurance/, 'Seguro de vida'], [/umbrella/, 'Responsabilidad civil'], [/profile\.insurance/, 'Pólizas'], [/case\.household/, 'Familia'],
+    [/education/, 'Universidad'], [/^goals/, 'Metas'], [/retirement|projections/, 'Jubilación'],
+  ];
+  function cifrasHtml(rows) {
+    if (!rows || !rows.length) return '';
+    const gs = [], key = S.temaK || S.rulOpen || '';
+    rows.forEach(r => { const n = (CF_GRUPOS.find(([re]) => re.test(r[2] || '')) || [0, 'Otras cifras'])[1], g = gs.find(x => x.n === n); if (g) g.rows.push(r); else gs.push({ n, rows: [r] }); });
+    const sel = CF_SEL[key] || '*';
+    const tile = (r, i) => `<div class="itile ${String(r[1]).length > 24 ? 'ancha' : ''}" style="--i:${i}"><small>${esc(r[0])}</small><b>${numHi(esc(r[1]))}</b>${PRO() && r[2] ? `<small class="tm-o">${esc(r[2])}</small>` : ''}</div>`;
+    return `<div class="cfw">${gs.length > 1 ? `<div class="cf-bar" role="group" aria-label="Filtrar cifras">${[['*', 'Todas', rows.length]].concat(gs.map(x => [x.n, x.n, x.rows.length])).map(([v, l, c]) => `<button class="cf-chip" data-act="cff" data-v="${esc(v)}" aria-pressed="${sel === v}"><span>${esc(l)}</span><em>${c}</em></button>`).join('')}</div>` : ''}
+      ${gs.map(x => `<section class="cf-g" data-n="${esc(x.n)}" ${sel === '*' || sel === x.n ? '' : 'hidden'}>${gs.length > 1 ? `<h4 class="cf-h">${esc(x.n)}</h4>` : ''}<div class="itiles">${x.rows.map(tile).join('')}</div></section>`).join('')}</div>`;
+  }
+  function selCf(btn, v) {
+    const box = btn.closest('.cfw'); if (!box) return; CF_SEL[S.temaK || S.rulOpen || ''] = v;
+    box.querySelectorAll('[data-act=cff]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+    box.querySelectorAll('.cf-g').forEach(g => { g.hidden = !(v === '*' || g.dataset.n === v); });
+  }
+  // Contenido de la página de un tema (también es lo que se ve al abrir una tarjeta de la ruleta).
+  function temaBody(k) {
     let html = '';
     if (k === '__nota') {
       html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
@@ -773,18 +902,23 @@
         ${sec(2, `Cómo crece ${w('vuestro', 'tu')} patrimonio`, grafLinea(r))}
         ${sec(3, 'Qué significa', lecturaHtml(r.lectura))}
         ${asesorHtml(r.asesor)}
-        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(r.detalle, true)}</details>`;
+        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${cifrasHtml(r.detalle)}</details>`;
     } else {
-      const x = temaDe(k); if (!x) { volverTema(); return; }
+      const x = temaDe(k); if (!x) return '';
       const { a, t, pasos } = x;
       html = `<header class="tp-h tema-big ${nivel(a.nota)}">${cabTema(a, t, 'h1')}</header>
         ${kpisHtml(a.kpis)}
         ${sec(1, 'El desglose', desgloseHtml(a.desglose) + graf(a.graf))}
-        ${sec(2, 'Qué significa', lecturaHtml(a.lectura) + dijeron(x))}
+        ${sec(2, 'Qué significa', lecturaHtml(a.lectura))}
         ${sec(3, `Lo que propone ${w('vuestro', 'tu')} plan`, pasos.length ? pasos.map(pasoTema).join('') : sinPaso(x))}
         ${asesorHtml(a.asesor)}
-        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(a.detalle, true)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></details>`;
+        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${cifrasHtml(a.detalle)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></details>`;
     }
+    return html;
+  }
+  function renderTema() {
+    const k = S.temaK, desdeResumen = S.temaFrom === 'story';
+    const html = temaBody(k); if (!html) { volverTema(); return; }
     app.innerHTML = `<div class="narrow tpage"><button class="link tp-back" data-act="temaback">${ic('arrow', 16).replace('<svg', '<svg style="transform:rotate(180deg)"')} ${desdeResumen ? 'Volver al resumen' : 'Volver al plan completo'}</button>${html}
       <p class="foot">Cifras del informe de ${w('vuestro', 'tu')} estudio. ${fuente()}</p></div>
       <div class="cta-bar"><div class="cta-in">${desdeResumen ? `<button class="btn ghost grow" data-act="temaback">Volver al resumen</button><button class="btn grow" data-act="temaback" data-v="plan">Plan completo</button>` : `<button class="btn grow" data-act="temaback">Volver al plan completo</button>`}</div></div>`;
@@ -1411,9 +1545,10 @@
 
   function render() {
     renderTop();
-    if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz' || S.stage === 'pareja');
+    if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz' || S.stage === 'pareja' || S.stage === 'story');
     if (S.stage !== 'pareja') { delete document.body.dataset.pj; if (window.Fondo) Fondo.who(null); }
     if (window.Fondo) Fondo.vivo(S.stage === 'pareja' && S.pj && S.pj.step === 0);
+    if (S.stage !== 'story') document.body.classList.remove('rul-lock');
     if (S.stage === 'home') renderHome();
     else if (S.stage === 'quiz') renderQuiz();
     else if (S.stage === 'pareja') renderPareja();
@@ -1505,6 +1640,15 @@
 
   document.addEventListener('pointermove', lineaHover);
   document.addEventListener('pointerdown', lineaHover);
+  // Ruleta del resumen: deslizar, flechas del teclado y recolocar al cambiar el tamaño.
+  document.addEventListener('pointerdown', rulDown);
+  document.addEventListener('pointermove', rulMove);
+  document.addEventListener('pointerup', rulUp);
+  document.addEventListener('pointercancel', e => { if (RUL.drag && RUL.drag.moved) rulUp(e); RUL.drag = null; });
+  document.addEventListener('click', e => { if (RUL.justDragged) { e.stopPropagation(); e.preventDefault(); } }, true);
+  document.addEventListener('keydown', e => { if (S.stage !== 'story' || S.rulOpen != null || /INPUT|TEXTAREA/.test(e.target.tagName)) return; if (e.key === 'ArrowRight') rulTo(Math.round(RUL.rot) + 1, 1); else if (e.key === 'ArrowLeft') rulTo(Math.round(RUL.rot) - 1, -1); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.stage === 'story' && S.rulOpen != null) rulClose(); });
+  window.addEventListener('resize', () => { if (S.stage === 'story') rulLayout(false); });
   document.addEventListener('pointerout', e => { if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('svg.gl')) lineaFuera(e); });
   document.addEventListener('click', async e => {
     if (app.contains(e.target) && !e.target.closest('[data-act], summary, a')) {
@@ -1577,10 +1721,14 @@
       case 'nb': nbSheet(); break;
       case 'next': go(); break;
       case 'toplan': preparePlan(); break;
-      case 'nextslide': S.slide = Math.min(S.slide + 1, SLIDES.length - 1); STORY_DIR = 'fwd'; render(); window.scrollTo(0, 0); break;
-      case 'prev': S.slide = Math.max(S.slide - 1, 0); STORY_DIR = 'back'; render(); window.scrollTo(0, 0); break;
-      case 'goslide': S.slide = +v; STORY_DIR = 'fwd'; render(); window.scrollTo(0, 0); break;
-      case 'fullplan': S.stage = 'plan'; render(); window.scrollTo(0, 0); break;
+      case 'nextslide': rulTo(Math.round(RUL.rot) + 1, 1); break;
+      case 'prev': rulTo(Math.round(RUL.rot) - 1, -1); break;
+      case 'goslide': rulTo(+v); break;
+      case 'rulgo': rulTo(Math.round(RUL.rot) + +v, +v); break;
+      case 'rulopen': rulOpen(v); break;
+      case 'rulclose': rulClose(); break;
+      case 'cff': selCf(b, v); break;
+      case 'fullplan': S.rulOpen = null; S.stage = 'plan'; render(); window.scrollTo(0, 0); break;
       case 'story': S.stage = 'story'; S.slide = 0; render(); window.scrollTo(0, 0); break;
       case 'tog': { const s = b.dataset.s; S.steps[s] = S.steps[s] === 'yes' ? null : 'yes'; keep(); break; }
       case 'oq': { const id = b.dataset.id; S.openQ = S.openQ.includes(id) ? S.openQ.filter(x => x !== id) : S.openQ.concat(id); keep(); break; }
@@ -1595,7 +1743,7 @@
         break;
       }
       case 'noreason': S.doubts.push({ id: 'no-' + b.dataset.s + '-' + Date.now(), topic: 'otra', paso: b.dataset.s, q: `No a «${low1(paso(b.dataset.s).titulo)}»: ${v}`, covered: 'no', status: 'open' }); closeSheet(); keep(); toast('Apuntado para la reunión'); break;
-      case 'tema': abrirTema(k); break;
+      case 'tema': if (S.stage === 'story' && S.rulOpen != null) { const ix = SLIDES.findIndex(x => rulKey(x) === k); if (ix >= 0) { RUL.rot = ix; S.slide = ix; } S.rulOpen = k; RUL.ovY = 0; render(); app.querySelector('.rul-full') && (app.querySelector('.rul-full').scrollTop = 0); } else abrirTema(k); break;
       case 'temaback': volverTema(v); break;
       case 'whatif': askSheet(null); break;
       case 'cat': { const veil = document.getElementById('veil'); S.cat = S.cat === v ? null : v; save(); askSheet(veil ? veil.dataset.paso : null); break; }
