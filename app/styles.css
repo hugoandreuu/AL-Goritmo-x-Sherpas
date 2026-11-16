@@ -1314,19 +1314,3 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .qstage.pj-turn .qhead .pj-qsub { margin: 0 0 14px; }
 .qstage .dock .btn[data-act="pjfrase"]:disabled { opacity: .35; transform: none; pointer-events: none; }
 .qstage.think .sugg .chip { opacity: 0; transform: translateY(8px); }
-
-/* «Lo que dice el informe»: el texto del informe de Sherpas por secciones, con sus tablas */
-.dsg-n { margin: 2px 0 10px; color: var(--ink-2); }
-.fold-all.inf { margin-bottom: 8px; }
-.inf-in { padding: 4px 0 10px; }
-.inf-b { margin: 0 0 18px; }
-.inf-b h4 { font-size: 15px; margin: 10px 0 6px; color: var(--ink); }
-.inf-md p { margin: 0 0 10px; }
-.inf-md .lect { margin-bottom: 10px; }
-.inf-t { margin-top: 8px; overflow-x: auto; }
-.inf-t td { font-size: 14px; }
-.inf-t td:not(:first-child) { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; padding-left: 10px; white-space: nowrap; }
-.inf-t td:first-child { font-weight: 400; text-align: left; white-space: normal; }
-.inf-t tr.cab td { font-size: 12px; font-weight: 700; color: var(--ink-2); border-top: 0; }
-.inf-as { margin: 6px 0 14px; }
-.inf-as p { margin: .3em 0 0; }

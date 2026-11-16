@@ -93,32 +93,27 @@
     [
      "A dónde va: Impuestos",
      "72.765 $ al año (27 %)",
-     "cashflowStatement.outflows"
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
     ],
     [
      "A dónde va: Deudas",
      "11.520 $ al año (4,3 %)",
-     "cashflowStatement.outflows"
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
     ],
     [
      "A dónde va: Vivienda",
      "29.250 $ al año (10,8 %)",
-     "cashflowStatement.outflows"
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
     ],
     [
      "A dónde va: Ahorro",
-     "47.500 $ al año (17,6 %)",
-     "cashflowStatement.outflows"
+     "61.500 $ al año (22,8 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
     ],
     [
      "A dónde va: Gastos del día a día (estimado)",
      "72.004 $ al año (26,7 %)",
-     "cashflowStatement.outflows"
-    ],
-    [
-     "Aparte: lo que pone la empresa en el 401(k)",
-     "14.000 $ al año (no sale del sueldo)",
-     "matchGapAnalysis"
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
     ],
     [
      "Lo que sobra este año tras gastos y ahorro (estimado)",
@@ -155,8 +150,8 @@
      },
      {
       "lab": "Ahorro",
-      "v": 47500,
-      "txt": "47.500 $ · 18 %",
+      "v": 61500,
+      "txt": "61.500 $ · 23 %",
       "tono": "bueno"
      },
      {
@@ -187,7 +182,7 @@
     {
      "lab": "Ahorro al año",
      "val": "62 K$",
-     "sub": "22,8 % de los ingresos, con 14 K$ de la empresa",
+     "sub": "22,8 % de los ingresos",
      "tono": "bueno"
     },
     {
@@ -220,7 +215,7 @@
      ],
      [
       "Ahorro",
-      "47.500 $"
+      "61.500 $"
      ],
      [
       "Gastos del día a día (estimado)",
@@ -234,177 +229,15 @@
     "total": [
      "Ingresos",
      "270.000 $"
-    ],
-    "nota": "Además, la empresa pone 14.000 $ al año en vuestro 401(k). No sale del sueldo, por eso no está en las filas: con ella, el ahorro al año es de 61.500 $."
+    ]
    },
    "lectura": [
-    "De cada 100 $ que entran, 27 a impuestos, 4 a deudas, 11 a vivienda, 18 a ahorro y 27 a gastos del día a día; sobran 14.",
+    "De cada 100 $ que entran, 27 a impuestos, 4 a deudas, 11 a vivienda, 23 a ahorro y 27 a gastos del día a día.",
     "Después de todo, este año os sobran <b>36.961 $</b>.",
     "El gasto del día a día y lo que sobra son <b>estimados</b>: el estudio avisa de que el gasto declarado puede estar por debajo del real.",
     "Cobráis toda la aportación de la empresa: <b>14.000 $</b> al año."
    ],
-   "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año.",
-   "informe": [
-    {
-     "titulo": "Lo que dice el informe",
-     "bloques": [
-      {
-       "t": "Ahorro y gastos",
-       "md": "- Ahorráis 61.500 $ al año, el 22,8 % de vuestros 270.000 $ de ingresos, y cobráis entera la aportación de las dos empresas. Vuestro ahorro para la jubilación va bien y no hace falta más.\n- Según el flujo de caja os sobran 36.960,75 $ al año (el 13,7 %), pero es una cifra poco fiable y puede que el gasto se quede corto. Importa porque todas las demás metas salen de ese sobrante incierto.\n- Tenéis 150.800 $ en efectivo, por encima de los 8 a 9 meses de gastos básicos (de 75.180 $ a 84.577,50 $) que cubrirían un imprevisto. Unos 60.222,50 $ quedan por encima de esa reserva y de los 6.000 $ de las vacaciones, así que la seguridad está bien cubierta.\n- Los estudios son vuestra principal meta sin cubrir: hay 0 $ en planes 529, y cumplirla pediría unos 4.609,22 $ más al año, una cifra para el primer año que sube cada año. Es el 1,7 % de vuestros ingresos, poco al lado del efectivo parado, pero depende de vuestro gasto real.\n- En vuestras IRA Roth no habéis aportado nada (0 $). Cada uno podría aportar hasta 5.250,10 $, aunque eso compite con los estudios por el mismo sobrante."
-      },
-      {
-       "t": "A dónde va cada dólar, partida a partida",
-       "filas": [
-        [
-         "Impuestos · impuesto federal",
-         "36.268 $ al año"
-        ],
-        [
-         "Impuestos · Seguridad Social y Medicare (FICA)",
-         "20.835 $ al año"
-        ],
-        [
-         "Impuestos · impuesto estatal",
-         "15.662 $ al año"
-        ],
-        [
-         "Deudas · préstamo del coche",
-         "4.800 $ al año"
-        ],
-        [
-         "Deudas · tarjeta",
-         "3.600 $ al año"
-        ],
-        [
-         "Deudas · préstamo de estudios",
-         "3.120 $ al año"
-        ],
-        [
-         "Vivienda · hipoteca",
-         "24.000 $ al año"
-        ],
-        [
-         "Vivienda · impuesto de la vivienda",
-         "3.500 $ al año"
-        ],
-        [
-         "Vivienda · seguro de hogar",
-         "1.750 $ al año"
-        ],
-        [
-         "Ahorro · 401(k) tradicional",
-         "25.000 $ al año"
-        ],
-        [
-         "Ahorro · cuenta de inversión",
-         "15.000 $ al año"
-        ],
-        [
-         "Ahorro · efectivo",
-         "7.500 $ al año"
-        ],
-        [
-         "Gastos del día a día · gastos de vida",
-         "72.000 $ al año"
-        ],
-        [
-         "Gastos del día a día · seguros",
-         "4 $ al año"
-        ]
-       ],
-       "cab": null,
-       "nota": null
-      },
-      {
-       "t": "Lo que hay y lo que se aparta en cada cuenta",
-       "filas": [
-        [
-         "401(k) Roth · Melanie",
-         "20.000 $",
-         "0 $"
-        ],
-        [
-         "401(k) Roth · Timothy",
-         "25.000 $",
-         "0 $"
-        ],
-        [
-         "401(k) tradicional · Melanie",
-         "55.000 $",
-         "17.000 $ al año"
-        ],
-        [
-         "401(k) tradicional · Timothy",
-         "70.000 $",
-         "22.000 $ al año"
-        ],
-        [
-         "Cuenta de inversión · Melanie",
-         "40.000 $",
-         "15.000 $ al año"
-        ],
-        [
-         "Efectivo y ahorro · Melanie",
-         "150.000 $",
-         "7.500 $ al año"
-        ]
-       ],
-       "cab": [
-        "Cuenta",
-        "Saldo",
-        "Aporta"
-       ],
-       "nota": null
-      },
-      {
-       "t": "Cuentas con ventaja fiscal: lo que queda por aprovechar",
-       "filas": [
-        [
-         "IRA Roth",
-         "0 $",
-         "10.500 $",
-         "10.500 $",
-         "—"
-        ],
-        [
-         "Cuenta de salud (HSA)",
-         "0 $",
-         "8.750 $",
-         "8.750 $",
-         "2.100 $ al año"
-        ],
-        [
-         "Plan 529 (universidad)",
-         "0 $",
-         "4.609 $",
-         "4.609 $",
-         "—"
-        ],
-        [
-         "401(k)",
-         "25.000 $",
-         "49.000 $",
-         "24.000 $",
-         "5.760 $ al año"
-        ]
-       ],
-       "cab": [
-        "Cuenta",
-        "Hoy",
-        "Máximo",
-        "Margen",
-        "Impuestos que ahorra (al 24 %)"
-       ],
-       "nota": "Los máximos son los que da el estudio. La IRA Roth depende de los ingresos y el HSA, de que el seguro de salud lo permita."
-      },
-      {
-       "t": "Lo que revisaría vuestro asesor",
-       "md": "confirmar vuestro gasto real del día a día, cómo el efectivo por encima de la reserva podría ayudar al ahorro para los estudios y a la tarjeta al 18 %, y si os encajan las aportaciones a la IRA Roth.",
-       "asesor": true
-      }
-     ]
-    }
-   ]
+   "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año."
   },
   {
    "nombre": "Deudas",
@@ -598,58 +431,7 @@
     "Con la vivienda, los pagos se llevan el <b>15,1 %</b> de los ingresos. Los bancos se fijan a partir del 36 %.",
     "Pagando como hasta ahora, la tarjeta se acaba en <b>septiembre de 2039</b>."
    ],
-   "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla.",
-   "informe": [
-    {
-     "titulo": "Lo que dice el informe",
-     "bloques": [
-      {
-       "t": "Deudas",
-       "md": "- Vuestra deuda es llevadera en general: 93.000 $ en total, y los pagos de deudas son el 13,2 % de vuestros 270.000 $ de ingresos. La única excepción cara es la tarjeta Chase de 18.000 $ al 18 %; la hipoteca, el préstamo de estudios y el del coche tienen intereses más bajos, del 6 %, el 5,5 % y el 4,5 %.\n- Contando también la vivienda, vuestras obligaciones se llevan el 15,1 % de los ingresos, muy por debajo del 36 % que suelen mirar primero los bancos. No es la deuda lo que os limita ahora mismo.\n- La tarjeta se paga a 300 $ al mes, cerca de los 270 $ de intereses que genera (el informe dice «al año»; con el 18 % sobre 18.000 $ salen al mes). Es una parte pequeña del pago, pero significa que el 18 % es lo que más conviene entender de vuestra deuda.\n- Si se mantiene el pago de 300 $, la tarjeta quedaría pagada en septiembre de 2039, dentro de unos 12 años. Es una proyección, y podría cambiar porque puede que los datos se queden cortos con vuestro gasto mensual.\n- Tenéis 150.800 $ de efectivo accesible, por encima de la reserva de 75.180 $ a 84.577,50 $, de 8 a 9 meses de gastos básicos. Unos 60.222,50 $ quedan por encima de la reserva y de las metas cercanas. Poner ese efectivo frente a la tarjeta al 18 % es la decisión principal, y mantener una buena reserva importa más que los ratios de deuda."
-      },
-      {
-       "t": "Más cifras de la sección",
-       "filas": [
-        [
-         "Deuda total sobre los ingresos de un año",
-         "34,4 %"
-        ],
-        [
-         "Umbrales que miran los bancos (pagos sobre ingresos)",
-         "36 %, 43 % y 50 %"
-        ],
-        [
-         "Hipoteca",
-         "2.000 $ al mes"
-        ],
-        [
-         "Otros gastos de la vivienda",
-         "438 $ al mes"
-        ],
-        [
-         "Valor de la vivienda",
-         "350.000 $"
-        ],
-        [
-         "Lo que es vuestro de la vivienda (sin la hipoteca)",
-         "300.000 $, el 85,7 %"
-        ],
-        [
-         "Sin deudas",
-         "septiembre de 2039, antes de la jubilación"
-        ]
-       ],
-       "cab": null,
-       "nota": null
-      },
-      {
-       "t": "Lo que revisaría vuestro asesor",
-       "md": "cómo se compara lo que debéis en la tarjeta con el efectivo que tenéis por encima de la reserva, cuándo quedaría pagada la tarjeta con el pago de hoy, y confirmar vuestro gasto mensual, porque las cifras de gasto pueden quedarse cortas.",
-       "asesor": true
-      }
-     ]
-    }
-   ]
+   "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla."
   },
   {
    "nombre": "Inversiones",
@@ -676,7 +458,7 @@
    "detalle": [
     [
      "Perfil de riesgo de Timothy",
-     "crecimiento",
+     "dinámico",
      "case.household.risk_profile"
     ],
     [
@@ -720,18 +502,8 @@
      "assetsAndInvestments.listOfAssets"
     ],
     [
-     "En bolsa, de lo invertido (sin el efectivo de las cuentas)",
-     "81,2 %",
-     "investment-analysis · allocationBenchmarkAnalysis.accounts"
-    ],
-    [
-     "En bolsa que pide el plan para la jubilación",
-     "98 %",
-     "assetsAndInvestments.retirementGlidePath"
-    ],
-    [
-     "En bolsa, de lo invertido (contando el efectivo de las cuentas)",
-     "77,4 %",
+     "En bolsa, de lo invertido",
+     "77 %",
      "investment-analysis · concentrationAndDiversification.totals"
     ],
     [
@@ -882,333 +654,11 @@
     ]
    },
    "lectura": [
-    "Sin contar el efectivo de las cuentas, el <b>81,2 %</b> de lo invertido está en bolsa; para vuestra jubilación el plan apunta a un <b>98 %</b>.",
+    "El <b>77,4 %</b> de lo invertido está en bolsa.",
     "Contando el efectivo, el reparto hoy es <b>45 / 55</b> (bolsa / resto). El análisis propone <b>40 / 60</b>, con una rentabilidad esperada del 5,75 % en vez del 4,3 %.",
-    "En una crisis como la de 2008, esta cartera habría caído un <b>16,8 %</b>.",
-    "UPRO (12.740 $, en IRA - Roth Timothy): es un fondo apalancado, que multiplica las subidas y las bajadas del mercado."
+    "En una crisis como la de 2008, esta cartera habría caído un <b>16,8 %</b>."
    ],
-   "asesor": "Timothy es crecimiento y Melanie, equilibrado: decidir juntos cuánto riesgo queréis en la cartera.",
-   "informe": [
-    {
-     "titulo": "Lo que dice el informe: patrimonio e inversiones",
-     "bloques": [
-      {
-       "t": "Patrimonio e inversiones",
-       "md": "- Vuestro patrimonio está sobre todo en la casa: la vivienda vale 350.000 $, el 44,4 % de vuestros 788.500 $. Es mucho en un solo bien que no se gasta fácilmente, aunque 300.000 $ son vuestros y solo queda una hipoteca de 50.000 $ (el 85,7 % es vuestro).\n- Tenéis 150.000 $ en efectivo frente a 210.000 $ invertidos. Como la jubilación se apoya sobre todo en lo invertido, una parte grande de vuestro dinero líquido no está preparada para crecer a largo plazo. El efectivo, eso sí, os da un colchón flexible.\n- Lo que tenéis invertido está en un 81,2 % en bolsa, frente a un objetivo del 98,0 %. El perfil de riesgo de Timothy es de crecimiento y el de Melanie, equilibrado, así que una sola mezcla para el hogar puede encajar distinto a cada uno.\n- Ahorráis para la jubilación con regularidad: cobráis entera la aportación de las dos empresas, 8.000 $ y 6.000 $ al año, así que no os dejáis nada."
-      },
-      {
-       "t": "Lo que revisaría vuestro asesor",
-       "md": "cómo encajan los 150.000 $ de efectivo con lo que tenéis invertido, si os convienen las IRA y un HSA según lo que podríais aportar, y cómo se compara la mezcla con un 81,2 % en bolsa con el perfil de riesgo de cada uno, una vez confirmado lo que tiene cada uno.",
-       "asesor": true
-      }
-     ]
-    },
-    {
-     "titulo": "El análisis de inversiones del informe",
-     "bloques": [
-      {
-       "t": "Vuestra cartera hoy",
-       "md": "Esta foto se basa en las cuentas de cada uno: Timothy y Melanie tienen cada uno sus cuentas de jubilación tradicional y Roth, hay una cuenta de inversión que tributa y una cuenta de efectivo aparte, fuera de lo invertido. Lo invertido suma 210.000 $, con los 150.000 $ de efectivo aparte. Mirando ese dinero invertido, pesa mucho la bolsa: alrededor de un 77 %."
-      },
-      {
-       "t": "Las cuentas, una a una",
-       "filas": [
-        [
-         "401(k) Roth · Melanie",
-         "20.000 $",
-         "15,2 % al año"
-        ],
-        [
-         "401(k) Roth · Timothy",
-         "25.000 $",
-         "41,1 % al año"
-        ],
-        [
-         "401(k) tradicional · Melanie",
-         "55.000 $",
-         "16,7 % al año"
-        ],
-        [
-         "401(k) tradicional · Timothy",
-         "70.000 $",
-         "19,6 % al año"
-        ],
-        [
-         "Cuenta de inversión · Melanie",
-         "40.000 $",
-         "15,6 % al año"
-        ],
-        [
-         "Efectivo y ahorro · Melanie",
-         "150.000 $",
-         "—"
-        ]
-       ],
-       "cab": [
-        "Cuenta",
-        "Saldo",
-        "Rentabilidad 3 años"
-       ],
-       "nota": null
-      },
-      {
-       "t": "La idea de fondo",
-       "md": "El problema de fondo es que el dinero invertido se porta más como una cartera de crecimiento que como el nivel equilibrado que dice el hogar, y tiene que sostener metas que no aguantan bien una mala racha: una jubilación hacia la que trabajáis los dos y los años de universidad de Liam y Josh, que se acercan. Al lado hay mucho efectivo, bastante más del que pide una reserva, que casi no rinde mientras sigue abierta una tarjeta cara. Así que la pregunta no es tanto si cada pieza está bien por sí sola, sino si juntas están preparadas para hacer el trabajo que necesitáis."
-      },
-      {
-       "t": "Lo que vuestra cartera debería hacer",
-       "md": "- **Ingresos en la jubilación**: queréis jubilaros a los 62 (Timothy) y a los 60 (Melanie), dentro de unos 21 años. El plan va bien: los ingresos cubren alrededor del 93 % de vuestro gasto, y al final del estudio quedarían 2.371.900,89 $. Ahorráis el 22,8 % de vuestros ingresos y cobráis las aportaciones de las dos empresas. El trabajo de la cartera aquí es mantener ese camino estable.\n- **Estudios de Liam y Josh**: Liam empieza la universidad en agosto de 2038 y Josh en agosto de 2041. Todavía no hay nada en planes 529, y faltan 113.508,60 $. Ahorrar unos 4.609 $ más al año empezaría a cerrarlo, así que este dinero necesita un sitio concreto y un calendario.\n- **Reserva de seguridad y gastos cercanos**: vuestro efectivo tiene que cubrir una reserva de 8 a 9 meses de gastos básicos, más los 6.000 $ de las vacaciones de enero de 2027. Eso son de 81.000 $ a 91.000 $, más o menos. Vuestros 150.800 $ de efectivo accesible cubren unos 16 meses, así que este trabajo está más que cumplido. Unos 60.000 $ quedan por encima de lo que piden la reserva y las metas cercanas.\n- **Crecer a largo plazo con el resto**: los 210.000 $ invertidos en vuestros 401(k), las cuentas Roth y la cuenta de inversión están para crecer a largo plazo. El nivel de comodidad que declara vuestro hogar es equilibrado, con un 60 % en bolsa como objetivo, así que este dinero debería crecer de una forma con la que los dos estéis cómodos."
-      },
-      {
-       "t": "Lo que está haciendo de verdad",
-       "md": "- **Mucha bolsa**: alrededor del 77 % de vuestros 210.000 $ invertidos está en bolsa, frente a un objetivo del 60 % para un perfil equilibrado. Como hay más bolsa de la que pide ese perfil, vuestra cartera se moverá más de lo que sugiere un perfil equilibrado. La comodidad de crecimiento de Timothy y la equilibrada de Melanie se cubren con esta misma mezcla única.\n- **Inclinación a la tecnología**: la tecnología es alrededor del 30 % de vuestra bolsa, la parte más grande, y ningún otro sector pasa del 14,6 %. Viene de fondos amplios, no de acciones sueltas, así que no la mueve una sola empresa. Aun así, una mala racha de la tecnología afectaría a vuestra bolsa más que si los sectores estuvieran repartidos.\n- **Fondo apalancado**: el Roth de Timothy tiene UPRO, un fondo cotizado apalancado de 12.740 $. El apalancamiento multiplica los movimientos de cada día, así que esta inversión puede subir o bajar más que el mercado. También ayuda a entender por qué esa cuenta ha sido la que más se ha movido de vuestras cinco cuentas invertidas.\n- **Efectivo parado al lado de una deuda cara**: vuestra cuenta de efectivo de 150.000 $ rinde alrededor de un 0,09 %, y 60.222,50 $ quedan por encima de la reserva y de las metas cercanas. Mientras, la tarjeta Chase de 18.000 $ cobra un 18 %, unos 270 $ de intereses al año según el informe (con el 18 % sobre 18.000 $ salen al mes). El efectivo rinde muy poco y la deuda cuesta mucho más."
-      },
-      {
-       "t": "Frente a una cartera sencilla con la misma parte en bolsa (3 años)",
-       "filas": [
-        [
-         "Rentabilidad al año",
-         "11,7 %",
-         "12,7 %"
-        ],
-        [
-         "Rentabilidad acumulada",
-         "39,3 %",
-         "43,2 %"
-        ],
-        [
-         "Cuánto se mueve al año (volatilidad)",
-         "7,5 %",
-         "6,8 %"
-        ],
-        [
-         "Peor caída",
-         "9,2 %",
-         "8,8 %"
-        ],
-        [
-         "Rentabilidad por unidad de riesgo (Sharpe)",
-         "1,08",
-         "1,33"
-        ],
-        [
-         "Parte de las subidas del mercado que recoge",
-         "110 %",
-         ""
-        ],
-        [
-         "Parte de las bajadas del mercado que recibe",
-         "106 %",
-         ""
-        ],
-        [
-         "Caída en la última subida de tipos de la Fed (5,25–5,50 %) (26/07/2023)",
-         "4,2 %",
-         "3,6 %"
-        ],
-        [
-         "Caída en el giro de la Fed (diciembre de 2023) (13/12/2023)",
-         "1,2 %",
-         "1,1 %"
-        ],
-        [
-         "Caída en la venta global (el VIX pasa de 60) (05/08/2024)",
-         "3,4 %",
-         "2,8 %"
-        ],
-        [
-         "Caída en la primera bajada de tipos de la Fed (0,5 puntos) (18/09/2024)",
-         "2,4 %",
-         "2 %"
-        ],
-        [
-         "Caída en la victoria electoral de Trump (05/11/2024)",
-         "1,5 %",
-         "1,1 %"
-        ],
-        [
-         "Caída en el susto de DeepSeek (IA) (27/01/2025)",
-         "0,2 %",
-         "0,2 %"
-        ],
-        [
-         "Caída en el anuncio de aranceles del «Liberation Day» (02/04/2025)",
-         "7,1 %",
-         "6,2 %"
-        ],
-        [
-         "Caída en la pausa de 90 días en los aranceles (09/04/2025)",
-         "1,6 %",
-         "2,4 %"
-        ],
-        [
-         "Caída en la tregua de aranceles EE. UU.-China en Ginebra (12/05/2025)",
-         "0,1 %",
-         "0 %"
-        ],
-        [
-         "Caída en el Supremo tumba esos aranceles (01/02/2026)",
-         "0,9 %",
-         "1,1 %"
-        ],
-        [
-         "Caída en la operación Epic Fury (ataques a Irán) (28/02/2026)",
-         "1 %",
-         "0,5 %"
-        ]
-       ],
-       "cab": [
-        "",
-        "Vuestra cartera",
-        "La comparación"
-       ],
-       "nota": "Resultados pasados de un periodo de 3 años: no son una promesa de lo que vendrá."
-      },
-      {
-       "t": "Cómo le ha ido",
-       "md": "En los tres años hasta noviembre de 2026, la cartera de vuestro hogar creció alrededor de un 11,7 % al año. Una cartera diversificada con la misma mezcla de bolsa, bonos y efectivo creció un 12,7 % al año, así que quedasteis más o menos un punto por detrás. Los vaivenes también fueron parecidos a los de esa comparación. La cartera se movió alrededor de un 7,5 % al año, frente a un 6,8 % de la comparación. La peor caída fue de alrededor de un 9 %, y se recuperó en 37 días.\n\nLo más significativo es que os movisteis casi al mismo paso que la comparación en las dos direcciones. En los mercados al alza recogisteis alrededor de 1,10 veces sus ganancias, y en los mercados a la baja alrededor de 1,06 veces sus pérdidas. Es un intercambio casi igualado, así que la diferencia de rentabilidad parece pequeña, no de fondo. La medida ajustada al riesgo, que es lo que se gana por encima del efectivo por cada unidad de vaivén, fue de 1,08 para vosotros y 1,33 para la comparación. Es una distancia modesta. Vuestros 360.000 dólares incluyen 150.000 dólares de efectivo, que bajan la parte en bolsa de todo el hogar a alrededor de un 45 %. Las cuentas invertidas, solas, están más cerca de un 77 % en bolsa y rindieron alrededor de un 20 % al año. El Roth de Timothy, más pequeño, rindió alrededor de un 41 % con vaivenes mucho mayores, lo que cuadra con su fondo apalancado. Ese resultado puede no repetirse.\n\nDestacan dos momentos del mercado. Cuando se anunciaron los aranceles, el 2 de abril de 2025, la cartera cayó alrededor de un 7,1 %, frente a un 6,2 % de la comparación: un poco más. Una semana después, en la subida por la pausa de los aranceles del 9 de abril de 2025, cayó solo un 1,6 % frente a un 2,4 %, y aguantó mejor. En un tercer episodio, la última subida de tipos de la Fed en julio de 2023, cayó alrededor de un 4,2 % frente a un 3,6 %. Son solo tres episodios, y los caminos fueron parecidos todo el tiempo, así que enseñan cómo se porta la cartera, no un veredicto claro."
-      },
-      {
-       "t": "Lo que funciona",
-       "md": "- **El plan de jubilación aguanta**: vuestro plan enseña un hueco de 0 en la jubilación, con 2.371.900,89 $ al final del estudio. Con Timothy jubilándose a los 62 y Melanie a los 60, los ingresos cubren el 93 % del gasto. La meta está cubierta si seguís como hoy.\n- **Buena costumbre de ahorro**: ahorráis el 22,78 % de los ingresos brutos, unos 61.500 $ al año. Está por encima del 20 % que se suele usar como referencia. Esa constancia es la razón de que la jubilación esté cubierta, y os da a los dos una base para seguir construyendo.\n- **Cobráis las aportaciones de las empresas**: vuestras empresas añaden 14.000 $ al año a vuestros planes de jubilación: 6.000 $ para Melanie y 8.000 $ para Timothy. Los dos aprovecháis lo que os ofrecen, así que ese dinero se suma cada año a vuestro ahorro en vez de quedarse sin cobrar.\n- **Un colchón de efectivo hondo**: vuestros 150.800 $ de efectivo accesible cubren unos 16 meses de gastos básicos, frente a los 8 a 9 meses recomendados. También cubren los 6.000 $ de las vacaciones de enero de 2027. Podríais afrontar perder un trabajo o un problema de salud sin vender inversiones.\n- **Variedad fiscal entre cuentas**: cada uno tiene cuentas de jubilación tradicionales y Roth, y además tenéis una cuenta de inversión que tributa. Eso os da tres formas de tributar para usar más adelante. Casi todo el coste de tener fondos de bonos ya está en cuentas que tributan más tarde, como LQD y SCHP."
-      },
-      {
-       "t": "Lo que hay que cambiar",
-       "md": "- **Cuánta bolsa y cuánta concentración**: vuestros 210.000 $ invertidos están en un 77 % en bolsa frente a un objetivo del 60 % para un perfil equilibrado, con la tecnología cerca del 30 % de la bolsa y 12.740 $ en un fondo cotizado apalancado (UPRO) en el Roth de Timothy. Seguramente se moverá más de lo que pide un nivel de comodidad equilibrado, así que el riesgo tiene que acercarse a lo que queréis los dos.\n- **Efectivo parado frente a una deuda cara y los estudios**: unos 60.222,50 $ de vuestros 150.800 $ de efectivo accesible están por encima de la reserva y de las metas cercanas, mientras una tarjeta de 18.000 $ cobra un 18 % de interés. No hay nada en planes 529 frente a una falta de 113.508,60 $ para los estudios. Ese efectivo necesita un trabajo más claro entre estas necesidades.\n- **Una reserva que rinde poco**: vuestra cuenta de efectivo de 150.000 $ rinde alrededor de un 0,09 %, así que incluso la reserva que debéis tener a mano rinde muy poco. Pasarla a un tipo competitivo valdría unos 2.808 $ al año, sin dejar de tenerla disponible."
-      },
-      {
-       "t": "Cuentas de jubilación",
-       "md": "Vuestras cuentas de jubilación hacen bien su trabajo principal: ahorráis el 22,8 % de los ingresos brutos, vuestras empresas añaden 6.000 $ (Melanie) y 8.000 $ (Timothy) al año, y el plan está cubierto, sin hueco en la jubilación y con 2.371.900,89 $ previstos al final. El punto débil es cómo está invertido el dinero, no cuánto ponéis. Lo que tenéis a largo plazo está en un 77,4 % en bolsa frente a un objetivo del 60,0 %, el Roth de Timothy tiene un fondo apalancado (UPRO) de 12.740 $ y la tecnología es el 30,0 % de vuestra bolsa, así que una caída del mercado podría golpear más de lo que pretende vuestro perfil objetivo. El Roth de Timothy rindió un 41,1 % moviéndose un 30,0 %, y ese resultado puede no repetirse. Con unos 22 años por delante para este dinero, merece la pena proteger un plan que ya está cubierto de vaivenes que no necesita. También tenéis límites de aportación sin usar: como los dos ya aportáis a un 401(k), Timothy puede añadir como mucho 10.500 $ y Melanie 13.500 $ este año, lo que podría ahorrar unos 5.760 $ de impuestos. Un camino claro pasa por decidir juntos cuánto riesgo deben llevar estas cuentas y qué aportaciones encajan en vuestro flujo de caja, algo que aún hay que confirmar porque el gasto declarado parece corto."
-      },
-      {
-       "t": "Cuenta de salud (HSA)",
-       "md": "Una cuenta de ahorro para la salud (HSA) es un paso secundario para vosotros, mejor después de lo grande, como la tarjeta al 18 %. Ninguno de los dos ha aportado a una hasta ahora, y el límite del hogar es de 8.750 $, así que entre los dos podríais aportar hasta 8.750 $. La ventaja de empezar es tener un sitio con ventaja fiscal para apartar dinero para la salud, y el estudio de ahorro calcula unos 2.100 $ menos de impuestos al año a vuestro tipo marginal actual del 24 %. Esa cifra solo vale si vuestro seguro de salud permite un HSA, y los datos todavía no lo dicen, así que lo primero es comprobarlo. Como las cifras de flujo de caja son inciertas y puede que el gasto se quede corto, ajustad cualquier aportación a lo que vuestro presupuesto mensual permita con holgura, y ponedla en la balanza con vuestras otras metas de ahorro, como la universidad. Una pérdida dentro de un HSA no desgrava, así que compensar pérdidas para pagar menos impuestos no sirve ahí. Los datos no traen saldos, inversiones ni impuestos de un HSA, así que no hay nada más concreto que decir sobre cómo se tendría. Merece la pena acordar juntos cuánto poner y cómo invertirlo."
-      },
-      {
-       "t": "Reparto por tipo de activo: hoy y lo que propone el análisis",
-       "filas": [
-        [
-         "Bolsa de EE. UU.",
-         "27 %",
-         "28 %"
-        ],
-        [
-         "Bolsa internacional",
-         "18 %",
-         "12 %"
-        ],
-        [
-         "Renta fija de EE. UU.",
-         "9 %",
-         "15 %"
-        ],
-        [
-         "Renta fija internacional",
-         "1 %",
-         "1 %"
-        ],
-        [
-         "Efectivo",
-         "44 %",
-         "43 %"
-        ],
-        [
-         "Otros",
-         "0 %",
-         "0 %"
-        ],
-        [
-         "Rentabilidad de los últimos 3 años",
-         "11,67 %",
-         "11,71 %"
-        ],
-        [
-         "Cuánto se mueve al año",
-         "7,48 %",
-         "5,1 %"
-        ],
-        [
-         "Rentabilidad esperada al año",
-         "4,3 %",
-         "5,75 %"
-        ]
-       ],
-       "cab": [
-        "",
-        "Hoy",
-        "Propuesta"
-       ],
-       "nota": "Prueba con los 3 últimos años (nov. 2023 - nov. 2026), sin comisiones: no son resultados reales."
-      },
-      {
-       "t": "Lo que recomienda el análisis",
-       "md": "- **Poner a trabajar el efectivo de sobra**: tenéis 150.800 $ de efectivo accesible, unos 16 meses de gastos básicos, cuando el objetivo es una reserva de 8 a 9 meses. Unos 60.222,50 $ están por encima de la reserva y de las vacaciones de enero de 2027, y casi todo vuestro efectivo rinde alrededor de un 0,09 %. Tener la reserva a mano con un tipo competitivo y usar lo que sobra según vuestro estudio de largo plazo podría sumar unos 7.000 $ al año.\n- **Decidir qué hacer con la tarjeta al 18 %**: vuestra tarjeta Chase tiene 18.000 $ al 18 %, y pagáis 300 $ cada mes, mientras el efectivo está parado al lado. El interés cuesta unos 270 $ al año según el informe (con el 18 % sobre 18.000 $ salen al mes). Usar parte del efectivo de sobra para saldarla quitaría un coste alto. Conviene hablarlo juntos, para que los dos estéis cómodos con cuánto va ahí.\n- **Empezar a ahorrar para la universidad de Liam y Josh**: no hay nada en planes 529, y faltan 113.508,60 $. Ahorrar unos 4.609 $ más cada año empezaría a cerrarlo, y empezar pronto reparte el coste en más años. Vuestro plan de jubilación ya va bien, así que esta es la principal meta sin cubrir. Como el gasto declarado puede quedarse corto, confirmad que esta cantidad encaja en vuestro flujo de caja mensual.\n- **Usar los límites del plan de jubilación y del HSA cuando podáis**: Timothy podría añadir hasta 10.500 $ y Melanie hasta 13.500 $ más en aportaciones al 401(k), lo que podría ahorrar unos 5.760 $ de impuestos al año. Si vuestro seguro de salud lo permite, podríais aportar hasta 8.750 $ a un HSA, unos 2.100 $ menos de impuestos al año. Aún hay que confirmar las reglas de las aportaciones de las empresas.\n- **Hablar del nivel de riesgo que queréis los dos**: vuestras cuentas de largo plazo están en un 77,4 % en bolsa frente a un objetivo del 60,0 %. Incluyen un fondo apalancado de 12.740 $, y la tecnología es el 30,0 % de vuestra bolsa. Además, los ingresos del hogar son el 38,8 % de vuestro patrimonio neto. Acordar un nivel de riesgo cómodo mantendría el plan estable para los dos."
-      },
-      {
-       "t": "Cómo les habría ido en crisis y subidas reales",
-       "filas": [
-        [
-         "La subida tras la crisis (abr. 2009 - abr. 2011)",
-         "38,5 %",
-         "19,2 %"
-        ],
-        [
-         "La crisis financiera (oct. 2007 - mar. 2009)",
-         "-16,8 %",
-         "-6 %"
-        ],
-        [
-         "La caída de bolsa de 2018 (sep. - dic.)",
-         "-7 %",
-         "-4,8 %"
-        ],
-        [
-         "La caída del COVID (feb. - mar. 2020)",
-         "-11,2 %",
-         "-7,7 %"
-        ]
-       ],
-       "cab": [
-        "",
-        "Hoy",
-        "Propuesta"
-       ],
-       "nota": null
-      },
-      {
-       "t": "Lo que enseñan esas crisis",
-       "md": "- **Tres episodios reales, diferencias pequeñas**: en los tres últimos años, todo el patrimonio de vuestro hogar rindió un 11,7 % al año. Es alrededor de 1 punto al año menos que una cartera diversificada con la misma parte en bolsa, y los vaivenes fueron muy parecidos. Cuando EE. UU. anunció los aranceles en abril de 2025, caísteis un 7,1 % frente a un 6,2 % de esa comparación: un poco más. Cuando la pausa de los aranceles hizo subir los mercados días después, caísteis un 1,6 % frente a un 2,4 %: aguantasteis mejor. Cuando los tipos de interés tocaron techo en julio de 2023, caísteis un 4,2 % frente a un 3,6 %. Este patrón mixto no enseña una debilidad constante, y lo que pasó no predice cómo irá el próximo episodio.\n- **Vuestra cartera invertida se inclina a la bolsa**: las cuentas que tenéis invertidas están en alrededor de un 77 % en bolsa, frente a un objetivo del 60 % para un perfil equilibrado. En una caída fuerte de la bolsa, esas cuentas pueden notar más los vaivenes que una mezcla al 60 %. El fondo apalancado (UPRO, 12.740 $) del Roth de Timothy es parte de esto. En tres años esa cuenta rindió un 41,1 %, pero se movió mucho más, con una volatilidad del 30,0 %. Ese resultado puede no repetirse, y enseña lo fuerte que puede moverse en las dos direcciones. Conviene hablar de cuánta bolsa queréis tener los dos. Nada de esto promete protección.\n- **Vuestro efectivo amortigua al hogar, no a la cartera**: unos 150.800 $ de efectivo accesible, unos 16 meses de gastos básicos, suavizan los vaivenes de vuestras finanzas en conjunto. Por eso la peor caída de todo el hogar en tres años fue solo del 9,15 %, y se recuperó en 37 días. El efectivo no cambia cómo se porta la cartera invertida en una caída. Un susto del mercado podría golpear esas cuentas tanto como indica su parte en bolsa."
-      },
-      {
-       "t": "Concentración e impuestos",
-       "filas": [
-        [
-         "El sueldo frente al patrimonio neto",
-         "38,8 %"
-        ],
-        [
-         "Bolsa de EE. UU., de toda la bolsa",
-         "80,8 %"
-        ],
-        [
-         "Sector Tecnología, de toda la bolsa",
-         "30 %"
-        ],
-        [
-         "Sector Finanzas, de toda la bolsa",
-         "14,6 %"
-        ],
-        [
-         "Impuestos al año por lo que rinde la cuenta de inversión",
-         "498 $"
-        ]
-       ],
-       "cab": null,
-       "nota": null
-      }
-     ]
-    }
-   ]
+   "asesor": "Timothy es dinámico y Melanie, equilibrado: decidir juntos cuánto riesgo queréis en la cartera."
   },
   {
    "nombre": "Colchón",
@@ -1341,22 +791,7 @@
     "Por encima de la reserva y de los gastos ya previstos sobran <b>60.223 $</b>.",
     "Hoy ese efectivo rinde <b>150 $</b> al año; bien colocado, unos <b>7.101 $</b>."
    ],
-   "asesor": "Qué hacer con el efectivo que sobra: deudas, seguros o inversión.",
-   "informe": [
-    {
-     "titulo": "Lo que dice el informe",
-     "bloques": [
-      {
-       "t": "Protección",
-       "md": "Como Liam y Josh dependen de vuestros dos sueldos, la protección es donde vuestra foto es más desigual: el colchón para imprevistos es una fortaleza real y os da margen si pasa algo inesperado. El seguro de vida y el de responsabilidad civil (umbrella) son donde vuestro hogar está más expuesto, y los apartados siguientes explican estas tres áreas en sencillo."
-      },
-      {
-       "t": "El colchón para imprevistos",
-       "md": "- Vuestros 150.801 $ de efectivo accesible cubren unos 16 meses de gastos básicos, muy por encima de los 8 a 9 meses recomendados para un hogar con dos niños pequeños y dos sueldos. No falta nada, así que vuestro colchón es una fortaleza clara, y todavía cubre unos 15,4 meses después de pagar los 6.000 $ de las vacaciones.\n- El efectivo por encima de la reserva y de las metas cercanas llega a 60.223 $. Es un recurso que tenéis a mano para mirar los otros huecos de protección."
-      }
-     ]
-    }
-   ]
+   "asesor": "Qué hacer con el efectivo que sobra: deudas, seguros o inversión."
   },
   {
    "nombre": "Seguros",
@@ -1538,63 +973,7 @@
     "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>.",
     "Liam y Josh dependen de vuestros ingresos."
    ],
-   "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios.",
-   "informe": [
-    {
-     "titulo": "Lo que dice el informe",
-     "bloques": [
-      {
-       "t": "Seguro de vida",
-       "md": "- Timothy tiene 140.000 $ de seguro de vida frente a un rango recomendado de 750.000 $ a 1.500.000 $: le faltan 610.000 $. Melanie tiene 110.000 $ frente a un rango de 600.000 $ a 1.200.000 $: le faltan 490.000 $. Ninguno tiene de más, y los dos tenéis algo de cobertura. Con Liam (6) y Josh (3) dependiendo de los dos sueldos, estos huecos importan.\n- Vuestro hogar vive de dos sueldos: 150.000 $ de Timothy y 120.000 $ de Melanie. Perder cualquiera de los dos sería difícil de llevar con dos niños pequeños.\n- Si faltara uno de los dos, quedarían obligaciones: tenéis 93.000 $ de deudas, entre ellas una tarjeta de 18.000 $ al 18 %, y aún necesitáis 113.509 $ para la universidad, además de lo que hay hoy en los 529."
-      },
-      {
-       "t": "Seguro de responsabilidad civil (umbrella)",
-       "md": "- No tenéis seguro de responsabilidad civil (umbrella), y el mínimo recomendado es de 1.000.000 $, así que ese 1.000.000 $ entero está sin cubrir. Una demanda podría llegar a vuestro patrimonio neto de 695.500 $, y eso es una exposición real, no una predicción.\n- La casa y los dos coches están asegurados, pero ese seguro es distinto del de responsabilidad civil umbrella y no tapa este hueco.\n- Una demanda podría alcanzar 428.500 $ de bienes (de los que 368.500 $ son vuestros), y también vuestros 360.000 $ de ahorro líquido. Es el ahorro que estáis construyendo para Liam y Josh.\n- Vuestro colchón de efectivo es una fortaleza de verdad, pero sería el dinero expuesto en una demanda, no un sustituto del seguro. El estudio no tiene precio de la póliza ni otras exposiciones, así que el coste y la cobertura adecuada siguen abiertos."
-      },
-      {
-       "t": "Lo que quedaría expuesto ante una demanda",
-       "filas": [
-        [
-         "Vivienda (1)",
-         "350.000 $",
-         "300.000 $"
-        ],
-        [
-         "Vehículos (2)",
-         "58.500 $",
-         "48.500 $"
-        ],
-        [
-         "Otros bienes (1)",
-         "20.000 $",
-         "20.000 $"
-        ],
-        [
-         "Total",
-         "428.500 $",
-         "368.500 $"
-        ],
-        [
-         "Ahorro e inversiones líquidas",
-         "360.000 $",
-         ""
-        ],
-        [
-         "Patrimonio neto",
-         "695.500 $",
-         ""
-        ]
-       ],
-       "cab": [
-        "",
-        "Valor",
-        "Lo que es vuestro"
-       ],
-       "nota": null
-      }
-     ]
-    }
-   ]
+   "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios."
   }
  ],
  "frases": [
@@ -1941,7 +1320,7 @@
     "nombre": "Timothy",
     "riesgo": "Growth",
     "nivel": 4,
-    "etiqueta": "Crecimiento"
+    "etiqueta": "Dinámico"
    },
    {
     "nombre": "Melanie",
@@ -1956,11 +1335,11 @@
    "dias": 37
   },
   "escala": [
-   "Conservar capital",
+   "Muy prudente",
    "Prudente",
    "Equilibrado",
-   "Crecimiento",
-   "Dinámico"
+   "Dinámico",
+   "Atrevido"
   ]
  },
  "roadmap": {
@@ -2048,14 +1427,9 @@
     "netWorthStatement.netWorth"
    ],
    [
-    "Patrimonio neto al jubilaros",
-    "2.820.967 $",
-    "retirementAndOtherGoals.netWorthAtRetirement"
-   ],
-   [
-    "De él, líquido (se puede gastar)",
-    "2.010.342 $",
-    "retirementAndOtherGoals.netWorthAtRetirement"
+    "Patrimonio neto al jubilaros (dólares de hoy)",
+    "2,81 M$",
+    "projections.yearly"
    ]
   ],
   "kpis": [
@@ -2079,15 +1453,14 @@
    },
    {
     "lab": "Patrimonio al jubilaros",
-    "val": "2,82 M$",
-    "sub": "2,01 M$ líquidos",
+    "val": "2,81 M$",
+    "sub": "en dólares de hoy",
     "tono": ""
    }
   ],
   "lectura": [
    "En la jubilación gastaréis unos <b>184.304 $</b> al año; las pensiones y rentas cubren <b>171.056 $</b> y el resto sale de los ahorros.",
-   "Para la universidad faltan <b>113.509 $</b>: unos <b>4.609 $</b> más al año.",
-   "Al final del estudio, el patrimonio neto sería de <b>3.359.400 $</b>, con 2.371.901 $ en ahorro líquido."
+   "Para la universidad faltan <b>113.509 $</b>: unos <b>4.609 $</b> más al año."
   ],
   "asesor": "Cómo encajar las metas (casa, coche, universidad) sin mover la jubilación.",
   "serie": [
@@ -2308,59 +1681,7 @@
     3359400
    ]
   ],
-  "jubila": 2048,
-  "informe": [
-   {
-    "titulo": "Lo que dice el informe",
-    "bloques": [
-     {
-      "t": "Jubilación y metas",
-      "md": "- Según la proyección, vuestro plan de jubilación está bien respaldado: los ingresos cubrirían el 93 % de los 184.303,51 $ que necesitaríais cada año, de media en 31 años de jubilación, y el dinero no se acaba antes de los 91.\n- Casi toda esa cobertura viene de ingresos garantizados (Seguridad Social y rentas, 171.055,83 $ al año de media), y los demás ingresos cubren solo un 0,2 %. Por eso la fuerza del plan depende de que esos ingresos garantizados lleguen como se prevé.\n- Los ahorros cubrirían de media solo unos 12.852,82 $ al año de gasto, y al empezar la jubilación se sacaría de media un 1,0 % de los ahorros. Al final del estudio quedarían 2.371.900,89 $ de ahorro e inversiones (en dólares de hoy), un colchón por si las cosas van peor de lo previsto.\n- El flujo de caja sería negativo en varios años, entre ellos 2030, 2041 y de 2048 a 2053. Con tanto ahorro previsto, esto pesa menos que la foto general, pero enseña que el gasto no será igual cada año. No se incluye el coste de cuidados de larga duración, y tenéis otras metas después de jubilaros que suman 673.481,06 $.\n- Timothy tiene un perfil de crecimiento y Melanie uno equilibrado, y la cartera está en un 77 % en bolsa frente a un objetivo del 60 % para un perfil equilibrado. Eso puede dar más crecimiento en los 21 años que quedan hasta la jubilación, pero también más vaivenes, así que conviene que acordéis cuánto vaivén aceptáis los dos. Además, los datos de gasto son poco fiables, así que la proyección es tan firme como esas cifras."
-     },
-     {
-      "t": "Más cifras de la jubilación",
-      "filas": [
-       [
-        "Patrimonio neto al jubilaros",
-        "2.820.967 $"
-       ],
-       [
-        "De él, líquido",
-        "2.010.342 $"
-       ],
-       [
-        "Patrimonio neto al final del estudio",
-        "3.359.400 $"
-       ],
-       [
-        "Ahorro líquido al final del estudio",
-        "2.371.901 $"
-       ],
-       [
-        "Otras metas después de la jubilación",
-        "673.481 $"
-       ],
-       [
-        "Coste de cuidados de larga duración",
-        "no está en el estudio"
-       ]
-      ],
-      "cab": null,
-      "nota": null
-     },
-     {
-      "t": "Lo que revisaría vuestro asesor",
-      "md": "lo seguros que son los ingresos garantizados de la Seguridad Social y de las rentas, porque sostienen casi todo el plan; cómo se pagan los años en que el flujo de caja es negativo, y confirmar el gasto real para que la proyección se apoye en cifras firmes.",
-      "asesor": true
-     }
-    ]
-   }
-  ]
- },
- "cierre": {
-  "recomendaciones": "- Usad parte del efectivo que tenéis por encima de la reserva y de las metas cercanas para cerrar los huecos de protección, empezando por el seguro de vida de los dos, porque dos niños pequeños dependen de los dos sueldos.\n- Pensad en un seguro de responsabilidad civil (umbrella), porque una demanda podría ir mucho más allá de lo que tenéis cubierto hoy.\n- Mirad de saldar la tarjeta, que es cara, con parte de ese mismo efectivo: es vuestra deuda más cara y tenéis mucho más efectivo del que necesitáis.\n- Decidid cómo debe repartirse el ahorro para la universidad de Liam y Josh con las demás prioridades, porque todavía no hay nada apartado.\n- Revisad juntos cómo tenéis invertido el dinero para que los dos estéis cómodos, ya que no os sentís igual con el riesgo.",
-  "resumen": "- Entre los dos ganáis 270.000 $ al año y tenéis 728.500 $ que son vuestros, pero solo 210.000 $ están invertidos. Otros 150.000 $ están en efectivo, y la casa es el 44 % de lo que tenéis.\n- Vuestro plan de jubilación es una fortaleza real. Según la proyección hasta los 91 años, los ingresos cubren el 93 % de vuestro gasto anual, cobráis entera la aportación de las dos empresas y los ahorros no se acaban en todo el plan.\n- El efectivo también es una fortaleza: 150.800 $ cubren unos 16 meses de gastos básicos, frente a los 8 a 9 meses recomendados. Unos 60.223 $ quedan por encima de esa reserva y de vuestras metas cercanas.\n- El problema de fondo es que ese efectivo de sobra está parado mientras la protección tiene huecos. Timothy tiene 140.000 $ de seguro de vida frente a un mínimo recomendado de 750.000 $. Melanie tiene 110.000 $ frente a 600.000 $. No tenéis seguro de responsabilidad civil (umbrella), un hueco de 1.000.000 $, y debéis 18.000 $ en una tarjeta al 18 %.\n- La otra necesidad abierta son los estudios. Tenéis 0 $ en planes 529, y para la universidad aún faltan unos 113.509 $, o unos 4.609 $ más de ahorro cada año. Liam empieza la universidad en 2038 y Josh en 2041. Lo que tenéis invertido está en un 81 % en bolsa, y Timothy y Melanie no se sienten igual de cómodos con el riesgo.\n- Lo realista es decidir juntos cómo usar el efectivo de sobra y lo que os sobra cada año entre el seguro de vida, un seguro umbrella, la tarjeta y el ahorro para los estudios. Compiten por los mismos dólares, así que el orden lo elegís vosotros. Mantened el plan de jubilación y las aportaciones de las empresas como están.",
-  "inversion": "- **Para qué es vuestra cartera**: vuestra cartera tiene que pagar la jubilación y ayudar con la universidad de Liam y Josh. La jubilación va bien, sin hueco en el plan. La falta clara es la universidad: no hay nada apartado y aún hacen falta 113.508,60 $.\n- **Las cifras, en sencillo**: ahorráis el 22,8 % de vuestros ingresos, que es mucho. Tenéis unos 150.800 $ de efectivo a mano, unos 16 meses de gastos básicos, pero rinde alrededor de un 0,09 %. Unos 60.222,50 $ están por encima de lo que necesitáis tener. Poner el efectivo a trabajar podría sumar unos 7.000 $ al año.\n- **Por dónde actuar primero**: usad parte del efectivo de sobra para la tarjeta de 18.000 $ al 18 %, y después empezad a ahorrar para la universidad unos 4.609 $ al año. Este año, Timothy podría añadir hasta 10.500 $ y Melanie hasta 13.500 $ en aportaciones al 401(k), lo que podría bajar vuestros impuestos en unos 5.760 $. Pasar el fondo de bonos JNK de la cuenta de inversión a una cuenta de jubilación podría ahorrar unos 224 $ de impuestos al año.\n- **Una advertencia**: el gasto declarado parece corto, así que las cifras de flujo de caja, incluidos los 36.960,75 $ que sobran, son poco fiables. Confirmad vuestro gasto real antes de comprometer nuevas cantidades cada mes.\n- **Para vigilar**: el Roth de Timothy tiene un fondo apalancado (UPRO) de 12.740 $, y la tecnología es el 30 % de vuestra bolsa. Nada es urgente, pero conviene vigilar las dos cosas."
+  "jubila": 2048
  },
  "lectura": "Les importa proteger a los niños y decidir qué hacer con el efectivo sobrante. Ver cuánto del pago de la tarjeta son intereses les moverá más que otros datos.",
  "porqueOrden": "Primero el coste invisible que sangra la liquidez, luego la protección de la familia, la nota global y acabamos con la buena noticia del colchón.",

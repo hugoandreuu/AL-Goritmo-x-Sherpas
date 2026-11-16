@@ -21,7 +21,6 @@
  *        se reutiliza esa respuesta (pasando otra vez el control de cifras).
  */
 import fs from 'node:fs';
-import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -613,17 +612,14 @@ async function escribirConLlm(E, persona, fh) {
 
 // ------------------------------------------------------------------ salida
 // ------------------------------------------------------------------ modo pareja: perfiles de riesgo y la peor caída real
-// Escala de perfiles de Sherpas, la del informe (Disclosures): 1 Capital preservation (Income en
-// allocationBenchmarkAnalysis), 2 Conservative, 3 Moderate, 4 Growth y 5 Dynamic (Aggressive).
-// Growth es «crecimiento»: «dinámico» es el nivel 5 y no se puede usar para el 4.
-const PERFIL = { Income: [1, 'Conservar capital'], 'Capital preservation': [1, 'Conservar capital'], Conservative: [2, 'Prudente'], Moderate: [3, 'Equilibrado'], Growth: [4, 'Crecimiento'], Dynamic: [5, 'Dinámico'], Aggressive: [5, 'Dinámico'] };
-const PERF = Object.fromEntries(Object.entries(PERFIL).map(([k, v]) => [k, v[1].toLowerCase()]));
+// Escala de perfiles de Sherpas (allocationBenchmarkAnalysis: Income 1 … Aggressive 5).
+const PERFIL = { Income: [1, 'Muy prudente'], Conservative: [2, 'Prudente'], Moderate: [3, 'Equilibrado'], Growth: [4, 'Dinámico'], Aggressive: [5, 'Atrevido'] };
 function leerPareja(E, ia) {
   if (!E.fam.pl) return null;
   const perfiles = E.fam.adultos.map(a => ({ nombre: a.nombre, riesgo: a.riesgo, nivel: (PERFIL[a.riesgo] || [])[0] || null, etiqueta: (PERFIL[a.riesgo] || [])[1] || a.riesgo }));
   const h = get(ia, 'key_metrics.performanceAnalysis.household') || {};
   const caida = h.maxDrawdown3y != null ? { pct: Math.abs(h.maxDrawdown3y), txt: P(Math.abs(h.maxDrawdown3y), 1), dias: h.maxDrawdownRecoveryDays ?? null } : null;
-  return { perfiles, caida, escala: [...new Set(Object.values(PERFIL).sort((x, y) => x[0] - y[0]).map(x => x[1]))] };
+  return { perfiles, caida, escala: Object.values(PERFIL).map(x => x[1]) };
 }
 
 // ------------------------------------------------------------------ el plan en 5 temas + roadmap
@@ -647,19 +643,7 @@ function leerTemas(E, fh, ia) {
   // El análisis marca si el gasto declarado es fiable; si no, el gasto y lo que sobra se enseñan como estimados.
   const est = get(ia, 'key_metrics.savingsAndContributions.savingsCapacity.savingsCapacityReliable') === false, ES = x => est ? x + ' (estimado)' : x;
   const SALIDA = { Taxes: 'Impuestos', 'Debt Payments': 'Deudas', 'Housing Expenses': 'Vivienda', Savings: 'Ahorro', Expenses: 'Gastos del día a día' };
-  // A dónde va lo que entra: el flujo de caja del plan (cashflowStatement.outflows), que es lo que pinta el
-  // informe. outflowSummary cuenta la aportación de la empresa como ahorro del hogar, pero esa parte la paga la
-  // empresa y no sale del sueldo: con ella las filas no suman los ingresos (el propio plan avisa en
-  // facts.retirement.netCashFlowThisYear). Por eso la aportación de la empresa va aparte.
-  const ORDEN_SAL = ['Taxes', 'Debt Payments', 'Housing Expenses', 'Savings', 'Expenses'];
-  const cfo = get(km, 'cashflowStatement.outflows.items') || [], ingBruto = sl.grossIncome || get(km, 'cashflowStatement.inflows.total');
-  const salCF = ORDEN_SAL.map(n => cfo.find(g => g.name === n)).filter(g => g && g.total > 0).map(g => [g.name, g.total, ingBruto ? g.total / ingBruto : 0, g.items || []]);
-  const sal = salCF.length ? salCF : (get(km, 'savingsAndExpenses.incomeAndCashflow.outflowSummary') || []).slice(1).filter(r => r[0] !== 'Total' && r[1] > 0);
-  const flujoLibre = get(km, 'cashflowStatement.freeCashflow.total');
-  if (salCF.length && ingBruto && flujoLibre != null) {
-    const suma = sal.reduce((x, r) => x + r[1], 0) + flujoLibre;
-    if (Math.abs(suma - ingBruto) > 5) console.warn(`  ${E.slug}: el desglose de lo que entra no cuadra (${Math.round(suma)} frente a ${ingBruto}).`);
-  }
+  const sal = (get(km, 'savingsAndExpenses.incomeAndCashflow.outflowSummary') || []).slice(1).filter(r => r[0] !== 'Total' && r[1] > 0);
   const ahorroMatch = match.length ? (sinCobrar > 0 ? `Dejáis sin cobrar ${M(sinCobrar)} al año` : `${t('Cobráis', 'Cobras')} toda: ${M(cobra)} al año`) : null;
   out['Ahorro'] = {
     resumen: [fila('Ahorro al año', sl.savingAmount != null ? `${M(sl.savingAmount)}, el ${P(sl.ratio, 1)} de ${t('vuestros', 'tus')} ingresos` : null, 'ratios.savingsLevel'), fila('Aportación de la empresa', ahorroMatch, 'matchGapAnalysis')].filter(Boolean),
@@ -669,8 +653,7 @@ function leerTemas(E, fh, ia) {
       fila(ES('Gastos al año (día a día, vivienda y deudas)'), gastoAnual != null ? M(gastoAnual) : null, 'ratios.investableAssetLevel.annualExpenses'),
       fila('Ahorro al año', sl.savingAmount != null ? `${M(sl.savingAmount)} (${P(sl.ratio, 1)})` : null, 'ratios.savingsLevel'),
       ...match.map(m => fila(`Aportación de la empresa · ${m.accountName}`, m.uncapturedAnnualMatch > 0 ? `${M(m.currentAnnualMatch)} de ${M(m.maxPossibleAnnualMatch)} posibles` : `${M(m.currentAnnualMatch)} al año, la máxima`, 'matchGapAnalysis')),
-      ...sal.map(r => fila(`A dónde va: ${r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0]}`, `${M(Math.round(r[1]))} al año (${P(r[2], 1)})`, 'cashflowStatement.outflows')),
-      cobra > 0 ? fila('Aparte: lo que pone la empresa en el 401(k)', `${M(cobra)} al año (no sale del sueldo)`, 'matchGapAnalysis') : null,
+      ...sal.map(r => fila(`A dónde va: ${r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0]}`, `${M(Math.round(r[1]))} al año (${P(r[2], 1)})`, 'savingsAndExpenses.incomeAndCashflow.outflowSummary')),
       fila(ES('Lo que sobra este año tras gastos y ahorro'), num(val(RT.netCashFlowThisYear)) != null ? M(Math.round(val(RT.netCashFlowThisYear))) : null, 'facts.retirement.netCashFlowThisYear'),
       fila('Percentil de ingresos del hogar', get(km, 'savingsAndExpenses.incomeAndCashflow.householdIncomePercentile') != null ? `por encima del ${P(get(km, 'savingsAndExpenses.incomeAndCashflow.householdIncomePercentile'))} de hogares` : null, 'incomeAndCashflow.householdIncomePercentile'),
     ].filter(Boolean),
@@ -719,6 +702,7 @@ function leerTemas(E, fh, ia) {
   const SECTOR = { Technology: 'Tecnología', 'Financial Services': 'Finanzas', Healthcare: 'Salud', Industrials: 'Industria' };
   const ENTORNO = { 'Global Financial Crisis': 'la crisis de 2008', 'COVID-19 Pandemic Crash': 'la caída del COVID (2020)', 'Global Equity Sell-off': 'la caída de bolsa de 2018', 'Post-GFC Bull Run': 'la subida tras 2009' };
   const env = (get(iak, 'portfolioAnalysis.marketEnvironments') || []).filter(e => e.type === 'historical');
+  const PERF = { Income: 'muy prudente', Conservative: 'prudente', Moderate: 'equilibrado', Growth: 'dinámico', Aggressive: 'atrevido' };
   out['Inversiones'] = {
     resumen: [fila('Invertido', invertible != null ? M(invertible) : null, 'ratios.investableAssetLevel.investableAssets'), fila('Rentabilidad últimos 3 años', h.return3yAnnualized != null ? `${P(h.return3yAnnualized, 1)} al año` : null, 'investment-analysis · performanceAnalysis'), fila('Peor caída en 3 años', h.maxDrawdown3y != null ? `${P(Math.abs(h.maxDrawdown3y), 1)}${h.maxDrawdownRecoveryDays ? `, recuperada en ${h.maxDrawdownRecoveryDays} días` : ''}` : null, 'investment-analysis · performanceAnalysis')].filter(Boolean),
     detalle: [
@@ -784,10 +768,10 @@ function leerTemas(E, fh, ia) {
   const SAL2 = { Taxes: 'impuestos', 'Debt Payments': 'deudas', 'Housing Expenses': 'vivienda', Savings: 'ahorro', Expenses: 'gastos del día a día' };
   const de100 = sal.map(r => `${Math.round(r[2] * 100)} a ${SAL2[r[0]] || r[0]}`);
   Object.assign(out['Ahorro'], {
-    kpis: [k('Ingresos al año', ingresos != null ? Mk(ingresos) : null), k('Ahorro al año', sl.savingAmount != null ? Mk(sl.savingAmount) : null, sl.ratio != null ? `${pct(sl.ratio)} de los ingresos${cobra > 0 ? `, con ${Mk(cobra)} de la empresa` : ''}` : '', 'bueno'),
+    kpis: [k('Ingresos al año', ingresos != null ? Mk(ingresos) : null), k('Ahorro al año', sl.savingAmount != null ? Mk(sl.savingAmount) : null, sl.ratio != null ? `${pct(sl.ratio)} de los ingresos` : '', 'bueno'),
       k(ES('Sobra al año'), sobraAnio != null ? Mk(Math.round(sobraAnio)) : null, est ? 'el gasto declarado puede ser bajo' : 'tras gastos y ahorro', sobraAnio < 0 ? 'coste' : ''), match.length ? k('Aportación de la empresa', Mk(cobra), sinCobrar > 0 ? `${Mk(sinCobrar)} sin cobrar` : 'la máxima', sinCobrar > 0 ? 'coste' : 'bueno') : null].filter(Boolean),
-    desglose: sal.length ? { titulo: 'A dónde va lo que entra cada año', filas: sal.map(r => [r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0], M(Math.round(r[1]))]).concat(sobraAnio != null ? [[ES(sobraAnio < 0 ? 'Falta' : 'Sobra'), M(Math.round(sobraAnio))]] : []), total: ['Ingresos', M(ingresos)], nota: cobra > 0 ? `Además, la empresa pone ${M(cobra)} al año en ${t('vuestro', 'tu')} 401(k). No sale del sueldo, por eso no está en las filas: con ella, el ahorro al año es de ${M(sl.savingAmount)}.` : null } : null,
-    lectura: [de100.length ? `De cada 100 $ que entran, ${lista(de100)}${(() => { const r = ingresos && sobraAnio != null ? Math.round(sobraAnio / ingresos * 100) : 0; return r > 0 ? `; sobran ${r}` : r < 0 ? `: salen ${100 - r} por cada 100 que entran` : ''; })()}.` : null,
+    desglose: sal.length ? { titulo: 'A dónde va lo que entra cada año', filas: sal.map(r => [r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0], M(Math.round(r[1]))]).concat(sobraAnio != null ? [[ES(sobraAnio < 0 ? 'Falta' : 'Sobra'), M(Math.round(sobraAnio))]] : []), total: ['Ingresos', M(ingresos)] } : null,
+    lectura: [de100.length ? `De cada 100 $ que entran, ${lista(de100)}.` : null,
       sobraAnio != null ? (sobraAnio >= 0 ? `Después de todo, este año ${t('os', 'te')} sobran ${b(M(Math.round(sobraAnio)))}.` : `Este año faltan ${b(M(Math.round(-sobraAnio)))}: se gasta más de lo que entra.`) : null,
       est ? `El gasto del día a día y lo que sobra son ${b('estimados')}: el estudio avisa de que el gasto declarado puede estar por debajo del real.` : null,
       match.length ? (sinCobrar > 0 ? `La empresa podría aportar ${b(M(sinCobrar))} más al año que hoy no se cobran.` : `${t('Cobráis', 'Cobras')} toda la aportación de la empresa: ${b(M(cobra))} al año.`) : null].filter(Boolean),
@@ -865,210 +849,6 @@ function leerTemas(E, fh, ia) {
     jubila: jA,
   };
   return out;
-}
-
-// ------------------------------------------------------------------ lo que dice el informe, sección a sección
-// El informe en PDF de Sherpas son las mismas dos partes (financial-health e investment-analysis): sus cifras
-// están en key_metrics y sus textos en narrative, en inglés. Aquí se añade a cada tema:
-//  · a la vista, los mensajes del informe que cambian lo que la familia debería hacer o preguntar;
-//  · el desplegable «Lo que dice el informe», con la estructura de su sección del PDF: el texto del informe
-//    en castellano y tablas con las cifras que la página no enseñaba.
-// Los textos traducidos están en scripts/informe-es/<caso>.json. Cada traducción guarda la huella del texto en
-// inglés: si Sherpas cambia el texto, la traducción se descarta y sale un aviso. Además se controla que toda
-// cifra de la traducción esté en el original y que no se pierda ninguna cifra del original.
-const INFORME_ES = path.join(ROOT, 'scripts', 'informe-es');
-const huella = txt => crypto.createHash('sha1').update(String(txt || '')).digest('hex').slice(0, 12);
-// Cifras de un texto, normalizadas: en inglés 1,177,586 y 5.6; en castellano 1.177.586 y 5,6.
-const cifrasEn = t => (String(t).match(/\d[\d,]*(?:\.\d+)?/g) || []).map(x => +x.replace(/,/g, '')).filter(x => !isNaN(x));
-const cifrasEs = t => (String(t).match(/\d[\d.]*(?:,\d+)?/g) || []).map(x => +x.replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.')).filter(x => !isNaN(x));
-function traductor(slug, fh, ia, avisos) {
-  const f = path.join(INFORME_ES, slug + '.json'), tr = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
-  if (!fs.existsSync(f)) avisos.push(`Informe: no hay traducción del texto del informe (scripts/informe-es/${slug}.json).`);
-  return clave => {
-    const [parte, k] = clave.split('.'), en = get(parte === 'ia' ? ia : fh, 'narrative.' + k);
-    if (!en) return null;
-    const x = tr[clave];
-    if (!x || !x.es) { avisos.push(`Informe: falta la traducción de ${clave}.`); return null; }
-    if (x.en !== huella(en)) { avisos.push(`Informe: el texto de ${clave} ha cambiado en Sherpas; hay que volver a traducirlo.`); return null; }
-    const nEn = new Set(cifrasEn(en)), nEs = cifrasEs(x.es);
-    const sobran = [...new Set(nEs.filter(n => !nEn.has(n)))], faltan = [...nEn].filter(n => !nEs.includes(n));
-    if (sobran.length) { avisos.push(`Informe: ${clave} descartado, cifras que no están en el original (${sobran.join(', ')}).`); return null; }
-    if (faltan.length) avisos.push(`Informe: en ${clave} faltan cifras del original (${faltan.join(', ')}).`);
-    return x.es;
-  };
-}
-
-function leerInforme(E, fh, ia, slug, avisos) {
-  const t = (p, s) => (E.fam.pl ? p : s), num = x => (typeof x === 'number' && !isNaN(x) ? x : null);
-  const km = get(fh, 'key_metrics') || {}, R = km.ratios || {}, ik = get(ia, 'key_metrics') || {};
-  const ad = (get(fh, 'case.household') || []).filter(p => p.role !== 'child');
-  const tr = traductor(slug, fh, ia, avisos);
-  const area = n => E.areas.find(a => a.nombre === n) || {};
-  const texto = (titulo, clave) => { const md = tr(clave); return md ? { t: titulo, md } : null; };
-  const tabla = (titulo, filas, cab, nota) => (filas = filas.filter(Boolean)).length ? { t: titulo, filas, cab: cab || null, nota: nota || null } : null;
-  const grupo = (titulo, bloques) => (bloques = bloques.filter(Boolean)).length ? { titulo, bloques } : null;
-  const revisar = clave => { const md = tr(clave); return md ? { t: `Lo que revisaría ${t('vuestro', 'tu')} asesor`, md: md.replace(/^\*\*[^*]+\*\*:\s*/, ''), asesor: true } : null; };
-  const nombreDe = c => (c === 'Joint' ? 'conjunta' : c);
-  const jA = E.roadmap && E.roadmap.jubila;
-
-  // ---- Ahorro · «Savings & Expenses»
-  const ah = area('Ahorro');
-  const cfo = get(km, 'cashflowStatement.outflows.items') || [], ORDEN_SAL2 = ['Taxes', 'Debt Payments', 'Housing Expenses', 'Savings', 'Expenses'];
-  const PARTIDA = { Taxes: 'Impuestos', 'Debt Payments': 'Deudas', 'Housing Expenses': 'Vivienda', Savings: 'Ahorro', Expenses: 'Gastos del día a día' };
-  const ITEM = { 'Federal Income Tax': 'impuesto federal', 'FICA tax': 'Seguridad Social y Medicare (FICA)', 'State Income Tax': 'impuesto estatal', 'Living Expenses': 'gastos de vida', 'Insurance payments': 'seguros', Rent: 'alquiler', 'Renter insurance': 'seguro del alquiler', Mortgage: 'hipoteca', 'Property Taxes': 'impuesto de la vivienda', 'Home Insurance': 'seguro de hogar', 'Car loan payments': 'préstamo del coche', 'Student loan payments': 'préstamo de estudios', 'Credit card payments': 'tarjeta', 'Cash savings': 'efectivo', 'Brokerage account savings': 'cuenta de inversión', 'HSA savings': 'cuenta de salud (HSA)', '401k - Traditional savings': '401(k) tradicional', '401k - Roth savings': '401(k) Roth', '529 - College Savings Plan savings': 'plan 529 para la universidad', 'Custodial UGMA savings': 'cuentas a nombre de los hijos (UGMA)' };
-  const CUENTA = { '401k - Traditional': '401(k) tradicional', '401k - Roth': '401(k) Roth', 'Brokerage account': 'Cuenta de inversión', 'Cash/savings': 'Efectivo y ahorro', HSA: 'Cuenta de salud (HSA)', '529 - College Savings Plan': 'Plan 529 (universidad)', 'Custodial UGMA': 'Cuentas a nombre de los hijos (UGMA)', 'IRA - Roth': 'IRA Roth', 'IRA - Traditional': 'IRA tradicional' };
-  const BUCKET = { 'Roth IRA': 'IRA Roth', HSA: 'Cuenta de salud (HSA)', '529 accounts': 'Plan 529 (universidad)', '401k': '401(k)' };
-  const adv = get(km, 'savingsAndExpenses.advantagedSavings') || {}, max401 = get(km, 'assetsAndInvestments.contributions.employerPlanContributions');
-  const tope401 = Array.isArray(max401) ? (max401.find(r => /Total possible/.test(r[0])) || [])[1] : null;
-  const sin401 = ad.filter((a, i) => (i ? adv.coClient401kCanContribute : adv.client401kCanContribute) === 'Yes' && (i ? adv.coClient401kContributions : adv.client401kContributions) === 0);
-  if (sin401.length && ah.lectura) {
-    const todos = sin401.length > 1, uno = !E.fam.pl;
-    const quien = uno ? 'No aportas nada a tu 401(k)' : todos ? `${lista(sin401.map(a => a.first_name))} no aportáis nada a vuestro 401(k)` : `${sin401[0].first_name} no aporta nada a su 401(k)`;
-    ah.lectura.unshift(`${quien}${tope401 ? `: ${uno ? 'puedes' : todos ? 'podéis' : 'puede'} meter hasta ${b(M(tope401))} al año${todos ? ' cada uno' : ''}` : ''}. Es lo primero que señala el informe para la jubilación.`);
-  }
-  const bk = get(ik, 'savingsAndContributions.taxOpportunityCheck.annualTaxSavingsByBucket') || [];
-  const tipoMarg = bk[0] && (String(bk[0][5] || '').match(/(\d+)%/) || [])[1];
-  ah.informe = [grupo('Lo que dice el informe', [
-    texto('Ahorro y gastos', 'fh.savings_short_observations'),
-    tabla('A dónde va cada dólar, partida a partida', ORDEN_SAL2.map(n => cfo.find(g => g.name === n)).filter(g => g && g.total > 0).flatMap(g => (g.items || []).filter(i => i.total > 0).map(i => [`${PARTIDA[g.name] || g.name} · ${ITEM[i.name] || i.name}`, `${M(Math.round(i.total))} al año`]))),
-    tabla('Lo que hay y lo que se aparta en cada cuenta', ((get(km, 'assetsAndInvestments.listOfAccounts') || []).slice(1)).map(r => [`${CUENTA[r[0]] || r[0]} · ${nombreDe(r[1])}`, M(r[3]), r[4] ? `${M(r[4])} al año` : '0 $']), ['Cuenta', 'Saldo', 'Aporta']),
-    tabla('Cuentas con ventaja fiscal: lo que queda por aprovechar', bk.slice(1).filter(r => r[4] > 0).map(r => [BUCKET[r[1]] || r[1], M(r[2]), M(r[3]), M(r[4]), r[5] != null ? `${M(r[5])} al año` : '—']), ['Cuenta', 'Hoy', 'Máximo', 'Margen', `Impuestos que ahorra${tipoMarg ? ` (al ${tipoMarg} %)` : ''}`], 'Los máximos son los que da el estudio. La IRA Roth depende de los ingresos y el HSA, de que el seguro de salud lo permita.'),
-    revisar('fh.savings_what_to_look_into'),
-  ])].filter(Boolean);
-
-  // ---- Deudas · «Debt management»
-  const de = area('Deudas'), dpd = R.currentDPD || {}, dov = get(km, 'debtManagement.debtOverview') || {}, dmo = get(km, 'debtManagement.debtToIncomeAndMonthlyObligations') || {}, hx = get(km, 'debtManagement.housingExpenses') || {}, ree = R.realEstateEquity || {};
-  if (dpd.beforeRetirement === false && dpd.debtLastPayment && de.lectura) de.lectura.push(`${t('Seguiréis', 'Seguirás')} pagando deudas hasta ${b(fecha(dpd.debtLastPayment))}${jA ? `, después de ${t('jubilaros', 'jubilarte')} en ${jA}` : ''}. El informe avisa: llegar a la jubilación con deudas aprieta el dinero de cada mes.`);
-  de.informe = [grupo('Lo que dice el informe', [
-    texto('Deudas', 'fh.debt_short_observations'),
-    tabla('Más cifras de la sección', [
-      dov.percentageOfDebtOverGrossIncome != null ? ['Deuda total sobre los ingresos de un año', P(dov.percentageOfDebtOverGrossIncome, 1)] : null,
-      dmo.dtiFirstThreshold ? ['Umbrales que miran los bancos (pagos sobre ingresos)', `${P(dmo.dtiFirstThreshold)}, ${P(dmo.dtiSecondThreshold)} y ${P(dmo.dtiThirdThreshold)}`] : null,
-      hx.rentalPayment ? ['Alquiler', `${M(hx.rentalPayment)} al mes`] : null,
-      hx.mortgagePayment ? ['Hipoteca', `${M(hx.mortgagePayment)} al mes`] : null,
-      hx.otherHousingExpenses ? ['Otros gastos de la vivienda', `${M(hx.otherHousingExpenses)} al mes`] : null,
-      ree.realEstateAssets ? ['Valor de la vivienda', M(ree.realEstateAssets)] : null,
-      ree.realEstateAssets ? [`Lo que es ${t('vuestro', 'tuyo')} de la vivienda (sin la hipoteca)`, `${M(ree.realEstateEquity)}, el ${P(ree.ratio, 1)}`] : null,
-      dpd.debtLastPayment ? ['Sin deudas', `${fecha(dpd.debtLastPayment)}${dpd.beforeRetirement === false ? `, ${dpd.yearsInRetirement} años después de la jubilación` : ', antes de la jubilación'}`] : null,
-    ]),
-    revisar('fh.debt_what_to_look_into'),
-  ])].filter(Boolean);
-
-  // ---- Inversiones · «Assets & Investments» + análisis de inversiones
-  const inv = area('Inversiones');
-  const cuentas = (get(ik, 'allocationBenchmarkAnalysis.accounts') || []).filter(a => a.portfolioMainType !== 'CASH' && a.currentEF);
-  const nc = cuentas.reduce((x, a) => x + a.accountAmount * (1 - (a.currentEF.cash || 0)), 0), eqSin = nc ? cuentas.reduce((x, a) => x + a.accountAmount * (a.currentEF.equity || 0), 0) / nc : null;
-  const gp = get(km, 'assetsAndInvestments.retirementGlidePath') || {}, obj = [gp.retirementGlideEquityForClient, gp.retirementGlideEquityForCoClient].filter(v => v != null);
-  const objTxt = obj.length ? (obj.length > 1 && Math.round(obj[0] * 100) !== Math.round(obj[1] * 100) ? `${P(obj[0])} para ${ad[0].first_name} y ${P(obj[1])} para ${ad[1].first_name}` : P(obj[0])) : null;
-  if (eqSin != null && inv.lectura) {
-    inv.lectura[0] = `Sin contar el efectivo de las cuentas, el ${b(P(eqSin, 1))} de lo invertido está en bolsa${objTxt ? `; para ${t('vuestra', 'tu')} jubilación el plan apunta a un ${b(objTxt)}` : ''}.`;
-    inv.detalle.splice(inv.detalle.findIndex(r => r[0] === 'En bolsa, de lo invertido'), 1,
-      ['En bolsa, de lo invertido (sin el efectivo de las cuentas)', P(eqSin, 1), 'investment-analysis · allocationBenchmarkAnalysis.accounts'],
-      objTxt ? ['En bolsa que pide el plan para la jubilación', objTxt, 'assetsAndInvestments.retirementGlidePath'] : null,
-      ['En bolsa, de lo invertido (contando el efectivo de las cuentas)', P(get(ik, 'concentrationAndDiversification.totals.equityExposure') / get(ik, 'concentrationAndDiversification.totals.investablePortfolioValue'), 1), 'investment-analysis · concentrationAndDiversification.totals']);
-    inv.detalle = inv.detalle.filter(Boolean);
-  }
-  const apal = (get(ia, 'positions') || []).filter(p => /Leveraged/i.test(p.category || ''));
-  if (apal.length && inv.lectura) inv.lectura.push(`${lista(apal.map(p => `${p.ticker || p.name} (${M(p.value)}, en ${p.account})`))}: ${apal.length > 1 ? 'son fondos apalancados' : 'es un fondo apalancado'}, que multiplica las subidas y las bajadas del mercado.`);
-  const h = get(ik, 'performanceAnalysis.household') || {}, bm = get(ik, 'performanceAnalysis.sameRiskBenchmark') || {};
-  const ev = get(ik, 'performanceAnalysis.perEventDrawdowns') || [];
-  const fila2 = (lab, a, c) => (a == null && c == null ? null : [lab, a, c]);
-  const pp = (v, d = 1) => (v == null ? '—' : P(Math.abs(v) < 0.0005 * Math.pow(10, 1 - d) ? 0 : v, d));
-  const rows = (get(ia, 'analysis.portfolioAnalysis.allocationSnapshot.rows') || []).filter(r => !/ER$/.test(r.label)), trows = get(ia, 'analysis.targetAnalysis.allocationSnapshot.rows') || [];
-  const CLASE = { 'U.S. Equity': 'Bolsa de EE. UU.', 'Non-U.S. Equity': 'Bolsa internacional', 'U.S. Fixed Income': 'Renta fija de EE. UU.', 'Non-U.S. Fixed Income': 'Renta fija internacional', Cash: 'Efectivo', Other: 'Otros' };
-  const ordenClase = Object.keys(CLASE);
-  const envA = (get(ik, 'portfolioAnalysis.marketEnvironments') || []).filter(e => e.type === 'historical'), envT = get(ik, 'targetAnalysis.marketEnvironments') || [];
-  const ENTORNO2 = { 'Post-GFC Bull Run': 'La subida tras la crisis (abr. 2009 - abr. 2011)', 'Global Financial Crisis': 'La crisis financiera (oct. 2007 - mar. 2009)', 'Global Equity Sell-off': 'La caída de bolsa de 2018 (sep. - dic.)', 'COVID-19 Pandemic Crash': 'La caída del COVID (feb. - mar. 2020)' };
-  const geo = (get(ik, 'concentrationAndDiversification.geographyConcentration') || []).find(r => r[0] === 'United States');
-  const sal = (get(ik, 'concentrationAndDiversification.employerConcentration') || []).find(r => r[0] === 'Annual salary');
-  const sec = (get(ik, 'concentrationAndDiversification.sectorConcentration') || []).slice(1, 3);
-  const SECTOR = { Technology: 'Tecnología', 'Financial Services': 'Finanzas', Healthcare: 'Salud', Industrials: 'Industria', 'Consumer Cyclical': 'Consumo', 'Communication Services': 'Comunicaciones' };
-  const drag = (get(ik, 'taxDragAnalysis.householdRollup') || []).find(r => /^Total annual tax cost \(Table 2\)/.test(r[0]));
-  const porCuenta = (get(ik, 'performanceAnalysis.goalGroups') || []).flatMap(g => g.accounts || []);
-  const tipos = ((get(km, 'assetsAndInvestments.listOfAccounts') || []).slice(1));
-  const fecha3 = (e => e ? `${e.slice(8, 10)}/${e.slice(5, 7)}/${e.slice(0, 4)}` : '');
-  const EVENTO = { '90-day tariff pause rally': 'la pausa de 90 días en los aranceles', 'DeepSeek AI shock': 'el susto de DeepSeek (IA)', 'Fed final hike to 5.25–5.50%': 'la última subida de tipos de la Fed (5,25–5,50 %)', 'Fed first rate cut — 50bp': 'la primera bajada de tipos de la Fed (0,5 puntos)', 'Fed pivot — December 2023 dot plot': 'el giro de la Fed (diciembre de 2023)', 'Global selloff — VIX spikes above 60': 'la venta global (el VIX pasa de 60)', 'Liberation Day tariffs announced': 'el anuncio de aranceles del «Liberation Day»', 'Operation Epic Fury — US-Israel strikes on Iran': 'la operación Epic Fury (ataques a Irán)', 'Supreme Court strikes down Liberation Day tariffs': 'el Supremo tumba esos aranceles', 'Trump election win': 'la victoria electoral de Trump', 'US-China Geneva tariff truce': 'la tregua de aranceles EE. UU.-China en Ginebra' };
-  inv.informe = [
-    grupo('Lo que dice el informe: patrimonio e inversiones', [texto('Patrimonio e inversiones', 'fh.assets_short_observations'), revisar('fh.assets_what_to_look_into')]),
-    grupo('El análisis de inversiones del informe', [
-      texto('Tu cartera hoy'.replace('Tu', t('Vuestra', 'Tu')), 'ia.snapshot_main'),
-      tabla('Las cuentas, una a una', tipos.map(r => [`${CUENTA[r[0]] || r[0]} · ${nombreDe(r[1])}`, M(r[3]), (porCuenta.find(a => a.balance === r[3] && (a.accountType === r[0] || a.name.includes(r[1]))) || {}).return3yAnnualized != null ? `${P(porCuenta.find(a => a.balance === r[3] && (a.accountType === r[0] || a.name.includes(r[1]))).return3yAnnualized, 1)} al año` : '—']), ['Cuenta', 'Saldo', 'Rentabilidad 3 años']),
-      texto('La idea de fondo', 'ia.portfolio_today_intro'),
-      texto(`Lo que ${t('vuestra', 'tu')} cartera debería hacer`, 'ia.portfolio_today_what_it_needs_to_do'),
-      texto('Lo que está haciendo de verdad', 'ia.portfolio_today_what_its_actually_doing'),
-      tabla('Frente a una cartera sencilla con la misma parte en bolsa (3 años)', [
-        fila2('Rentabilidad al año', pp(h.return3yAnnualized), pp(bm.return3yAnnualized)),
-        fila2('Rentabilidad acumulada', pp(h.return3yCumulative), pp(bm.return3yCumulative)),
-        fila2('Cuánto se mueve al año (volatilidad)', pp(h.volatility3y), pp(bm.volatility3y)),
-        fila2('Peor caída', pp(h.maxDrawdown3y && Math.abs(h.maxDrawdown3y)), pp(bm.maxDrawdown3y && Math.abs(bm.maxDrawdown3y))),
-        fila2('Rentabilidad por unidad de riesgo (Sharpe)', h.sharpe3y != null ? dec(h.sharpe3y, 2) : '—', bm.sharpe3y != null ? dec(bm.sharpe3y, 2) : '—'),
-        h.upsideCapture3y != null ? ['Parte de las subidas del mercado que recoge', P(h.upsideCapture3y), ''] : null,
-        h.downsideCapture3y != null ? ['Parte de las bajadas del mercado que recibe', P(h.downsideCapture3y), ''] : null,
-        ...ev.filter(e => e.household && e.sameRiskBenchmark).map(e => [`Caída en ${EVENTO[e.eventTitle] || e.eventTitle} (${fecha3(e.eventDate)})`, pp(Math.abs(e.household.drawdownPct)), pp(Math.abs(e.sameRiskBenchmark.drawdownPct))]),
-      ], ['', t('Vuestra cartera', 'Tu cartera'), 'La comparación'], 'Resultados pasados de un periodo de 3 años: no son una promesa de lo que vendrá.'),
-      texto('Cómo le ha ido', 'ia.portfolio_today_performance_timeline'),
-      texto('Lo que funciona', 'ia.portfolio_today_whats_working'),
-      texto('Lo que hay que cambiar', 'ia.portfolio_today_priorities'),
-      texto('Cuentas de jubilación', 'ia.portfolio_today_verdict'),
-      texto('Cuenta de salud (HSA)', 'ia.portfolio_today_also_meaningful'),
-      tabla('Reparto por tipo de activo: hoy y lo que propone el análisis', ordenClase.filter(c => rows.some(r => r.label === c) || trows.some(r => r.label === c)).map(c => [CLASE[c], pp((rows.find(r => r.label === c) || {}).weight, 0), pp((trows.find(r => r.label === c) || {}).weight, 0)]).concat([
-        ['Rentabilidad de los últimos 3 años', pp(get(ia, 'analysis.portfolioAnalysis.allocationSnapshot.allocation.annualReturn'), 2), pp(get(ia, 'analysis.targetAnalysis.allocationSnapshot.allocation.annualReturn'), 2)],
-        ['Cuánto se mueve al año', pp(get(ia, 'analysis.portfolioAnalysis.allocationSnapshot.allocation.standardDeviation'), 2), pp(get(ia, 'analysis.targetAnalysis.allocationSnapshot.allocation.standardDeviation'), 2)],
-        ['Rentabilidad esperada al año', pp(get(ik, 'portfolioAnalysis.performance.expectedPerformance'), 2), pp(get(ik, 'targetAnalysis.performance.expectedPerformance'), 2)]]), ['', 'Hoy', 'Propuesta'], 'Prueba con los 3 últimos años (nov. 2023 - nov. 2026), sin comisiones: no son resultados reales.'),
-      texto('Lo que recomienda el análisis', 'ia.recommendations_main'),
-      tabla('Cómo les habría ido en crisis y subidas reales', envA.map(e => [ENTORNO2[e.name] || e.name, pp(e.performance), pp((envT.find(x => x.name === e.name) || {}).performance)]), ['', 'Hoy', 'Propuesta']),
-      texto('Lo que enseñan esas crisis', 'ia.recommendations_scenarios'),
-      tabla('Concentración e impuestos', [
-        sal ? ['El sueldo frente al patrimonio neto', P(sal[2], 1)] : null,
-        geo ? ['Bolsa de EE. UU., de toda la bolsa', P(geo[1], 1)] : null,
-        ...sec.map(r => [`Sector ${SECTOR[r[0]] || r[0]}, de toda la bolsa`, P(r[1], 1)]),
-        drag ? ['Impuestos al año por lo que rinde la cuenta de inversión', M(Math.round(drag[1]))] : null,
-      ]),
-    ]),
-  ].filter(Boolean);
-
-  // ---- Colchón · «Emergency fund»
-  area('Colchón').informe = [grupo('Lo que dice el informe', [texto('Protección', 'fh.protection_intro'), texto('El colchón para imprevistos', 'fh.protection_emergency_fund_short_observations')])].filter(Boolean);
-
-  // ---- Seguros · «Life insurance» y «Umbrella insurance»
-  const se = area('Seguros'), ue = get(km, 'protection.umbrellaInsurance') || {}, ax = get(ue, 'assetExposed') || {};
-  const TIPOB = { 'Real estate': 'Vivienda', Vehicle: 'Vehículos', 'Other asset': 'Otros bienes', Total: 'Total' };
-  const sinSeguro = (ue.assetInsuranceStatus || []).filter(a => a.isInsured === false);
-  se.informe = [grupo('Lo que dice el informe', [
-    texto('Seguro de vida', 'fh.protection_life_insurance_short_observations'),
-    texto('Seguro de responsabilidad civil (umbrella)', 'fh.protection_umbrella_short_observations'),
-    tabla('Lo que quedaría expuesto ante una demanda', (ax.assetExposedSummary || []).slice(1).map(r => [`${TIPOB[r[0]] || r[0]}${r[0] !== 'Total' ? ` (${r[1]})` : ''}`, M(r[2]), M(r[3])]).concat(ax.totalLiquidAssets != null ? [['Ahorro e inversiones líquidas', M(ax.totalLiquidAssets), '']] : [], ax.netWorth != null ? [['Patrimonio neto', M(ax.netWorth), '']] : []), ['', 'Valor', `Lo que es ${t('vuestro', 'tuyo')}`]),
-    tabla('Bienes que los datos marcan sin seguro', sinSeguro.map(a => [a.assetName === 'Primary home' ? 'Vivienda principal' : a.assetName, `sin seguro en los datos; ${t('vuestra', 'tu')} parte: ${M(a.equityAmount)}`]), null, sinSeguro.length ? 'Puede que solo falte el dato: conviene confirmarlo.' : null),
-  ])].filter(Boolean);
-
-  // ---- Roadmap · «Retirement & Goals»
-  const rm = E.roadmap, nwr = get(km, 'retirementAndOtherGoals.netWorthAtRetirement') || {}, dep = get(km, 'retirementAndOtherGoals.assetDepletion') || {}, og = get(km, 'retirementAndOtherGoals.otherGoalsAndLegacy') || {};
-  const hueco = num(get(R, 'retirementSavings.planningGapAtRetirementAgeInTodaysDollars')), Mx = v => (v < 0 ? '-' : '') + miles(v) + ' $';
-  if (rm) {
-    if (hueco > 0) rm.lectura.unshift(`Al ${t('jubilaros', 'jubilarte')}, a las cuentas de jubilación les faltarían ${b(Mx(Math.round(hueco)))} (en dólares de hoy) para cubrir todo el gasto.`);
-    if (num(dep.netWorthAtEndOfPlan) != null) rm.lectura.push(`Al final del estudio, el patrimonio neto sería de ${b(Mx(Math.round(dep.netWorthAtEndOfPlan)))}${num(dep.liquidAssetsAtEndOfPlan) != null ? (dep.liquidAssetsAtEndOfPlan < 0 ? `, pero en bienes que no se gastan fácilmente, como la casa: el ahorro líquido se habría acabado y quedarían ${Mx(Math.round(-dep.liquidAssetsAtEndOfPlan))} de gasto sin pagar` : `, con ${Mx(Math.round(dep.liquidAssetsAtEndOfPlan))} en ahorro líquido`) : ''}.`);
-    const kj = rm.kpis.find(k2 => /^Patrimonio al/.test(k2.lab));
-    if (kj && num(nwr.netWorthAtRetirementAge) != null) Object.assign(kj, { val: Mk(nwr.netWorthAtRetirementAge), sub: num(nwr.liquidAssetsAtRetirementAge) != null ? `${Mk(nwr.liquidAssetsAtRetirementAge)} líquidos` : '' });
-    const ij = rm.detalle.findIndex(r => /^Patrimonio neto al/.test(r[0]));
-    if (ij >= 0 && num(nwr.netWorthAtRetirementAge) != null) rm.detalle.splice(ij, 1, [`Patrimonio neto al ${t('jubilaros', 'jubilarte')}`, Mx(Math.round(nwr.netWorthAtRetirementAge)), 'retirementAndOtherGoals.netWorthAtRetirement'], ['De él, líquido (se puede gastar)', Mx(Math.round(nwr.liquidAssetsAtRetirementAge)), 'retirementAndOtherGoals.netWorthAtRetirement']);
-    rm.informe = [grupo('Lo que dice el informe', [
-      texto('Jubilación y metas', 'fh.retirement_short_observations'),
-      tabla('Más cifras de la jubilación', [
-        hueco > 0 ? ['Lo que faltaría en las cuentas de jubilación (dólares de hoy)', Mx(Math.round(hueco))] : null,
-        num(nwr.netWorthAtRetirementAge) != null ? [`Patrimonio neto al ${t('jubilaros', 'jubilarte')}`, Mx(Math.round(nwr.netWorthAtRetirementAge))] : null,
-        num(nwr.liquidAssetsAtRetirementAge) != null ? ['De él, líquido', Mx(Math.round(nwr.liquidAssetsAtRetirementAge))] : null,
-        num(dep.netWorthAtEndOfPlan) != null ? ['Patrimonio neto al final del estudio', Mx(Math.round(dep.netWorthAtEndOfPlan))] : null,
-        num(dep.liquidAssetsAtEndOfPlan) != null ? ['Ahorro líquido al final del estudio', Mx(Math.round(dep.liquidAssetsAtEndOfPlan))] : null,
-        num(dep.ageWhenTheyRunOutOfLiquidAssets) != null ? ['El ahorro líquido se acaba a los', `${dep.ageWhenTheyRunOutOfLiquidAssets} años`] : null,
-        og.otherGoalsAfterRetirement && num(og.otherGoalsAfterRetirementAmount) ? ['Otras metas después de la jubilación', Mx(Math.round(og.otherGoalsAfterRetirementAmount))] : null,
-        ['Coste de cuidados de larga duración', 'no está en el estudio'],
-      ]),
-      revisar('fh.retirement_what_to_look_into'),
-    ])].filter(Boolean);
-  }
-
-  // ---- resúmenes finales: «Summary» de las dos partes del informe
-  E.cierre = { recomendaciones: tr('fh.summary_recommendations'), resumen: tr('fh.summary_main'), inversion: tr('ia.summary_main') };
 }
 
 // Lo que contesta la familia se contrasta con los RESULTADOS DEL ESTUDIO (cifras, nota, proyecciones).
@@ -1157,7 +937,6 @@ async function main() {
     E.pareja = leerPareja(E, d.ia);
     const T = leerTemas(E, d.fh, d.ia);
     E.areas.forEach(a => { Object.assign(a, T[a.nombre] || {}); });
-    leerInforme(E, d.fh, d.ia, slug, g.avisos);
     let crudo = null;
     if (!sinLlm) {
       try {
