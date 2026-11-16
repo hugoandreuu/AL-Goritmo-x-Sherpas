@@ -3,7 +3,7 @@
  * Acompaña el momento: se calma con la carga, tira a magenta con una mala noticia,
  * se aclara con una buena, abre ondas cuando cae la gota y se ondula al escribir.
  * En el quiz, al contestar cambia de color (tint): turquesa al responder, verde si va bien, coral si toca mejorar.
- * En el modo pareja, mientras contesta uno, es una malla de puntos de su color (who); la respuesta, la malla morada.
+ * En el modo pareja, mientras contesta uno, la misma malla toma su color (who); la respuesta, la malla morada.
  * Si no hay WebGL queda un degradado CSS (clase .nogl en <body>).
  */
 (function () {
@@ -32,6 +32,10 @@ void main(){
   vec2 q=p+(.30+pulse*.08)*vec2(n(p*1.3+tt*.05)-.5,n(p*1.3-tt*.04+3.7)-.5)+ring*.015*normalize(p-rp+1e-4);
   vec3 base=vec3(.972,.964,1.);
   vec3 violet=vec3(.55,.42,1.),lilac=vec3(.78,.70,1.),mag=vec3(.90,.47,.93),blue=vec3(.40,.52,.95);
+  // modo pareja: la misma malla, con la paleta pasada al color de quien contesta (dc); la respuesta, en morado
+  base=mix(base,mix(vec3(1.),dc,.08),dots);
+  violet=mix(violet,dc,dots);lilac=mix(lilac,mix(dc,vec3(1.),.45),dots);
+  mag=mix(mag,mix(dc,vec3(1.,.85,.75),.35),dots);blue=mix(blue,mix(dc,vec3(1.),.2),dots);
   vec3 col=base;
   float m=clamp(-mood,0.,1.),g=clamp(mood,0.,1.);
   col=mix(col,lilac,.55*blob(q,vec2(.15*asp+.12*sin(tt*.11),.95+.08*cos(tt*.13)),.22));
@@ -43,14 +47,6 @@ void main(){
   float tb=blob(q,vec2(.5*asp+.25*sin(tt*.06),.55+.2*cos(tt*.07)),.45);
   col=mix(col,tc,tk*(.26+.36*tb));
   violet=mix(violet,tc,tk*.8);
-  // modo pareja, mientras contesta uno: malla de puntos de su color (dc) que respira con una onda lenta.
-  // La respuesta (lo que veis juntos) es la malla morada de siempre.
-  vec2 gp=gl_FragCoord.xy/11.;vec2 ce=fract(gp)-.5;
-  float wv=n(floor(gp)*.09+vec2(tt*.18,-tt*.12))+.35*ring;
-  float rd=.10+.24*wv;
-  float dt=smoothstep(rd,rd-.09,length(ce));
-  vec3 dbg=mix(vec3(1.),dc,.12+.06*blob(q,vec2(.5*asp,.7),.5));
-  col=mix(col,mix(dbg,dc,dt*(.42+.30*wv)),dots);
   vec2 uv=gl_FragCoord.xy/r-.5;
   col=mix(col,col*vec3(.90,.88,.98),focus*smoothstep(.15,.75,length(uv)));
   col=mix(col,violet,clamp(ring,0.,1.)*.32);
@@ -90,7 +86,7 @@ void main(){
   api.show = on => { st.on = !!on; document.body.classList.toggle('fondo-on', st.on); go(); };
   api.mood = v => { st.moodT = Math.max(-1, Math.min(1, v || 0)); };
   api.focus = on => { st.focusT = on ? 1 : 0; };
-  // Modo pareja: 'a' (azul) o 'b' (teja) mientras contesta uno, 'duo' (morado) si contestan juntos; null, la malla morada.
+  // Modo pareja: 'a' (azul) o 'b' (teja) mientras contesta uno; null (también si contestan juntos), la malla morada.
   const WHO = { a: [.27, .40, .86], b: [.80, .45, .24], duo: [.50, .38, .95] };
   api.who = k => { const c = WHO[k]; if (c) { if (st.dots < .05) { st.dc = c.slice(); } st.dcT = c.slice(); st.dotsT = 1; } else st.dotsT = 0; };
   // Colores al contestar: pick (ya ha contestado), bien (acierta o el dato va bien), mal (toca mejorar). null vuelve al morado.

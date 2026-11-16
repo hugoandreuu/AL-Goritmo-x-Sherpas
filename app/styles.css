@@ -1309,4 +1309,8 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .pj-meet .pj-addq { display: inline-flex; align-items: center; gap: 6px; color: #fff; text-decoration: underline; text-underline-offset: 3px; margin: 2px 0 10px; font-weight: 600; }
 
 /* Lo que le ronda la cabeza a cada uno: lo escribe en privado y va solo al asesor */
-.pj-turn #pjfrase { margin-top: 6px; }
+.pj-turn #pjfrase { margin-top: 0; }
+.qstage.pj-turn .qhead .q { margin: 6px 0 8px; }
+.qstage.pj-turn .qhead .pj-qsub { margin: 0 0 14px; }
+.qstage .dock .btn[data-act="pjfrase"]:disabled { opacity: .35; transform: none; pointer-events: none; }
+.qstage.think .sugg .chip { opacity: 0; transform: translateY(8px); }

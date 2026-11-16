@@ -1071,28 +1071,30 @@
       <button class="btn block pj-btn ${x}" data-act="pjgo">Soy ${esc(pName(x))}, continuar</button>
     </div></div>`;
   }
-  function pjCard(x, part, body, foot) {
-    return `<div class="narrow pj-turn ${x}"><div class="pj-who">${pAv(x)}<span>Respuesta privada de <b>${esc(pName(x))}</b></span>${ic('lock', 16)}</div>
-      ${part}<div class="pj-card">${body}</div>${foot || ''}</div>`;
-  }
+  // Como en el quiz individual: la pregunta entra en el centro y después sube y se amplía con las respuestas (introQ).
+  let PJ_IN = null, PJ_NEW = false;
+  const pjAsk = (cls, who, part, head, body, foot) => `<div class="narrow pj-turn ${cls} qstage ${PJ_NEW ? 'intro' : ''}"><div class="qhead">${who}${part}${head}</div>
+      <div class="qbody"><div class="pj-card">${body}</div></div>${foot || ''}</div>`;
+  const pjWho = x => `<div class="pj-who">${pAv(x)}<span>Respuesta privada de <b>${esc(pName(x))}</b></span>${ic('lock', 16)}</div>`;
+  const pjCard = (x, part, head, body, foot) => pjAsk(x, pjWho(x), part, head, body, foot);
+  const pjQHead = q => `<h2 class="q">${esc(q.q)}</h2>${q.sub ? `<p class="muted small pj-qsub">${esc(q.sub)}</p>` : ''}`;
   function pjSlider(q, v, key) {
     const st = q.step || 1, mid = Math.round((q.min + q.max) / 2 / st) * st, has = v != null;
-    return `<h2 class="q">${esc(q.q)}</h2>${q.sub ? `<p class="muted small pj-qsub">${esc(q.sub)}</p>` : ''}
-      <div class="numw"><div class="nw-val ${has ? '' : 'empty'}" id="pjamt">${has ? showV(q, v) : '?'}</div>
+    return `<div class="numw"><div class="nw-val ${has ? '' : 'empty'}" id="pjamt">${has ? showV(q, v) : '?'}</div>
       <div class="nw-track"><input type="range" min="${q.min}" max="${q.max}" step="${st}" value="${has ? v : mid}" class="${has ? '' : 'untouched'}" data-act="pjrange" data-k="${key}" aria-label="${esc(q.q)}">${has ? '' : '<i class="nw-hint" aria-hidden="true"></i>'}</div>
       <div class="spread tiny"><span>${showV(q, q.min)}</span><span>${showV(q, q.max)}</span></div></div>`;
   }
   function pjMoney(x) {
     const has = S.pj.money[x] != null;
-    return pjCard(x, pjPart('money', 'Vuestro dinero'), pjSlider(moneyQ(), S.pj.money[x], x),
+    return pjCard(x, pjPart('money', 'Vuestro dinero'), pjQHead(moneyQ()), pjSlider(moneyQ(), S.pj.money[x], x),
       `<div class="dock"><button class="btn block pj-btn ${x}" data-act="pjgo" id="pjsave" ${has ? '' : 'disabled'}>Guardar respuesta</button></div>`);
   }
   // Como en el quiz abierto: primero sus palabras. Aquí cada uno por separado, en privado.
   function pjFrase(x) {
     const f = S.pj.frase[x], kids = E.fam.hijos.map(k => k.nombre);
     return pjCard(x, pjPart('frase', 'Lo que te ronda la cabeza'), `<h2 class="q">¿Qué es lo que más te ronda la cabeza con el dinero?</h2>
-      <p class="muted small pj-qsub">Con tus palabras. No se enseña a ${esc(pName(other(x)))}: es para vuestro asesor, para preparar la reunión.</p>
-      <textarea id="pjfrase" class="free" rows="3" maxlength="240" data-x="${x}" placeholder="${esc(kids.length ? `Por ejemplo: que a ${kids.join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilos a la jubilación')}">${esc(f || '')}</textarea>
+      <p class="muted small pj-qsub">Con tus palabras. No se enseña a ${esc(pName(other(x)))}: es para vuestro asesor, para preparar la reunión.</p>`,
+      `<textarea id="pjfrase" class="free" rows="3" maxlength="240" data-x="${x}" placeholder="${esc(kids.length ? `Por ejemplo: que a ${kids.join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilos a la jubilación')}">${esc(f || '')}</textarea>
       <p class="tiny sugg-t">O empieza con una de estas y cámbiala a tu gusto:</p>
       <div class="sugg">${E.frases.map((p, i) => `<button class="chip sm" style="--i:${i}" data-act="pjfsugg" data-v="${esc(p)}">${esc(p)}</button>`).join('')}</div>`,
       `<div class="dock"><button class="btn block pj-btn ${x}" data-act="pjfrase" data-x="${x}" id="pjfsave" ${f ? '' : 'disabled'}>Guardar en secreto</button><button class="link block skipw" data-act="pjfrase" data-x="${x}" data-v="skip">Prefiero no escribir</button></div>`);
@@ -1105,15 +1107,13 @@
   }
   function pjVida() {
     const has = S.pj.vida != null;
-    return `<div class="narrow pj-turn duo"><div class="pj-who">${pDuo()}<span>Esta la <b>contestáis juntos</b></span></div>
-      ${pjPart('vida', partVida())}<div class="pj-card">${pjSlider(vidaQ(), S.pj.vida, 'vida')}</div>
-      <div class="dock"><button class="btn block" data-act="pjgo" id="pjsave" ${has ? '' : 'disabled'}>Ver lo que dice el estudio</button></div></div>`;
+    return pjAsk('duo', `<div class="pj-who">${pDuo()}<span>Esta la <b>contestáis juntos</b></span></div>`, pjPart('vida', partVida()), pjQHead(vidaQ()), pjSlider(vidaQ(), S.pj.vida, 'vida'),
+      `<div class="dock"><button class="btn block" data-act="pjgo" id="pjsave" ${has ? '' : 'disabled'}>Ver lo que dice el estudio</button></div>`);
   }
   function pjNota() {
     const has = S.pj.nota != null;
-    return `<div class="narrow pj-turn duo"><div class="pj-who">${pDuo()}<span>Una última, <b>juntos</b></span></div>
-      <div class="pj-card">${pjSlider(notaQ(), S.pj.nota, 'nota')}</div>
-      <div class="dock"><button class="btn block" data-act="pjgo" id="pjsave" ${has ? '' : 'disabled'}>Ver vuestra nota</button></div></div>`;
+    return pjAsk('duo', `<div class="pj-who">${pDuo()}<span>Una última, <b>juntos</b></span></div>`, '', pjQHead(notaQ()), pjSlider(notaQ(), S.pj.nota, 'nota'),
+      `<div class="dock"><button class="btn block" data-act="pjgo" id="pjsave" ${has ? '' : 'disabled'}>Ver vuestra nota</button></div>`);
   }
   function pjTiles(x, kind) {
     return `<div class="pj-tiles" role="group">${RISK.map(([v, , , i, s], k) => `<button class="pj-tile ${x}" style="--i:${k}" data-act="pjpick" data-k="${kind}" data-x="${x}" data-v="${v}" aria-pressed="${S.pj[kind][x] === v}">${ic(i, 20)}<span>${s}</span></button>`).join('')}</div>`;
@@ -1121,8 +1121,8 @@
   function pjRisk(x) {
     const c = E.pareja && E.pareja.caida, done = S.pj.risk[x] && S.pj.guess[x];
     const head = c ? `En los últimos 3 años, vuestras inversiones llegaron a caer un <b>${esc(c.txt)}</b>. Si mañana volviera a pasar:` : 'Si mañana vuestras inversiones cayeran de golpe:';
-    return pjCard(x, pjPart('risk', 'Vuestro riesgo'), `<p class="pj-lead">${head}</p>${PRO() && c ? `<p class="tiny">Caída máxima de la cartera del hogar en 3 años, según el análisis de inversiones de vuestro plan.</p>` : ''}
-      <h3 class="pj-sub">¿Qué harías tú?</h3>${pjTiles(x, 'risk')}
+    return pjCard(x, pjPart('risk', 'Vuestro riesgo'), `<h2 class="q">${head}</h2>${PRO() && c ? `<p class="tiny">Caída máxima de la cartera del hogar en 3 años, según el análisis de inversiones de vuestro estudio.</p>` : ''}`,
+      `<h3 class="pj-sub">¿Qué harías tú?</h3>${pjTiles(x, 'risk')}
       <h3 class="pj-sub">¿Y qué haría <span class="pj-name ${other(x)}">${esc(pName(other(x)))}</span>?</h3>${pjTiles(x, 'guess')}`,
       `<div class="dock"><button class="btn block pj-btn ${x}" data-act="pjgo" id="pjsave" ${done ? '' : 'disabled'}>Guardar respuesta</button></div>`);
   }
@@ -1293,19 +1293,21 @@
     if (!S.pj || S.pj.v !== 7) S.pj = pjFresh();
     const steps = pjSteps(), [kind, x] = steps[S.pj.step].split(':');
     const prog = `<div class="progress thin"><div class="bar"><i style="width:${S.pj.step / (steps.length - 1) * 100}%"></i></div></div>`;
+    const key = S.pj.step + ':' + steps[S.pj.step]; PJ_NEW = PJ_IN !== key; PJ_IN = key;
     const V = { intro: pjIntro, frase: () => pjFrase(x), pass: () => pjPass(x), money: () => pjMoney(x), vida: pjVida, nota: pjNota, rev: () => (x === 'money' ? pjRevMoney() : x === 'vida' ? pjRevVida() : x === 'nota' ? pjRevNota() : pjRevRisk()), risk: () => pjRisk(x), map: pjMap }[kind];
     app.innerHTML = (kind === 'pass' ? '' : prog) + V();
     // El fondo toma el color de quien contesta: azul uno, teja el otro; neutro cuando lo veis juntos.
     if (x === 'a' || x === 'b') document.body.dataset.pj = x; else delete document.body.dataset.pj;
     if (kind === 'rev' && x === 'nota') animateRing();
+    clearTimeout(INTRO_T); if (PJ_NEW && app.querySelector('.qstage.intro')) { window.scrollTo(0, 0); introQ(); }
     pjTint(kind, x);
   }
-  // Fondo del modo pareja: mientras contesta uno, puntos de su color; si contestan juntos, puntos morados.
+  // Fondo del modo pareja: mientras contesta uno, la malla toma su color; si contestan juntos, morada.
   // La respuesta (lo que veis juntos: revelaciones, entrada y cierre) es la malla morada.
   function pjTint(kind, x) {
     if (!window.Fondo) return;
     Fondo.tint(null);
-    Fondo.who(x === 'a' || x === 'b' ? x : kind === 'vida' || kind === 'nota' ? 'duo' : null);
+    Fondo.who(x === 'a' || x === 'b' ? x : null);
   }
   // Al terminar su turno, la carta se da la vuelta (queda boca abajo, con candado) y sale como una carta pasada.
   function pjSeal(then) {
