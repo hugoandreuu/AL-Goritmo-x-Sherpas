@@ -1287,7 +1287,7 @@
   function pjIntro() {
     return `<div class="narrow pj-intro"><div class="pj-duo">${pAv('a', 'xl')}${pAv('b', 'xl')}</div>
       <h1 class="pj-h1">Vuestro dinero,<br>visto por los dos</h1>
-      <p class="muted">Antes de ir a las cifras, cada uno os cuenta lo suyo. Unos 4 minutos.</p>
+      <p class="muted">Cada uno contesta en privado y luego lo veis juntos. Unos 4 minutos.</p>
       <ol class="pj-rules"><li><span>1</span><p>Cada uno, <b>en privado</b>: qué le ronda la cabeza con el dinero. Eso solo lo verá vuestro asesor.</p></li>
         <li><span>2</span><p>Después, qué creéis de unas cifras de vuestro estudio y qué haríais ante una caída.</p></li>
         <li><span>3</span><p>Lo destapáis <b>juntos</b>, lo comparáis con el estudio y veis qué propone vuestro plan.</p></li></ol>
@@ -1379,6 +1379,19 @@
     window.scrollTo(0, 0);
     BRIDGE_T = setTimeout(endBridge, 2900);
   }
+  // Lo mismo antes del modo pareja: una frase que prepara, y entra sola.
+  function pjBridge() {
+    topActions.innerHTML = '';
+    if (window.Fondo) { Fondo.show(true); Fondo.vivo(true); }
+    app.innerHTML = `<div class="narrow"><button class="bridge" data-act="pjbridge"><span>Antes de ir a las cifras,</span> <span>veamos cuánto os conocéis con el dinero.</span></button></div>`;
+    window.scrollTo(0, 0);
+    BRIDGE_T = setTimeout(endPjBridge, 2900);
+  }
+  function endPjBridge() {
+    clearTimeout(BRIDGE_T);
+    if (!app.querySelector('.bridge')) return;
+    swipe(() => { S.stage = 'pareja'; render(); window.scrollTo(0, 0); });
+  }
   function endBridge() {
     clearTimeout(BRIDGE_T);
     if (!app.querySelector('.bridge')) return;
@@ -1389,6 +1402,7 @@
     renderTop();
     if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz' || S.stage === 'pareja');
     if (S.stage !== 'pareja') { delete document.body.dataset.pj; if (window.Fondo) Fondo.who(null); }
+    if (window.Fondo) Fondo.vivo(S.stage === 'pareja' && S.pj && S.pj.step === 0);
     if (S.stage === 'home') renderHome();
     else if (S.stage === 'quiz') renderQuiz();
     else if (S.stage === 'pareja') renderPareja();
@@ -1493,8 +1507,9 @@
     switch (act) {
       case 'start': if (S.qi > 0) swipe(() => { S.stage = 'quiz'; render(); }); else swipe(bridge); break;
       case 'bridge': endBridge(); break;
+      case 'pjbridge': endPjBridge(); break;
       case 'mode':
-        if (v === 'pareja') { if (S.mode !== 'pareja' || !S.pj || S.pj.v !== 7) S.pj = pjFresh(); S.mode = 'pareja'; S.who = 'juntos'; swipe(() => { S.stage = 'pareja'; render(); window.scrollTo(0, 0); }); }
+        if (v === 'pareja') { if (S.mode !== 'pareja' || !S.pj || S.pj.v !== 7) S.pj = pjFresh(); S.mode = 'pareja'; S.who = 'juntos'; if (S.pj.step > 0) swipe(() => { S.stage = 'pareja'; render(); window.scrollTo(0, 0); }); else swipe(pjBridge); }
         else { if (S.mode !== 'solo') { S.qi = 0; S.who = null; } S.mode = 'solo'; if (S.qi > 0) swipe(() => { S.stage = 'quiz'; render(); }); else swipe(bridge); }
         break;
       case 'pjgo': if (b.id === 'pjsave') { b.disabled = true; if (window.Fondo) Fondo.pulse(); pjSeal(pjGo); } else pjGo(); break;

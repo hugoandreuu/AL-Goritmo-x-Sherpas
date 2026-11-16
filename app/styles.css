@@ -1370,3 +1370,6 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .note-w { display: grid; gap: 8px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .note-w[hidden], .rx-ok[hidden], .addnote[hidden] { display: none; }
+
+/* Entrada del modo pareja: título con el degradado morado de Sherpas */
+.pj-h1 { background: linear-gradient(127deg, #774be5 0%, #4565d6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
