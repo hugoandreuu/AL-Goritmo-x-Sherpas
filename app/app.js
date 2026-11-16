@@ -1361,9 +1361,12 @@
       const w1 = new Date(s.getTime() + 7 * 864e5), w2 = new Date(w1.getTime() + 10 * 60000);
       evs = [...ev(Date.now(), s, e2, E.primer.titulo + why, `Primer paso de vuestro plan. Después, el saldo de la tarjeta queda en ${E.primer.despuesTxt} y la nota pasa a ${E.primer.nota}.`, base, '-PT15M'),
         ...ev(Date.now() + 1, w1, w2, 'Comprobar el saldo de la tarjeta' + why, `Mirad el saldo en la app del banco y escribidlo en vuestro plan.`, base + '&semana=1', '-PT0M')];
-    } else evs = ev(Date.now(), s, e2, 'Reunión con el asesor' + why, summaryText(), S.stage === 'pareja' ? base + '&reunion=1' : base, '-PT1H');
+    } else if (S.stage === 'pareja' && pjDone()) evs = ev(Date.now(), s, e2, 'Reunión con el asesor' + why, pjIcsText(), base + '&reunion=1', '-PT1H');
+    else evs = ev(Date.now(), s, e2, 'Reunión con el asesor' + why, summaryText(), base, '-PT1H');
     icsSave(evs, pay ? 'primer-paso.ics' : 'reunion-plan.ics');
   }
+  // La cita de la pareja es suya: con quién se ve cada cosa y lo que el asesor ya sabe de ellos (sin la hoja interna).
+  const pjIcsText = () => `Con vuestro asesor: ${pjConLista()}.\nLo que vuestro asesor ya sabe de vosotros:\n${pjGets().map(t => '- ' + t).join('\n')}\nPara añadir otra pregunta antes de ir, abrid el enlace.`;
   function summaryText() {
     const acc = E.pasos.filter(p => S.steps[p.key] === 'yes').map(p => '- ' + p.titulo), open = S.doubts.filter(d => d.status === 'open').map(d => '- ' + d.q);
     return `${E.fam.titulo}. Reunión: ${S.booking ? S.booking.label + ' (' + S.booking.mins + ' min)' : 'sin fecha'}${S.phrase ? '\nLo que más importa: ' + S.phrase : ''}${S.gain ? '\nQué cambiaría en casa: ' + S.gain : ''}${pjDone() ? `\nLo que habéis contestado:\n${pjGets().slice(S.phrase ? 1 : 0).filter(t => !/^Lo que queréis que os conteste/.test(t)).map(t => '- ' + t).join('\n')}` : ''}\nNivel: ${PRO() ? 'sabe de finanzas' : 'nuevo en esto'}${S.payDate ? '\nPrimer paso con fecha: ' + S.payDate.label : ''}\nPasos aceptados:\n${acc.join('\n') || '- ninguno'}\nPreguntas para la reunión:\n${open.join('\n') || '- ninguna'}`;
