@@ -619,6 +619,153 @@ function leerPareja(E, ia) {
   return { perfiles, caida, escala: Object.values(PERFIL).map(x => x[1]) };
 }
 
+// ------------------------------------------------------------------ el plan en 5 temas + roadmap
+// Una tarjeta por cada área de la nota, con las cifras de la sección del informe (estudio previo)
+// que le corresponde, y una tarjeta final con el roadmap. Todo leído del plan; rótulos por código.
+// Cobertura: cada cifra lleva su origen, para comprobar que no falta nada del informe.
+const TIPO_DEUDA = { Mortgage: 'Hipoteca', 'Credit card': 'Tarjeta', 'Student loan': 'Préstamo de estudios', 'Vehicle loan': 'Préstamo del coche', 'Other liability': 'Otra deuda', 'Personal loan': 'Préstamo personal' };
+const TIPO_SEGURO = { LONG_TERM_DI: 'Incapacidad (largo plazo)', SHORT_TERM_DI: 'Incapacidad (corto plazo)', WHOLE_LIFE: 'Vida (permanente)', TERM_LIFE: 'Vida (temporal)', HOMEOWNERS_INSURANCE: 'Hogar', VEHICLE_INSURANCE: 'Coche', UMBRELLA_INSURANCE: 'Responsabilidad civil (umbrella)', HEALTH_INSURANCE: 'Salud', LONG_TERM_CARE: 'Dependencia' };
+const TIPO_ACTIVO = { 'Cash account': 'Efectivo', 'Investment account': 'Inversiones', 'Real estate': 'Vivienda', Vehicle: 'Vehículos', 'Other asset': 'Otros' };
+function leerTemas(E, fh, ia) {
+  const t = (p, s) => (E.fam.pl ? p : s), val = x => (x && typeof x === 'object' ? x.value : x), num = x => (typeof x === 'number' && !isNaN(x) ? x : null);
+  const km = get(fh, 'key_metrics') || {}, R = km.ratios || {}, F = km.facts || {}, C = F.cash || {}, RT = F.retirement || {}, ED = F.education || {};
+  const ad = (get(fh, 'case.household') || []).filter(p => p.role !== 'child'), ki = (get(fh, 'case.household') || []).filter(p => p.role === 'child');
+  const fila = (lab, txt, o) => txt == null || txt === '' ? null : [lab, String(txt), o || ''];
+  const out = {};
+
+  // Ahorro y flujo de caja · informe: «Savings & Expenses»
+  const sl = R.savingsLevel || {}, inc = (get(fh, 'profile.incomes') || []).filter(i => i.type === 'SALARY_AND_WAGES');
+  const match = (get(km, 'assetsAndInvestments.matchGapAnalysis') || []).filter(m => m.matchMaximizationStatus && m.matchMaximizationStatus !== 'NOT_APPLICABLE');
+  const gastoAnual = num(get(R, 'investableAssetLevel.annualExpenses')), sinCobrar = match.reduce((s, m) => s + (m.uncapturedAnnualMatch || 0), 0), cobra = match.reduce((s, m) => s + (m.currentAnnualMatch || 0), 0);
+  const SALIDA = { Taxes: 'Impuestos', 'Debt Payments': 'Deudas', 'Housing Expenses': 'Vivienda', Savings: 'Ahorro', Expenses: 'Gastos del día a día' };
+  const sal = (get(km, 'savingsAndExpenses.incomeAndCashflow.outflowSummary') || []).slice(1).filter(r => r[0] !== 'Total' && r[1] > 0);
+  const ahorroMatch = match.length ? (sinCobrar > 0 ? `Dejáis sin cobrar ${M(sinCobrar)} al año` : `${t('Cobráis', 'Cobras')} toda: ${M(cobra)} al año`) : null;
+  out['Ahorro'] = {
+    resumen: [fila('Ahorro al año', sl.savingAmount != null ? `${M(sl.savingAmount)}, el ${P(sl.ratio, 1)} de ${t('vuestros', 'tus')} ingresos` : null, 'ratios.savingsLevel'), fila('Aportación de la empresa', ahorroMatch, 'matchGapAnalysis')].filter(Boolean),
+    detalle: [
+      ...inc.map(i => fila(`Sueldo${E.fam.pl ? ' de ' + (i.name.startsWith('Co-client') ? ad[1].first_name : ad[0].first_name) : ''}`, `${M(i.yearly)} al año`, 'profile.incomes')),
+      fila('Ingresos brutos del hogar', sl.grossIncome != null ? `${M(sl.grossIncome)} al año` : null, 'ratios.savingsLevel.grossIncome'),
+      fila('Gastos al año (día a día, vivienda y deudas)', gastoAnual != null ? M(gastoAnual) : null, 'ratios.investableAssetLevel.annualExpenses'),
+      fila('Ahorro al año', sl.savingAmount != null ? `${M(sl.savingAmount)} (${P(sl.ratio, 1)})` : null, 'ratios.savingsLevel'),
+      ...match.map(m => fila(`Aportación de la empresa · ${m.accountName}`, m.uncapturedAnnualMatch > 0 ? `${M(m.currentAnnualMatch)} de ${M(m.maxPossibleAnnualMatch)} posibles` : `${M(m.currentAnnualMatch)} al año, la máxima`, 'matchGapAnalysis')),
+      ...sal.map(r => fila(`A dónde va: ${SALIDA[r[0]] || r[0]}`, `${M(Math.round(r[1]))} al año (${P(r[2], 1)})`, 'savingsAndExpenses.incomeAndCashflow.outflowSummary')),
+      fila('Lo que sobra este año tras gastos y ahorro', num(val(RT.netCashFlowThisYear)) != null ? M(Math.round(val(RT.netCashFlowThisYear))) : null, 'facts.retirement.netCashFlowThisYear'),
+      fila('Percentil de ingresos del hogar', get(km, 'savingsAndExpenses.incomeAndCashflow.householdIncomePercentile') != null ? `por encima del ${P(get(km, 'savingsAndExpenses.incomeAndCashflow.householdIncomePercentile'))} de hogares` : null, 'incomeAndCashflow.householdIncomePercentile'),
+    ].filter(Boolean),
+    graf: sal.length ? { tipo: 'barras', titulo: `A dónde van ${t('vuestros', 'tus')} ${M(sl.grossIncome)} al año`, items: sal.map(r => ({ lab: SALIDA[r[0]] || r[0], v: r[1], txt: `${M(Math.round(r[1]))} · ${P(r[2])}`, tono: r[0] === 'Savings' ? 'bueno' : r[0] === 'Debt Payments' ? 'coste' : '' })).concat(num(val(RT.netCashFlowThisYear)) > 0 ? [{ lab: 'Sobra', v: val(RT.netCashFlowThisYear), txt: M(Math.round(val(RT.netCashFlowThisYear))), tono: 'bueno' }] : []) } : null,
+  };
+
+  // Deudas · informe: «Debt management»
+  const ld = (get(km, 'debtManagement.listOfDebts') || []).slice(1).filter(r => r[2] > 0).map(r => ({ nombre: r[0], tipo: TIPO_DEUDA[r[1]] || r[1], saldo: r[2], tipoInt: r[3], pago: r[4], interes: r[5] }));
+  const ind = R.indebtedness || {}, dti = R.debtToIncome || {}, cara = ld.slice().sort((x, y) => y.tipoInt - x.tipoInt)[0];
+  const libre = get(R, 'currentDPD.debtLastPayment'), ccFin = get(R, 'creditCardDebt.ccPayoffDate');
+  out['Deudas'] = {
+    resumen: ld.length ? [fila('Deuda total', `${M(ind.debtBalance)}, ${M(ind.monthlyDebtPayment)} al mes`, 'ratios.indebtedness'), fila('La más cara', cara ? `${cara.tipo}: ${M(cara.saldo)} al ${P(cara.tipoInt, 1)}` : null, 'debtManagement.listOfDebts'), fila('Sin deudas en', libre ? fecha(libre) : null, 'ratios.currentDPD')].filter(Boolean)
+      : [fila('Deuda total', `0 $. ${t('No tenéis', 'No tienes')} deudas pendientes`, 'ratios.indebtedness')],
+    detalle: [
+      ...ld.map(d => fila(`${d.tipo} · ${d.nombre}`, `${M(d.saldo)} al ${P(d.tipoInt, 1)} · ${M(d.pago)} al mes, ${M(Math.round(d.interes))} de intereses al mes`, 'debtManagement.listOfDebts')),
+      fila('Parte de los ingresos que va a deudas', dti.debtOnlyDti != null ? P(dti.debtOnlyDti, 1) : null, 'ratios.debtToIncome.debtOnlyDti'),
+      fila('Con los gastos de vivienda', dti.ratio != null ? `${P(dti.ratio, 1)} (los bancos miran el 36 %)` : null, 'ratios.debtToIncome.ratio'),
+      fila('Vivienda sobre ingresos', get(R, 'housingRatio.ratio') != null ? P(get(R, 'housingRatio.ratio'), 1) : null, 'ratios.housingRatio'),
+      fila('La tarjeta se acaba, a este ritmo', ccFin && ld.some(d => d.tipo === 'Tarjeta') ? fecha(ccFin) : null, 'ratios.creditCardDebt.ccPayoffDate'),
+      fila('Último pago de todas las deudas', libre ? fecha(libre) : null, 'ratios.currentDPD.debtLastPayment'),
+    ].filter(Boolean),
+    graf: ld.length ? { tipo: 'barras', titulo: 'Lo que se debe, y a qué interés', items: ld.map(d => ({ lab: d.tipo, v: d.saldo, txt: `${M(d.saldo)} · ${P(d.tipoInt, 1)}`, tono: d === cara && cara.tipoInt >= 0.1 ? 'coste' : '' })) } : null,
+  };
+
+  // Inversiones · informe: «Assets & Investments» + análisis de inversiones
+  const h = get(ia, 'key_metrics.performanceAnalysis.household') || {}, la = (get(km, 'assetsAndInvestments.listOfAssets') || []).slice(1);
+  const invertible = num(get(R, 'investableAssetLevel.investableAssets')), caja = num(get(R, 'investableAssetLevel.cashBalance'));
+  const iak = get(ia, 'key_metrics') || {}, tot = get(iak, 'concentrationAndDiversification.totals') || {}, pa = get(iak, 'portfolioAnalysis.performance') || {}, ta = get(iak, 'targetAnalysis.performance') || {};
+  const pv = get(iak, 'portfolioAnalysis.volatility.annualizedVolatility'), tv = get(iak, 'targetAnalysis.volatility.annualizedVolatility');
+  const eqP = ((get(iak, 'targetAnalysis.assetAllocations.assetAllocationsEF') || []).find(x => x.assetAllocation === 'EQUITY') || {}).weight ?? null;
+  const sec = (get(iak, 'concentrationAndDiversification.sectorConcentration') || []).slice(1)[0];
+  const SECTOR = { Technology: 'Tecnología', 'Financial Services': 'Finanzas', Healthcare: 'Salud', Industrials: 'Industria' };
+  const ENTORNO = { 'Global Financial Crisis': 'la crisis de 2008', 'COVID-19 Pandemic Crash': 'la caída del COVID (2020)', 'Global Equity Sell-off': 'la caída de bolsa de 2018', 'Post-GFC Bull Run': 'la subida tras 2009' };
+  const env = (get(iak, 'portfolioAnalysis.marketEnvironments') || []).filter(e => e.type === 'historical');
+  const PERF = { Income: 'muy prudente', Conservative: 'prudente', Moderate: 'equilibrado', Growth: 'dinámico', Aggressive: 'atrevido' };
+  out['Inversiones'] = {
+    resumen: [fila('Invertido', invertible != null ? M(invertible) : null, 'ratios.investableAssetLevel.investableAssets'), fila('Rentabilidad últimos 3 años', h.return3yAnnualized != null ? `${P(h.return3yAnnualized, 1)} al año` : null, 'investment-analysis · performanceAnalysis'), fila('Peor caída en 3 años', h.maxDrawdown3y != null ? `${P(Math.abs(h.maxDrawdown3y), 1)}${h.maxDrawdownRecoveryDays ? `, recuperada en ${h.maxDrawdownRecoveryDays} días` : ''}` : null, 'investment-analysis · performanceAnalysis')].filter(Boolean),
+    detalle: [
+      ...ad.map(a => fila(`Perfil de riesgo${E.fam.pl ? ' de ' + a.first_name : ''}`, a.risk_profile ? PERF[a.risk_profile] || a.risk_profile : null, 'case.household.risk_profile')),
+      fila('Patrimonio total', get(km, 'assetsAndInvestments.totalAssetsAndEquity.totalAssets') != null ? M(get(km, 'assetsAndInvestments.totalAssetsAndEquity.totalAssets')) : null, 'totalAssetsAndEquity'),
+      fila('Patrimonio neto (lo que tenéis menos lo que debéis)', get(km, 'netWorthStatement.netWorth.total') != null ? M(get(km, 'netWorthStatement.netWorth.total')) : null, 'netWorthStatement.netWorth'),
+      ...la.map(r => fila(TIPO_ACTIVO[r[0]] || r[0], `${M(r[2])} (${P(r[3])} del total)`, 'assetsAndInvestments.listOfAssets')),
+      fila('En bolsa, de lo invertido', tot.investablePortfolioValue ? P(tot.equityExposure / tot.investablePortfolioValue) : null, 'investment-analysis · concentrationAndDiversification.totals'),
+      fila('Reparto del hogar hoy (bolsa / resto)', h.currentEquityPct != null ? `${Math.round(h.currentEquityPct * 100)} / ${100 - Math.round(h.currentEquityPct * 100)}` : null, 'investment-analysis · performanceAnalysis.household.currentEquityPct'),
+      fila('Reparto que propone el análisis', eqP != null ? `${Math.round(eqP * 100)} / ${100 - Math.round(eqP * 100)}` : null, 'investment-analysis · targetAnalysis.assetAllocations'),
+      fila('Rentabilidad esperada al año, hoy y propuesta', pa.expectedPerformance != null && ta.expectedPerformance != null ? `${P(pa.expectedPerformance, 2)} → ${P(ta.expectedPerformance, 2)}` : null, 'investment-analysis · portfolioAnalysis / targetAnalysis'),
+      fila('Cuánto se mueve al año, hoy y propuesto', pv != null && tv != null ? `${P(pv, 2)} → ${P(tv, 2)}` : null, 'investment-analysis · volatility'),
+      sec ? fila('Sector con más peso', `${SECTOR[sec[0]] || sec[0]}: ${P(sec[1])} de la bolsa (${sec[3] === 'Elevated' ? 'alto' : 'normal'})`, 'investment-analysis · sectorConcentration') : null,
+      ...env.map(e => fila(`Cómo le iría en: ${ENTORNO[e.name] || e.name}`, P(e.performance, 1), 'investment-analysis · marketEnvironments')),
+      fila('Rentabilidad último año', h.return1yAnnualized != null ? P(h.return1yAnnualized, 1) : null, 'investment-analysis · return1yAnnualized'),
+      fila('Rentabilidad acumulada 3 años', h.return3yCumulative != null ? P(h.return3yCumulative, 1) : null, 'investment-analysis · return3yCumulative'),
+      fila('Cuánto se mueve (volatilidad 3 años)', h.volatility3y != null ? P(h.volatility3y, 1) : null, 'investment-analysis · volatility3y'),
+    ].filter(Boolean),
+    graf: la.length ? { tipo: 'barras', titulo: 'Dónde está vuestro patrimonio'.replace('vuestro', t('vuestro', 'tu')), items: la.map(r => ({ lab: TIPO_ACTIVO[r[0]] || r[0], v: r[2], txt: `${M(r[2])} · ${P(r[3])}`, tono: r[0] === 'Investment account' ? 'bueno' : '' })) } : null,
+  };
+
+  // Colchón · informe: «Emergency fund»
+  const ac = num(val(C.accessibleCash)), mc = parseFloat(val(C.monthsCovered)), er = C.emergencyReserve || {}, ef = R.emergencyFund || {};
+  const cy = ((get(ia, 'key_metrics.cashNeeds.summaryIncome') || []).find(r => r[0] === 'Total')) || null;
+  const sobra = num(val(C.cashAboveTotalNeeded)), falta = num(ef.shortfallToAdjustedMin);
+  out['Colchón'] = {
+    resumen: [fila('Efectivo accesible', ac != null ? M(ac) : null, 'facts.cash.accessibleCash'), fila('Cubre', !isNaN(mc) ? `${dec(mc, 1)} meses de gastos básicos (el plan pide ${ef.minRecommendedEFMonths} a ${ef.maxRecommendedEFMonths})` : null, 'facts.cash.monthsCovered'), sobra > 0 ? fila('Sobra', `${M(sobra)} por encima de la reserva y los gastos previstos`, 'facts.cash.cashAboveTotalNeeded') : falta > 0 ? fila('Falta', `${M(falta)} para la reserva y los gastos ya previstos`, 'ratios.emergencyFund.shortfallToAdjustedMin') : null].filter(Boolean),
+    detalle: [
+      fila('Efectivo accesible', ac != null ? M(ac) : null, 'facts.cash.accessibleCash'),
+      fila('Gastos básicos al mes', ef.monthlyExpenses ? M(ef.monthlyExpenses) : null, 'ratios.emergencyFund.monthlyExpenses'),
+      fila('Meses que cubre hoy', !isNaN(mc) ? dec(mc, 1) : null, 'facts.cash.monthsCovered'),
+      fila('Reserva que recomienda el plan', er.min != null ? `${M(er.min)} a ${M(er.max)} (${ef.minRecommendedEFMonths} a ${ef.maxRecommendedEFMonths} meses)` : null, 'facts.cash.emergencyReserve'),
+      fila('Meses tras apartar los gastos ya previstos', val(C.monthsCoveredAfterNearTermGoals) != null ? dec(val(C.monthsCoveredAfterNearTermGoals), 1) : null, 'facts.cash.monthsCoveredAfterNearTermGoals'),
+      sobra > 0 ? fila('Lo que sobra tras la reserva y esos gastos', M(sobra), 'facts.cash.cashAboveTotalNeeded') : null,
+      C.totalCashNeeded ? fila('Efectivo que pide el plan con los gastos ya previstos', `${M(C.totalCashNeeded.min)} a ${M(C.totalCashNeeded.max)}`, 'facts.cash.totalCashNeeded') : null,
+      ...(C.nearTermGoals || []).map(g => fila('Gasto ya previsto', `${M(g.value)}: ${/vacation/i.test(g.label) ? 'vacaciones' : /home|real estate|house/i.test(g.label) ? 'casa' : /vehicle|car/i.test(g.label) ? 'coche' : 'otro objetivo'}`, 'facts.cash.nearTermGoals')),
+      falta > 0 ? fila('Lo que falta para la reserva y esos gastos', M(falta), 'ratios.emergencyFund.shortfallToAdjustedMin') : null,
+      cy && cy[2] > cy[1] ? fila('Lo que rinde el efectivo al año', `${M(Math.round(cy[1]))}; bien colocado, unos ${M(Math.round(cy[2]))}`, 'investment-analysis · cashNeeds.summaryIncome') : null,
+    ].filter(Boolean),
+    graf: ac != null && er.min != null ? { tipo: 'rango', titulo: 'Vuestro efectivo frente a lo recomendado'.replace('Vuestro', t('Vuestro', 'Tu')), v: ac, min: er.min, max: er.max, txt: M(ac), minTxt: M(er.min), maxTxt: M(er.max) } : null,
+  };
+
+  // Seguros · informe: «Insurance & Protection» (vida y umbrella)
+  const li = R.lifeInsurance || {}, um = R.umbrella || {}, pol = get(fh, 'profile.insurance') || [];
+  const vidas = ad.map((a, i) => ({ n: a.first_name, hoy: i ? li.coClientCoverage : li.clientCoverage, min: i ? li.recommendedCoClientMinCoverage : li.recommendedClientMinCoverage, max: i ? li.recommendedCoClientMaxCoverage : li.recommendedClientMaxCoverage })).filter(v => v.min);
+  out['Seguros'] = {
+    resumen: [...vidas.map(v => fila(`Vida${E.fam.pl ? ' · ' + v.n : ''}`, `${M(v.hoy || 0)}; el plan pide ${M(v.min)} como mínimo`, 'ratios.lifeInsurance')), um.recommendedCoverage ? fila('Responsabilidad civil', `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)} recomendados`, 'ratios.umbrella') : null].filter(Boolean),
+    detalle: [
+      ...vidas.flatMap(v => [fila(`Seguro de vida de ${v.n}`, M(v.hoy || 0), 'ratios.lifeInsurance'), fila(`Recomendado para ${v.n}`, `${M(v.min)} a ${M(v.max)}`, 'ratios.lifeInsurance'), (v.hoy || 0) < v.min ? fila(`A ${v.n} le falta como mínimo`, M(v.min - (v.hoy || 0)), 'ratios.lifeInsurance') : null]),
+      um.recommendedCoverage ? fila('Responsabilidad civil (umbrella)', `${M(um.currentCoverage || 0)} hoy, ${M(um.recommendedCoverage)} recomendado`, 'ratios.umbrella') : null,
+      ...pol.map(p => fila(`Póliza · ${TIPO_SEGURO[p.type] || p.type}${E.fam.pl ? ((a => a ? ' · ' + a : '')(/^Your /.test(p.name) ? ad[0].first_name : (ad.find(x => p.name.includes(x.first_name)) || {}).first_name)) : ''}`, typeof p.coverage === 'number' ? M(p.coverage) : 'en vigor, sin importe en el plan', 'profile.insurance')),
+      ki.length ? fila('Dependen de estos ingresos', lista(ki.map(k => `${k.first_name} (${k.age})`)), 'case.household') : null,
+    ].filter(Boolean),
+    graf: vidas.length || um.recommendedCoverage ? { tipo: 'barras', titulo: 'Lo que hay frente a lo recomendado', items: [...vidas.map(v => ({ lab: `Vida${E.fam.pl ? ' ' + v.n : ''}`, v: v.hoy || 0, ref: v.min, txt: `${M(v.hoy || 0)} de ${M(v.min)}`, tono: (v.hoy || 0) < v.min ? 'coste' : 'bueno' })), um.recommendedCoverage ? { lab: 'Resp. civil', v: um.currentCoverage || 0, ref: um.recommendedCoverage, txt: `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)}`, tono: (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno' } : null].filter(Boolean) } : null,
+  };
+
+  // Roadmap · informe: «Retirement & Goals» + educación + proyección del patrimonio
+  const yearly = get(fh, 'projections.yearly') || [], gs = get(fh, 'goals.goalsSummary') || [], cg = get(fh, 'goals.chartGoals') || [];
+  const jub = cg.filter(g => g.goalType === 'RETIREMENT').map(g => anio(g.date)), jA = jub.length ? Math.max(...jub) : null;
+  const enJub = jA ? yearly.find(y => y.year === jA) : null, agota = RT.savingsRunOut;
+  const META = g => g.goalType === 'RETIREMENT' ? null : g.goalType === 'VACATION' ? fila('Vacaciones', `${M(g.amount)} cada año`, 'goals.goalsSummary') : g.goalType === 'COLLEGE' ? fila('Universidad', `${M(g.amount)} por hijo`, 'goals.goalsSummary') : g.subType === 'REAL_ESTATE_PURCHASE' ? fila('Casa', `${M(g.amount)}${(cg.find(c => c.subType === 'REAL_ESTATE_PURCHASE') || {}).date ? ' en ' + fecha(cg.find(c => c.subType === 'REAL_ESTATE_PURCHASE').date) : ''}`, 'goals') : g.subType === 'VEHICLE_PURCHASE' ? fila('Coche', `${M(g.amount)}${(cg.find(c => c.subType === 'VEHICLE_PURCHASE') || {}).date ? ' en ' + fecha(cg.find(c => c.subType === 'VEHICLE_PURCHASE').date) : ''}`, 'goals') : fila('Otra meta', g.amount ? M(g.amount) : g.value, 'goals');
+  E.roadmap = {
+    resumen: [fila('Jubilación', jA ? `${jA}, a los ${lista(ad.map(a => String(a.retirement_age)))}` : null, 'goals.chartGoals'), fila('Los ingresos cubren', val(RT.incomeShareOfNeed) ? `el ${String(val(RT.incomeShareOfNeed)).replace('.', ',').replace('%', ' %')} del gasto en la jubilación` : null, 'facts.retirement.incomeShareOfNeed'), agota ? fila('Los ahorros se acaban', `a los ${(agota.label.match(/age (\d+)/) || [])[1]} años`, 'facts.retirement.savingsRunOut') : fila('Al final del plan quedan', val(RT.savingsLeftAtPlanEnd) != null ? M(val(RT.savingsLeftAtPlanEnd)) : null, 'facts.retirement.savingsLeftAtPlanEnd')].filter(Boolean),
+    detalle: [
+      ...gs.map(META).filter(Boolean),
+      fila('Gasto al año en la jubilación', val(RT.spendingNeed) ? M(Math.round(val(RT.spendingNeed))) : null, 'facts.retirement.spendingNeed'),
+      fila('Ingresos garantizados al año (pensiones y rentas)', val(RT.guaranteedIncome) ? M(Math.round(val(RT.guaranteedIncome))) : null, 'facts.retirement.guaranteedIncome'),
+      fila('Lo que sale de los ahorros cada año', val(RT.spendingGap) ? M(Math.round(val(RT.spendingGap))) : null, 'facts.retirement.spendingGap'),
+      fila('Retirada media de los ahorros', val(RT.withdrawalRateAverage) ? String(val(RT.withdrawalRateAverage)).replace('.', ',').replace('%', ' %') : null, 'facts.retirement.withdrawalRateAverage'),
+      fila('Ahorro extra que pide la jubilación', get(R, 'retirementSavings.requiredExtraSavings') > 0 ? `${M(Math.round(get(R, 'retirementSavings.requiredExtraSavings')))} al año` : null, 'ratios.retirementSavings.requiredExtraSavings'),
+      ...(get(R, 'educationSavings.goalsSummary') || []).map(g => fila(`${g.goalName.replace('College ', 'Universidad de ')}`, `empieza en ${fecha(g.date)}; ahorrado ${M(g.accountBalance || 0)}, falta ${M(Math.round(g.totalGAP))}`, 'ratios.educationSavings')),
+      fila('Falta para la universidad', val(ED.fundingGap) ? M(Math.round(val(ED.fundingGap))) : null, 'facts.education.fundingGap'),
+      fila('Ahorro extra al año para la universidad', val(ED.extraYearlySaving) ? M(Math.round(val(ED.extraYearlySaving))) : null, 'facts.education.extraYearlySaving'),
+      fila('Patrimonio neto hoy', get(km, 'netWorthStatement.netWorth.total') != null ? M(get(km, 'netWorthStatement.netWorth.total')) : null, 'netWorthStatement.netWorth'),
+      fila(`Patrimonio neto al ${t('jubilaros', 'jubilarte')} (dólares de hoy)`, enJub ? M(enJub.net_worth_todays_dollars) : null, 'projections.yearly'),
+    ].filter(Boolean),
+    serie: yearly.map(y => [y.year, Math.round(y.net_worth_todays_dollars)]),
+    jubila: jA,
+  };
+  return out;
+}
+
 function cerrar(E) {
   const porId = Object.fromEntries(E.catalogo.map(q => [q.id, q]));
   E.preguntas = E.orden.map(id => porId[id]).filter(Boolean);
@@ -684,6 +831,8 @@ async function main() {
     }
     const E = leer(d.fh);
     E.pareja = leerPareja(E, d.ia);
+    const T = leerTemas(E, d.fh, d.ia);
+    E.areas.forEach(a => { Object.assign(a, T[a.nombre] || {}); });
     let crudo = null;
     if (!sinLlm) {
       try {

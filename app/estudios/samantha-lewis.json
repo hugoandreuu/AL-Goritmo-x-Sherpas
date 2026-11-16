@@ -35,31 +35,448 @@
    "nombre": "Ahorro",
    "icon": "coins",
    "nota": 75,
-   "puntos": "22/30"
+   "puntos": "22/30",
+   "resumen": [
+    [
+     "Ahorro al año",
+     "60.000 $, el 24 % de tus ingresos",
+     "ratios.savingsLevel"
+    ]
+   ],
+   "detalle": [
+    [
+     "Sueldo",
+     "250.000 $ al año",
+     "profile.incomes"
+    ],
+    [
+     "Ingresos brutos del hogar",
+     "250.000 $ al año",
+     "ratios.savingsLevel.grossIncome"
+    ],
+    [
+     "Gastos al año (día a día, vivienda y deudas)",
+     "129.600 $",
+     "ratios.investableAssetLevel.annualExpenses"
+    ],
+    [
+     "Ahorro al año",
+     "60.000 $ (24 %)",
+     "ratios.savingsLevel"
+    ],
+    [
+     "A dónde va: Impuestos",
+     "66.818 $ al año (26,7 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+    ],
+    [
+     "A dónde va: Vivienda",
+     "13.500 $ al año (5,4 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+    ],
+    [
+     "A dónde va: Ahorro",
+     "60.000 $ al año (24 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+    ],
+    [
+     "A dónde va: Gastos del día a día",
+     "116.100 $ al año (46,4 %)",
+     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+    ],
+    [
+     "Lo que sobra este año tras gastos y ahorro",
+     "-6.418 $",
+     "facts.retirement.netCashFlowThisYear"
+    ],
+    [
+     "Percentil de ingresos del hogar",
+     "por encima del 90 % de hogares",
+     "incomeAndCashflow.householdIncomePercentile"
+    ]
+   ],
+   "graf": {
+    "tipo": "barras",
+    "titulo": "A dónde van tus 250.000 $ al año",
+    "items": [
+     {
+      "lab": "Impuestos",
+      "v": 66817.99,
+      "txt": "66.818 $ · 27 %",
+      "tono": ""
+     },
+     {
+      "lab": "Vivienda",
+      "v": 13500,
+      "txt": "13.500 $ · 5 %",
+      "tono": ""
+     },
+     {
+      "lab": "Ahorro",
+      "v": 60000,
+      "txt": "60.000 $ · 24 %",
+      "tono": "bueno"
+     },
+     {
+      "lab": "Gastos del día a día",
+      "v": 116100,
+      "txt": "116.100 $ · 46 %",
+      "tono": ""
+     }
+    ]
+   }
   },
   {
    "nombre": "Deudas",
    "icon": "card",
    "nota": 100,
-   "puntos": "20/20"
+   "puntos": "20/20",
+   "resumen": [
+    [
+     "Deuda total",
+     "0 $. No tienes deudas pendientes",
+     "ratios.indebtedness"
+    ]
+   ],
+   "detalle": [
+    [
+     "Parte de los ingresos que va a deudas",
+     "0 %",
+     "ratios.debtToIncome.debtOnlyDti"
+    ],
+    [
+     "Con los gastos de vivienda",
+     "5,4 % (los bancos miran el 36 %)",
+     "ratios.debtToIncome.ratio"
+    ],
+    [
+     "Vivienda sobre ingresos",
+     "5,4 %",
+     "ratios.housingRatio"
+    ]
+   ],
+   "graf": null
   },
   {
    "nombre": "Inversiones",
    "icon": "chart",
    "nota": 66,
-   "puntos": "10/15"
+   "puntos": "10/15",
+   "resumen": [
+    [
+     "Invertido",
+     "335.000 $",
+     "ratios.investableAssetLevel.investableAssets"
+    ],
+    [
+     "Rentabilidad últimos 3 años",
+     "15,6 % al año",
+     "investment-analysis · performanceAnalysis"
+    ],
+    [
+     "Peor caída en 3 años",
+     "11,9 %, recuperada en 78 días",
+     "investment-analysis · performanceAnalysis"
+    ]
+   ],
+   "detalle": [
+    [
+     "Perfil de riesgo",
+     "dinámico",
+     "case.household.risk_profile"
+    ],
+    [
+     "Patrimonio total",
+     "1,4 M$",
+     "totalAssetsAndEquity"
+    ],
+    [
+     "Patrimonio neto (lo que tenéis menos lo que debéis)",
+     "1,4 M$",
+     "netWorthStatement.netWorth"
+    ],
+    [
+     "Efectivo",
+     "80.000 $ (6 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "Inversiones",
+     "335.000 $ (24 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "Vivienda",
+     "900.000 $ (65 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "Vehículos",
+     "80.000 $ (6 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "Otros",
+     "0 $ (0 % del total)",
+     "assetsAndInvestments.listOfAssets"
+    ],
+    [
+     "En bolsa, de lo invertido",
+     "85 %",
+     "investment-analysis · concentrationAndDiversification.totals"
+    ],
+    [
+     "Reparto del hogar hoy (bolsa / resto)",
+     "68 / 32",
+     "investment-analysis · performanceAnalysis.household.currentEquityPct"
+    ],
+    [
+     "Reparto que propone el análisis",
+     "65 / 35",
+     "investment-analysis · targetAnalysis.assetAllocations"
+    ],
+    [
+     "Rentabilidad esperada al año, hoy y propuesta",
+     "6,13 % → 6,78 %",
+     "investment-analysis · portfolioAnalysis / targetAnalysis"
+    ],
+    [
+     "Cuánto se mueve al año, hoy y propuesto",
+     "8,88 % → 8 %",
+     "investment-analysis · volatility"
+    ],
+    [
+     "Sector con más peso",
+     "Tecnología: 31 % de la bolsa (alto)",
+     "investment-analysis · sectorConcentration"
+    ],
+    [
+     "Cómo le iría en: la subida tras 2009",
+     "52,8 %",
+     "investment-analysis · marketEnvironments"
+    ],
+    [
+     "Cómo le iría en: la crisis de 2008",
+     "-17,9 %",
+     "investment-analysis · marketEnvironments"
+    ],
+    [
+     "Cómo le iría en: la caída de bolsa de 2018",
+     "-8,4 %",
+     "investment-analysis · marketEnvironments"
+    ],
+    [
+     "Cómo le iría en: la caída del COVID (2020)",
+     "-15,5 %",
+     "investment-analysis · marketEnvironments"
+    ],
+    [
+     "Rentabilidad último año",
+     "13,6 %",
+     "investment-analysis · return1yAnnualized"
+    ],
+    [
+     "Rentabilidad acumulada 3 años",
+     "54,3 %",
+     "investment-analysis · return3yCumulative"
+    ],
+    [
+     "Cuánto se mueve (volatilidad 3 años)",
+     "8,9 %",
+     "investment-analysis · volatility3y"
+    ]
+   ],
+   "graf": {
+    "tipo": "barras",
+    "titulo": "Dónde está tu patrimonio",
+    "items": [
+     {
+      "lab": "Efectivo",
+      "v": 80000,
+      "txt": "80.000 $ · 6 %",
+      "tono": ""
+     },
+     {
+      "lab": "Inversiones",
+      "v": 335000,
+      "txt": "335.000 $ · 24 %",
+      "tono": "bueno"
+     },
+     {
+      "lab": "Vivienda",
+      "v": 900000,
+      "txt": "900.000 $ · 65 %",
+      "tono": ""
+     },
+     {
+      "lab": "Vehículos",
+      "v": 80000,
+      "txt": "80.000 $ · 6 %",
+      "tono": ""
+     },
+     {
+      "lab": "Otros",
+      "v": 0,
+      "txt": "0 $ · 0 %",
+      "tono": ""
+     }
+    ]
+   }
   },
   {
    "nombre": "Colchón",
    "icon": "shield",
    "nota": 100,
-   "puntos": "15/15"
+   "puntos": "15/15",
+   "resumen": [
+    [
+     "Efectivo accesible",
+     "80.000 $",
+     "facts.cash.accessibleCash"
+    ],
+    [
+     "Cubre",
+     "7,9 meses de gastos básicos (el plan pide 5 a 6)",
+     "facts.cash.monthsCovered"
+    ],
+    [
+     "Sobra",
+     "750 $ por encima de la reserva y los gastos previstos",
+     "facts.cash.cashAboveTotalNeeded"
+    ]
+   ],
+   "detalle": [
+    [
+     "Efectivo accesible",
+     "80.000 $",
+     "facts.cash.accessibleCash"
+    ],
+    [
+     "Gastos básicos al mes",
+     "10.125 $",
+     "ratios.emergencyFund.monthlyExpenses"
+    ],
+    [
+     "Meses que cubre hoy",
+     "7,9",
+     "facts.cash.monthsCovered"
+    ],
+    [
+     "Reserva que recomienda el plan",
+     "50.625 $ a 60.750 $ (5 a 6 meses)",
+     "facts.cash.emergencyReserve"
+    ],
+    [
+     "Meses tras apartar los gastos ya previstos",
+     "6,1",
+     "facts.cash.monthsCoveredAfterNearTermGoals"
+    ],
+    [
+     "Lo que sobra tras la reserva y esos gastos",
+     "750 $",
+     "facts.cash.cashAboveTotalNeeded"
+    ],
+    [
+     "Efectivo que pide el plan con los gastos ya previstos",
+     "69.125 $ a 79.250 $",
+     "facts.cash.totalCashNeeded"
+    ],
+    [
+     "Gasto ya previsto",
+     "6.000 $: vacaciones",
+     "facts.cash.nearTermGoals"
+    ],
+    [
+     "Gasto ya previsto",
+     "12.500 $: otro objetivo",
+     "facts.cash.nearTermGoals"
+    ]
+   ],
+   "graf": {
+    "tipo": "rango",
+    "titulo": "Tu efectivo frente a lo recomendado",
+    "v": 80000,
+    "min": 50625,
+    "max": 60750,
+    "txt": "80.000 $",
+    "minTxt": "50.625 $",
+    "maxTxt": "60.750 $"
+   }
   },
   {
    "nombre": "Seguros",
    "icon": "heart",
    "nota": 71,
-   "puntos": "14/20"
+   "puntos": "14/20",
+   "resumen": [
+    [
+     "Vida",
+     "2 M$; el plan pide 1,25 M$ como mínimo",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "Responsabilidad civil",
+     "2 M$ de 2 M$ recomendados",
+     "ratios.umbrella"
+    ]
+   ],
+   "detalle": [
+    [
+     "Seguro de vida de Samantha",
+     "2 M$",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "Recomendado para Samantha",
+     "1,25 M$ a 2,5 M$",
+     "ratios.lifeInsurance"
+    ],
+    [
+     "Responsabilidad civil (umbrella)",
+     "2 M$ hoy, 2 M$ recomendado",
+     "ratios.umbrella"
+    ],
+    [
+     "Póliza · Incapacidad (largo plazo)",
+     "150.000 $",
+     "profile.insurance"
+    ],
+    [
+     "Póliza · Vida (temporal)",
+     "2 M$",
+     "profile.insurance"
+    ],
+    [
+     "Póliza · Responsabilidad civil (umbrella)",
+     "2 M$",
+     "profile.insurance"
+    ],
+    [
+     "Dependen de estos ingresos",
+     "Ethan (18) y Ava (16)",
+     "case.household"
+    ]
+   ],
+   "graf": {
+    "tipo": "barras",
+    "titulo": "Lo que hay frente a lo recomendado",
+    "items": [
+     {
+      "lab": "Vida",
+      "v": 2000000,
+      "ref": 1250000,
+      "txt": "2 M$ de 1,25 M$",
+      "tono": "bueno"
+     },
+     {
+      "lab": "Resp. civil",
+      "v": 2000000,
+      "ref": 2000000,
+      "txt": "2 M$ de 2 M$",
+      "tono": "bueno"
+     }
+    ]
+   }
   }
  ],
  "frases": [
@@ -321,6 +738,275 @@
   }
  ],
  "pareja": null,
+ "roadmap": {
+  "resumen": [
+   [
+    "Jubilación",
+    "2044, a los 65",
+    "goals.chartGoals"
+   ],
+   [
+    "Los ingresos cubren",
+    "el 25 % del gasto en la jubilación",
+    "facts.retirement.incomeShareOfNeed"
+   ],
+   [
+    "Los ahorros se acaban",
+    "a los 73 años",
+    "facts.retirement.savingsRunOut"
+   ]
+  ],
+  "detalle": [
+   [
+    "Vacaciones",
+    "6.000 $ cada año",
+    "goals.goalsSummary"
+   ],
+   [
+    "Universidad",
+    "50.000 $ por hijo",
+    "goals.goalsSummary"
+   ],
+   [
+    "Casa",
+    "500.000 $ en enero de 2030",
+    "goals"
+   ],
+   [
+    "Gasto al año en la jubilación",
+    "153.672 $",
+    "facts.retirement.spendingNeed"
+   ],
+   [
+    "Ingresos garantizados al año (pensiones y rentas)",
+    "38.336 $",
+    "facts.retirement.guaranteedIncome"
+   ],
+   [
+    "Lo que sale de los ahorros cada año",
+    "115.335 $",
+    "facts.retirement.spendingGap"
+   ],
+   [
+    "Retirada media de los ahorros",
+    "12,2 %",
+    "facts.retirement.withdrawalRateAverage"
+   ],
+   [
+    "Universidad de Ethan",
+    "empieza en agosto de 2026; ahorrado 0 $, falta 48.469 $",
+    "ratios.educationSavings"
+   ],
+   [
+    "Universidad de Ava",
+    "empieza en agosto de 2028; ahorrado 0 $, falta 50.369 $",
+    "ratios.educationSavings"
+   ],
+   [
+    "Falta para la universidad",
+    "98.838 $",
+    "facts.education.fundingGap"
+   ],
+   [
+    "Ahorro extra al año para la universidad",
+    "-179.276 $",
+    "facts.education.extraYearlySaving"
+   ],
+   [
+    "Patrimonio neto hoy",
+    "1,4 M$",
+    "netWorthStatement.netWorth"
+   ],
+   [
+    "Patrimonio neto al jubilarte (dólares de hoy)",
+    "2,11 M$",
+    "projections.yearly"
+   ]
+  ],
+  "serie": [
+   [
+    2026,
+    1397932
+   ],
+   [
+    2027,
+    1432697
+   ],
+   [
+    2028,
+    1459301
+   ],
+   [
+    2029,
+    1490341
+   ],
+   [
+    2030,
+    1499733
+   ],
+   [
+    2031,
+    1520607
+   ],
+   [
+    2032,
+    1557387
+   ],
+   [
+    2033,
+    1596514
+   ],
+   [
+    2034,
+    1637954
+   ],
+   [
+    2035,
+    1681688
+   ],
+   [
+    2036,
+    1727732
+   ],
+   [
+    2037,
+    1776100
+   ],
+   [
+    2038,
+    1826824
+   ],
+   [
+    2039,
+    1879944
+   ],
+   [
+    2040,
+    1935529
+   ],
+   [
+    2041,
+    1993529
+   ],
+   [
+    2042,
+    2055119
+   ],
+   [
+    2043,
+    2119245
+   ],
+   [
+    2044,
+    2110822
+   ],
+   [
+    2045,
+    1988498
+   ],
+   [
+    2046,
+    1886793
+   ],
+   [
+    2047,
+    1806092
+   ],
+   [
+    2048,
+    1721546
+   ],
+   [
+    2049,
+    1632978
+   ],
+   [
+    2050,
+    1540200
+   ],
+   [
+    2051,
+    1443020
+   ],
+   [
+    2052,
+    1341231
+   ],
+   [
+    2053,
+    1238092
+   ],
+   [
+    2054,
+    1138737
+   ],
+   [
+    2055,
+    1043090
+   ],
+   [
+    2056,
+    951045
+   ],
+   [
+    2057,
+    862497
+   ],
+   [
+    2058,
+    777347
+   ],
+   [
+    2059,
+    695502
+   ],
+   [
+    2060,
+    616446
+   ],
+   [
+    2061,
+    539602
+   ],
+   [
+    2062,
+    464904
+   ],
+   [
+    2063,
+    392286
+   ],
+   [
+    2064,
+    321685
+   ],
+   [
+    2065,
+    253039
+   ],
+   [
+    2066,
+    186288
+   ],
+   [
+    2067,
+    121374
+   ],
+   [
+    2068,
+    58240
+   ],
+   [
+    2069,
+    -3167
+   ],
+   [
+    2070,
+    -33615
+   ]
+  ],
+  "jubila": 2044
+ },
  "lectura": "Samantha prioriza proteger a Ethan y Ava y asegurarse de tener tranquilidad a largo plazo. Lo que más le moverá es saber hasta cuándo le duran los ahorros. También le interesará la concentración de sus inversiones y confirmar que su colchón es suficiente.",
  "porqueOrden": "Primero toca lo más crítico (la jubilación), luego la inversión concreta que le preocupa, después una buena noticia sobre su colchón y al final el resultado global.",
  "preguntas": [
@@ -601,7 +1287,7 @@
  ],
  "sinUsar": [],
  "generado": {
-  "fecha": "2026-11-15",
+  "fecha": "2026-11-16",
   "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [],
