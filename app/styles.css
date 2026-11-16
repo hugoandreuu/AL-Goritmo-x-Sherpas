@@ -102,7 +102,7 @@ details.why summary::before { content: "+"; display: inline-grid; place-items: c
 details.why[open] summary::before { content: "–"; }
 .story { font-size: 18.5px; line-height: 1.55; }
 .story strong { color: var(--accent); }
-.src { font-size: 12px; color: var(--ink-3); margin-top: 8px; font-family: ui-monospace, Menlo, monospace; word-break: break-word; }
+.src { font-size: 12px; color: var(--ink-3); margin-top: 8px; font-family: var(--font); word-break: break-word; }
 
 /* quiz */
 .progress { display: flex; align-items: center; gap: 10px; margin: 4px 0 18px; }
@@ -1212,7 +1212,7 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 
 .tm-open { display: block; }
 .card-btn { margin-bottom: 12px; }
-.tm-o { display: block; color: var(--ink-3); font-size: 11.5px; font-family: ui-monospace, monospace; }
+.tm-o { display: block; color: var(--ink-3); font-size: 11.5px; font-family: var(--font); }
 .tm-pl { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
 .tm-pl li { display: flex; gap: 8px; align-items: flex-start; font-size: 15px; }
 .tm-pl .tm-n { flex: none; margin: 1px 0 0; }
@@ -1371,5 +1371,13 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .note-w[hidden], .rx-ok[hidden], .addnote[hidden] { display: none; }
 
-/* Entrada del modo pareja: título con el degradado morado de Sherpas */
-.pj-h1 { background: linear-gradient(127deg, #774be5 0%, #4565d6 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* Entrada del modo pareja: título en blanco sobre el morado, y todo entra escalonado tras la frase previa */
+.pj-intro .pj-h1 { color: #fff; text-shadow: 0 2px 18px rgba(69,60,180,.35); }
+.pj-intro > * { animation: hin .7s var(--soft) both; }
+.pj-intro > :nth-child(1) { animation-delay: .05s; } .pj-intro > :nth-child(2) { animation-delay: .2s; } .pj-intro > :nth-child(3) { animation-delay: .35s; }
+.pj-intro > :nth-child(4) { animation-delay: .5s; } .pj-intro > :nth-child(5) { animation-delay: .7s; } .pj-intro > :nth-child(6) { animation-delay: .85s; }
+/* Transiciones suaves: la frase previa y la tarjeta guardada se funden hacia arriba; lo siguiente entra con un fundido */
+.fade-out { animation: fdOut .45s var(--soft-in) both; pointer-events: none; }
+@keyframes fdOut { to { opacity: 0; transform: translateY(-14px); filter: blur(4px); } }
+.fd-in { animation: pjFade .45s var(--soft) both; }
+.sealing .dock { opacity: 0; transition: opacity .2s; pointer-events: none; }

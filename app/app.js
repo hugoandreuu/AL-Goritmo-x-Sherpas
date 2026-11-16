@@ -1019,7 +1019,10 @@
   const encaje = x => { const p = perfil(x), r = riskOpt(S.pj.risk[x]); if (!p || !p.nivel || !r) return 'ok'; const d = r[2] - p.nivel; return d <= -1.5 ? 'prudente' : d >= 1.5 ? 'arriesgado' : 'ok'; };
   const ENCAJE = { ok: () => 'Encaja con su perfil', prudente: () => 'Más prudente que su perfil', arriesgado: () => 'Más arriesgado que su perfil' };
   const aciertos = () => ['a', 'b'].reduce((n, x) => n + (S.pj.guess[x] && S.pj.guess[x] === S.pj.risk[other(x)] ? 1 : 0), 0);
-  const pjGo = () => swipe(() => { S.pj.step = Math.min(S.pj.step + 1, pjSteps().length - 1); if (pjAt() === 'map') pjAgenda(); render(); window.scrollTo(0, 0); });
+  const pjAdv = () => { S.pj.step = Math.min(S.pj.step + 1, pjSteps().length - 1); if (pjAt() === 'map') pjAgenda(); render(); window.scrollTo(0, 0); };
+  const pjGo = () => swipe(pjAdv);
+  // Tras «Guardar en secreto» la pantalla ya se ha ido con un fundido: la siguiente entra igual, sin otro deslizamiento.
+  const pjGoFade = () => { pjAdv(); const n = app.lastElementChild; if (n) n.classList.add('fd-in'); };
   const titMoney = () => { const ca = moneyClose('a'), cb = moneyClose('b'); return ca && cb ? 'Los dos lo teníais claro' : !ca && !cb ? 'A los dos se os escapaba' : 'Lo veíais distinto'; };
   // Con la edad del hijo mayor (aBarra) se dice «hasta los X años de Liam»; si no, la cifra tal cual.
   const vidaK = () => { const q = vidaQ(), k = E.fam.hijos[0]; return q && q.vis && q.vis.base != null && k ? k.nombre : null; };
@@ -1315,17 +1318,23 @@
     Fondo.who(x === 'a' || x === 'b' ? x : null);
   }
   // Al terminar su turno, la carta se da la vuelta (queda boca abajo, con candado) y sale como una carta pasada.
-  function pjSeal(then) {
+  function pjSeal(then, force) {
     const steps = pjSteps(), nx = steps[S.pj.step + 1] || '', x = steps[S.pj.step].split(':')[1], card = app.querySelector('.pj-turn .pj-card');
-    if (!card || (x !== 'a' && x !== 'b') || !(nx.startsWith('pass') || nx.startsWith('rev')) || REDUCED() || !card.animate) { then(); return; }
+    if (!card || (x !== 'a' && x !== 'b') || !(force || nx.startsWith('pass') || nx.startsWith('rev')) || REDUCED() || !card.animate) { then(); return; }
     card.style.position = 'relative';
+    const tw = app.querySelector('.pj-turn'); if (tw) tw.classList.add('sealing');
     const back = document.createElement('div');
     back.className = 'pj-seal ' + x; back.innerHTML = `${ic('lock', 30)}<b>Guardado en secreto</b>`;
-    card.animate([{ transform: 'perspective(900px) rotateY(0)' }, { transform: 'perspective(900px) rotateY(90deg)' }], { duration: 260, easing: 'ease-in', fill: 'forwards' }).onfinish = () => {
+    card.animate([{ transform: 'perspective(900px) rotateY(0)' }, { transform: 'perspective(900px) rotateY(90deg)' }], { duration: 240, easing: 'cubic-bezier(.55,0,.7,.2)', fill: 'forwards' }).onfinish = () => {
       card.appendChild(back);
-      const a = card.animate([{ transform: 'perspective(900px) rotateY(-90deg)', opacity: 1 }, { transform: 'perspective(900px) rotateY(0)', opacity: 1, offset: .35 }, { transform: 'perspective(900px) rotateY(0)', opacity: 1, offset: .7 },
-        { transform: `perspective(900px) translateX(${x === 'a' ? '' : '-'}120%) rotate(${x === 'a' ? 8 : -8}deg)`, opacity: 0 }], { duration: 1100, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
-      a.onfinish = then;
+      card.animate([{ transform: 'perspective(900px) rotateY(-90deg)' }, { transform: 'perspective(900px) rotateY(0)' }], { duration: 420, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' }).onfinish = () => {
+        // Se queda un momento boca abajo y la pantalla entera se funde hacia arriba.
+        setTimeout(() => {
+          const turn = app.querySelector('.pj-turn') || card;
+          turn.classList.add('fade-out');
+          setTimeout(pjGoFade, 430);
+        }, 650);
+      };
     };
   }
   function pjSheetBlock() {
@@ -1389,13 +1398,15 @@
   }
   function endPjBridge() {
     clearTimeout(BRIDGE_T);
-    if (!app.querySelector('.bridge')) return;
-    swipe(() => { S.stage = 'pareja'; render(); window.scrollTo(0, 0); });
+    const br = app.querySelector('.bridge'); if (!br || br.classList.contains('fade-out')) return;
+    br.classList.add('fade-out');
+    setTimeout(() => { S.stage = 'pareja'; render(); window.scrollTo(0, 0); }, 450);
   }
   function endBridge() {
     clearTimeout(BRIDGE_T);
-    if (!app.querySelector('.bridge')) return;
-    swipe(() => { S.stage = 'quiz'; render(); });
+    const br = app.querySelector('.bridge'); if (!br || br.classList.contains('fade-out')) return;
+    br.classList.add('fade-out');
+    setTimeout(() => { S.stage = 'quiz'; render(); }, 450);
   }
 
   function render() {
@@ -1519,7 +1530,7 @@
         const x = b.dataset.x, t = document.getElementById('pjfrase'), txt = v === 'skip' ? '' : (t ? t.value.trim() : '');
         S.pj.frase[x] = txt || null; pjFraseSet(); save();
         if (txt && window.Fondo) Fondo.pulse();
-        b.disabled = true; setTimeout(pjGo, txt ? 500 : 0); break;
+        b.disabled = true; if (txt) pjSeal(pjGo, true); else pjGo(); break;
       }
       case 'pjpact': CAL.pact = CAL.pact || {}; CAL.pact[b.dataset.x] = !CAL.pact[b.dataset.x]; calSheet(CAL.kind, true); break;
       case 'pjpick': { const kind = k, x = b.dataset.x; S.pj[kind][x] = v; save();
