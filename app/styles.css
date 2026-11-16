@@ -1142,3 +1142,8 @@ body.gl .lake .rip { display: none; }
 .hello h1 .h-b { background: linear-gradient(90deg, var(--accent), #8b5cf6 70%); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: .06em; }
 body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .chip.sm[aria-pressed="true"] { background: #6a4ce0; border-color: #6a4ce0; color: #fff; }
+.pj-goals span.mine { background: var(--accent-soft, #fff1e6); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.pj-goals span.mine b { font-weight: 700; color: var(--accent); }
+.pj-ladder li.mine small i { font-style: normal; font-weight: 700; color: var(--accent); }
+.pj-knows { list-style: none; margin: 4px 0 14px; padding: 0; display: grid; gap: 8px; text-align: left; }
+.pj-knows li { font-size: 14px; line-height: 1.35; padding: 10px 12px; border-radius: 12px; background: var(--bg-2); color: var(--ink); }
