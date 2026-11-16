@@ -65,6 +65,77 @@
   }
   const accepted = () => E.pasos.map(p => p.key).filter(k => S.steps[k] === 'yes');
 
+  // ------------------------------------------------------------------ la ruta
+  // Un solo hilo para el quiz, el resumen y el plan: de la nota de hoy a la del plan, parada a parada.
+  // Las paradas son los pasos del plan. En el quiz se descubren (cada sorpresa enseña la parada que la arregla),
+  // en el resumen se repasan y en el plan se deciden. Solo cifras del plan: la nota de hoy, la de cada paso y la máxima.
+  const TEMA_PASOS = { tarjeta: ['card'], vida: ['life'], jubilacion: ['withdraw', 'savings'], inversion: ['conc', 'growth'], colchon: [] };
+  const pasoDe = q => {
+    if (!q || q.tono !== 'malo') return null;
+    const ks = TEMA_PASOS[q.tema] || [];
+    return E.pasos.find(p => ks.includes(p.key)) || null;
+  };
+  const vistos = () => (S.seen = S.seen || {});
+  function descubrir(q) { // al revelar: la parada que arregla esto queda descubierta
+    const p = pasoDe(q);
+    if (p) vistos()[p.key] = true;
+    else if (q.tema === 'nota' && q.tono === 'malo') E.pasos.forEach(x => { vistos()[x.key] = true; });
+    // La sorpresa más grande es la primera revelación mala y lejos de lo que pensaban: solo ahí se ofrece la reunión.
+    if (S.bigQ == null && q.tono === 'malo' && banda(q, S.a[q.id].value) === 'lejos') S.bigQ = q.id;
+  }
+  const FASE = { quiz: 'Descubrir', story: 'Repasar', plan: 'Decidir', tema: 'Repasar' };
+  function routeBar() {
+    const P = E.pasos; if (!P.length || !E.nota) return '';
+    const acc = accepted(), sc = scoreFor(acc).v, lo = E.nota.hoy, hi = Math.max(E.nota.max, lo + 1), seen = vistos();
+    const nDone = acc.length, nSeen = P.filter(p => seen[p.key] || acc.includes(p.key)).length;
+    const fases = ['quiz', 'story', 'plan'], cur = fases.indexOf(S.stage === 'tema' ? 'story' : S.stage);
+    const estado = nDone ? `${nDone} de ${P.length} ${P.length === 1 ? 'parada' : 'paradas'} en ${w('vuestra', 'tu')} ruta`
+      : S.stage === 'quiz' ? `${nSeen} de ${P.length} ${P.length === 1 ? 'parada descubierta' : 'paradas descubiertas'}` : `${P.length} ${P.length === 1 ? 'parada' : 'paradas'} hasta ${E.nota.max}`;
+    return `<nav class="route" aria-label="${w('Vuestra', 'Tu')} ruta: nota ${sc} de ${E.nota.max} posibles. ${esc(estado)}">
+      <div class="rt-top"><ol class="rt-fases">${fases.map((f, i) => `<li class="${i < cur ? 'past' : i === cur ? 'cur' : ''}">${FASE[f]}</li>`).join('')}</ol>
+        <span class="rt-sc"><b id="rt-now">${sc}</b><span>/ ${E.nota.max}</span></span></div>
+      <div class="rt-track"><span class="rt-end lo" title="Nota de hoy">${lo}</span>
+        <div class="rt-line">${P.map((p, i) => `<i class="rt-seg ${acc.includes(p.key) ? 'on' : ''}" style="left:${i / (P.length + 1) * 100}%;width:${100 / (P.length + 1)}%"></i>`).join('')}<i class="rt-seg ${acc.length === P.length ? 'on' : ''}" style="left:${P.length / (P.length + 1) * 100}%;width:${100 / (P.length + 1)}%"></i>
+        ${P.map((p, i) => { const st = acc.includes(p.key) ? 'done' : seen[p.key] || S.stage !== 'quiz' ? 'seen' : 'off';
+          return `<button class="rt-stop ${st}" id="rs-${p.key}" style="left:${(i + 1) / (P.length + 1) * 100}%" data-act="stop" data-s="${p.key}" aria-label="Parada ${i + 1}: ${st === 'off' ? 'por descubrir' : esc(pTitulo(p)) + (st === 'done' ? ', en la ruta' : '')}">${st === 'done' ? ic('check', 13) : st === 'off' ? '?' : i + 1}</button>`; }).join('')}</div>
+        <span class="rt-end hi" title="Nota con todo el plan">${hi}</span></div>
+      <p class="rt-st">${esc(estado)}</p></nav>`;
+  }
+  // Repinta solo la barra y el anillo, sin rehacer la pantalla (la revelación no vuelve a empezar).
+  function refreshRoute() {
+    const old = app.querySelector('.route'); if (!old) return;
+    const t = document.createElement('div'); t.innerHTML = routeBar(); const nu = t.firstElementChild; if (!nu) return;
+    old.replaceWith(nu);
+    nu.classList.add('bump'); setTimeout(() => nu.classList.remove('bump'), 700);
+  }
+  // Tarjeta al final de cada revelación: la parada de la ruta que arregla lo que acaban de ver.
+  function rvRoute(q) {
+    const p = pasoDe(q), i = p ? E.pasos.indexOf(p) : -1, yes = p && S.steps[p.key] === 'yes';
+    const big = S.bigQ === q.id && E.pasos.length;
+    const meet = big ? (S.booking
+      ? `<p class="saved">${ic('check', 15)}Reunión pedida: ${esc(S.booking.short)}</p>`
+      : `<div class="rr-meet"><p>Es lo que más se aleja de lo que ${w('pensabais', 'pensabas')}. Si ${w('preferís', 'prefieres')} verlo con una persona:</p><button class="btn soft block" data-act="book" data-k="quiz">${ic('cal', 18)} Elegir día con ${w('vuestro', 'tu')} asesor</button></div>`) : '';
+    let body;
+    if (p) {
+      body = `<div class="rr-k">${ic('flag', 15)}Esto tiene salida en ${w('vuestra', 'tu')} ruta</div>
+        <div class="rr-stop ${yes ? 'done' : ''}"><b class="rr-n">${yes ? ic('check', 15) : i + 1}</b><div><b>${esc(pTitulo(p))}</b><small>Parada ${i + 1} · ${quienTxt(p)} · con este paso, nota ${p.nota}</small></div></div>
+        ${q.salida ? `<p class="small muted rr-sal">${esc(q.salida)}</p>` : ''}
+        ${yes ? `<p class="saved">${ic('check', 15)}En ${w('vuestra', 'tu')} ruta. Lo ${w('decidís', 'decides')} del todo en el plan.</p>`
+          : `<button class="btn block" data-act="rtake" data-s="${p.key}">${ic('plus', 18)} ${w('Lo queremos', 'Lo quiero')} en ${w('nuestra', 'mi')} ruta</button>`}`;
+    } else if (q.tema === 'nota' && q.tono === 'malo' && E.pasos.length) {
+      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestra', 'Tu')} ruta, entera</div>
+        <p class="small" style="margin:0">De ${E.nota.hoy} a ${E.nota.max} en ${E.pasos.length} ${E.pasos.length === 1 ? 'parada' : 'paradas'}. Ya ${w('las veis', 'las ves')} arriba; ${w('las decidís', 'las decides')} en el plan.</p>
+        <ol class="rr-list">${E.pasos.map((x, k) => `<li><b class="rr-n sm">${S.steps[x.key] === 'yes' ? ic('check', 12) : k + 1}</b>${esc(pTitulo(x))}</li>`).join('')}</ol>`;
+    } else if (q.tono !== 'malo') {
+      body = `<div class="rr-k good">${ic('check', 15)}Esto ya está bien</div><p class="small muted rr-sal">${esc(q.salida || `Es parte de la base de ${w('vuestra', 'tu')} ruta: no hay que tocarlo.`)}</p>`;
+    } else {
+      const ya = S.doubts.some(d => d.id === 'rq-' + q.id);
+      body = `<div class="rr-k">${ic('chat', 15)}Para hablarlo en la reunión</div><p class="small muted rr-sal">${esc(q.salida || '')}</p>
+        ${ya ? `<p class="saved">${ic('check', 15)}Apuntado para ${w('vuestro', 'tu')} asesor</p>` : `<button class="btn soft block" data-act="rask" data-k="${q.id}">${ic('pen', 18)} Apuntarlo para ${w('vuestro', 'tu')} asesor</button>`}`;
+    }
+    return `<div class="rv-route" data-st="fade">${body}${meet}</div>`;
+  }
+
   // ------------------------------------------------------------------ iconos (trazo, 24x24)
   const ICP = {
     heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
@@ -176,7 +247,7 @@
       <span class="rl-m you" style="left:${g}%"><small>${w('Vosotros', 'Tú')}</small></span><span class="rl-m plan" style="left:${r}%"><small>Estudio</small></span></div></div>`;
   }
   function revealView(q) {
-    const a = S.a[q.id], r = S.react[q.id], bad = q.tono === 'malo', b = banda(q, a.value), help = S.help && S.help[q.id], tit = titular(q, a.value);
+    const a = S.a[q.id], r = S.react[q.id], bad = q.tono === 'malo', b = banda(q, a.value), tit = titular(q, a.value);
     const count = q.tipo === 'importe' ? { to: q.real, fmt: 'money' } : q.tipo === 'anio' ? { from: a.value, to: q.real, fmt: 'year' } : q.tipo === 'num' && !q.mid ? { to: q.real, fmt: 'num', suf: q.sufijo || '', d: q.real % 1 ? 1 : 0 } : null;
     return `<div class="rv2 ${bad ? 'bad' : 'good'} b-${b} ${JUST ? 'play' : ''}">
       <p class="rv-guess">${w('Vosotros decíais', 'Tú decías')} <b>${esc(fmtGuess(q, a.value))}</b></p>
@@ -187,6 +258,7 @@
       <div class="rv-prec" data-st="type"><small class="rv-band">${esc(BANDA[b]())}</small><h2 class="rv-type" data-text="${esc(tit)}">${esc(tit)}</h2></div>
       <div class="rv-vis" data-st="vis">${vis(q)}</div>
       ${q.siente ? `<p class="rv-feel" data-st="fade">${q.siente}</p>` : ''}
+      ${rvRoute(q)}
       <div class="rv-note" data-st="fade"><div class="rv-note-q">¿Qué ${w('os pasa', 'te pasa')} por la cabeza al ver esto?</div>
         <div class="rx-row">${REACT.map(([v, l, i]) => `<button class="rx" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}"><span class="sg-ic">${ic(i, 18)}</span><span>${l()}</span></button>`).join('')}</div>
         <p class="saved rx-ok" ${r ? '' : 'hidden'}>${ic('check', 15)}Apuntado para ${w('vuestro', 'tu')} asesor</p>
@@ -194,9 +266,8 @@
         <div class="note-w" ${(S.notes || {})[q.id] ? '' : 'hidden'}><label for="note" class="sr">Con ${w('vuestras', 'tus')} palabras</label>
         <textarea id="note" class="free" rows="2" maxlength="200" data-k="${q.id}" placeholder="${w('Escribidlo como os salga', 'Escríbelo como te salga')}">${esc((S.notes || {})[q.id] || '')}</textarea>
         ${(S.notes || {})[q.id] ? `<p class="saved">${ic('check', 15)}Guardado en el cuaderno de ${w('vuestro', 'tu')} asesor</p>` : `<button class="btn soft savebtn" data-act="note" data-k="${q.id}" disabled>Guardar para ${w('vuestro', 'tu')} asesor</button>`}</div></div>
-      ${help ? `<div class="rv-exit" id="rv-exit"><span class="dc-ic">${ic(bad ? 'arrow' : 'check', 20)}</span><span>${esc(q.salida)}</span></div>` : ''}
       <div class="rv-foot" data-st="fade">${proBlock(q)}${origen(q)}</div>
-      <div class="rv-dock" data-st="dock">${help ? dock('Seguir', true) : `<div class="dock"><button class="btn block" data-act="help" data-k="${q.id}">Podemos ${w('ayudaros', 'ayudarte')} con esto</button><button class="link block" data-act="next">Seguir</button></div>`}</div>
+      <div class="rv-dock" data-st="dock">${dock('Seguir', true)}</div>
     </div>`;
   }
 
@@ -333,15 +404,15 @@
     return q;
   }
   // «Os escuchamos»: la frase vuela al cuaderno del asesor.
-  function fly(from, txt) {
-    const nb = document.getElementById('nb'); if (!from || !nb || !txt) return;
+  function fly(from, txt, to = 'nb') {
+    const nb = document.getElementById(to); if (!from || !nb || !txt) return;
     const a = from.getBoundingClientRect(), b = nb.getBoundingClientRect(), el = document.createElement('div');
     el.className = 'fly'; el.textContent = txt.length > 60 ? txt.slice(0, 58) + '…' : txt;
     el.style.left = a.left + 'px'; el.style.top = a.top + 'px'; el.style.width = Math.min(a.width, 320) + 'px';
     document.body.appendChild(el);
     const dx = b.left + b.width / 2 - (a.left + Math.min(a.width, 320) / 2), dy = b.top + b.height / 2 - (a.top + 20);
     const an = el.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${dx * .5}px, ${dy * .45}px) scale(.6)`, opacity: .9, offset: .55 }, { transform: `translate(${dx}px, ${dy}px) scale(.12)`, opacity: 0 }], { duration: 850, easing: 'cubic-bezier(.4,0,.2,1)' });
-    an.onfinish = () => { el.remove(); const n = document.getElementById('nb'); if (n) { n.classList.remove('got'); void n.offsetWidth; n.classList.add('got'); } };
+    an.onfinish = () => { el.remove(); const n = document.getElementById(to); if (n) { n.classList.remove('got'); void n.offsetWidth; n.classList.add('got'); } };
   }
   const nbCount = () => (S.phrase ? 1 : 0) + Object.keys(S.notes || {}).length;
   function nbSheet() {
@@ -389,9 +460,10 @@
   function renderQuiz() {
     const step = QUIZ[S.qi];
     clearTimeout(INTRO_T);
-    if (PEND === step) { app.innerHTML = `<div class="narrow">${progress()}${suspense(QMAP[step])}</div>`; window.scrollTo(0, 0); return; }
+    const rb = QMAP[step] || step === 'gain' ? routeBar() : '';
+    if (PEND === step) { app.innerHTML = `<div class="narrow">${rb}${progress()}${suspense(QMAP[step])}</div>`; window.scrollTo(0, 0); return; }
     const q = QMAP[step], a = q ? (S.a[q.id] || {}) : {};
-    if (q && a.revealed) { app.innerHTML = `<div class="narrow">${progress()}${revealView(q)}</div>`; if (!JUST) animateRing(); return; }
+    if (q && a.revealed) { app.innerHTML = `<div class="narrow">${rb}${progress()}${revealView(q)}</div>`; if (!JUST) animateRing(); return; }
     const perm = q && q.permiso && !a.permission, key = step + (perm ? ':permiso' : '');
     const intro = INTRO !== key; INTRO = key;
     if (intro) BUCKET = null;
@@ -429,7 +501,7 @@
       dk = dock(q.tipo === 'anio' ? 'Ver la fecha' : q.tipo === 'opciones' ? 'Ver la respuesta' : 'Ver el dato', has, 'reveal');
     }
     if (window.Fondo) { Fondo.mood(0); Fondo.focus(false); Fondo.tint(quizAnswered(step, a) ? 'pick' : null); }
-    app.innerHTML = `<div class="narrow"><div class="qstage ${intro ? 'intro' : ''}">${progress()}<div class="qhead">${head}</div><div class="qbody">${body}</div>${dk}</div></div>`;
+    app.innerHTML = `<div class="narrow">${rb}<div class="qstage ${intro ? 'intro' : ''}">${progress()}<div class="qhead">${head}</div><div class="qbody">${body}</div>${dk}</div></div>`;
     if (intro) { window.scrollTo(0, 0); introQ(); }
   }
 
@@ -554,7 +626,7 @@
     const i = rulMod(RUL.rot), id = SLIDES[i], n = rulN(), prev = SLIDES[(i + n - 1) % n], next = SLIDES[(i + 1) % n];
     const back = ic('arrow', 18).replace('<svg', '<svg style="transform:rotate(180deg)"');
     const open = S.rulOpen != null ? SLIDES.find(x => rulKey(x) === S.rulOpen) : null;
-    app.innerHTML = `<div class="rul-wrap"><div class="narrow"><div class="segs" aria-label="Tarjeta ${i + 1} de ${n}">${SLIDES.map((x, k) => `<button data-act="goslide" data-v="${k}" class="${k === i ? 'cur' : ''}" aria-label="Ir a ${esc(rulName(x))}"></button>`).join('')}</div></div>
+    app.innerHTML = `<div class="rul-wrap"><div class="narrow">${routeBar()}<div class="segs" aria-label="Tarjeta ${i + 1} de ${n}">${SLIDES.map((x, k) => `<button data-act="goslide" data-v="${k}" class="${k === i ? 'cur' : ''}" aria-label="Ir a ${esc(rulName(x))}"></button>`).join('')}</div></div>
       <div class="rul-stage" data-rul aria-roledescription="carrusel" aria-label="Resumen de ${w('vuestro', 'tu')} plan"><div class="rul-ring">${SLIDES.map((x, k) => `<section class="rul-card" data-i="${k}" aria-label="${esc(rulName(x))}" ${k === i ? '' : 'aria-hidden="true"'}><div class="rul-in slide">${slideHtml(x)}
         ${rulKey(x) ? `<button class="rul-abrir" data-act="rulopen" data-v="${esc(rulKey(x))}">${ic('plus', 16)}<span>Abrir página</span></button>` : ''}</div></section>`).join('')}</div></div>
       <div class="narrow rul-nav"><button class="rul-arr" data-act="rulgo" data-v="-1" aria-label="Anterior: ${esc(rulName(prev))}">${back}<span>${esc(rulName(prev))}</span></button><span class="rul-pos">${i + 1} / ${n}</span><button class="rul-arr nx" data-act="rulgo" data-v="1" aria-label="Siguiente: ${esc(rulName(next))}"><span>${esc(rulName(next))}</span>${ic('arrow', 18)}</button></div></div>
@@ -754,7 +826,7 @@
   function temaCard(x, i, modo) {
     const { a, t, pasos } = x, story = modo === 'story';
     const plan = pasos.length
-      ? (story ? `<ul class="tm-pl">${pasos.map(p => `<li><b class="tm-n">${E.pasos.indexOf(p) + 1}</b>${esc(pTitulo(p))}</li>`).join('')}</ul>` : pasos.map(pasoTema).join(''))
+      ? (story ? `<ul class="tm-pl">${pasos.map(p => { const y = S.steps[p.key] === 'yes', v = (S.seen || {})[p.key]; return `<li class="${y ? 'done' : v ? 'seen' : ''}"><b class="tm-n">${y ? ic('check', 12) : E.pasos.indexOf(p) + 1}</b><span>${esc(pTitulo(p))}${y ? `<small>En ${w('vuestra', 'tu')} ruta</small>` : v ? `<small>Lo ${w('descubristeis', 'descubriste')} en el quiz</small>` : ''}</span></li>`; }).join('')}</ul>` : pasos.map(pasoTema).join(''))
       : sinPaso(x);
     const men = x.qs.some(q => (S.match || []).includes(q.id)) ? `<span class="porque tm-men">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
     return `<article class="tema ${nivel(a.nota)}" style="--i:${i}">${men}
@@ -953,14 +1025,15 @@
         <ul class="ticks"><li>${ic('check', 16)}${w('Salís', 'Sales')} con el orden de ${w('vuestros', 'tus')} pasos y respuesta a ${w('vuestras', 'tus')} dudas</li><li>${ic('check', 16)}${ns.mins} minutos por videollamada</li><li>${ic('check', 16)}No hay que preparar nada</li></ul>
         <button class="btn block big-cta" data-act="book">${ic('cal')} ${c.yes ? `Elegir día con ${w('vuestro', 'tu')} asesor` : `Hablarlo con ${w('vuestro', 'tu')} asesor`}</button>
         <p class="tiny" style="text-align:center;margin:.6em 0 0">Sin compromiso. ${w('Decidís vosotros', 'Decides tú')}.</p>`}
-        <button class="link" style="width:100%" data-act="whatif">Antes, ${w('tenemos', 'tengo')} otra pregunta</button></div>
+        <button class="link" style="width:100%" data-act="whatif">Antes, ${w('tenemos', 'tengo')} otra pregunta</button>
+        ${S.booking ? '' : `<button class="link" style="width:100%" data-act="later">${window.__PREVIEW__ ? (S.later ? 'Sin prisa: el plan sigue aquí' : 'Ahora no') : S.later ? 'Recordatorios a los 3 y 30 días, en el calendario' : `Ahora no. ${w('Recordádnoslo', 'Recuérdamelo')} en 3 y en 30 días`}</button>`}</div>
       ${weekCard()}
       ${E.primer && (S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>Cómo comprobamos que el primer paso está hecho</small></span>${ic('arrow', 18)}</button>` : ''}
       ${S.booking ? fold('hoja', ic('list', 16), `Lo que recibe ${w('vuestro', 'tu')} asesor`, `La hoja con ${w('vuestras', 'tus')} respuestas y dudas`, advisorSheet(), false) : ''}</div>`;
 
     main += `<p class="foot">Esto ayuda a entender el plan del asesor. No es consejo nuevo ni lo cambia. Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor. Caso de ejemplo del reto. ${fuente()}</p>`;
 
-    app.innerHTML = `<div class="plan-grid solo"><div>${main}</div></div>
+    app.innerHTML = `<div class="plan-grid solo"><div>${routeBar()}${main}</div></div>
       <div class="cta-bar"><div class="cta-in"><button class="btn ghost" data-act="whatif">${ic('pen', 16)} Preguntar</button>${S.booking
         ? `<button class="btn soft grow" data-act="gocierre">${ic('check', 18)} Reunión: ${esc(S.booking.short)}</button>`
         : `<button class="btn grow" data-act="book">${ic('cal', 18)} Pedir reunión</button>`}</div></div>`;
@@ -1683,7 +1756,22 @@
       case 'pjplan': S.prefs.level = S.prefs.level || 'new'; preparePlan(); break;
       case 'pjagain': S.pj = pjFresh(); S.doubts = S.doubts.filter(d => !/^pj-/.test(d.id)); render(); window.scrollTo(0, 0); break;
       case 'pjlevel': S.prefs.level = v; save(); app.querySelectorAll('[data-act="pjlevel"]').forEach(el => el.setAttribute('aria-pressed', el.dataset.v === v)); break;
-      case 'help': S.help[k] = true; keep(); { const ex = document.getElementById('rv-exit'); if (ex) ex.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break;
+      case 'rtake': { // desde la sorpresa: la parada entra en la ruta y la nota sube
+        const s0 = b.dataset.s, before = scoreFor(accepted()).v; S.steps[s0] = 'yes'; save();
+        const after = scoreFor(accepted()).v, stop = document.getElementById('rs-' + s0);
+        if (stop) stop.scrollIntoView({ block: 'nearest' });
+        fly(b, pTitulo(paso(s0)), 'rs-' + s0);
+        setTimeout(() => { keep(); refreshRoute(); toast(after > before ? `${w('Vuestra', 'Tu')} nota sube de ${before} a ${after}` : 'En la ruta'); }, 860);
+        break;
+      }
+      case 'rask': { const q = QMAP[k]; if (!S.doubts.some(d => d.id === 'rq-' + k)) S.doubts.push({ id: 'rq-' + k, topic: 'otra', q: `${q.creian}: ${q.plan} ${q.unidad}. ¿Cómo lo arreglamos?`, covered: 'no', status: 'open' }); fly(b, 'Para la reunión'); keep(); break; }
+      case 'stop': {
+        const p = paso(b.dataset.s), i = E.pasos.indexOf(p);
+        if (S.stage === 'plan') { const el = document.getElementById('step-' + p.key); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); } }
+        else if (S.stage === 'quiz' && !(S.seen || {})[p.key] && S.steps[p.key] !== 'yes') toast(`Parada ${i + 1}: aparece cuando ${w('descubráis', 'descubras')} lo que arregla`);
+        else toast(`Parada ${i + 1}: ${pTitulo(p)} · nota ${p.nota}`);
+        break;
+      }
       case 'skip': toPlan(); render(); window.scrollTo(0, 0); break;
       case 'caso': closeSheet(); await abrirCaso(v); render(); window.scrollTo(0, 0); break;
       case 'who': S.who = v; render(); advance(); break;
@@ -1696,7 +1784,7 @@
       case 'opt': S.a[k] = Object.assign(S.a[k] || {}, { value: +v }); render(); break;
       case 'perm': { const id = QUIZ[S.qi]; if (v === 'later') { S.a[id] = { permission: 'later' }; go(); } else { S.a[id] = Object.assign(S.a[id] || {}, { permission: 'now' }); render(); } break; }
       case 'reveal': {
-        const q = QMAP[QUIZ[S.qi]]; S.a[q.id].revealed = true;
+        const q = QMAP[QUIZ[S.qi]]; S.a[q.id].revealed = true; descubrir(q);
         if (document.startViewTransition) { document.startViewTransition(() => playReveal(q)); break; }
         const st = app.querySelector('.qstage'); if (st) st.classList.add('fade-out'); setTimeout(() => playReveal(q), 300); break;
       }
@@ -1732,7 +1820,7 @@
       case 'story': S.stage = 'story'; S.slide = 0; render(); window.scrollTo(0, 0); break;
       case 'tog': { const s = b.dataset.s; S.steps[s] = S.steps[s] === 'yes' ? null : 'yes'; keep(); break; }
       case 'oq': { const id = b.dataset.id; S.openQ = S.openQ.includes(id) ? S.openQ.filter(x => x !== id) : S.openQ.concat(id); keep(); break; }
-      case 'later': S.later = true; keep(); if (window.__PREVIEW__) toast('Sin prisa. El plan sigue aquí'); else { laterIcs(); toast('Recordatorio para dentro de una semana'); } break;
+      case 'later': S.later = true; keep(); if (window.__PREVIEW__) toast('Sin prisa. El plan sigue aquí'); else { laterIcs(); toast('Recordatorios a los 3 y a los 30 días'); } break;
       case 'vote': {
         const s = b.dataset.s, before = scoreFor(accepted()).v;
         S.steps[s] = S.steps[s] === v ? null : v; keep();
@@ -1766,7 +1854,7 @@
       case 'talk': talkSheet(); break;
       case 'settings': settingsSheet(); break;
       case 'setpref': S.prefs.level = v; keep(); settingsSheet(); break;
-      case 'book': if (S.stage === 'home' || S.stage === 'quiz') { toPlan(); render(); } calSheet('meet'); break;
+      case 'book': if (S.stage === 'home') { toPlan(); render(); } calSheet('meet'); break;
       case 'cal': calSheet(k); break;
       case 'calday': CAL.day = v; calSheet(CAL.kind, true); break;
       case 'caltime': CAL.time = v; calSheet(CAL.kind, true); break;
@@ -1801,9 +1889,20 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = name; a.click();
   }
   // «Ahora no»: una cita dentro de una semana, a las 19:00, que devuelve al plan.
+  // «Ahora no»: dos citas reales en el calendario, a los 3 y a los 30 días, que vuelven a la ruta.
   function laterIcs() {
-    const d = new Date(); d.setDate(d.getDate() + 7); d.setHours(19, 0, 0, 0);
-    icsSave(icsEv(Date.now(), d, new Date(d.getTime() + 15 * 60000), 'Volver a vuestro plan' + (S.phrase ? ` · ${S.phrase}` : ''), 'Mirad vuestro plan y elegid el día para hablarlo con el asesor.', icsBase(), '-PT0M'), 'volver-al-plan.ics');
+    const evs = [3, 30].flatMap((n, i) => { const d = new Date(); d.setDate(d.getDate() + n); d.setHours(19, 0, 0, 0);
+      return icsEv(Date.now() + i, d, new Date(d.getTime() + 15 * 60000), `${w('Vuestra', 'Tu')} ruta, ${n} días después` + (S.phrase ? ` · ${S.phrase}` : ''), `Mirad qué paradas lleváis y cuál es la siguiente.`, icsBase() + '&vuelta=' + n, '-PT0M'); });
+    icsSave(evs, 'volver-a-la-ruta.ics');
+  }
+  // Al volver desde esas citas (?vuelta=3 o 30): lo hecho, lo que falta y la siguiente parada.
+  function vueltaSheet(n) {
+    const P = E.pasos, acc = accepted(), sc = scoreFor(acc).v, sig = P.find(p => !acc.includes(p.key));
+    sheet(`<div class="kicker">${n} días después</div><h2>${acc.length ? `${w('Lleváis', 'Llevas')} ${acc.length} de ${P.length} paradas. Nota ${sc}.` : `${w('Vuestra', 'Tu')} ruta sigue aquí, en ${sc}.`}</h2>
+      ${S.phrase ? `<p class="week-why">${w('Lo que os movía', 'Lo que te movía')}: <b>«${esc(S.phrase)}»</b></p>` : ''}
+      <ol class="rr-list big">${P.map((p, i) => `<li class="${acc.includes(p.key) ? 'done' : p === sig ? 'next' : ''}"><b class="rr-n sm">${acc.includes(p.key) ? ic('check', 12) : i + 1}</b><span>${esc(pTitulo(p))}<small>${acc.includes(p.key) ? 'Hecho o decidido' : p === sig ? `Siguiente · con este paso, nota ${p.nota}` : `Nota ${p.nota}`}</small></span></li>`).join('')}</ol>
+      ${S.booking ? `<p class="saved">${ic('check', 15)}Reunión pedida: ${esc(S.booking.short)}</p><button class="btn block" data-act="close">Ver ${w('vuestro', 'tu')} plan</button>`
+        : `<button class="btn block" data-act="book">${ic('cal', 18)} ${sig && sig.quien === 'familia' ? 'Elegir día para hacerlo' : `Elegir día con ${w('vuestro', 'tu')} asesor`}</button><button class="link" style="width:100%" data-act="close">Ver ${w('vuestro', 'tu')} plan</button>`}`);
   }
   function downloadIcs(kind) {
     const pay = kind === 'pay', b = pay ? S.payDate : S.booking; if (!b) return;
@@ -1836,7 +1935,8 @@
       await abrirCaso(slug, q.has('reset'));
       if (q.get('demo') === 'plan' || q.get('demo') === 'story') { S.stage = q.get('demo'); S.prefs.level = q.get('l') === 'pro' ? 'pro' : 'new'; S.phrase = S.phrase || E.frases[0]; if (q.get('s')) S.slide = +q.get('s'); }
       render();
-      if (q.get('semana') && E.primer && S.payDate && !S.week) weekSheet(true);
+      if (q.get('vuelta') && E.pasos.length) { if (S.stage === 'home' || S.stage === 'quiz') { toPlan(); render(); } vueltaSheet(+q.get('vuelta') || 3); }
+      else if (q.get('semana') && E.primer && S.payDate && !S.week) weekSheet(true);
       else if (q.get('reunion') && S.booking && S.stage === 'pareja' && pjDone()) pjBooked(true);
     } catch (err) {
       console.error(err);

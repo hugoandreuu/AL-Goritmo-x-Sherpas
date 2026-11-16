@@ -1456,3 +1456,58 @@ body.fondo-on .rul-arr { background: rgba(255,255,255,.85); -webkit-backdrop-fil
   .rul-in .card-btn > .foto + .areas { margin-top: 0; }
   .rul-in .ar { grid-template-columns: 28px 1fr 70px 28px; gap: 8px; }
 }
+
+/* La ruta: un solo hilo para el quiz, el resumen y el plan. De la nota de hoy a la del plan, parada a parada. */
+.route { background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 16px; padding: 9px 12px 8px; margin: 0 0 14px; box-shadow: var(--shadow); }
+.plan-grid .route { position: sticky; top: 64px; z-index: 15; backdrop-filter: blur(8px); }
+.rt-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rt-fases { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; font-size: 12px; font-weight: 600; color: var(--ink-3); letter-spacing: .02em; }
+.rt-fases li { display: flex; align-items: center; gap: 4px; }
+.rt-fases li + li::before { content: ""; width: 10px; height: 1.5px; background: var(--line); }
+.rt-fases li.past { color: var(--ink-2); }
+.rt-fases li.cur { color: var(--accent); }
+.rt-sc { display: inline-flex; align-items: baseline; gap: 3px; font-size: 12px; color: var(--ink-3); }
+.rt-sc b { font: 700 19px/1 var(--head); color: var(--ink); }
+.route.bump .rt-sc b { animation: bump .6s var(--soft); display: inline-block; }
+.rt-track { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.rt-end { font-size: 12px; font-weight: 600; color: var(--ink-3); min-width: 18px; text-align: center; }
+.rt-end.hi { color: var(--accent); }
+.rt-line { position: relative; flex: 1; height: 6px; border-radius: 6px; background: #e3e7f3; margin: 9px 0; }
+.rt-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: linear-gradient(90deg, var(--sky), var(--accent)); transition: width .9s var(--soft); }
+.rt-stop { position: absolute; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; display: grid; place-items: center; font: 700 12px/1 var(--font); cursor: pointer; padding: 0; transition: background .3s, border-color .3s, transform .3s var(--soft); }
+.rt-stop::after { content: ""; position: absolute; inset: -9px; } /* zona táctil de 44px */
+.rt-stop.off { background: #fff; border: 1.5px dashed #c3c9da; color: var(--ink-3); }
+.rt-stop.seen { background: #fff; border: 2px solid var(--accent); color: var(--accent); animation: stopin .6s var(--soft); }
+.rt-stop.done { background: var(--good); border: 2px solid var(--good); color: #fff; }
+.rt-stop.got { animation: bump .6s var(--soft); }
+@keyframes stopin { from { transform: scale(.4); } 60% { transform: scale(1.18); } to { transform: none; } }
+.rt-st { margin: 2px 0 0; font-size: 12px; color: var(--ink-3); }
+
+/* Final de cada sorpresa: la parada de la ruta que la arregla. */
+.rv2 .rv-route { background: var(--accent-soft); border-radius: 20px; padding: 16px; display: grid; gap: 10px; }
+.rr-k { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--accent); }
+.rr-k.good { color: var(--good); }
+.rr-stop { display: flex; gap: 12px; align-items: center; background: #fff; border-radius: 14px; padding: 12px; }
+.rr-stop small { display: block; font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+.rr-n { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; font: 700 14px/1 var(--font); }
+.rr-stop.done .rr-n, li.done > .rr-n { background: var(--good); }
+.rr-n.sm { width: 22px; height: 22px; font-size: 12px; }
+.rr-sal { margin: 0; }
+.rr-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 15px; }
+.rr-list li { display: flex; gap: 8px; align-items: center; }
+.rr-list.big { gap: 10px; margin: 10px 0 16px; }
+.rr-list.big li { align-items: flex-start; }
+.rr-list li small { display: block; font-size: 12.5px; color: var(--ink-3); }
+.rr-list li.next { font-weight: 600; }
+.rr-list li.next > .rr-n { box-shadow: 0 0 0 4px var(--accent-soft); }
+.rr-meet { border-top: 1px dashed #c8d2f6; padding-top: 12px; display: grid; gap: 8px; }
+.rr-meet p { margin: 0; font-size: 14.5px; }
+.tm-pl li.done small, .tm-pl li.seen small { display: block; font-size: 12px; color: var(--accent); }
+.tm-pl li.done small { color: var(--good); }
+.tm-pl li.done .tm-n { background: var(--good); color: #fff; }
+.tm-paso.flash { animation: flash 1.2s var(--soft); }
+@keyframes flash { 0%, 100% { box-shadow: none; } 30% { box-shadow: 0 0 0 4px var(--accent-soft), 0 0 0 6px var(--accent); } }
+.rt-seg { position: absolute; top: 0; bottom: 0; background: transparent; transition: background .6s var(--soft); }
+.rt-seg.on { background: linear-gradient(90deg, var(--sky), var(--accent)); }
+.rt-seg:first-child { border-radius: 6px 0 0 6px; } .rt-seg:last-of-type { border-radius: 0 6px 6px 0; }
+.rr-list li > span { display: block; line-height: 1.3; }
