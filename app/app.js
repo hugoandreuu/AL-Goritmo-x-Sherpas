@@ -548,28 +548,6 @@
   }
   const doubtLine = d => `<div class="doubt ${d.status === 'resolved' ? 'resolved' : 'advisor'}"><div class="spread"><b class="small">${esc(d.q)}</b>${d.status === 'resolved' ? '<span class="tag good">Resuelta</span>' : '<span class="tag acc">Para la reunión</span>'}</div></div>`;
 
-  function stepCard(p, i) {
-    const v = S.steps[p.key], mine = S.doubts.filter(d => d.paso === p.key);
-    let after = '';
-    if (E.primer && E.primer.key === p.key && v === 'yes') {
-      after = S.payDate
-        ? `<div class="datechip"><span class="dc-ic">${ic('cal', 22)}</span><div><small>Lo ${w('hacéis', 'haces')} el</small><b>${esc(S.payDate.label)}</b></div><button class="link small" data-act="cal" data-k="pay">Cambiar</button></div>
-           <details class="why"><summary>Cómo se hace, en tres pasos</summary><ol class="how">${E.primer.como.map(x => `<li>${esc(x)}</li>`).join('')}</ol>${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="ics" data-k="pay">Añadir al calendario</button>'}</details>`
-        : `<button class="btn block" style="margin-top:12px" data-act="cal" data-k="pay">${ic('cal')} Elegir día y hora</button>`;
-    } else if (v === 'yes') {
-      after = p.quien === 'asesor' ? `<div class="datechip soft"><span class="dc-ic">${ic('chat', 22)}</span><div><small>Este paso se hace con ${w('vuestro', 'tu')} asesor</small><b>Lo trae preparado a la reunión</b></div></div>` : '';
-    }
-    return `<div class="rstep ${v === 'yes' ? 'done' : ''}" id="step-${p.key}"><span class="rdot">${v === 'yes' ? ic('check', 18) : i + 1}</span>
-     <div class="card step">
-      <div class="spread" style="align-items:flex-start"><div class="kicker" style="margin:0">${quienTxt(p)} · esfuerzo ${esc(p.esfuerzo)}</div><span class="tag acc" title="Nota si solo se hace este paso">Solo: nota ${p.nota}</span></div>
-      <h3 style="margin:6px 0">${esc(pTitulo(p))}</h3>
-      ${p.porque ? `<p>${esc(p.porque)}</p>` : ''}
-      <p style="margin:14px 0 0;font-weight:600">¿${w('Os', 'Te')} convence?</p>
-      <div class="vote">${[['yes', 'Sí'], ['doubt', w('Tenemos dudas', 'Tengo dudas')], ['no', 'No']].map(([k, l]) => `<button class="chip" data-act="vote" data-s="${p.key}" data-v="${k}" aria-pressed="${v === k}">${l}</button>`).join('')}</div>
-      ${after}${mine.length ? `<div style="margin-top:10px">${mine.map(doubtLine).join('')}</div>` : ''}
-     </div></div>`;
-  }
-
   function believed() {
     return E.preguntas.filter(q => (S.a[q.id] || {}).revealed).map(q => [q.creian, fmtGuess(q, S.a[q.id].value), `${q.plan} ${q.unidad}`]);
   }
@@ -601,18 +579,85 @@
     return `Datos del plan: ${g.datos === 'mcp' ? 'MCP de Sherpas' : 'archivos del caso (los mismos que sirve el MCP de Sherpas)'}. Frases: ${String(g.textos || '').startsWith('llm') ? `escritas por el LLM de Sherpas (${esc(g.textos.slice(4))}) y comprobadas contra el plan` : 'plantilla, pendientes de pasar por el LLM de Sherpas'}.`;
   };
 
+
+  // ------------------------------------------------------------------ el plan en 5 temas
+  // El plan es la estructura: las cinco áreas con las que calcula la nota. Cada pregunta del quiz
+  // era una situación dentro de uno de estos temas, y cada paso del plan cae en uno de ellos.
+  const TEMAS = {
+    'Ahorro': { sub: () => `Lo que ${w('guardáis', 'guardas')} y ${w('vuestra', 'tu')} jubilación`, temas: ['jubilacion'], ids: ['jubilacion'], pasos: ['savings', 'withdraw'], warn: x => x.icon === 'clock' },
+    'Deudas': { sub: () => 'La tarjeta y otros préstamos', temas: ['tarjeta'], ids: ['tarjeta_fin'], pasos: ['card'], warn: x => x.key === 'card' },
+    'Inversiones': { sub: () => 'Cómo está invertido lo ahorrado', temas: ['inversion'], ids: [], pasos: ['growth', 'conc'], warn: () => false },
+    'Colchón': { sub: () => 'El efectivo para imprevistos', temas: ['colchon'], ids: [], pasos: [], warn: () => false },
+    'Seguros': { sub: () => `Proteger a ${w('vuestra', 'tu')} familia y ${w('vuestra', 'tu')} casa`, temas: ['vida'], ids: [], pasos: ['life', 'umbrella', 'cover'], warn: () => false }
+  };
+  const ETIQ = { tarjeta_interes: 'Intereses al mes', tarjeta_fin: 'Fin de la tarjeta', vida: 'Seguro de vida', colchon: 'Efectivo', jubilacion: 'Jubilación', concentracion: 'En un solo fondo' };
+  function temasPlan() {
+    const usados = new Set();
+    const lista = E.areas.map(a => {
+      const t = TEMAS[a.nombre] || { sub: () => '', temas: [], ids: [], pasos: [], warn: () => false };
+      const pasos = E.pasos.filter(p => t.pasos.includes(p.key));
+      pasos.forEach(p => usados.add(p.key));
+      const hechos = [];
+      E.preguntas.filter(q => t.temas.includes(q.tema)).forEach(q => {
+        const r = (S.a[q.id] || {}).revealed ? S.a[q.id] : null;
+        hechos.push({ lab: ETIQ[q.id] || q.creian, txt: `<b>${esc(q.plan)}</b> ${esc(q.unidad)}`, dijo: r ? fmtGuess(q, r.value) : null, salida: q.salida });
+      });
+      (E.sinUsar || []).filter(x => t.ids.includes(x.id)).forEach(x => hechos.push({ lab: ETIQ[x.id] || x.creian, txt: esc(x.plan) }));
+      if (!hechos.length) E.linea.filter(x => x.c === 'warn' && t.warn(x)).forEach(x => hechos.push({ lab: String(x.anio), txt: esc(/hasta aquí/.test(x.t) ? x.t.replace('hasta aquí', 'hasta ' + x.anio) : x.t) }));
+      return { a, t, pasos, hechos: hechos.slice(0, 2) };
+    });
+    // Pasos que el código aún no sabe colocar: al tema con peor nota, para que no se pierdan.
+    const sueltos = E.pasos.filter(p => !usados.has(p.key));
+    if (sueltos.length && lista.length) lista.slice().sort((x, y) => x.a.nota - y.a.nota)[0].pasos.push(...sueltos);
+    // Orden: primero los temas donde el plan pide algo, en el orden de sus pasos; luego el resto, de peor a mejor nota.
+    const primero = x => x.pasos.length ? Math.min(...x.pasos.map(p => E.pasos.indexOf(p))) : 99;
+    return lista.sort((x, y) => primero(x) - primero(y) || x.a.nota - y.a.nota);
+  }
+  function pasoTema(p) {
+    const i = E.pasos.indexOf(p), v = S.steps[p.key], mine = S.doubts.filter(d => d.paso === p.key);
+    let after = '';
+    if (E.primer && E.primer.key === p.key && v === 'yes') {
+      after = S.payDate
+        ? `<div class="datechip"><span class="dc-ic">${ic('cal', 22)}</span><div><small>Lo ${w('hacéis', 'haces')} el</small><b>${esc(S.payDate.label)}</b></div><button class="link small" data-act="cal" data-k="pay">Cambiar</button></div>
+           <details class="why"><summary>Cómo se hace, en tres pasos</summary><ol class="how">${E.primer.como.map(x => `<li>${esc(x)}</li>`).join('')}</ol>${window.__PREVIEW__ ? '' : '<button class="btn soft" data-act="ics" data-k="pay">Añadir al calendario</button>'}</details>`
+        : `<button class="btn block" style="margin-top:12px" data-act="cal" data-k="pay">${ic('cal')} Elegir día y hora</button>`;
+    } else if (v === 'yes' && p.quien === 'asesor') after = `<p class="tiny" style="margin:8px 0 0">${ic('chat', 13)} ${w('Vuestro', 'Tu')} asesor lo trae preparado a la reunión.</p>`;
+    return `<div class="tm-paso ${v === 'yes' ? 'done' : ''}" id="step-${p.key}">
+      <div class="spread" style="align-items:flex-start"><span class="tiny"><b class="tm-n">${v === 'yes' ? ic('check', 13) : i + 1}</b>Paso ${i + 1} del plan · ${quienTxt(p)}</span><span class="tag acc" title="Nota si solo se hace este paso">Nota ${p.nota}</span></div>
+      <b class="tm-pt">${esc(pTitulo(p))}</b>${p.porque ? `<p class="small" style="margin:.2em 0 0">${esc(p.porque)}</p>` : ''}
+      <div class="vote sm"><span class="small">¿${w('Os', 'Te')} convence?</span>${[['yes', 'Sí'], ['doubt', 'Dudas'], ['no', 'No']].map(([k, l]) => `<button class="chip" data-act="vote" data-s="${p.key}" data-v="${k}" aria-pressed="${v === k}">${l}</button>`).join('')}</div>
+      ${after}${mine.length ? `<div style="margin-top:8px">${mine.map(doubtLine).join('')}</div>` : ''}</div>`;
+  }
+  function temaCard(x, i) {
+    const { a, t, pasos, hechos } = x, lvl = a.nota < 50 ? 'low' : a.nota < 75 ? 'mid' : 'hi';
+    const estado = lvl === 'low' ? 'A reforzar' : lvl === 'mid' ? 'Mejorable' : 'Bien';
+    const res = hechos.map(h => `<li><span class="tm-l">${esc(h.lab)}</span><span>${h.txt}${h.dijo ? ` <span class="tiny">(${w('pensabais', 'pensabas')} ${esc(h.dijo)})</span>` : ''}</span></li>`).join('');
+    const salida = !pasos.length && hechos.find(h => h.salida);
+    const plan = pasos.length
+      ? pasos.map(pasoTema).join('')
+      : `<p class="small muted" style="margin:0">${salida ? esc(salida.salida) : lvl === 'hi' ? 'Está bien así: el plan no pide cambios en este tema.' : `El plan no propone un paso aquí por ahora. Si ${w('os', 'te')} preocupa, ${w('preguntadlo', 'pregúntalo')} en la reunión.`}</p>`;
+    return `<article class="tema ${lvl}" style="--i:${i}">
+      <header class="tm-h"><span class="ar-ic">${ic(a.icon, 18)}</span><div class="tm-ht"><h3>${esc(a.nombre)}</h3><small>${esc(t.sub())}</small></div>
+        <div class="tm-s"><em>${a.nota}<small>/100</small></em><span class="tm-e">${estado}</span></div></header>
+      <div class="ar-b"><i style="width:${Math.max(3, a.nota)}%"></i></div>
+      ${res ? `<ul class="tm-res">${res}</ul>` : ''}
+      <div class="tm-plan"><div class="kicker" style="margin:0 0 6px">${pasos.length ? `Lo que propone ${w('vuestro', 'tu')} plan` : `${w('Vuestro', 'Tu')} plan`}</div>${plan}</div>
+    </article>`;
+  }
+
   function renderPlan() {
-    const ns = nextStep(), c = counts(), rows = believed(), acc = accepted(), sc = scoreFor(acc), max = E.nota.max, openAll = window.innerWidth >= 1000;
+    const ns = nextStep(), c = counts(), acc = accepted(), sc = scoreFor(acc), max = E.nota.max;
     let main = `<section class="planhero"><div class="kicker" style="margin:0">Plan de ${esc(E.fam.titulo)}</div>
       <h1>«${esc(S.phrase || `${w('Vuestro', 'Tu')} plan`)}»</h1>
       <div class="heroscore">${ring(sc.v, max)}
         <div><b class="hs-t">${acc.length ? `${w('Vuestra', 'Tu')} nota con lo que ${w('habéis', 'has')} aceptado` : `${w('Vuestra', 'Tu')} nota de salud financiera, hoy`}</b>
         <p class="muted small" style="margin:.3em 0 0">${max > E.nota.hoy ? `Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${max}</b>. ` : ''}${w('Lleváis', 'Llevas')} ${acc.length} de ${c.n}.${sc.parcial ? ' El plan da la nota de cada paso por separado.' : ''}</p></div></div></section>`;
 
-    main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestra', 'Tu')} hoja de ruta</div>
-      <p class="muted" style="margin-top:-2px">${c.n} ${c.n === 1 ? 'paso' : 'pasos'}, en el orden del plan. ${w('Decid', 'Di')} en cada uno si ${w('os', 'te')} convence.</p>
-      <div class="road"><div class="rstep start"><span class="rdot">${ic('flag', 16)}</span><div class="startc"><b>Hoy · nota ${E.nota.hoy}</b>${E.nota.banda ? `<small>${esc(E.nota.banda.replace(/^./, x => x.toUpperCase()))}, según ${w('vuestro', 'tu')} plan</small>` : ''}</div></div>
-      ${E.pasos.map(stepCard).join('')}${goalsStrip()}</div></div>`;
+    const temas = temasPlan();
+    main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestro', 'Tu')} plan en ${temas.length} temas</div>
+      <p class="muted" style="margin-top:-2px">Son las ${temas.length} partes con las que ${w('vuestro', 'tu')} plan calcula la nota. Lo que ${w('habéis', 'has')} contestado eran situaciones de estos temas. En cada uno, cómo está hoy y qué propone el plan.</p>
+      <div class="temas">${temas.map(temaCard).join('')}</div>
+      <div class="road solo-goals">${goalsStrip()}</div></div>`;
 
     main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Vuestro', 'Tu')} siguiente paso</div>
       <div class="card close"><div class="meter">
@@ -629,11 +674,7 @@
       ${E.primer && (S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>Cómo comprobamos que el primer paso está hecho</small></span>${ic('arrow', 18)}</button>` : ''}
       ${S.booking ? fold('hoja', ic('list', 16), `Lo que recibe ${w('vuestro', 'tu')} asesor`, `La hoja con ${w('vuestras', 'tus')} respuestas y dudas`, advisorSheet(), false) : ''}</div>`;
 
-    main += `<div class="section"><div class="kicker"><b>3</b>Más sobre ${w('vuestro', 'tu')} plan</div>`;
-    if (rows.length) main += fold('creiais', ic('eye', 16), `Lo que ${w('creíais', 'creías')} y lo que dice el plan`, `${rows.length} respuestas comparadas`, `<div class="card">${tbl(rows)}</div>`, openAll);
-    main += fold('linea', ic('flag', 16), `De hoy a ${w('vuestra', 'tu')} jubilación`, 'Los pasos, las compras y las fechas del plan en una línea', lineaHtml(), openAll);
-    main += fold('areas', ic('chart', 16), `${w('Vuestra', 'Tu')} nota por áreas`, 'Las cinco áreas con las que el plan calcula la nota', `<div class="card">${rowsTbl(E.areas.map(a => [a.nombre, `${a.nota} de 100`]))}</div>`, openAll);
-    main += `</div><p class="foot">Esto ayuda a entender el plan del asesor. No es consejo nuevo ni lo cambia. Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor. Caso de ejemplo del reto. ${fuente()}</p>`;
+    main += `<p class="foot">Esto ayuda a entender el plan del asesor. No es consejo nuevo ni lo cambia. Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor. Caso de ejemplo del reto. ${fuente()}</p>`;
 
     app.innerHTML = `<div class="plan-grid solo"><div>${main}</div></div>
       <div class="cta-bar"><div class="cta-in"><button class="btn ghost" data-act="whatif">${ic('pen', 16)} Preguntar</button>${S.booking

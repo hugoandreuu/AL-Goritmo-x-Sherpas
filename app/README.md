@@ -25,7 +25,7 @@ Las pocas cuentas propias (por ejemplo, años de gastos que cubre el seguro) las
 2. **Quién mira, qué importa y nivel.** "Somos nuevos" o "Sabemos de finanzas" (añade el bloque técnico y el origen de cada cifra).
 3. **Adivinar y ver.** De 3 a 5 preguntas, las que el estudio trae para ese caso. Tras contestar: "decíais / el plan dice", un titular distinto si acertó, si el dato es mayor o si es menor, una imagen, la frase para sentirlo, la salida y una reacción de un toque.
 4. **Recorrido.** La foto (nota y sus cinco áreas), los dos frenos, los pasos con interruptores y la nota que da el plan, la línea de hoy a la jubilación, el primer paso con calendario (solo si el primer paso del plan lo puede hacer la familia sola) y la reunión.
-5. **Plan completo.** Hoja de ruta con "¿Os convence?", reunión, lo que creían frente al plan y la hoja para el asesor.
+5. **Plan completo: el plan en 5 temas.** El plan es la estructura y las preguntas eran situaciones dentro de él. La pantalla son las cinco áreas con las que el plan calcula la nota (ahorro y jubilación, deudas, inversiones, colchón y seguros), cada una como un bloque breve: su nota, cómo está hoy (el dato del plan y, si contestaron, lo que pensaban) y lo que propone el plan en ese tema (sus pasos con "¿Os convence?", o una línea si no pide nada). Primero van los temas con pasos, en el orden del plan; luego el resto, de peor a mejor nota. Debajo, a dónde lleva el plan y la reunión con la hoja para el asesor. El reparto de preguntas y pasos por tema está en `TEMAS` (`app.js`).
 
 ## Modo pareja: «Vuestro dinero, visto por los dos»
 
