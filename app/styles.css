@@ -1133,8 +1133,9 @@ body.gl .lake .rip { display: none; }
 .qstage.think .sugg .chip { opacity: 0; transform: translateY(8px); }
 .sugg-t { margin: 14px 0 0; }
 .sugg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 2px; }
-.sg { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-height: 104px; padding: 14px; border-radius: 18px; border: 1.5px solid rgba(139,108,255,.32); background: rgba(139,108,255,.13); color: var(--ink); font: 600 15px/1.3 var(--font); text-align: left; cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
-.sg:hover { border-color: #8b6cff; }
+.sg { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-height: 104px; padding: 14px; border-radius: 18px; border: 2px solid #6a4ce0; background: #fff; box-shadow: 0 3px 0 rgba(106,76,224,.35); color: var(--ink); font: 600 15px/1.3 var(--font); text-align: left; cursor: pointer; transition: background .15s, border-color .15s, transform .15s, box-shadow .15s; }
+.sg:hover { background: #f4f0ff; }
+.sg:active { box-shadow: 0 1px 0 rgba(106,76,224,.35); }
 .sg:active { transform: scale(.98); }
 .sg:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
 .sg-ic { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #6a4ce0; color: #fff; }
@@ -1322,3 +1323,16 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .qstage.pj-turn .qhead .pj-qsub { margin: 0 0 14px; }
 .qstage .dock .btn[data-act="pjfrase"]:disabled { opacity: .35; transform: none; pointer-events: none; }
 .qstage.think .sugg .chip { opacity: 0; transform: translateY(8px); }
+
+/* Botones que se tienen que ver como botones (pedido de hugo, 16 nov): borde y texto morados sobre blanco. */
+.chip.sm { background: #fff; border: 1.5px solid #6a4ce0; color: #6a4ce0; font-weight: 600; box-shadow: 0 2px 0 rgba(106,76,224,.25); }
+.chip.sm:hover { background: #f4f0ff; }
+
+/* Dictado por voz */
+.micw { position: relative; }
+.micw textarea { padding-right: 60px; }
+.mic { position: absolute; right: 10px; bottom: 10px; display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; border: 0; background: #6a4ce0; color: #fff; cursor: pointer; box-shadow: 0 2px 8px rgba(106,76,224,.35); }
+.mic:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.mic.on { background: #d4542a; animation: micOn 1.1s ease-in-out infinite; }
+@keyframes micOn { 0%, 100% { box-shadow: 0 0 0 0 rgba(212,84,42,.45); } 50% { box-shadow: 0 0 0 10px rgba(212,84,42,0); } }
+.pj-whyw .mic { position: static; flex: none; width: 40px; height: 40px; }

@@ -92,6 +92,7 @@
     cap: '<path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11.5V16c2 2 10 2 12 0v-4.5"/>',
     seed: '<path d="M12 21v-9"/><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6zM12 15c0-3-2-5-6-5 0 3 2 5 6 5z"/>',
     chart: '<path d="M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6"/>',
+    mic: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
     pen: '<path d="M4 20l4-1L19 8l-3-3L5 16l-1 4z"/><path d="M14 7l3 3"/>',
   };
   const ic = (n, sz = 20) => `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICP[n] || ''}</svg>`;
@@ -396,7 +397,7 @@
       head = `<h2 class="q">¿Quién mira el plan?</h2>`;
       body = [['juntos', 'Los dos juntos', 'heart']].concat([['a', ad[0].nombre, 'eye'], ['b', ad[1].nombre, 'eye']]).map(([v, l, i], k) => `<button class="opt" style="--i:${k}" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${optBody(i, esc(l))}</button>`).join('');
     } else if (step === 'phrase') {
-      head = `<h2 class="q">¿Qué es lo que más ${w('os ronda', 'te ronda')} la cabeza con el dinero?</h2><p class="muted">Con ${w('vuestras', 'tus')} palabras. También ${w('podéis', 'puedes')} dictarlo con el micrófono del teclado.</p>`;
+      head = `<h2 class="q">¿Qué es lo que más ${w('os ronda', 'te ronda')} la cabeza con el dinero?</h2><p class="muted">Con ${w('vuestras', 'tus')} palabras. ${SR ? `O ${w('decidlo', 'dilo')} en voz alta con el micrófono.` : `También ${w('podéis', 'puedes')} dictarlo con el micrófono del teclado.`}</p>`;
       body = `${suggTiles('sugg', S.phrase)}
         <p class="tiny sugg-t">O ${w('escribidlo con vuestras', 'escríbelo con tus')} palabras:</p>
         <textarea id="worry" class="free" rows="3" maxlength="240" data-act="free-in" placeholder="${esc(E.fam.hijos.length ? `Por ejemplo: que a ${E.fam.hijos.map(k => k.nombre).join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilo a la jubilación')}">${esc(S.phrase || '')}</textarea>`;
@@ -1389,9 +1390,41 @@
     else if (S.stage === 'quiz') renderQuiz();
     else if (S.stage === 'pareja') renderPareja();
     else if (S.stage === 'story') renderStory();
-        else renderPlan();
+    else renderPlan();
     save();
   }
+  // Dictado por voz en todo lo que se escribe: el reconocimiento de voz del propio navegador
+  // (Chrome, Edge y Safari). Sin servidor nuestro. Donde no existe, el botón no sale.
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let MIC = null;
+  function addMics() {
+    if (!SR) return;
+    document.querySelectorAll('#app textarea, #veil textarea, #pjq').forEach(t => {
+      if (t.dataset.mic) return; t.dataset.mic = '1';
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'mic'; b.dataset.act = 'mic'; b.dataset.for = t.id;
+      b.setAttribute('aria-label', 'Dictar por voz'); b.innerHTML = ic('mic', 20);
+      if (t.tagName === 'INPUT') { t.after(b); return; }
+      const wr = document.createElement('div'); wr.className = 'micw'; t.before(wr); wr.append(t, b);
+    });
+  }
+  function dictar(b) {
+    const t = document.getElementById(b.dataset.for); if (!t) return;
+    if (MIC) { const was = MIC.btn; MIC.rec.stop(); if (was === b) return; }
+    const rec = new SR(), base = t.value.trim() ? t.value.trim() + ' ' : '';
+    rec.lang = 'es-ES'; rec.interimResults = true; rec.continuous = false;
+    MIC = { rec, btn: b }; b.classList.add('on'); b.setAttribute('aria-label', 'Parar el dictado');
+    rec.onresult = e => {
+      const txt = [...e.results].map(r => r[0].transcript).join('');
+      t.value = (base + txt).slice(0, +t.maxLength > 0 ? +t.maxLength : 1000);
+      t.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    const fin = () => { b.classList.remove('on'); b.setAttribute('aria-label', 'Dictar por voz'); if (MIC && MIC.rec === rec) MIC = null; };
+    rec.onend = fin;
+    rec.onerror = e => { fin(); if (e.error === 'not-allowed' || e.error === 'service-not-allowed') toast('Sin permiso para el micrófono. Podéis usar el del teclado.'); };
+    try { rec.start(); } catch (er) { fin(); }
+  }
+  if (SR) new MutationObserver(() => addMics()).observe(document.body, { childList: true, subtree: true });
   function keep() { const y = window.scrollY; render(); window.scrollTo(0, y); }
   const marcaSugg = b => app.querySelectorAll('.sg').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
   function toast(t) { const el = document.createElement('div'); el.className = 'toast'; el.textContent = t; document.body.appendChild(el); setTimeout(() => el.remove(), 2400); }
@@ -1462,6 +1495,7 @@
         else { if (S.mode !== 'solo') { S.qi = 0; S.who = null; } S.mode = 'solo'; if (S.qi > 0) swipe(() => { S.stage = 'quiz'; render(); }); else swipe(bridge); }
         break;
       case 'pjgo': if (b.id === 'pjsave') { b.disabled = true; if (window.Fondo) Fondo.pulse(); pjSeal(pjGo); } else pjGo(); break;
+      case 'mic': dictar(b); break;
       case 'pjfsugg': { const t = document.getElementById('pjfrase'); if (!t) break; t.value = v; marcaSugg(b); t.focus(); const bt = document.getElementById('pjfsave'); if (bt) bt.disabled = false; if (window.Fondo) Fondo.pulse(); break; }
       case 'pjfrase': {
         const x = b.dataset.x, t = document.getElementById('pjfrase'), txt = v === 'skip' ? '' : (t ? t.value.trim() : '');
