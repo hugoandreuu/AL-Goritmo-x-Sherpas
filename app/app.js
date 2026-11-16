@@ -186,10 +186,13 @@
       <div class="rv-prec" data-st="type"><small class="rv-band">${esc(BANDA[b]())}</small><h2 class="rv-type" data-text="${esc(tit)}">${esc(tit)}</h2></div>
       <div class="rv-vis" data-st="vis">${vis(q)}</div>
       ${q.siente ? `<p class="rv-feel" data-st="fade">${q.siente}</p>` : ''}
-      <div class="rv-note" data-st="fade"><label for="note">¿Qué ${w('os pasa', 'te pasa')} por la cabeza al ver esto?</label>
+      <div class="rv-note" data-st="fade"><div class="rv-note-q">¿Qué ${w('os pasa', 'te pasa')} por la cabeza al ver esto?</div>
+        <div class="rx-row">${REACT.map(([v, l, i]) => `<button class="rx" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}"><span class="sg-ic">${ic(i, 18)}</span><span>${l()}</span></button>`).join('')}</div>
+        <p class="saved rx-ok" ${r ? '' : 'hidden'}>${ic('check', 15)}Apuntado para ${w('vuestro', 'tu')} asesor</p>
+        ${(S.notes || {})[q.id] ? '' : `<button class="link addnote" data-act="addnote">${ic('pen', 16)}Añadir algo con ${w('vuestras', 'tus')} palabras</button>`}
+        <div class="note-w" ${(S.notes || {})[q.id] ? '' : 'hidden'}><label for="note" class="sr">Con ${w('vuestras', 'tus')} palabras</label>
         <textarea id="note" class="free" rows="2" maxlength="200" data-k="${q.id}" placeholder="${w('Escribidlo como os salga', 'Escríbelo como te salga')}">${esc((S.notes || {})[q.id] || '')}</textarea>
-        <div class="sugg">${REACT.map(([v, l, i]) => `<button class="chip sm" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}">${l()}</button>`).join('')}</div>
-        ${(S.notes || {})[q.id] ? `<p class="saved">${ic('check', 15)}Guardado en el cuaderno de ${w('vuestro', 'tu')} asesor</p>` : `<button class="btn soft savebtn" data-act="note" data-k="${q.id}" disabled>Guardar para ${w('vuestro', 'tu')} asesor</button>`}</div>
+        ${(S.notes || {})[q.id] ? `<p class="saved">${ic('check', 15)}Guardado en el cuaderno de ${w('vuestro', 'tu')} asesor</p>` : `<button class="btn soft savebtn" data-act="note" data-k="${q.id}" disabled>Guardar para ${w('vuestro', 'tu')} asesor</button>`}</div></div>
       ${help ? `<div class="rv-exit" id="rv-exit"><span class="dc-ic">${ic(bad ? 'arrow' : 'check', 20)}</span><span>${esc(q.salida)}</span></div>` : ''}
       <div class="rv-foot" data-st="fade">${proBlock(q)}${origen(q)}</div>
       <div class="rv-dock" data-st="dock">${help ? dock('Seguir', true) : `<div class="dock"><button class="btn block" data-act="help" data-k="${q.id}">Podemos ${w('ayudaros', 'ayudarte')} con esto</button><button class="link block" data-act="next">Seguir</button></div>`}</div>
@@ -1537,7 +1540,8 @@
         if (S.pjFrase) { S.pjFrase = false; setTimeout(preparePlan, txt ? 650 : 0); break; }
         setTimeout(nextQ, txt ? 450 : 0); break;
       }
-      case 'nsugg': { const t = document.getElementById('note'), l = (REACT.find(r => r[0] === v) || [0, () => ''])[1](); S.react[k] = v; t.value = t.value.trim() ? t.value.trim().replace(/[.\s]*$/, '. ') + l : l; t.dispatchEvent(new Event('input', { bubbles: true })); save(); break; }
+      case 'nsugg': { S.react[k] = v; save(); app.querySelectorAll('.rx').forEach(x => x.setAttribute('aria-pressed', String(x === b))); const ok = app.querySelector('.rx-ok'); if (ok) ok.hidden = false; if (window.Fondo) Fondo.pulse(); break; }
+      case 'addnote': { const nw = app.querySelector('.note-w'); if (nw) { nw.hidden = false; b.hidden = true; const t = document.getElementById('note'); if (t) t.focus(); } break; }
       case 'note': {
         const t = document.getElementById('note'), txt = t.value.trim(); if (!txt) break;
         S.notes[k] = txt; S.doubts = S.doubts.filter(d => d.id !== 'nota-' + k);
