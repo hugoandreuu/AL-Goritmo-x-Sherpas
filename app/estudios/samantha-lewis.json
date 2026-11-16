@@ -123,7 +123,11 @@
       "txt": "116.100 $ · 46 %",
       "tono": ""
      }
-    ]
+    ],
+    "leyenda": {
+     "coste": "Pago de deudas",
+     "bueno": "Ahorro y lo que sobra"
+    }
    },
    "kpis": [
     {
@@ -360,32 +364,27 @@
      {
       "lab": "Efectivo",
       "v": 80000,
-      "txt": "80.000 $ · 6 %",
-      "tono": ""
+      "txt": "80.000 $ · 6 %"
      },
      {
       "lab": "Inversiones",
       "v": 335000,
-      "txt": "335.000 $ · 24 %",
-      "tono": "bueno"
+      "txt": "335.000 $ · 24 %"
      },
      {
       "lab": "Vivienda",
       "v": 900000,
-      "txt": "900.000 $ · 65 %",
-      "tono": ""
+      "txt": "900.000 $ · 65 %"
      },
      {
       "lab": "Vehículos",
       "v": 80000,
-      "txt": "80.000 $ · 6 %",
-      "tono": ""
+      "txt": "80.000 $ · 6 %"
      },
      {
       "lab": "Otros",
       "v": 0,
-      "txt": "0 $ · 0 %",
-      "tono": ""
+      "txt": "0 $ · 0 %"
      }
     ]
    },
@@ -659,7 +658,11 @@
       "txt": "2 M$ de 2 M$",
       "tono": "bueno"
      }
-    ]
+    ],
+    "leyenda": {
+     "coste": "Por debajo del mínimo",
+     "bueno": "Cubierto"
+    }
    },
    "kpis": [
     {

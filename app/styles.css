@@ -1142,28 +1142,43 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .tema-big .ar-b { margin: 12px 0 4px; background: var(--surface-2); height: 8px; }
 .sheet .tm-res li { grid-template-columns: minmax(120px, 42%) 1fr; }
 /* gráficos */
-.gf { margin: 14px 0 0; padding: 14px; background: var(--surface-2); border-radius: 16px; }
-.gf figcaption { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
-.gb { display: grid; grid-template-columns: 92px 1fr; gap: 4px 10px; align-items: center; margin-bottom: 10px; }
-.gb-l { font-size: 13.5px; font-weight: 600; }
-.gb-t { position: relative; height: 12px; background: #fff; border-radius: 8px; }
-.gb-t i { display: block; height: 100%; border-radius: 8px; background: var(--accent); transform-origin: left; animation: grow .8s var(--ease) both; animation-delay: calc(var(--i) * 80ms + 150ms); }
-.gb.coste .gb-t i { background: var(--s2); } .gb.bueno .gb-t i { background: var(--s3); }
-.gb-v { grid-column: 2; font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-.gb-ref { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1.5px; background: var(--navy); border-radius: 2px; }
-.gb-ref.sm { position: static; display: inline-block; width: 3px; height: 11px; vertical-align: -1px; margin: 0 4px 0 0; }
-.gf-leg { margin: 2px 0 0; }
-.gr { position: relative; height: 28px; background: #fff; border-radius: 10px; overflow: hidden; }
-.gr-z { position: absolute; top: 0; bottom: 0; background: repeating-linear-gradient(135deg, var(--good-soft) 0 6px, #d6efdf 6px 12px); }
-.gr-z span { position: absolute; top: 5px; left: 6px; font-size: 11px; font-weight: 700; color: var(--good); white-space: nowrap; }
-.gr-v { position: absolute; left: 0; bottom: 0; height: 9px; border-radius: 0 6px 6px 0; background: var(--accent); transform-origin: left; animation: grow .8s var(--ease) both; }
-.gr-v.coste { background: var(--s2); } .gr-v.bueno { background: var(--s3); }
-.gr-ax { position: relative; height: 18px; font-size: 11.5px; color: var(--ink-3); }
-.gr-ax span { position: absolute; top: 3px; transform: translateX(-50%); white-space: nowrap; } .gr-ax span:first-child { transform: none; }
-.gl { width: 100%; height: auto; display: block; overflow: visible; }
-.gl-a { fill: var(--accent-soft); } .gl-l { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
-.gl-j { stroke: var(--navy); stroke-dasharray: 4 4; } .gl-p { fill: var(--navy); }
-.gl-t { font-size: 11px; fill: var(--ink-2); font-family: var(--font); }
+.gf { margin: 14px 0 0; padding: 16px 16px 14px; background: #fff; border: 1px solid var(--line); border-radius: 16px; }
+.gf figcaption { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.35; margin-bottom: 14px; }
+/* barras horizontales con eje común */
+.gx { --lab: 13px; font-size: var(--lab); }
+.gx-plot { position: relative; padding: 2px 0 6px; }
+.gx-g { position: absolute; top: 0; bottom: 0; width: 1px; margin-left: -.5px; background: var(--line); }
+.gx-g.z { background: #b9bcc4; }
+.gx-zona { position: absolute; top: 0; bottom: 0; background: var(--good-soft); border-left: 1px solid #9fd3b2; border-right: 1px solid #9fd3b2; }
+.gx-row { position: relative; margin-bottom: 12px; } .gx-row:last-child { margin-bottom: 4px; }
+.gx-h { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 5px; line-height: 1.3; }
+.gx-l { font-weight: 600; color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: #fff; padding-right: 4px; }
+.gx-v { flex: none; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; background: #fff; padding-left: 4px; }
+.gx-bar { position: relative; height: 12px; }
+.gx-bar i { display: block; height: 100%; border-radius: 0 4px 4px 0; background: var(--accent); transform-origin: left; animation: grow .8s var(--ease) both; animation-delay: calc(var(--i) * 80ms + 150ms); }
+.gx-row.coste .gx-bar i { background: var(--s2); } .gx-row.bueno .gx-bar i { background: var(--s3); }
+.gx-ref { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1.5px; background: var(--navy); border-radius: 2px; box-shadow: 0 0 0 2px #fff; }
+.gx-ax { position: relative; height: 18px; border-top: 1px solid #b9bcc4; font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.gx-ax span { position: absolute; top: 4px; transform: translateX(-50%); white-space: nowrap; }
+.gx-ax span.ini { transform: none; } .gx-ax span.fin { transform: translateX(-100%); }
+.gx-leg { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 12px; color: var(--ink-2); }
+.gx-leg span { display: inline-flex; align-items: center; gap: 6px; }
+.gx-leg i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--accent); }
+.gx-leg i.coste { background: var(--s2); } .gx-leg i.bueno { background: var(--s3); }
+.gx-leg i.ref { width: 3px; height: 14px; border-radius: 2px; background: var(--navy); }
+.gx-leg i.zona { background: var(--good-soft); border: 1px solid #9fd3b2; }
+/* línea en el tiempo con ejes */
+.gl-w { position: relative; }
+.gl { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; }
+.gl-g { stroke: var(--line); stroke-width: 1; shape-rendering: crispEdges; } .gl-g.z { stroke: #b9bcc4; }
+.gl-a { fill: var(--accent); fill-opacity: .1; } .gl-l { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.gl-j { stroke: var(--navy); stroke-opacity: .45; stroke-width: 1; } .gl-p { fill: var(--navy); stroke: #fff; stroke-width: 2; }
+.gl-t { font-size: 11.5px; fill: var(--ink-3); font-family: var(--font); font-variant-numeric: tabular-nums; }
+.gl-m { font-size: 12px; font-weight: 600; fill: var(--ink); font-family: var(--font); }
+.gl-hv { opacity: 0; pointer-events: none; } .gl-hl { stroke: var(--ink-3); stroke-width: 1; } .gl-hp { fill: var(--accent); stroke: #fff; stroke-width: 2; }
+.gl-tip { position: absolute; opacity: 0; pointer-events: none; padding: 5px 9px; border-radius: 8px; background: var(--navy); color: #fff; font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; transition: opacity .15s; }
+.gl-tip b { margin-right: 4px; }
+.gl-res { margin: 8px 0 0; font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .tm-men { margin: 0 0 10px; }
 /* ---------- Página de tema ---------- */
 .tpage { padding-bottom: 110px; }

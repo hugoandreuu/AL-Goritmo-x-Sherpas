@@ -657,7 +657,7 @@ function leerTemas(E, fh, ia) {
       fila(ES('Lo que sobra este año tras gastos y ahorro'), num(val(RT.netCashFlowThisYear)) != null ? M(Math.round(val(RT.netCashFlowThisYear))) : null, 'facts.retirement.netCashFlowThisYear'),
       fila('Percentil de ingresos del hogar', get(km, 'savingsAndExpenses.incomeAndCashflow.householdIncomePercentile') != null ? `por encima del ${P(get(km, 'savingsAndExpenses.incomeAndCashflow.householdIncomePercentile'))} de hogares` : null, 'incomeAndCashflow.householdIncomePercentile'),
     ].filter(Boolean),
-    graf: sal.length ? { tipo: 'barras', titulo: `A dónde van ${t('vuestros', 'tus')} ${M(sl.grossIncome)} al año`, items: sal.map(r => ({ lab: r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0], v: r[1], txt: `${M(Math.round(r[1]))} · ${P(r[2])}`, tono: r[0] === 'Savings' ? 'bueno' : r[0] === 'Debt Payments' ? 'coste' : '' })).concat(num(val(RT.netCashFlowThisYear)) > 0 ? [{ lab: 'Sobra', v: val(RT.netCashFlowThisYear), txt: M(Math.round(val(RT.netCashFlowThisYear))), tono: 'bueno' }] : []) } : null,
+    graf: sal.length ? { tipo: 'barras', titulo: `A dónde van ${t('vuestros', 'tus')} ${M(sl.grossIncome)} al año`, items: sal.map(r => ({ lab: r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0], v: r[1], txt: `${M(Math.round(r[1]))} · ${P(r[2])}`, tono: r[0] === 'Savings' ? 'bueno' : r[0] === 'Debt Payments' ? 'coste' : '' })).concat(num(val(RT.netCashFlowThisYear)) > 0 ? [{ lab: 'Sobra', v: val(RT.netCashFlowThisYear), txt: M(Math.round(val(RT.netCashFlowThisYear))), tono: 'bueno' }] : []), leyenda: { coste: 'Pago de deudas', bueno: 'Ahorro y lo que sobra' } } : null,
   };
 
   // Deudas · informe: «Debt management»
@@ -689,7 +689,7 @@ function leerTemas(E, fh, ia) {
       fila('La tarjeta se acaba, a este ritmo', ccFin && ld.some(d => d.tipo === 'Tarjeta') ? fecha(ccFin) : null, 'ratios.creditCardDebt.ccPayoffDate'),
       fila('Último pago de todas las deudas', libre ? fecha(libre) : null, 'ratios.currentDPD.debtLastPayment'),
     ].filter(Boolean),
-    graf: curvaDeuda || (ld.length ? { tipo: 'barras', titulo: 'Lo que se debe, y a qué interés', items: ld.map(d => ({ lab: d.tipo, v: d.saldo, txt: `${M(d.saldo)} · ${P(d.tipoInt, 1)}`, tono: d === cara && cara.tipoInt >= 0.1 ? 'coste' : '' })) } : null),
+    graf: curvaDeuda || (ld.length ? { tipo: 'barras', titulo: 'Lo que se debe, y a qué interés', items: ld.map(d => ({ lab: d.tipo, v: d.saldo, txt: `${M(d.saldo)} · ${P(d.tipoInt, 1)}`, tono: d === cara && cara.tipoInt >= 0.1 ? 'coste' : '' })), leyenda: { coste: 'La más cara' } } : null),
   };
 
   // Inversiones · informe: «Assets & Investments» + análisis de inversiones
@@ -721,7 +721,7 @@ function leerTemas(E, fh, ia) {
       fila('Rentabilidad acumulada 3 años', h.return3yCumulative != null ? P(h.return3yCumulative, 1) : null, 'investment-analysis · return3yCumulative'),
       fila('Cuánto se mueve (volatilidad 3 años)', h.volatility3y != null ? P(h.volatility3y, 1) : null, 'investment-analysis · volatility3y'),
     ].filter(Boolean),
-    graf: la.length ? { tipo: 'barras', titulo: 'Dónde está vuestro patrimonio'.replace('vuestro', t('vuestro', 'tu')), items: la.map(r => ({ lab: TIPO_ACTIVO[r[0]] || r[0], v: r[2], txt: `${M(r[2])} · ${P(r[3])}`, tono: r[0] === 'Investment account' ? 'bueno' : '' })) } : null,
+    graf: la.length ? { tipo: 'barras', titulo: 'Dónde está vuestro patrimonio'.replace('vuestro', t('vuestro', 'tu')), items: la.map(r => ({ lab: TIPO_ACTIVO[r[0]] || r[0], v: r[2], txt: `${M(r[2])} · ${P(r[3])}` })) } : null,
   };
 
   // Colchón · informe: «Emergency fund»
@@ -756,7 +756,7 @@ function leerTemas(E, fh, ia) {
       ...pol.map(p => fila(`Póliza · ${TIPO_SEGURO[p.type] || p.type}${E.fam.pl ? ((a => a ? ' · ' + a : '')(/^Your /.test(p.name) ? ad[0].first_name : (ad.find(x => p.name.includes(x.first_name)) || {}).first_name)) : ''}`, typeof p.coverage === 'number' ? M(p.coverage) : 'en vigor, sin importe en el plan', 'profile.insurance')),
       ki.length ? fila('Dependen de estos ingresos', lista(ki.map(k => `${k.first_name} (${k.age})`)), 'case.household') : null,
     ].filter(Boolean),
-    graf: vidas.length || um.recommendedCoverage ? { tipo: 'barras', titulo: 'Lo que hay frente a lo recomendado', items: [...vidas.map(v => ({ lab: `Vida${E.fam.pl ? ' ' + v.n : ''}`, v: v.hoy || 0, ref: v.min, txt: `${M(v.hoy || 0)} de ${M(v.min)}`, tono: (v.hoy || 0) < v.min ? 'coste' : 'bueno' })), um.recommendedCoverage ? { lab: 'Resp. civil', v: um.currentCoverage || 0, ref: um.recommendedCoverage, txt: `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)}`, tono: (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno' } : null].filter(Boolean) } : null,
+    graf: vidas.length || um.recommendedCoverage ? { tipo: 'barras', titulo: 'Lo que hay frente a lo recomendado', items: [...vidas.map(v => ({ lab: `Vida${E.fam.pl ? ' ' + v.n : ''}`, v: v.hoy || 0, ref: v.min, txt: `${M(v.hoy || 0)} de ${M(v.min)}`, tono: (v.hoy || 0) < v.min ? 'coste' : 'bueno' })), um.recommendedCoverage ? { lab: 'Resp. civil', v: um.currentCoverage || 0, ref: um.recommendedCoverage, txt: `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)}`, tono: (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno' } : null].filter(Boolean), leyenda: { coste: 'Por debajo del mínimo', bueno: 'Cubierto' } } : null,
   };
 
   // ---- página de cada tema, con la estructura de su sección del informe:

@@ -657,38 +657,86 @@
     </article>`;
   }
 
-  // --- gráficos (sin librerías): barras con marca de lo recomendado, rango recomendado y línea del patrimonio
+  // --- gráficos (sin librerías). Reglas: todo empieza en cero sobre un eje con marcas redondas,
+  // rejilla fina y discreta, un solo color por gráfico salvo cuando el color significa algo (y entonces
+  // hay leyenda), textos siempre del mismo tamaño y nunca encima de la marca ni cortados.
+  const ejeTxt = v => { const a = Math.abs(v); return a === 0 ? '0' : a >= 1e6 ? dec(v / 1e6, 1) + ' M$' : a >= 1e3 ? dec(v / 1e3, 0) + ' K$' : Math.round(v) + ' $'; };
+  function marcas(lo, hi, n = 4) { // marcas redondas (1, 2, 2,5, 5 × 10^k) que cubren [lo, hi]
+    const r = (hi - lo) || Math.abs(hi) || 1, raw = r / n, e = Math.pow(10, Math.floor(Math.log10(raw)));
+    const paso = [1, 2, 2.5, 5, 10].map(m => m * e).find(m => m >= raw);
+    const a = Math.floor(lo / paso) * paso, b = Math.ceil(hi / paso) * paso, t = [];
+    for (let v = a; v <= b + paso / 2; v += paso) t.push(Math.round(v * 100) / 100);
+    return t;
+  }
+  const leyenda = items => items.length ? `<div class="gx-leg">${items.map(([c, t]) => `<span><i class="${c}"></i>${esc(t)}</span>`).join('')}</div>` : '';
+  // Barras horizontales: nombre y cifra en una línea encima de cada barra, eje común abajo.
+  function barrasHtml(titulo, items, extra = {}) {
+    const top = Math.max(...items.map(it => Math.max(it.v || 0, it.ref || 0)), extra.zona ? extra.zona[1] : 0) || 1;
+    const t = marcas(0, top), mx = t[t.length - 1], pc = v => Math.max(0, Math.min(100, v / mx * 100));
+    const leg = [];
+    if (items.some(it => it.tono === 'coste')) leg.push(['coste', extra.costeTxt || 'A vigilar']);
+    if (items.some(it => it.tono === 'bueno')) leg.push(['bueno', extra.buenoTxt || 'A favor']);
+    if (items.some(it => it.ref)) leg.push(['ref', 'Mínimo que recomienda el plan']);
+    if (extra.zona) leg.push(['zona', `Recomendado: ${extra.zona[2]}`]);
+    return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><div class="gx">
+      <div class="gx-plot">${t.map(v => `<i class="gx-g${v === 0 ? ' z' : ''}" style="left:${pc(v)}%"></i>`).join('')}${extra.zona ? `<i class="gx-zona" style="left:${pc(extra.zona[0])}%;width:${pc(extra.zona[1]) - pc(extra.zona[0])}%"></i>` : ''}
+      ${items.map((it, k) => `<div class="gx-row ${it.tono || ''}" style="--i:${k}"><div class="gx-h"><span class="gx-l" title="${esc(it.lab)}">${esc(it.lab)}</span><span class="gx-v">${esc(it.txt || M(it.v))}</span></div>
+        <div class="gx-bar">${it.v > 0 ? `<i style="width:${Math.max(0.8, pc(it.v))}%"></i>` : ''}${it.ref ? `<b class="gx-ref" style="left:${pc(it.ref)}%"></b>` : ''}</div></div>`).join('')}</div>
+      <div class="gx-ax">${t.map((v, k) => `<span class="${k === 0 ? 'ini' : k === t.length - 1 ? 'fin' : ''}" style="left:${pc(v)}%">${ejeTxt(v)}</span>`).join('')}</div></div>${leyenda(leg)}</figure>`;
+  }
   function graf(g) {
     if (!g) return '';
-    if (g.tipo === 'barras') {
-      const mx = Math.max(...g.items.map(it => Math.max(it.v || 0, it.ref || 0))) || 1;
-      return `<figure class="gf"><figcaption>${esc(g.titulo)}</figcaption>${g.items.map((it, k) => `<div class="gb ${it.tono || ''}" style="--i:${k}"><span class="gb-l">${esc(it.lab)}</span>
-        <div class="gb-t"><i style="width:${Math.max(1.5, (it.v || 0) / mx * 100)}%"></i>${it.ref ? `<b class="gb-ref" style="left:${it.ref / mx * 100}%" title="Recomendado"></b>` : ''}</div><span class="gb-v">${esc(it.txt || M(it.v))}</span></div>`).join('')}
-        ${g.items.some(it => it.ref) ? `<p class="tiny gf-leg"><b class="gb-ref sm"></b> Lo mínimo que recomienda el plan</p>` : ''}</figure>`;
-    }
-    if (g.tipo === 'rango') {
-      const top = Math.max(g.v, g.max) * 1.15, pc = v => Math.min(100, v / top * 100);
-      return `<figure class="gf"><figcaption>${esc(g.titulo)}</figcaption><div class="gr"><div class="gr-z" style="left:${pc(g.min)}%;width:${pc(g.max) - pc(g.min)}%"><span>Recomendado</span></div><i class="gr-v ${g.v < g.min ? 'coste' : 'bueno'}" style="width:${pc(g.v)}%"></i></div>
-        <div class="gr-ax"><span>0</span><span style="left:${pc(g.min)}%">${esc(g.minTxt)}</span><span style="left:${pc(g.max)}%">${esc(g.maxTxt)}</span></div><p class="small" style="margin:.4em 0 0">Hoy: <b>${esc(g.txt)}</b></p></figure>`;
-    }
+    if (g.tipo === 'barras') return barrasHtml(g.titulo, g.items, { costeTxt: g.leyenda && g.leyenda.coste, buenoTxt: g.leyenda && g.leyenda.bueno });
+    if (g.tipo === 'rango') return barrasHtml(g.titulo, [{ lab: 'Hoy', v: g.v, txt: g.txt, tono: g.v < g.min ? 'coste' : 'bueno' }], { zona: [g.min, g.max, `${g.minTxt} a ${g.maxTxt}`], costeTxt: 'Por debajo de lo recomendado', buenoTxt: 'Dentro o por encima' });
     if (g.tipo === 'curva') return svgLinea(g.serie, g.marca, g.titulo, g.nota);
     return '';
   }
-  // Línea en el tiempo (patrimonio del roadmap o curva de la deuda), con una marca y su rótulo.
+  // Línea en el tiempo (patrimonio del roadmap o curva de la deuda) con ejes X (años) e Y (dólares).
+  // Se dibuja al ancho real de la página para que los textos salgan a su tamaño, ni más grandes ni más pequeños.
   function svgLinea(s, marca, titulo, nota) {
     if (!s || s.length < 2) return '';
-    const W = 320, H = 150, x0 = s[0][0], x1 = s[s.length - 1][0], mx = Math.max(...s.map(p => p[1])) || 1, mn = Math.min(0, ...s.map(p => p[1]));
-    const X = y => (y - x0) / ((x1 - x0) || 1) * W, Y = v => H - (v - mn) / (mx - mn) * (H - 14) - 2;
+    const W = Math.round(Math.max(280, Math.min(640, window.innerWidth) - 60)), H = 190;
+    const vs = s.map(p => p[1]), yt = marcas(Math.min(0, ...vs), Math.max(...vs)), y0 = yt[0], y1 = yt[yt.length - 1];
+    const L = Math.max(...yt.map(v => ejeTxt(v).length)) * 6.6 + 10, R = 10, T = 26, B = 24, pw = W - L - R, ph = H - T - B;
+    const x0 = s[0][0], x1 = s[s.length - 1][0], span = (x1 - x0) || 1;
+    const X = y => L + (y - x0) / span * pw, Y = v => T + ph - (v - y0) / ((y1 - y0) || 1) * ph;
+    const pasoX = [1, 2, 5, 10, 20, 25].find(p => span / p <= Math.max(3, Math.floor(pw / 62))) || 50;
+    const xt = []; for (let y = Math.ceil(x0 / pasoX) * pasoX; y <= x1; y += pasoX) xt.push(y);
     const pts = s.map(p => `${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ');
     const j = marca && s.find(p => p[0] === marca[0]);
-    return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><svg class="gl" viewBox="0 0 ${W} ${H + 18}" role="img" aria-label="${esc(titulo)}, de ${x0} a ${x1}">
-      <polygon points="0,${H} ${pts} ${X(x1)},${H}" class="gl-a"/><polyline points="${pts}" class="gl-l"/>
-      ${j ? `<line x1="${X(j[0])}" x2="${X(j[0])}" y1="0" y2="${H}" class="gl-j"/><circle cx="${X(j[0])}" cy="${Y(j[1])}" r="4" class="gl-p"/><text x="${X(j[0]) > W - 110 ? X(j[0]) - 5 : X(j[0]) + 5}" y="12" class="gl-t" ${X(j[0]) > W - 110 ? 'text-anchor="end"' : ''}>${esc(marca[1])}</text>` : ''}
-      <text x="0" y="${H + 14}" class="gl-t">${x0} · ${M(s[0][1])}</text><text x="${W}" y="${H + 14}" class="gl-t" text-anchor="end">${x1} · ${M(s[s.length - 1][1])}</text></svg>${nota ? `<p class="tiny" style="margin:6px 0 0">${esc(nota)}</p>` : ''}</figure>`;
+    let anot = '';
+    if (j) { // rótulo arriba, encajado dentro del gráfico
+      const tw = marca[1].length * 6.4, cx = X(j[0]), lx = Math.max(L, Math.min(W - R - tw, cx - tw / 2));
+      anot = `<line x1="${cx}" x2="${cx}" y1="${T - 6}" y2="${T + ph}" class="gl-j"/><circle cx="${cx}" cy="${Y(j[1])}" r="4.5" class="gl-p"/><text x="${lx}" y="${T - 10}" class="gl-m">${esc(marca[1])}</text>`;
+    }
+    const resumen = `${x0}: ${M(Math.round(s[0][1]))} · ${x1}: ${M(Math.round(s[s.length - 1][1]))}`;
+    return `<figure class="gf"><figcaption>${esc(titulo)}</figcaption><div class="gl-w"><svg class="gl" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(titulo)}. ${esc(resumen)}" data-s='${JSON.stringify(s.map(p => [p[0], Math.round(p[1])]))}' data-g="${[L, T, pw, ph, x0, span, y0, y1 - y0].join(',')}">
+      ${yt.map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" class="gl-g${v === 0 ? ' z' : ''}"/><text x="${L - 8}" y="${Y(v) + 4}" class="gl-t" text-anchor="end">${ejeTxt(v)}</text>`).join('')}
+      ${xt.map(y => `<line x1="${X(y)}" x2="${X(y)}" y1="${T + ph}" y2="${T + ph + 4}" class="gl-g z"/><text x="${X(y)}" y="${H - 4}" class="gl-t" text-anchor="middle">${y}</text>`).join('')}
+      <polygon points="${X(x0)},${Y(Math.max(0, y0))} ${pts} ${X(x1)},${Y(Math.max(0, y0))}" class="gl-a"/><polyline points="${pts}" class="gl-l"/>${anot}
+      <g class="gl-hv"><line class="gl-hl" y1="${T}" y2="${T + ph}"/><circle r="4.5" class="gl-hp"/></g></svg><div class="gl-tip" aria-hidden="true"></div></div>
+      <p class="gl-res">${esc(resumen)}</p>${nota ? `<p class="tiny" style="margin:4px 0 0">${esc(nota)}</p>` : ''}</figure>`;
+  }
+  // Al pasar el dedo o el ratón por una línea: año y cifra de ese punto.
+  function lineaHover(e) {
+    const sv = e.target.closest && e.target.closest('svg.gl'); if (!sv) return;
+    const s = JSON.parse(sv.dataset.s), [L, T, pw, ph, x0, span, y0, yr] = sv.dataset.g.split(',').map(Number);
+    const r = sv.getBoundingClientRect(), k = r.width / sv.viewBox.baseVal.width, xv = (e.clientX - r.left) / k;
+    const yr0 = x0 + (xv - L) / pw * span, p = s.reduce((a, b) => Math.abs(b[0] - yr0) < Math.abs(a[0] - yr0) ? b : a);
+    const cx = L + (p[0] - x0) / span * pw, cy = T + ph - (p[1] - y0) / (yr || 1) * ph;
+    const g = sv.querySelector('.gl-hv'), tip = sv.parentNode.querySelector('.gl-tip');
+    g.style.opacity = 1; g.querySelector('line').setAttribute('x1', cx); g.querySelector('line').setAttribute('x2', cx);
+    g.querySelector('circle').setAttribute('cx', cx); g.querySelector('circle').setAttribute('cy', cy);
+    tip.innerHTML = `<b>${p[0]}</b> ${M(p[1])}`; tip.style.opacity = 1;
+    const tw = tip.offsetWidth; tip.style.left = Math.max(0, Math.min(r.width - tw, cx * k - tw / 2)) + 'px'; tip.style.top = Math.max(0, cy * k - 44) + 'px';
+  }
+  function lineaFuera(e) {
+    const w = e.target.closest && e.target.closest('.gl-w'); if (!w) return;
+    w.querySelector('.gl-hv').style.opacity = 0; w.querySelector('.gl-tip').style.opacity = 0;
   }
   function grafLinea(r) {
     const j = r.jubila && (r.serie || []).find(p => p[0] === r.jubila);
-    return svgLinea(r.serie, j ? [j[0], `Jubilación · ${M(j[1])}`] : null, 'Patrimonio neto, en dólares de hoy');
+    return svgLinea(r.serie, j ? [j[0], `Jubilación ${j[0]} · ${M(Math.round(j[1]))}`] : null, 'Patrimonio neto, en dólares de hoy');
   }
 
   // --- página de un tema (al tocar una tarjeta, en el resumen o en el plan completo).
@@ -1297,6 +1345,9 @@
   }
   const toPlan = () => { S.stage = 'plan'; S.prefs.level = S.prefs.level || 'new'; };
 
+  document.addEventListener('pointermove', lineaHover);
+  document.addEventListener('pointerdown', lineaHover);
+  document.addEventListener('pointerout', e => { if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('svg.gl')) lineaFuera(e); });
   document.addEventListener('click', async e => {
     if (app.contains(e.target) && !e.target.closest('[data-act], summary, a')) {
       if (app.querySelector('.qstage.think')) { settleQ(); return; }
