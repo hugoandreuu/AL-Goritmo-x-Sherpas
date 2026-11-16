@@ -68,27 +68,32 @@
     [
      "A dónde va: Impuestos",
      "40.664 $ al año (22,6 %)",
-     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+     "cashflowStatement.outflows"
     ],
     [
      "A dónde va: Deudas",
      "11.400 $ al año (6,3 %)",
-     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+     "cashflowStatement.outflows"
     ],
     [
      "A dónde va: Vivienda",
      "34.272 $ al año (19 %)",
-     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+     "cashflowStatement.outflows"
     ],
     [
      "A dónde va: Ahorro",
-     "43.000 $ al año (23,9 %)",
-     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+     "36.000 $ al año (20 %)",
+     "cashflowStatement.outflows"
     ],
     [
      "A dónde va: Gastos del día a día",
      "66.000 $ al año (36,7 %)",
-     "savingsAndExpenses.incomeAndCashflow.outflowSummary"
+     "cashflowStatement.outflows"
+    ],
+    [
+     "Aparte: lo que pone la empresa en el 401(k)",
+     "7.000 $ al año (no sale del sueldo)",
+     "matchGapAnalysis"
     ],
     [
      "Lo que sobra este año tras gastos y ahorro",
@@ -125,8 +130,8 @@
      },
      {
       "lab": "Ahorro",
-      "v": 43000,
-      "txt": "43.000 $ · 24 %",
+      "v": 36000,
+      "txt": "36.000 $ · 20 %",
       "tono": "bueno"
      },
      {
@@ -151,7 +156,7 @@
     {
      "lab": "Ahorro al año",
      "val": "43 K$",
-     "sub": "23,9 % de los ingresos",
+     "sub": "23,9 % de los ingresos, con 7.000 $ de la empresa",
      "tono": "bueno"
     },
     {
@@ -184,7 +189,7 @@
      ],
      [
       "Ahorro",
-      "43.000 $"
+      "36.000 $"
      ],
      [
       "Gastos del día a día",
@@ -198,14 +203,151 @@
     "total": [
      "Ingresos",
      "180.000 $"
-    ]
+    ],
+    "nota": "Además, la empresa pone 7.000 $ al año en tu 401(k). No sale del sueldo, por eso no está en las filas: con ella, el ahorro al año es de 43.000 $."
    },
    "lectura": [
-    "De cada 100 $ que entran, 23 a impuestos, 6 a deudas, 19 a vivienda, 24 a ahorro y 37 a gastos del día a día.",
+    "De cada 100 $ que entran, 23 a impuestos, 6 a deudas, 19 a vivienda, 20 a ahorro y 37 a gastos del día a día: salen 105 por cada 100 que entran.",
     "Este año faltan <b>8.336 $</b>: se gasta más de lo que entra.",
     "Cobras toda la aportación de la empresa: <b>7.000 $</b> al año."
    ],
-   "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año."
+   "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año.",
+   "informe": [
+    {
+     "titulo": "Lo que dice el informe",
+     "bloques": [
+      {
+       "t": "Ahorro y gastos",
+       "md": "- Ahorras 43.000 $ al año, y esa cifra incluye los 7.000 $ que pone la empresa. Aun así, tu flujo de caja es de -8.336 $ al año. Le estás pidiendo mucho a tu sueldo: no es falta de esfuerzo.\n- Cerrar el hueco de la jubilación pediría unos 20.231 $ más al año, que es lo que haría falta, según la proyección, para cubrir el hueco de 1.177.586 $ a los 58. Eso sale del mismo sueldo que ya va en negativo, así que la jubilación y las necesidades cercanas compiten por los mismos dólares.\n- Tus 30.000 $ de efectivo cubren 3,2 meses de gastos. Una reserva de 5 a 6 meses serían de 46.530 $ a 55.836 $: te faltan 16.530 $ para llegar a lo mínimo. Ahora mismo esto importa más que añadir ahorro a largo plazo.\n- La casa y las vacaciones de enero de 2027 suman 116.800 $ de necesidades cercanas. Con ellas, el efectivo que hace falta es de 163.330 $ a 172.636 $, y tu efectivo de hoy cubriría 0 meses después de pagarlas.\n- Tu ratio de obligaciones con la vivienda es del 25,37 %, por debajo del primer umbral del 36 %: no es la vivienda lo que aprieta tu presupuesto. Y cobras entera la aportación de la empresa, así que no te dejas ese dinero."
+      },
+      {
+       "t": "A dónde va cada dólar, partida a partida",
+       "filas": [
+        [
+         "Impuestos · impuesto federal",
+         "26.894 $ al año"
+        ],
+        [
+         "Impuestos · Seguridad Social y Medicare (FICA)",
+         "13.770 $ al año"
+        ],
+        [
+         "Deudas · préstamo del coche",
+         "6.000 $ al año"
+        ],
+        [
+         "Deudas · préstamo de estudios",
+         "3.000 $ al año"
+        ],
+        [
+         "Deudas · tarjeta",
+         "2.400 $ al año"
+        ],
+        [
+         "Vivienda · alquiler",
+         "33.600 $ al año"
+        ],
+        [
+         "Vivienda · seguro del alquiler",
+         "672 $ al año"
+        ],
+        [
+         "Ahorro · 401(k) tradicional",
+         "17.000 $ al año"
+        ],
+        [
+         "Ahorro · cuenta de inversión",
+         "12.000 $ al año"
+        ],
+        [
+         "Ahorro · cuenta de salud (HSA)",
+         "4.000 $ al año"
+        ],
+        [
+         "Ahorro · efectivo",
+         "3.000 $ al año"
+        ],
+        [
+         "Gastos del día a día · gastos de vida",
+         "66.000 $ al año"
+        ]
+       ],
+       "cab": null,
+       "nota": null
+      },
+      {
+       "t": "Lo que hay y lo que se aparta en cada cuenta",
+       "filas": [
+        [
+         "401(k) tradicional · Michael",
+         "80.000 $",
+         "24.000 $ al año"
+        ],
+        [
+         "Cuenta de inversión · Michael",
+         "60.000 $",
+         "12.000 $ al año"
+        ],
+        [
+         "Efectivo y ahorro · Michael",
+         "27.000 $",
+         "3.000 $ al año"
+        ],
+        [
+         "Cuenta de salud (HSA) · Michael",
+         "5.000 $",
+         "4.000 $ al año"
+        ]
+       ],
+       "cab": [
+        "Cuenta",
+        "Saldo",
+        "Aporta"
+       ],
+       "nota": null
+      },
+      {
+       "t": "Cuentas con ventaja fiscal: lo que queda por aprovechar",
+       "filas": [
+        [
+         "IRA Roth",
+         "0 $",
+         "4.500 $",
+         "4.500 $",
+         "—"
+        ],
+        [
+         "Cuenta de salud (HSA)",
+         "4.000 $",
+         "4.400 $",
+         "400 $",
+         "96 $ al año"
+        ],
+        [
+         "401(k)",
+         "17.000 $",
+         "24.500 $",
+         "7.500 $",
+         "1.800 $ al año"
+        ]
+       ],
+       "cab": [
+        "Cuenta",
+        "Hoy",
+        "Máximo",
+        "Margen",
+        "Impuestos que ahorra (al 24 %)"
+       ],
+       "nota": "Los máximos son los que da el estudio. La IRA Roth depende de los ingresos y el HSA, de que el seguro de salud lo permita."
+      },
+      {
+       "t": "Lo que revisaría tu asesor",
+       "md": "la IRA Roth, el margen que queda en el 401(k) y el HSA si tu seguro de salud lo permite. También habría que confirmar los datos que faltan sobre compras de acciones en el plan de la empresa, la aportación extra a la IRA por edad y la aportación de la empresa al HSA, para que cualquier decisión encaje con el efectivo que necesitas.",
+       "asesor": true
+      }
+     ]
+    }
+   ]
   },
   {
    "nombre": "Deudas",
@@ -354,7 +496,50 @@
     "Con la vivienda, los pagos se llevan el <b>25,4 %</b> de los ingresos. Los bancos se fijan a partir del 36 %.",
     "Pagando como hasta ahora, la tarjeta se acaba en <b>julio de 2028</b>."
    ],
-   "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla."
+   "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla.",
+   "informe": [
+    {
+     "titulo": "Lo que dice el informe",
+     "bloques": [
+      {
+       "t": "Deudas",
+       "md": "- Tu deuda parece llevadera, no una fuente de agobio: 28.500 $ en total, un 15,83 % de tus 180.000 $ de ingresos, y los pagos se llevan alrededor de un 6,33 % de los ingresos. La presión fuerte está en otra parte: en el efectivo.\n- Lo que destaca es tu tarjeta de 3.500 $ al 20 %. Es pequeña, pero es la deuda más cara para lo que debes. Que quede pagada en julio de 2028 es una proyección: solo se cumple si sigues pagando 200 $ al mes.\n- Un alquiler de 2.800 $ al mes deja tu ratio de vivienda en el 19,04 %, y con los pagos de deudas, el de obligaciones con la vivienda en el 25,37 %. Está por debajo del primer umbral del 36 %, así que hoy hay margen. Comprar la casa lo cambiaría, y la nueva cuota de la hipoteca no está en los datos, así que no se sabe cuánto.\n- Tus 30.000 $ en efectivo están por debajo de la reserva de 46.530 $ a 55.836 $ (de 5 a 6 meses): faltan 16.530 $ para llegar al mínimo. Por ahora este colchón seguramente importa más que el tamaño de tu deuda, porque ese mismo efectivo puede hacer falta para comprar la casa.\n- Pagar antes la tarjeta competiría con el ahorro para la jubilación y con el dinero para la casa, así que es un equilibrio, no una decisión evidente."
+      },
+      {
+       "t": "Más cifras de la sección",
+       "filas": [
+        [
+         "Deuda total sobre los ingresos de un año",
+         "15,8 %"
+        ],
+        [
+         "Umbrales que miran los bancos (pagos sobre ingresos)",
+         "36 %, 43 % y 50 %"
+        ],
+        [
+         "Alquiler",
+         "2.800 $ al mes"
+        ],
+        [
+         "Otros gastos de la vivienda",
+         "56 $ al mes"
+        ],
+        [
+         "Sin deudas",
+         "julio de 2030, antes de la jubilación"
+        ]
+       ],
+       "cab": null,
+       "nota": null
+      },
+      {
+       "t": "Lo que revisaría tu asesor",
+       "md": "lo caro que sale el interés de la tarjeta, cómo encajan los pagos de deudas con tu flujo de caja y con la compra de la casa, y qué papel tiene el préstamo de estudios frente a tus otras metas.",
+       "asesor": true
+      }
+     ]
+    }
+   ]
   },
   {
    "nombre": "Inversiones",
@@ -381,7 +566,7 @@
    "detalle": [
     [
      "Perfil de riesgo",
-     "dinámico",
+     "crecimiento",
      "case.household.risk_profile"
     ],
     [
@@ -420,8 +605,18 @@
      "assetsAndInvestments.listOfAssets"
     ],
     [
-     "En bolsa, de lo invertido",
-     "70 %",
+     "En bolsa, de lo invertido (sin el efectivo de las cuentas)",
+     "73,5 %",
+     "investment-analysis · allocationBenchmarkAnalysis.accounts"
+    ],
+    [
+     "En bolsa que pide el plan para la jubilación",
+     "98 %",
+     "assetsAndInvestments.retirementGlidePath"
+    ],
+    [
+     "En bolsa, de lo invertido (contando el efectivo de las cuentas)",
+     "69,6 %",
      "investment-analysis · concentrationAndDiversification.totals"
     ],
     [
@@ -572,11 +767,322 @@
     ]
    },
    "lectura": [
-    "El <b>69,6 %</b> de lo invertido está en bolsa.",
+    "Sin contar el efectivo de las cuentas, el <b>73,5 %</b> de lo invertido está en bolsa; para tu jubilación el plan apunta a un <b>98 %</b>.",
     "Contando el efectivo, el reparto hoy es <b>59 / 41</b> (bolsa / resto). El análisis propone <b>67 / 33</b>, con una rentabilidad esperada del 6,91 % en vez del 6,08 %.",
     "En una crisis como la de 2008, esta cartera habría caído un <b>19,2 %</b>."
    ],
-   "asesor": "Si el riesgo de la cartera encaja con tu perfil y con lo que quieres conseguir."
+   "asesor": "Si el riesgo de la cartera encaja con tu perfil y con lo que quieres conseguir.",
+   "informe": [
+    {
+     "titulo": "Lo que dice el informe: patrimonio e inversiones",
+     "bloques": [
+      {
+       "t": "Patrimonio e inversiones",
+       "md": "- Casi todo tu patrimonio está en ahorro invertido: 145.000 $, el 58,7 % de tus 247.000 $ de patrimonio. Como no tienes vivienda, tu avance depende sobre todo de cómo estén invertidas estas cuentas, algo que importa a los 37 años y con un perfil de crecimiento.\n- Tu ahorro invertido está en un 73,5 % en bolsa, frente a una mezcla objetivo del 98 %. El objetivo es hacia dónde vas, no lo que tienes hoy, así que hay distancia entre tu mezcla actual y el enfoque de crecimiento que elegiste.\n- Tienes 27.000 $ en efectivo, el 10,93 % de tu patrimonio. Es un colchón líquido junto a lo invertido, y le añades unos 3.000 $ al año.\n- Metes 24.000 $ al año en tu 401(k), contando los 7.000 $ que pone la empresa, pensando en jubilarte a los 58. Ese ahorro constante compensa en parte la distancia de tu mezcla en bolsa."
+      },
+      {
+       "t": "Lo que revisaría tu asesor",
+       "md": "cómo encajan tu otro bien y tu coche junto a tus cuentas, si te convienen una IRA y aportar más al HSA, y confirmar cómo tributa la cuenta de inversión, que no está en los datos.",
+       "asesor": true
+      }
+     ]
+    },
+    {
+     "titulo": "El análisis de inversiones del informe",
+     "bloques": [
+      {
+       "t": "Tu cartera hoy",
+       "md": "Esta foto recoge las cuentas que tenemos registradas: tu 401(k), tu HSA, tu cuenta de inversión y tus cuentas corriente y de ahorro. Juntas forman una cartera que gira en torno a una cuenta de inversión grande, junto a las cuentas de jubilación y de efectivo, con un colchón de efectivo escaso para el tamaño de las inversiones."
+      },
+      {
+       "t": "Las cuentas, una a una",
+       "filas": [
+        [
+         "401(k) tradicional · Michael",
+         "80.000 $",
+         "17,9 % al año"
+        ],
+        [
+         "Cuenta de inversión · Michael",
+         "60.000 $",
+         "14,9 % al año"
+        ],
+        [
+         "Efectivo y ahorro · Michael",
+         "27.000 $",
+         "—"
+        ],
+        [
+         "Cuenta de salud (HSA) · Michael",
+         "5.000 $",
+         "3 % al año"
+        ]
+       ],
+       "cab": [
+        "Cuenta",
+        "Saldo",
+        "Rentabilidad 3 años"
+       ],
+       "nota": null
+      },
+      {
+       "t": "La idea de fondo",
+       "md": "Tu cartera está pensada para crecer a largo plazo, pero esos mismos dólares tienen que sostener una jubilación que hoy se queda corta y mantener un colchón de efectivo que aún es escaso: un mismo dinero hace varios trabajos a la vez. Crecer, tener seguridad y cobrar en la jubilación no siempre tiran hacia el mismo lado, así que la pregunta es de liquidez y de orden, más que de un fondo concreto. Los apartados siguientes miran lo bien que la cartera de hoy cumple cada uno de esos fines."
+      },
+      {
+       "t": "Lo que tu cartera debería hacer",
+       "md": "- **Colchón de seguridad**: tus 30.000 $ de efectivo accesible cubren unos 2,9 meses de gastos. Una reserva de 5 a 6 meses (de 46.530 $ a 55.836 $) te dejaría pasar un imprevisto sin tener que vender inversiones; te faltan 16.530 $ para el mínimo. El trabajo de este dinero es estar disponible y estable, no buscar rentabilidad.\n- **Ingresos en la jubilación**: la proyección de hoy dice que tu dinero llega hasta los 85 años y que el plan acaba con 32.439 $ de menos, retirando un 5,59 % en valor de hoy. Es el trabajo de largo plazo, y sale de los mismos dólares que tu flujo de caja de cada año y tu colchón.\n- **Crecer a largo plazo y ahorrar con ventaja fiscal**: tu 401(k), tu HSA y tu cuenta de inversión hacen el trabajo de crecer, con 145.000 $ invertibles. Metes 17.000 $ en el 401(k), con aportación de la empresa, y podrías añadir hasta 7.500 $ más. También podrías aportar hasta 4.500 $ a una IRA Roth, donde todavía no has puesto nada. Cuándo hacerlo depende de lo que permita tu flujo de caja."
+      },
+      {
+       "t": "Lo que está haciendo de verdad",
+       "md": "- **Colchón escaso**: tu efectivo accesible cubre unos 2,9 meses de gastos, frente a los 5 a 6 meses recomendados (de 46.530 $ a 55.836 $). Te faltan 16.530 $ para el mínimo. Un gasto inesperado o un corte de ingresos seguramente se pagaría vendiendo inversiones o pidiendo prestado, no con el efectivo que tienes.\n- **Gastas más de lo que entra**: tu flujo de caja es de -8.336 $ al año, un 4,63 % de los ingresos brutos, después de gastos, impuestos y 11.400 $ al año de pagos de deudas. Aunque ha mejorado desde -14.936 $, tus gastos del día a día y las deudas siguen tirando de los ahorros. Por eso el hueco de efectivo tarda en cerrarse solo.\n- **Una sola empresa sostiene el trabajo y el patrimonio**: tu sueldo de 180.000 $ equivale al 82,38 % de tus 218.500 $ de patrimonio neto. Tu nómina y casi toda tu situación dependen de la misma empresa. Si esos ingresos se cortaran, lo notarías a la vez en el colchón y en la capacidad de tus inversiones de seguir creciendo, porque el colchón ya es escaso.\n- **Deuda cara junto a la falta de efectivo**: tu tarjeta Amex tiene 3.500 $ al 20 %, y pagas 200 $ al mes. Ese interés es muy superior a lo que rinde el ahorro parado, así que suma presión al flujo de caja. Tu deuda total es de 28.500 $, el 15,83 % de los ingresos brutos, y los pagos de deudas se llevan el 6,33 % de los ingresos, que es moderado."
+      },
+      {
+       "t": "Frente a una cartera sencilla con la misma parte en bolsa (3 años)",
+       "filas": [
+        [
+         "Rentabilidad al año",
+         "13,6 %",
+         "15,3 %"
+        ],
+        [
+         "Rentabilidad acumulada",
+         "46,6 %",
+         "53,3 %"
+        ],
+        [
+         "Cuánto se mueve al año (volatilidad)",
+         "7,9 %",
+         "9 %"
+        ],
+        [
+         "Peor caída",
+         "10,2 %",
+         "11,4 %"
+        ],
+        [
+         "Rentabilidad por unidad de riesgo (Sharpe)",
+         "1,27",
+         "1,3"
+        ],
+        [
+         "Parte de las subidas del mercado que recoge",
+         "72 %",
+         ""
+        ],
+        [
+         "Parte de las bajadas del mercado que recibe",
+         "91 %",
+         ""
+        ],
+        [
+         "Caída en la última subida de tipos de la Fed (5,25–5,50 %) (26/07/2023)",
+         "4,2 %",
+         "4,6 %"
+        ],
+        [
+         "Caída en el giro de la Fed (diciembre de 2023) (13/12/2023)",
+         "1,4 %",
+         "1,6 %"
+        ],
+        [
+         "Caída en la venta global (el VIX pasa de 60) (05/08/2024)",
+         "3,5 %",
+         "3,6 %"
+        ],
+        [
+         "Caída en la primera bajada de tipos de la Fed (0,5 puntos) (18/09/2024)",
+         "2,6 %",
+         "2,8 %"
+        ],
+        [
+         "Caída en la victoria electoral de Trump (05/11/2024)",
+         "1,7 %",
+         "1,6 %"
+        ],
+        [
+         "Caída en el susto de DeepSeek (IA) (27/01/2025)",
+         "0,2 %",
+         "0,3 %"
+        ],
+        [
+         "Caída en el anuncio de aranceles del «Liberation Day» (02/04/2025)",
+         "8,4 %",
+         "8,2 %"
+        ],
+        [
+         "Caída en la pausa de 90 días en los aranceles (09/04/2025)",
+         "2 %",
+         "3,3 %"
+        ],
+        [
+         "Caída en la tregua de aranceles EE. UU.-China en Ginebra (12/05/2025)",
+         "0,1 %",
+         "0 %"
+        ],
+        [
+         "Caída en el Supremo tumba esos aranceles (01/02/2026)",
+         "0,8 %",
+         "1,4 %"
+        ],
+        [
+         "Caída en la operación Epic Fury (ataques a Irán) (28/02/2026)",
+         "0,9 %",
+         "0,6 %"
+        ]
+       ],
+       "cab": [
+        "",
+        "Tu cartera",
+        "La comparación"
+       ],
+       "nota": "Resultados pasados de un periodo de 3 años: no son una promesa de lo que vendrá."
+      },
+      {
+       "t": "Cómo le ha ido",
+       "md": "En los tres años hasta noviembre de 2026, tu cartera creció alrededor de un 13,6 % al año. Una cartera diversificada sencilla, con la misma parte en bolsa, creció un 15,3 % al año en el mismo periodo, así que quedaste unos 1,7 puntos por detrás. Tu valor subió y bajó alrededor de un 7,9 % al año, frente a un 9,0 % de esa comparación. Por cada unidad de riesgo, las dos quedaron cerca (1,27 la tuya y 1,30 la comparación). Dicho de forma sencilla: ganaste más o menos lo que se esperaría de tu mezcla de bolsa, bonos y efectivo. Tres años es poco tiempo, así que describe este periodo y no una tendencia de largo plazo.\n\nLo más significativo es cómo se portó en los malos momentos. En su peor tramo, la cartera cayó alrededor de un 10,2 % desde su máximo y se recuperó en 62 días, mientras que la comparación cayó un 11,4 %. También caíste menos que la comparación en la mayoría de los sustos del mercado. Con la pausa de los aranceles de abril de 2025, caíste un 2,0 % frente a un 3,3 %. Con la sentencia del Supremo sobre los aranceles de febrero de 2026, caíste un 0,8 % frente a un 1,4 %. La otra cara es que solo recogiste alrededor del 72 % de las subidas del mercado, y en cambio te llevaste un 91 % de sus caídas. O sea, renunciaste a algo más de las recuperaciones de lo que te ahorraste en las caídas.\n\nTus cuentas fueron distintas. El 401(k) rindió alrededor de un 17,9 % al año, mientras que el HSA, que es casi todo bonos y efectivo, rindió alrededor de un 3,0 %. Tu cartera y la comparación fueron muy parecidas todo el tiempo, y las diferencias en cada susto fueron pequeñas, así que no sacaría conclusiones fuertes de ningún episodio. Los resultados de este periodo no son una previsión."
+      },
+      {
+       "t": "Lo que funciona",
+       "md": "- **Cobras la aportación de la empresa**: aportas a tu 401(k) lo suficiente para recibir lo que pone la empresa, que suma 7.000 $ al año a tu jubilación. Es parte de tu sueldo que ya cobras, y crece junto a tus propias aportaciones sin esfuerzo ni coste extra.\n- **Aportas al 401(k) con regularidad**: metes 17.000 $ al año en tu 401(k) tradicional, con un límite de 24.500 $, y la cuenta tiene 80.000 $. Esas aportaciones construyen ahorro para la jubilación que tributa más tarde, y las mantienes a la vez que ahorras en el HSA y en la cuenta de inversión.\n- **Deuda llevadera**: los pagos de deudas se llevan el 6,33 % de los ingresos, 11.400 $ al año frente a 180.000 $ brutos. La deuda total es de 28.500 $: 15.000 $ del préstamo del BMW 3 Series, 10.000 $ del préstamo de estudios y 3.500 $ en la tarjeta Amex.\n- **Flujo de caja**: tu flujo de caja es de -8.336 $ al año, un hueco cada año.\n- **Patrimonio neto**: tu patrimonio neto es de 218.500 $."
+      },
+      {
+       "t": "Lo que hay que cambiar",
+       "md": "- **Los ahorros se agotan**: tu plan enseña que el ahorro líquido se acaba a los 85 y termina en -32.439 $, retirando un 5,59 % en valor de hoy. Cerrarlo pediría unos 20.231 $ más al año, y esos mismos dólares hacen falta para tapar tu flujo de caja negativo.\n- **Colchón escaso**: tu efectivo cubre unos 2,9 meses de gastos, frente a los 5 a 6 meses recomendados (de 46.530 $ a 55.836 $). Te faltan 16.530 $ para el mínimo, así que un gasto inesperado o un corte de ingresos podría obligarte a vender inversiones.\n- **Flujo de caja**: el flujo de caja es de -8.336 $ al año, alrededor de un 4,63 % de los ingresos brutos, incluso después de mejorar desde -14.936 $. Los gastos y los pagos de deudas, de 11.400 $ al año, tiran de los ahorros, y eso limita lo rápido que se pueden atacar a la vez la reserva y la falta en la jubilación."
+      },
+      {
+       "t": "Cuentas de jubilación",
+       "md": "Estás haciendo un esfuerzo real en tus cuentas de jubilación: metes 17.000 $ en tu 401(k), la empresa añade 7.000 $ al año y tu 401(k) rindió un 17,9 % al año en tres años. El punto débil es que ese esfuerzo aún no llega a la meta: la proyección enseña una falta de 1.177.586 $ y unos ahorros que se acaban a los 85 años. Cerrar ese hueco pediría unos 20.231 $ más al año, pero tu flujo de caja ya es negativo, así que los dólares de la jubilación compiten con tu tarjeta al 20 %, tu reserva para imprevistos y la compra de la casa de enero de 2027. El límite de tu 401(k) es de 24.500 $, así que lo máximo que puedes añadir son 7.500 $ (unos 1.800 $ menos de impuestos), y podrías aportar hasta 4.500 $ a una IRA Roth, donde aún no has puesto nada, aunque falta confirmar si con estos ingresos puedes. Lo que está en juego es un ingreso en la jubilación que dure, y querer hacerlo todo a la vez suele acabar en nada. Necesitas un camino claro y a tu ritmo que decida qué dólares van a la tarjeta, al efectivo y a la jubilación, y en qué orden, y que después revise el gasto para cubrir el hueco."
+      },
+      {
+       "t": "Cuenta de salud (HSA)",
+       "md": "Tu HSA es un paso más pequeño, para después de lo importante, como la tarjeta al 20 % y juntar el efectivo para las metas de enero de 2027. Has aportado 4.000 $ de un límite de 4.400 $. Añadir los 400 $ que faltan te ahorraría unos 96 $ de impuestos al año, y suma a un sitio libre de impuestos para pagar gastos médicos. Como tu flujo de caja es justo, añádelos solo cuando quede dinero libre. Hay una segunda mejora dentro de la cuenta. Tu HSA tiene 1.500 $ en efectivo, 1.400 $ por encima de un pequeño colchón de uso, y ese efectivo rinde un 0,00 %. Invertirlo dentro del HSA, sin sacarlo, vale por sí solo unos 104 $ al año. Esto es parte de los 134 $ al año que podrías ganar invirtiendo el efectivo parado del HSA y del 401(k). La otra inversión del HSA es un fondo de bonos de 3.500 $. Lo que paga costaría unos 38 $ al año de impuestos en una cuenta normal, y el HSA ya te ahorra ese coste, así que no es un ahorro que te quede por hacer. El HSA es casi todo bonos y efectivo, y rindió un 3,0 % al año en tres años. Más adelante podría ayudar revisar si sus fondos frenan la rentabilidad."
+      },
+      {
+       "t": "Reparto por tipo de activo: hoy y lo que propone el análisis",
+       "filas": [
+        [
+         "Bolsa de EE. UU.",
+         "46 %",
+         "47 %"
+        ],
+        [
+         "Bolsa internacional",
+         "12 %",
+         "20 %"
+        ],
+        [
+         "Renta fija de EE. UU.",
+         "19 %",
+         "14 %"
+        ],
+        [
+         "Renta fija internacional",
+         "2 %",
+         "1 %"
+        ],
+        [
+         "Efectivo",
+         "20 %",
+         "18 %"
+        ],
+        [
+         "Otros",
+         "0 %",
+         "0 %"
+        ],
+        [
+         "Rentabilidad de los últimos 3 años",
+         "13,59 %",
+         "16,63 %"
+        ],
+        [
+         "Cuánto se mueve al año",
+         "7,9 %",
+         "8,36 %"
+        ],
+        [
+         "Rentabilidad esperada al año",
+         "6,08 %",
+         "6,91 %"
+        ]
+       ],
+       "cab": [
+        "",
+        "Hoy",
+        "Propuesta"
+       ],
+       "nota": "Prueba con los 3 últimos años (nov. 2023 - nov. 2026), sin comisiones: no son resultados reales."
+      },
+      {
+       "t": "Lo que recomienda el análisis",
+       "md": "- **Rehacer un colchón de liquidez**: tus 30.000 $ de efectivo accesible cubren unos 3 meses de gastos básicos, frente a los 5 a 6 meses recomendados (de 46.530 $ a 55.836 $). Te faltan 16.530 $ para el mínimo. Con más margen podrías afrontar una sorpresa sin vender inversiones ni tirar de la tarjeta al 20 %, que tiene 3.500 $. Tú decides a qué ritmo construirlo.\n- **Confirmar el efectivo que necesitas en enero de 2027**: contando la compra de la casa de 113.300 $ y las vacaciones de 3.500 $ de enero de 2027, el efectivo que hace falta es de 163.330 $ a 172.636 $. Te faltan unos 133.330 $, y después el efectivo cubriría 0 meses. Confirmar cuánto y cuándo serán esas metas diría qué parte del hueco es real. También evitaría que una bajada del mercado te obligue a vender.\n- **Hacer encajar el ahorro y el flujo de caja**: ahorras 43.000 $ al año, el 23,9 % de los ingresos. Aun así, después de impuestos, gastos y pagos de deudas te faltan 15.336 $ al año. El ahorro para la jubilación y el colchón salen de los mismos dólares, así que revisa a la vez el gasto y el reparto del ahorro. Saldar la tarjeta al 20 % es una palanca clara.\n- **Cerrar el hueco de la jubilación poco a poco**: tu plan enseña que los ahorros se acaban a los 85, con unos 32.439 $ de gasto previsto sin pagar, y unos 20.231 $ más al año cerrarían el hueco. Metes 17.000 $ en tu 401(k), así que podrías añadir hasta 7.500 $ más, unos 1.800 $ menos de impuestos. En el HSA has aportado 4.000 $ de un límite de 4.400 $. Todo lo extra depende de lo que permita el flujo de caja.\n- **Mirar dónde tributa lo que rinden las inversiones**: pagas unos 527 $ al año de impuestos por lo que rinden tus inversiones, todo en la cuenta de inversión. Unos 247 $ vienen de un solo fondo de bonos de alto rendimiento que tributa al 24 %, que quizá encajaría mejor en una cuenta con ventaja fiscal. El ahorro es modesto, así que ponlo en la balanza con tus otras prioridades.\n- **Repartir lo que está muy concentrado**: tu sueldo de 180.000 $ equivale al 82,4 % de tu patrimonio neto. La tecnología es alrededor del 33 % de tu bolsa, y lo de EE. UU. alrededor del 85 %. Un mal momento en tu empresa o en un sector podría golpear a la vez tu sueldo y tu cartera. Revísalo frente a tus metas de crecimiento."
+      },
+      {
+       "t": "Cómo les habría ido en crisis y subidas reales",
+       "filas": [
+        [
+         "La subida tras la crisis (abr. 2009 - abr. 2011)",
+         "51,2 %",
+         "31,6 %"
+        ],
+        [
+         "La crisis financiera (oct. 2007 - mar. 2009)",
+         "-19,2 %",
+         "-11,1 %"
+        ],
+        [
+         "La caída de bolsa de 2018 (sep. - dic.)",
+         "-7,3 %",
+         "-8,2 %"
+        ],
+        [
+         "La caída del COVID (feb. - mar. 2020)",
+         "-13,2 %",
+         "-13,1 %"
+        ]
+       ],
+       "cab": [
+        "",
+        "Hoy",
+        "Propuesta"
+       ],
+       "nota": null
+      },
+      {
+       "t": "Lo que enseñan esas crisis",
+       "md": "- **Las caídas han sido suaves**: en los tres años estudiados, tu mezcla de alrededor de un 59 % en bolsa, un 21 % en bonos y un 20 % en algo parecido al efectivo perdió como mucho un 10,21 % de máximo a mínimo, y se recuperó en 62 días. Una cartera diversificada con la misma parte en bolsa perdió un 11,44 % en su peor momento. Ganaste un 13,6 % al año frente a un 15,3 % de esa comparación, con menos vaivenes. La rentabilidad por unidad de riesgo fue parecida: 1,27 frente a 1,30. Son resultados pasados, no una promesa sobre los mercados futuros.\n- **Los sustos recientes te afectaron un poco menos**: en la subida por la pausa de 90 días de los aranceles (abril de 2025), caíste un 1,98 % mientras la comparación caía un 3,27 %. Tras la sentencia del Supremo sobre los aranceles (febrero de 2026), caíste un 0,79 % frente a un 1,40 %. Tras la última subida de tipos de la Fed (julio de 2023), caíste un 4,19 % frente a un 4,63 %. Tus peores diferencias fueron pequeñas: en la operación Epic Fury quedaste 0,29 puntos peor, y en los aranceles del «Liberation Day», 0,19 peor.\n- **Las recuperaciones se aprovecharon menos**: en los mercados al alza te quedaste con alrededor del 72 % de las ganancias de una mezcla parecida. En los mercados a la baja te llevaste alrededor del 91 % de las pérdidas. O sea, el colchón protegió solo parte de las caídas y a cambio renunció a más parte de la recuperación. Esto describe la mezcla que tuviste en estos tres años, no una mezcla objetivo, y puede no describir los mercados futuros."
+      },
+      {
+       "t": "Concentración e impuestos",
+       "filas": [
+        [
+         "El sueldo frente al patrimonio neto",
+         "82,4 %"
+        ],
+        [
+         "Bolsa de EE. UU., de toda la bolsa",
+         "85,3 %"
+        ],
+        [
+         "Sector Tecnología, de toda la bolsa",
+         "33 %"
+        ],
+        [
+         "Sector Finanzas, de toda la bolsa",
+         "12,7 %"
+        ],
+        [
+         "Impuestos al año por lo que rinde la cuenta de inversión",
+         "527 $"
+        ]
+       ],
+       "cab": null,
+       "nota": null
+      }
+     ]
+    }
+   ]
   },
   {
    "nombre": "Colchón",
@@ -718,7 +1224,22 @@
     "Para la reserva y los gastos ya previstos faltan <b>133.330 $</b>.",
     "Hoy ese efectivo rinde <b>0 $</b> al año; bien colocado, unos <b>230 $</b>."
    ],
-   "asesor": "Cómo llegar a la reserva sin dejar de lado lo demás."
+   "asesor": "Cómo llegar a la reserva sin dejar de lado lo demás.",
+   "informe": [
+    {
+     "titulo": "Lo que dice el informe",
+     "bloques": [
+      {
+       "t": "Protección",
+       "md": "La protección abarca tres áreas que cuidan los planes que sostienen tus 180.000 $ de ingresos: el colchón para imprevistos, el seguro de vida y el seguro de responsabilidad civil (umbrella). Hoy las tres están por debajo de lo recomendado, y tu colchón también está atado a la casa y las vacaciones de enero de 2027, así que miramos cada área por separado y explicamos por qué importan sus cifras."
+      },
+      {
+       "t": "El colchón para imprevistos",
+       "md": "- Tus 30.000 $ de efectivo accesible cubren unos 3,2 meses de tus 9.306 $ de gastos al mes, cuando lo recomendado para ti son de 5 a 6 meses (de 46.530 $ a 55.836 $). Faltan 16.530 $, y eso importa porque este efectivo es tu colchón si algún día se cortaran tus 180.000 $ de ingresos.\n- La compra de la casa de enero de 2027 (113.300 $ que hay que tener) y las vacaciones (3.500 $) llegan a la vez. Contándolas, el efectivo que hace falta sube a 163.330 $ a 172.636 $, y los meses que cubriría tu efectivo después de esas metas bajan a 0.\n- Tus 180.000 $ de ingresos son una fortaleza real, pero por sí solos no cierran el hueco de efectivo."
+      }
+     ]
+    }
+   ]
   },
   {
    "nombre": "Seguros",
@@ -831,7 +1352,69 @@
     "A Michael le faltan como mínimo <b>720.000 $</b> de seguro de vida.",
     "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>."
    ],
-   "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios."
+   "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios.",
+   "informe": [
+    {
+     "titulo": "Lo que dice el informe",
+     "bloques": [
+      {
+       "t": "Seguro de vida",
+       "md": "- Tienes 180.000 $ de seguro de vida frente a un rango recomendado de 900.000 $ a 1.800.000 $: faltan 720.000 $ y no sobra nada. Aunque vives solo, ese hueco importa: tu cobertura está muy por debajo de lo que haría falta si tus ingresos se cortaran.\n- Tus 180.000 $ son los únicos ingresos del hogar, así que todo lo que planeas y debes depende de ellos.\n- Quedarían tres deudas: 15.000 $ del préstamo del BMW 3 Series, 10.000 $ del préstamo de estudios y 3.500 $ de tarjeta al 20 %. En total 28.500 $, y la tarjeta es la que tiene el interés más alto.\n- No tienes metas de herencia ni de estudios, así que el hueco viene de tus ingresos y de estas deudas, no de esas metas."
+      },
+      {
+       "t": "Seguro de responsabilidad civil (umbrella)",
+       "md": "- No tienes seguro de responsabilidad civil (umbrella), y el mínimo recomendado es de 1.000.000 $: esa cantidad entera queda sin cubrir. Una demanda podría llegar a tus 172.000 $ de ahorro líquido y, más allá, a tus 218.500 $ de patrimonio neto, que son el ahorro y el patrimonio que estás construyendo para tus planes.\n- Tu BMW 3 Series, del que son tuyos 25.000 $, aparece sin seguro en los datos. Eso suma a tu exposición y conviene confirmarlo, porque puede que los datos no reflejen el seguro que tienes de verdad.\n- El seguro umbrella competiría con otras presiones de tu presupuesto, entre ellas el poco efectivo antes de comprar la casa en enero de 2027. Su coste no está en los datos, así que aún no se sabe cómo sale ese equilibrio."
+      },
+      {
+       "t": "Lo que quedaría expuesto ante una demanda",
+       "filas": [
+        [
+         "Vehículos (1)",
+         "40.000 $",
+         "25.000 $"
+        ],
+        [
+         "Otros bienes (1)",
+         "35.000 $",
+         "35.000 $"
+        ],
+        [
+         "Total",
+         "75.000 $",
+         "60.000 $"
+        ],
+        [
+         "Ahorro e inversiones líquidas",
+         "172.000 $",
+         ""
+        ],
+        [
+         "Patrimonio neto",
+         "218.500 $",
+         ""
+        ]
+       ],
+       "cab": [
+        "",
+        "Valor",
+        "Lo que es tuyo"
+       ],
+       "nota": null
+      },
+      {
+       "t": "Bienes que los datos marcan sin seguro",
+       "filas": [
+        [
+         "BMW 3 Series",
+         "sin seguro en los datos; tu parte: 25.000 $"
+        ]
+       ],
+       "cab": null,
+       "nota": "Puede que solo falte el dato: conviene confirmarlo."
+      }
+     ]
+    }
+   ]
   }
  ],
  "frases": [
@@ -1151,9 +1734,14 @@
     "netWorthStatement.netWorth"
    ],
    [
-    "Patrimonio neto al jubilarte (dólares de hoy)",
-    "1,51 M$",
-    "projections.yearly"
+    "Patrimonio neto al jubilarte",
+    "1.535.457 $",
+    "retirementAndOtherGoals.netWorthAtRetirement"
+   ],
+   [
+    "De él, líquido (se puede gastar)",
+    "1.071.095 $",
+    "retirementAndOtherGoals.netWorthAtRetirement"
    ]
   ],
   "kpis": [
@@ -1177,14 +1765,16 @@
    },
    {
     "lab": "Patrimonio al jubilarte",
-    "val": "1,51 M$",
-    "sub": "en dólares de hoy",
+    "val": "1,54 M$",
+    "sub": "1,07 M$ líquidos",
     "tono": ""
    }
   ],
   "lectura": [
+   "Al jubilarte, a las cuentas de jubilación les faltarían <b>1.177.586 $</b> (en dólares de hoy) para cubrir todo el gasto.",
    "En la jubilación gastarás unos <b>89.649 $</b> al año; las pensiones y rentas cubren <b>30.036 $</b> y el resto sale de los ahorros.",
-   "Para que la jubilación llegue, el plan pide ahorrar <b>20.231 $</b> más al año."
+   "Para que la jubilación llegue, el plan pide ahorrar <b>20.231 $</b> más al año.",
+   "Al final del estudio, el patrimonio neto sería de <b>567.450 $</b>, pero en bienes que no se gastan fácilmente, como la casa: el ahorro líquido se habría acabado y quedarían 32.439 $ de gasto sin pagar."
   ],
   "asesor": "Qué cambiar para que los ahorros lleguen hasta el final.",
   "serie": [
@@ -1409,7 +1999,67 @@
     567450
    ]
   ],
-  "jubila": 2047
+  "jubila": 2047,
+  "informe": [
+   {
+    "titulo": "Lo que dice el informe",
+    "bloques": [
+     {
+      "t": "Jubilación y metas",
+      "md": "- Tu plan de jubilarte a los 58 se queda corto: los ahorros y las inversiones se acabarían a los 85 años, seis años antes de que el plan termine a los 91. Para entonces quedarían sin pagar unos 32.439 $ del gasto previsto.\n- Los ingresos garantizados, que son solo la Seguridad Social, cubren el 34 % de un gasto de 89.649 $ al año. Eso deja a los ahorros unos 59.613 $ al año de media, así que el plan se apoya mucho en tus inversiones.\n- Ese peso se nota en que, al empezar la jubilación, sacarías de media un 5,6 % de tus ahorros cada año. Es una media de toda la jubilación, no una prueba de si es un ritmo seguro, pero ayuda a entender por qué el dinero no llega a los 91.\n- Llegas a la jubilación con 1.535.457 $ de patrimonio neto, pero solo 1.071.095 $ son líquidos. El resto, como la casa, no se gasta fácilmente, así que apenas alarga unos ahorros que se acaban a los 85. También es la razón de que el patrimonio neto siga siendo positivo al final del estudio.\n- Tu gasto incluye 443.522 $ de otras metas después de jubilarte, que se suman a lo que tienen que aguantar los ahorros. El plan no incluye el coste de cuidados de larga duración, así que lo que haga falta de verdad podría ser más de lo que enseña esta proyección."
+     },
+     {
+      "t": "Más cifras de la jubilación",
+      "filas": [
+       [
+        "Lo que faltaría en las cuentas de jubilación (dólares de hoy)",
+        "1.177.586 $"
+       ],
+       [
+        "Patrimonio neto al jubilarte",
+        "1.535.457 $"
+       ],
+       [
+        "De él, líquido",
+        "1.071.095 $"
+       ],
+       [
+        "Patrimonio neto al final del estudio",
+        "567.450 $"
+       ],
+       [
+        "Ahorro líquido al final del estudio",
+        "-32.439 $"
+       ],
+       [
+        "El ahorro líquido se acaba a los",
+        "85 años"
+       ],
+       [
+        "Otras metas después de la jubilación",
+        "443.522 $"
+       ],
+       [
+        "Coste de cuidados de larga duración",
+        "no está en el estudio"
+       ]
+      ],
+      "cab": null,
+      "nota": null
+     },
+     {
+      "t": "Lo que revisaría tu asesor",
+      "md": "que en la jubilación los ingresos solo cubren parte del gasto, la edad a la que se acabarían los ahorros frente a un plan que llega a los 91, y cómo se pagan las otras metas después de jubilarte.",
+      "asesor": true
+     }
+    ]
+   }
+  ]
+ },
+ "cierre": {
+  "recomendaciones": "- Decide cómo encajan la compra de la casa de enero de 2027 y tu colchón de efectivo, y separa ese dinero de corto plazo de tus inversiones a largo plazo.\n- Pon en la balanza cuánto más dedicar a la jubilación frente a un flujo de caja mensual muy justo, porque las dos cosas salen del mismo sueldo.\n- Revisa tu seguro de vida y el de responsabilidad civil (umbrella), y compara lo que cuestan con tu presupuesto.\n- Sigue pagando la tarjeta, que es cara, para que siga en camino de quedar saldada.\n- Compara cuánto tienes hoy en bolsa con el perfil de crecimiento que elegiste, sobre todo una vez apartado el dinero para la casa.",
+  "resumen": "- Partes de una posición fuerte: unos 247.000 $ de patrimonio, 145.000 $ de ellos invertibles, y 43.000 $ al año que van al ahorro, contando la aportación de la empresa. Esa aportación la cobras entera: 7.000 $ al año.\n- El problema es que el mismo sueldo tiene que hacer varios trabajos. Tu flujo de caja es negativo en unos 8.336 $ al año, porque el ahorro para la jubilación, las metas cercanas y el colchón de efectivo salen de los mismos dólares.\n- Dos metas llegan en enero de 2027: la compra de una casa de 113.300 $ y unas vacaciones de 3.500 $. Tus 30.000 $ en efectivo cubren unos 3 meses de gastos, frente a una reserva de 5 a 6 meses de 46.530 $ a 55.836 $. Contando esas metas, el efectivo que hace falta es de 163.330 $ a 172.636 $.\n- Según la proyección, jubilarte a los 58 deja un hueco en las cuentas de jubilación de unos 1.177.586 $ en dólares de hoy. Los ingresos garantizados cubrirían un 34 % de un gasto de 89.649 $ al año, y los ahorros durarían hasta los 85 años, cuando el plan llega a los 91. Tu patrimonio neto sigue siendo positivo durante todo el plan.\n- La protección y las deudas también tienen huecos. El seguro de vida es de 180.000 $, frente a los 900.000 $ a 1.800.000 $ recomendados, y no tienes seguro de responsabilidad civil (umbrella). Tu tarjeta de 3.500 $ está al 20 % y, pagando 200 $ al mes, va camino de quedar pagada en julio de 2028.\n- Lo realista es poner en la balanza la compra de la casa, el hueco de la jubilación y la protección, y decidir qué te importa más. Tus ingresos y tu costumbre de ahorrar son una buena base para construir un plan alrededor de esa decisión.",
+  "inversion": "- **El hueco es la jubilación**: tu cartera tiene que pagar una jubilación larga mientras sigues ahorrando de un solo sueldo. Tus 145.000 $ invertibles son una buena base. La falta más clara es que tus ahorros e inversiones se acaban a los 85 años y dejan sin pagar 32.439 $ del gasto previsto.\n- **Qué significan las cifras**: los ingresos cubren un 34 % de tu gasto en la jubilación, de 89.649 $ al año, así que los ahorros tienen que poner de media unos 59.613 $ al año. El flujo de caja es de -8.336 $ al año, así que cada dólar necesita un trabajo claro.\n- **Por dónde empezar**: rehaz tu reserva para imprevistos hasta los 46.530 $ a 55.836 $, y paga pronto la tarjeta de 3.500 $ al 20 %. Después, suma a la jubilación: metes 17.000 $ en tu 401(k), así que lo máximo que puedes añadir son 7.500 $. Podrías aportar hasta 4.500 $ a una IRA Roth.\n- **El orden importa**: el ahorro para la jubilación, el colchón y pagar la tarjeta compiten por los mismos dólares mientras el flujo de caja sea negativo, así que probaremos en qué orden hacerlo. Falta el precio de compra de lo que hay en tu cuenta de inversión, así que todavía no se sabe qué impuestos tendría vender algo.\n- **Vigila**: tus ingresos dependen de una sola empresa, lo que suma riesgo a un colchón de efectivo escaso. Vigila las dos cosas mientras construyes la reserva."
  },
  "lectura": "Le importa poder comprar la casa sin quedarse sin colchón y, al mismo tiempo, no recortar su jubilación. Lo que más le moverá es ver cuántos meses de gastos cubre su efectivo. También reaccionará fuerte al dato sobre hasta cuándo duran sus ahorros.",
  "porqueOrden": "Primero la liquidez y la casa, luego la jubilación; cerramos con la nota y una buena noticia de la tarjeta",
