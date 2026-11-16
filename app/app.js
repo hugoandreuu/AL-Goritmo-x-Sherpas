@@ -743,7 +743,26 @@
   // Misma estructura que su sección en el informe: cifras clave, desglose con total y gráfico,
   // qué significa, lo que propone el plan, para hablar con el asesor y, al final, todas las cifras.
   const kpisHtml = ks => ks && ks.length ? `<div class="kpis">${ks.map((x, i) => `<div class="kpi ${x.tono || ''}" style="--i:${i}"><small>${esc(x.lab)}</small><b>${esc(x.val)}</b>${x.sub ? `<span>${esc(x.sub)}</span>` : ''}</div>`).join('')}</div>` : '';
-  const desgloseHtml = d => d ? `<div class="dsg"><div class="dsg-t">${esc(d.titulo)}</div><table>${d.filas.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}${d.total ? `<tr class="tot"><td>${esc(d.total[0])}</td><td>${esc(d.total[1])}</td></tr>` : ''}</table></div>` : '';
+  const desgloseHtml = d => d ? `<div class="dsg"><div class="dsg-t">${esc(d.titulo)}</div><table>${d.filas.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}${d.total ? `<tr class="tot"><td>${esc(d.total[0])}</td><td>${esc(d.total[1])}</td></tr>` : ''}</table>${d.nota ? `<p class="tiny dsg-n">${esc(d.nota)}</p>` : ''}</div>` : '';
+  // «Lo que dice el informe»: el texto de cada sección del informe de Sherpas, en castellano, y sus tablas.
+  // El texto viene en un markdown mínimo: viñetas con «- », negritas con **…** y párrafos.
+  const mdHtml = t => {
+    const inl = x => esc(x).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    const out = []; let ul = [];
+    const flush = () => { if (ul.length) out.push(`<ul class="lect">${ul.map(li => `<li>${li}</li>`).join('')}</ul>`); ul = []; };
+    String(t || '').split(/\n+/).map(l => l.trim()).filter(Boolean).forEach(l => { if (/^- /.test(l)) ul.push(inl(l.slice(2))); else { flush(); out.push(`<p>${inl(l)}</p>`); } });
+    flush(); return out.join('');
+  };
+  const tablaInf = bl => `<div class="dsg inf-t"><table>${bl.cab ? `<tr class="cab">${bl.cab.map(c => `<td>${esc(c)}</td>`).join('')}</tr>` : ''}${bl.filas.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table>${bl.nota ? `<p class="tiny dsg-n">${esc(bl.nota)}</p>` : ''}</div>`;
+  const bloqueInf = bl => bl.asesor
+    ? `<div class="asesor inf-as">${ic('chat', 18)}<div><b>${esc(bl.t)}</b>${mdHtml(bl.md)}</div></div>`
+    : `<section class="inf-b"><h4>${esc(bl.t)}</h4>${bl.md ? `<div class="inf-md">${mdHtml(bl.md)}</div>` : ''}${bl.filas ? tablaInf(bl) : ''}</section>`;
+  // Resúmenes finales del informe: sus recomendaciones a la vista y los dos resúmenes (salud financiera e inversiones) desplegables.
+  const cierreInforme = n => { const c = E.cierre || {}; if (!c.recomendaciones && !c.resumen && !c.inversion) return '';
+    return sec(n, 'Lo que recomienda el informe', `${c.recomendaciones ? `<div class="inf-md">${mdHtml(c.recomendaciones)}</div>` : ''}
+      ${c.resumen ? `<details class="fold-all inf"><summary>El resumen del informe</summary><div class="inf-in inf-md">${mdHtml(c.resumen)}</div></details>` : ''}
+      ${c.inversion ? `<details class="fold-all inf"><summary>El resumen del análisis de inversiones</summary><div class="inf-in inf-md">${mdHtml(c.inversion)}</div></details>` : ''}`); };
+  const informeHtml = gs => (gs || []).map(g => `<details class="fold-all inf"><summary>${esc(g.titulo)}</summary><div class="inf-in">${g.bloques.map(bloqueInf).join('')}</div></details>`).join('');
   const lecturaHtml = ls => ls && ls.length ? `<ul class="lect">${ls.map(l => `<li>${l}</li>`).join('')}</ul>` : '';
   const asesorHtml = t => t ? `<div class="asesor">${ic('chat', 18)}<div><b>Para hablar con ${w('vuestro', 'tu')} asesor</b><p>${esc(t)}</p><button class="link small" data-act="whatif">Apuntar una pregunta</button></div></div>` : '';
   const sec = (n, t, body) => body ? `<section class="tp-sec"><div class="kicker"><b>${n}</b>${t}</div>${body}</section>` : '';
@@ -759,7 +778,8 @@
       html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
         <div class="foto">${ring(E.nota.hoy, E.nota.max)}</div>
         ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })) }) + `<div class="tp-links">${E.areas.map(a => `<button class="chip sm" data-act="tema" data-k="${esc(a.nombre)}">${esc(a.nombre)}</button>`).join('')}</div>`)}
-        ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s => (paso(s) || {}).titulo || s).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}`;
+        ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s => (paso(s) || {}).titulo || s).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}
+        ${cierreInforme(3)}`;
     } else if (k === '__ruta') {
       const r = E.roadmap || {};
       html = `<header class="tp-h"><div class="kicker">${w('Vuestro', 'Tu')} roadmap</div><h1>De hoy a ${w('vuestra', 'tu')} jubilación</h1></header>
@@ -768,6 +788,7 @@
         ${sec(2, `Cómo crece ${w('vuestro', 'tu')} patrimonio`, grafLinea(r))}
         ${sec(3, 'Qué significa', lecturaHtml(r.lectura))}
         ${asesorHtml(r.asesor)}
+        ${informeHtml(r.informe)}
         <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(r.detalle, true)}</details>`;
     } else {
       const x = temaDe(k); if (!x) { volverTema(); return; }
@@ -778,6 +799,7 @@
         ${sec(2, 'Qué significa', lecturaHtml(a.lectura) + dijeron(x))}
         ${sec(3, `Lo que propone ${w('vuestro', 'tu')} plan`, pasos.length ? pasos.map(pasoTema).join('') : sinPaso(x))}
         ${asesorHtml(a.asesor)}
+        ${informeHtml(a.informe)}
         <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(a.detalle, true)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></details>`;
     }
     app.innerHTML = `<div class="narrow tpage"><button class="link tp-back" data-act="temaback">${ic('arrow', 16).replace('<svg', '<svg style="transform:rotate(180deg)"')} ${desdeResumen ? 'Volver al resumen' : 'Volver al plan completo'}</button>${html}
@@ -802,7 +824,8 @@
     const temas = temasPlan();
     main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestro', 'Tu')} plan en ${temas.length} temas</div>
       <p class="muted" style="margin-top:-2px">Son las ${temas.length} partes con las que ${w('vuestro', 'tu')} plan calcula la nota. Lo que ${w('habéis', 'has')} contestado eran situaciones de estos temas. ${w('Tocad', 'Toca')} uno para verlo a fondo.</p>
-      <div class="temas">${temas.map((x, i) => temaCard(x, i, 'plan')).join('')}${rutaCard()}</div></div>`;
+      <div class="temas">${temas.map((x, i) => temaCard(x, i, 'plan')).join('')}${rutaCard()}</div>
+      ${E.cierre && E.cierre.recomendaciones ? `<details class="fold-all inf" style="margin-top:14px"><summary>Lo que recomienda el informe de Sherpas</summary><div class="inf-in inf-md">${mdHtml(E.cierre.recomendaciones)}<button class="link small" data-act="tema" data-k="__nota">Ver los resúmenes del informe</button></div></details>` : ''}</div>`;
 
     main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Vuestro', 'Tu')} siguiente paso</div>
       <div class="card close"><div class="meter">
@@ -989,7 +1012,7 @@
   const riskOpt = id => RISK.find(r => r[0] === id) || null;
   const perfil = x => (E.pareja && E.pareja.perfiles[pIdx(x)]) || null;
   const pLab = p => !p ? 'sin dato' : PRO() ? `${p.etiqueta} (${p.riesgo})` : p.etiqueta;
-  const escala = () => (E.pareja && E.pareja.escala) || ['Muy prudente', 'Prudente', 'Equilibrado', 'Dinámico', 'Atrevido'];
+  const escala = () => (E.pareja && E.pareja.escala) || ['Conservar capital', 'Prudente', 'Equilibrado', 'Crecimiento', 'Dinámico'];
   // La pregunta de dinero sigue al estudio: el primer freno con cifra (Weah, la tarjeta; Johnson, el colchón).
   const numQ = q => q && q.tipo !== 'opciones' && q.id !== 'vida' && q.id !== 'nota' && q.min != null;
   // Entre las preguntas con cifra, la del área que peor va (no se elige un tema cuya área va bien); a igualdad, el orden de frenos del estudio.
