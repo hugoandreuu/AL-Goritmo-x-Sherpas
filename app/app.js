@@ -302,6 +302,10 @@
       jubilacion: /jubil|retir|vejez|pension|mayores/, colchon: /paro|trabaj|emergen|imprevist|colchon|despid|ingres|sueldo/, nota: /futur|salud|general|tranquil|bien/, inversion: /invers|fondo|bolsa|accion/ };
     return E.preguntas.filter(q => T[q.tema] && T[q.tema].test(t)).map(q => q.id);
   }
+  // Frases sugeridas como tarjetas en rejilla, con un icono según el tema de la frase (solo adorno, sin cifras).
+  const SUGG_IC = [[/interes|tarjet|deud/, 'card'], [/cubiert|proteg|hij|famil/, 'shield'], [/casa|hogar/, 'home'], [/coche/, 'car'], [/jubil|retir/, 'sun'], [/efectivo|colchon|imprevist|ahorr/, 'coins'], [/fondo|invers|bolsa/, 'chart'], [/camino|tranquil/, 'flag']];
+  const suggIc = t => (SUGG_IC.find(([r]) => r.test(sinTilde(t))) || [0, 'heart'])[1];
+  const suggTiles = (act, actual) => `<div class="sugg-grid">${E.frases.map((p, i) => `<button class="sg" style="--i:${i}" data-act="${act}" data-v="${esc(p)}" aria-pressed="${actual === p}"><span class="sg-ic">${ic(suggIc(p), 18)}</span><span class="sg-t">${esc(p)}</span></button>`).join('')}</div>`;
   // Toda apuesta con la barra: las preguntas de opciones pasan a una edad, con cifras que ya trae el estudio.
   function aBarra(q) {
     if (q.tipo !== 'opciones') return q;
@@ -393,9 +397,9 @@
       body = [['juntos', 'Los dos juntos', 'heart']].concat([['a', ad[0].nombre, 'eye'], ['b', ad[1].nombre, 'eye']]).map(([v, l, i], k) => `<button class="opt" style="--i:${k}" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${optBody(i, esc(l))}</button>`).join('');
     } else if (step === 'phrase') {
       head = `<h2 class="q">¿Qué es lo que más ${w('os ronda', 'te ronda')} la cabeza con el dinero?</h2><p class="muted">Con ${w('vuestras', 'tus')} palabras. También ${w('podéis', 'puedes')} dictarlo con el micrófono del teclado.</p>`;
-      body = `<textarea id="worry" class="free" rows="3" maxlength="240" data-act="free-in" placeholder="${esc(E.fam.hijos.length ? `Por ejemplo: que a ${E.fam.hijos.map(k => k.nombre).join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilo a la jubilación')}">${esc(S.phrase || '')}</textarea>
-        <p class="tiny sugg-t">O ${w('empezad', 'empieza')} con una de estas y ${w('cambiadla', 'cámbiala')} a ${w('vuestro', 'tu')} gusto:</p>
-        <div class="sugg">${E.frases.map((p, i) => `<button class="chip sm" style="--i:${i}" data-act="sugg" data-v="${esc(p)}">${esc(p)}</button>`).join('')}</div>`;
+      body = `${suggTiles('sugg', S.phrase)}
+        <p class="tiny sugg-t">O ${w('escribidlo con vuestras', 'escríbelo con tus')} palabras:</p>
+        <textarea id="worry" class="free" rows="3" maxlength="240" data-act="free-in" placeholder="${esc(E.fam.hijos.length ? `Por ejemplo: que a ${E.fam.hijos.map(k => k.nombre).join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilo a la jubilación')}">${esc(S.phrase || '')}</textarea>`;
       dk = `<div class="dock"><button class="btn block" data-act="worry" ${S.phrase ? '' : 'disabled'}>Seguir</button><button class="link block skipw" data-act="worry" data-v="skip">${w('Preferimos', 'Prefiero')} no escribir</button></div>`;
     } else if (step === 'level') {
       head = `<h2 class="q">¿Cómo ${w('os manejáis', 'te manejas')} con las finanzas?</h2><p class="muted">No hay respuestas buenas ni malas. Se puede cambiar después.</p>`;
@@ -1091,9 +1095,9 @@
     const f = S.pj.frase[x], kids = E.fam.hijos.map(k => k.nombre);
     return pjCard(x, pjPart('frase', 'Lo que te ronda la cabeza'), `<h2 class="q">¿Qué es lo que más te ronda la cabeza con el dinero?</h2>
       <p class="muted small pj-qsub">Con tus palabras. No se enseña a ${esc(pName(other(x)))}: es para vuestro asesor, para preparar la reunión.</p>`,
-      `<textarea id="pjfrase" class="free" rows="3" maxlength="240" data-x="${x}" placeholder="${esc(kids.length ? `Por ejemplo: que a ${kids.join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilos a la jubilación')}">${esc(f || '')}</textarea>
-      <p class="tiny sugg-t">O empieza con una de estas y cámbiala a tu gusto:</p>
-      <div class="sugg">${E.frases.map((p, i) => `<button class="chip sm" style="--i:${i}" data-act="pjfsugg" data-v="${esc(p)}">${esc(p)}</button>`).join('')}</div>`,
+      `${suggTiles('pjfsugg', f)}
+      <p class="tiny sugg-t">O escríbelo con tus palabras:</p>
+      <textarea id="pjfrase" class="free" rows="3" maxlength="240" data-x="${x}" placeholder="${esc(kids.length ? `Por ejemplo: que a ${kids.join(' y ')} no les falte de nada` : 'Por ejemplo: llegar tranquilos a la jubilación')}">${esc(f || '')}</textarea>`,
       `<div class="dock"><button class="btn block pj-btn ${x}" data-act="pjfrase" data-x="${x}" id="pjfsave" ${f ? '' : 'disabled'}>Guardar en secreto</button><button class="link block skipw" data-act="pjfrase" data-x="${x}" data-v="skip">Prefiero no escribir</button></div>`);
   }
   // Lo que le ronda a cada uno es solo para el asesor: no va a la portada, al calendario ni a lo que veis juntos.
@@ -1389,6 +1393,7 @@
     save();
   }
   function keep() { const y = window.scrollY; render(); window.scrollTo(0, y); }
+  const marcaSugg = b => app.querySelectorAll('.sg').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
   function toast(t) { const el = document.createElement('div'); el.className = 'toast'; el.textContent = t; document.body.appendChild(el); setTimeout(() => el.remove(), 2400); }
 
   // ------------------------------------------------------------------ eventos
@@ -1457,7 +1462,7 @@
         else { if (S.mode !== 'solo') { S.qi = 0; S.who = null; } S.mode = 'solo'; if (S.qi > 0) swipe(() => { S.stage = 'quiz'; render(); }); else swipe(bridge); }
         break;
       case 'pjgo': if (b.id === 'pjsave') { b.disabled = true; if (window.Fondo) Fondo.pulse(); pjSeal(pjGo); } else pjGo(); break;
-      case 'pjfsugg': { const t = document.getElementById('pjfrase'); if (!t) break; t.value = v; t.focus(); const bt = document.getElementById('pjfsave'); if (bt) bt.disabled = false; if (window.Fondo) Fondo.pulse(); break; }
+      case 'pjfsugg': { const t = document.getElementById('pjfrase'); if (!t) break; t.value = v; marcaSugg(b); t.focus(); const bt = document.getElementById('pjfsave'); if (bt) bt.disabled = false; if (window.Fondo) Fondo.pulse(); break; }
       case 'pjfrase': {
         const x = b.dataset.x, t = document.getElementById('pjfrase'), txt = v === 'skip' ? '' : (t ? t.value.trim() : '');
         S.pj.frase[x] = txt || null; pjFraseSet(); save();
@@ -1488,7 +1493,7 @@
         if (document.startViewTransition) { document.startViewTransition(() => playReveal(q)); break; }
         const st = app.querySelector('.qstage'); if (st) st.classList.add('fade-out'); setTimeout(() => playReveal(q), 300); break;
       }
-      case 'sugg': { const t = document.getElementById('worry'); t.value = v; t.focus(); const bt = app.querySelector('[data-act="worry"]:not([data-v])'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } break; }
+      case 'sugg': { const t = document.getElementById('worry'); t.value = v; marcaSugg(b); t.focus(); const bt = app.querySelector('[data-act="worry"]:not([data-v])'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } break; }
       case 'worry': {
         const t = document.getElementById('worry'), txt = v === 'skip' ? '' : (t ? t.value.trim() : '');
         S.phrase = txt; S.match = temasDe(txt); buildQuiz(S.match);
