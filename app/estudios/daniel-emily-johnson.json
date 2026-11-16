@@ -214,7 +214,44 @@
     "De cada 100 $ que entran, 28 a impuestos, 6 a deudas, 22 a vivienda, 9 a ahorro y 30 a gastos del día a día.",
     "Después de todo, este año os sobran <b>15.032 $</b>."
    ],
-   "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año."
+   "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año.",
+   "capas": [
+    {
+     "t": "tabla",
+     "titulo": "Ahorro de cada cuenta",
+     "cab": [
+      "Cuenta",
+      "De",
+      "Aportación al año",
+      "Empresa"
+     ],
+     "filas": [
+      [
+       "Cuenta de ahorro",
+       "Emily",
+       "6.000 $",
+       "0 $"
+      ],
+      [
+       "Cuenta 529 (universidad)",
+       "Emily",
+       "8.000 $",
+       "0 $"
+      ],
+      [
+       "Cuenta de bróker",
+       "Emily",
+       "12.000 $",
+       "0 $"
+      ]
+     ]
+    }
+   ],
+   "conexiones": [
+    "flujo",
+    "impuestos",
+    "jubilacion"
+   ]
   },
   {
    "nombre": "Deudas",
@@ -440,7 +477,49 @@
     "Con la vivienda, los pagos se llevan el <b>27,3 %</b> de los ingresos. Los bancos se fijan a partir del 36 %.",
     "Pagando como hasta ahora, la tarjeta se acaba en <b>enero de 2034</b>."
    ],
-   "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla."
+   "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla.",
+   "capas": [
+    {
+     "t": "tabla",
+     "titulo": "Todas las deudas",
+     "cab": [
+      "Deuda",
+      "Saldo",
+      "Interés",
+      "Pago al mes"
+     ],
+     "filas": [
+      [
+       "Chase Sapphire · Daniel",
+       "18.000 $",
+       "24,9 %",
+       "450 $"
+      ],
+      [
+       "Student loan - Daniel · Daniel",
+       "12.000 $",
+       "5,2 %",
+       "250 $"
+      ],
+      [
+       "Primary home mortgage · Daniel, Emily",
+       "560.000 $",
+       "6,5 %",
+       "4.100 $"
+      ],
+      [
+       "Toyota Highlander loan · Daniel, Emily",
+       "28.000 $",
+       "7,9 %",
+       "620 $"
+      ]
+     ]
+    }
+   ],
+   "conexiones": [
+    "Colchón",
+    "flujo"
+   ]
   },
   {
    "nombre": "Inversiones",
@@ -667,7 +746,12 @@
     "Contando el efectivo, el reparto hoy es <b>54 / 46</b> (bolsa / resto). El análisis propone <b>66 / 34</b>, con una rentabilidad esperada del 7,12 % en vez del 6,63 %.",
     "En una crisis como la de 2008, esta cartera habría caído un <b>20,4 %</b>."
    ],
-   "asesor": "Daniel es dinámico y Emily, equilibrado: decidir juntos cuánto riesgo queréis en la cartera."
+   "asesor": "Daniel es dinámico y Emily, equilibrado: decidir juntos cuánto riesgo queréis en la cartera.",
+   "capas": [],
+   "conexiones": [
+    "cartera",
+    "jubilacion"
+   ]
   },
   {
    "nombre": "Colchón",
@@ -800,7 +884,94 @@
     "Para la reserva y los gastos ya previstos faltan <b>92.360 $</b>.",
     "Hoy ese efectivo rinde <b>0 $</b> al año; bien colocado, unos <b>625 $</b>."
    ],
-   "asesor": "Cómo llegar a la reserva sin dejar de lado lo demás."
+   "asesor": "Cómo llegar a la reserva sin dejar de lado lo demás.",
+   "capas": [
+    {
+     "t": "tabla",
+     "titulo": "Efectivo cuenta a cuenta",
+     "cab": [
+      "Cuenta",
+      "Se puede usar",
+      "Saldo",
+      "En efectivo",
+      "Rinde hoy",
+      "Podría rendir"
+     ],
+     "filas": [
+      [
+       "401(k) - Daniel",
+       "No",
+       "150.000 $",
+       "5.000 $",
+       "0 %",
+       "7,27 %"
+      ],
+      [
+       "401(k) - Emily",
+       "No",
+       "100.000 $",
+       "2.000 $",
+       "0 %",
+       "7,27 %"
+      ],
+      [
+       "529 College Savings",
+       "No",
+       "30.000 $",
+       "5.000 $",
+       "0 %",
+       "7,27 %"
+      ],
+      [
+       "Taxable Brokerage",
+       "Sí",
+       "50.000 $",
+       "5.000 $",
+       "0 %",
+       "3,2 %"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Lo que rinde el efectivo",
+     "filas": [
+      [
+       "Reserva",
+       "hoy 0 $ al año; podría 160 $ (se pierden 160 $)"
+      ],
+      [
+       "Exceso disponible",
+       "hoy 0 $ al año; podría 0 $ (se pierden 0 $)"
+      ],
+      [
+       "Exceso no disponible",
+       "hoy 0 $ al año; podría 465 $ (se pierden 465 $)"
+      ],
+      [
+       "Colchón operativo",
+       "hoy 0 $ al año; podría 0 $ (se pierden 0 $)"
+      ],
+      [
+       "· disponible",
+       "hoy 0 $ al año; podría 0 $ (se pierden 0 $)"
+      ],
+      [
+       "· no disponible",
+       "hoy 0 $ al año; podría 0 $ (se pierden 0 $)"
+      ],
+      [
+       "Total",
+       "hoy 0 $ al año; podría 625 $ (se pierden 625 $)"
+      ]
+     ]
+    }
+   ],
+   "conexiones": [
+    "Deudas",
+    "Seguros",
+    "universidad"
+   ]
   },
   {
    "nombre": "Seguros",
@@ -967,7 +1138,49 @@
     "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>.",
     "Oliver y Sophia dependen de vuestros ingresos."
    ],
-   "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios."
+   "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios.",
+   "capas": [
+    {
+     "t": "tabla",
+     "titulo": "Todas las pólizas",
+     "cab": [
+      "Póliza",
+      "De",
+      "Cobertura",
+      "Prima al año"
+     ],
+     "filas": [
+      [
+       "Incapacidad (largo plazo)",
+       "Daniel",
+       "Sí (sin importe)",
+       "—"
+      ],
+      [
+       "Vida (entera)",
+       "Daniel",
+       "250.000 $",
+       "—"
+      ],
+      [
+       "Incapacidad (largo plazo)",
+       "Emily",
+       "Sí (sin importe)",
+       "—"
+      ],
+      [
+       "Vida (entera)",
+       "Emily",
+       "200.000 $",
+       "—"
+      ]
+     ]
+    }
+   ],
+   "conexiones": [
+    "Colchón",
+    "Deudas"
+   ]
   }
  ],
  "frases": [
@@ -1580,6 +1793,3018 @@
   ],
   "jubila": 2044
  },
+ "puntos": [
+  {
+   "id": "jubilacion",
+   "nombre": "Jubilación y metas",
+   "icon": "sun",
+   "sub": "Si el dinero llega y qué metas hay por el camino",
+   "cifra": "49 %",
+   "cifraLab": "del gasto de la jubilación cubierto",
+   "estado": "mid",
+   "titular": "Falta dinero para la jubilación: 1,43 M$.",
+   "conexiones": [
+    "Ahorro",
+    "Inversiones",
+    "universidad"
+   ],
+   "kpis": [
+    {
+     "lab": "Jubilación",
+     "val": "2044",
+     "sub": "a los 62 y 60",
+     "tono": ""
+    },
+    {
+     "lab": "Gasto cubierto",
+     "val": "49 %",
+     "sub": "sin cuidados de larga duración",
+     "tono": "coste"
+    },
+    {
+     "lab": "Al final del estudio",
+     "val": "260 K$",
+     "sub": "en ahorros líquidos",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Patrimonio al jubilaros",
+     "val": "1,81 M$",
+     "sub": "sin descontar la inflación",
+     "tono": ""
+    }
+   ],
+   "graf": {
+    "tipo": "barras",
+    "titulo": "Gasto al año en la jubilación y de dónde sale",
+    "items": [
+     {
+      "lab": "Gasto que se necesita",
+      "v": 124070.59,
+      "txt": "124.071 $"
+     },
+     {
+      "lab": "Pensión pública (Social Security)",
+      "v": 59465.61,
+      "txt": "59.466 $",
+      "tono": "bueno"
+     },
+     {
+      "lab": "Otros: trabajo",
+      "v": 1672.79,
+      "txt": "1.673 $",
+      "tono": "bueno"
+     },
+     {
+      "lab": "De los ahorros",
+      "v": 62932.2,
+      "txt": "62.932 $",
+      "tono": "coste"
+     }
+    ],
+    "leyenda": {
+     "bueno": "Ingresos garantizados",
+     "coste": "Sale de los ahorros"
+    }
+   },
+   "lectura": [
+    "En la jubilación necesitaréis unos <b>124.071 $</b> al año de media. Los ingresos cubren el <b>49 %</b> (el 40 % si se suman cuidados de larga duración).",
+    "Casi todo viene de ingresos garantizados (pensión pública y rentas): el <b>47,9 %</b>. Otros ingresos aportan el 1,4 %.",
+    "De los ahorros saldrían unos <b>62.932 $</b> al año, una retirada media del <b>5,5 %</b>.",
+    "Al final del estudio quedarían <b>260.272 $</b> en ahorros: un margen si las cosas van peor.",
+    "Para cubrir toda la jubilación faltan <b>1,43 M$</b>: unos <b>34.165 $</b> más de ahorro al año.",
+    "El cálculo principal no incluye cuidados de larga duración, que el estudio estima en 234.397 $ al año."
+   ],
+   "asesor": "Qué cambiar (ahorro, edad o gasto) para que el dinero llegue hasta el final.",
+   "capas": [
+    {
+     "t": "filas",
+     "titulo": "Metas del plan",
+     "filas": [
+      [
+       "Jubilación",
+       "2044, a los 62 y 60"
+      ],
+      [
+       "Vacaciones",
+       "4.500 $ cada año"
+      ],
+      [
+       "Universidad",
+       "60.000 $ por hijo"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Cuándo llega cada meta",
+     "filas": [
+      [
+       "Vacaciones",
+       "enero de 2027 hasta septiembre de 2044"
+      ],
+      [
+       "Universidad de Oliver",
+       "agosto de 2033 hasta enero de 2037"
+      ],
+      [
+       "Universidad de Sophia",
+       "agosto de 2035 hasta enero de 2039"
+      ],
+      [
+       "Jubilación de Emily",
+       "mayo de 2044"
+      ],
+      [
+       "Jubilación de Daniel",
+       "septiembre de 2044"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "El gasto en la jubilación",
+     "filas": [
+      [
+       "Al año, sin cuidados de larga duración",
+       "124.071 $"
+      ],
+      [
+       "Al año, con cuidados de larga duración",
+       "154.315 $"
+      ],
+      [
+       "Total de la jubilación, sin cuidados",
+       "3,85 M$"
+      ],
+      [
+       "Total, con cuidados",
+       "4,78 M$"
+      ],
+      [
+       "Cuidados de larga duración, al año",
+       "234.397 $ (estimado)"
+      ],
+      [
+       "Cuidados de larga duración, total",
+       "937.590 $"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Ingresos de la jubilación",
+     "cab": [
+      "Fuente",
+      "Total",
+      "Media al año"
+     ],
+     "filas": [
+      [
+       "Pensión pública (Social Security)",
+       "1,84 M$",
+       "59.466 $"
+      ],
+      [
+       "Rentas (anualidades)",
+       "0 $",
+       "0 $"
+      ],
+      [
+       "Pensión de empresa",
+       "0 $",
+       "0 $"
+      ],
+      [
+       "Total garantizado",
+       "1,84 M$",
+       "59.466 $"
+      ],
+      [
+       "Trabajo",
+       "51.856 $",
+       "1.673 $"
+      ],
+      [
+       "Total otros ingresos",
+       "51.856 $",
+       "1.673 $"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Qué parte del gasto cubren los ingresos",
+     "filas": [
+      [
+       "Todos los ingresos, sin cuidados",
+       "49,3 %"
+      ],
+      [
+       "Ingresos garantizados, sin cuidados",
+       "47,9 %"
+      ],
+      [
+       "Otros ingresos, sin cuidados",
+       "1,4 %"
+      ],
+      [
+       "Todos los ingresos, con cuidados",
+       "39,6 %"
+      ],
+      [
+       "Ingresos garantizados, con cuidados",
+       "38,5 %"
+      ],
+      [
+       "Otros ingresos, con cuidados",
+       "1,1 %"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Lo que sale de los ahorros",
+     "filas": [
+      [
+       "Al año",
+       "62.932 $"
+      ],
+      [
+       "En total (dólares de hoy)",
+       "1,95 M$"
+      ],
+      [
+       "Retirada media sobre los ahorros",
+       "5,49 %"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Patrimonio en la jubilación y al final",
+     "filas": [
+      [
+       "Patrimonio al jubilaros",
+       "1,81 M$"
+      ],
+      [
+       "· de él, líquido",
+       "1,14 M$"
+      ],
+      [
+       "· de él, no líquido (casa, coches)",
+       "669.470 $"
+      ],
+      [
+       "En cuentas de jubilación al jubilarse (dólares de hoy)",
+       "523.442 $"
+      ],
+      [
+       "Patrimonio al final del estudio",
+       "1,01 M$"
+      ],
+      [
+       "Ahorros líquidos al final del estudio",
+       "260.272 $"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Lo que pide la jubilación",
+     "filas": [
+      [
+       "Dinero que falta",
+       "1,43 M$"
+      ],
+      [
+       "Ahorro extra al año",
+       "34.165 $"
+      ],
+      [
+       "Años hasta la jubilación",
+       "17"
+      ],
+      [
+       "Rentabilidad media supuesta",
+       "7,58 %"
+      ],
+      [
+       "Inflación supuesta",
+       "3 %"
+      ],
+      [
+       "Otras metas después de jubilarse",
+       "No"
+      ],
+      [
+       "Meta de herencia",
+       "No hay"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Proyección año a año",
+     "cab": [
+      "Año",
+      "Edad",
+      "Patrimonio (hoy)",
+      "Patrimonio",
+      "Deudas",
+      "Invertible"
+     ],
+     "filas": [
+      [
+       "2026",
+       "44 / 42",
+       "521 K$",
+       "522 K$",
+       "614 K$",
+       "350 K$"
+      ],
+      [
+       "2027",
+       "45 / 43",
+       "593 K$",
+       "613 K$",
+       "592 K$",
+       "400 K$"
+      ],
+      [
+       "2028",
+       "46 / 44",
+       "668 K$",
+       "711 K$",
+       "568 K$",
+       "453 K$"
+      ],
+      [
+       "2029",
+       "47 / 45",
+       "744 K$",
+       "816 K$",
+       "542 K$",
+       "512 K$"
+      ],
+      [
+       "2030",
+       "48 / 46",
+       "823 K$",
+       "930 K$",
+       "514 K$",
+       "575 K$"
+      ],
+      [
+       "2031",
+       "49 / 47",
+       "898 K$",
+       "1,05 M$",
+       "490 K$",
+       "644 K$"
+      ],
+      [
+       "2032",
+       "50 / 48",
+       "973 K$",
+       "1,17 M$",
+       "468 K$",
+       "719 K$"
+      ],
+      [
+       "2033",
+       "51 / 49",
+       "1,04 M$",
+       "1,28 M$",
+       "444 K$",
+       "783 K$"
+      ],
+      [
+       "2034",
+       "52 / 50",
+       "1,1 M$",
+       "1,4 M$",
+       "423 K$",
+       "853 K$"
+      ],
+      [
+       "2035",
+       "53 / 51",
+       "1,14 M$",
+       "1,5 M$",
+       "400 K$",
+       "906 K$"
+      ],
+      [
+       "2036",
+       "54 / 52",
+       "1,19 M$",
+       "1,61 M$",
+       "376 K$",
+       "962 K$"
+      ],
+      [
+       "2037",
+       "55 / 53",
+       "1,26 M$",
+       "1,75 M$",
+       "351 K$",
+       "1,05 M$"
+      ],
+      [
+       "2038",
+       "56 / 54",
+       "1,32 M$",
+       "1,9 M$",
+       "324 K$",
+       "1,14 M$"
+      ],
+      [
+       "2039",
+       "57 / 55",
+       "1,41 M$",
+       "2,08 M$",
+       "295 K$",
+       "1,26 M$"
+      ],
+      [
+       "2040",
+       "58 / 56",
+       "1,49 M$",
+       "2,28 M$",
+       "264 K$",
+       "1,39 M$"
+      ],
+      [
+       "2041",
+       "59 / 57",
+       "1,58 M$",
+       "2,49 M$",
+       "231 K$",
+       "1,54 M$"
+      ],
+      [
+       "2042",
+       "60 / 58",
+       "1,68 M$",
+       "2,71 M$",
+       "195 K$",
+       "1,69 M$"
+      ],
+      [
+       "2043",
+       "61 / 59",
+       "1,77 M$",
+       "2,96 M$",
+       "158 K$",
+       "1,86 M$"
+      ],
+      [
+       "2044",
+       "62 / 60",
+       "1,81 M$",
+       "3,11 M$",
+       "118 K$",
+       "1,93 M$"
+      ],
+      [
+       "2045",
+       "63 / 61",
+       "1,75 M$",
+       "3,09 M$",
+       "75 K$",
+       "1,84 M$"
+      ],
+      [
+       "2046",
+       "64 / 62",
+       "1,68 M$",
+       "3,07 M$",
+       "29 K$",
+       "1,72 M$"
+      ],
+      [
+       "2047",
+       "65 / 63",
+       "1,61 M$",
+       "3,03 M$",
+       "0 $",
+       "1,61 M$"
+      ],
+      [
+       "2048",
+       "66 / 64",
+       "1,53 M$",
+       "2,96 M$",
+       "0 $",
+       "1,5 M$"
+      ],
+      [
+       "2049",
+       "67 / 65",
+       "1,44 M$",
+       "2,88 M$",
+       "0 $",
+       "1,38 M$"
+      ],
+      [
+       "2050",
+       "68 / 66",
+       "1,38 M$",
+       "2,83 M$",
+       "0 $",
+       "1,28 M$"
+      ],
+      [
+       "2051",
+       "69 / 67",
+       "1,34 M$",
+       "2,83 M$",
+       "0 $",
+       "1,24 M$"
+      ],
+      [
+       "2052",
+       "70 / 68",
+       "1,31 M$",
+       "2,85 M$",
+       "0 $",
+       "1,21 M$"
+      ],
+      [
+       "2053",
+       "71 / 69",
+       "1,27 M$",
+       "2,87 M$",
+       "0 $",
+       "1,18 M$"
+      ],
+      [
+       "2054",
+       "72 / 70",
+       "1,24 M$",
+       "2,88 M$",
+       "0 $",
+       "1,14 M$"
+      ],
+      [
+       "2055",
+       "73 / 71",
+       "1,21 M$",
+       "2,89 M$",
+       "0 $",
+       "1,09 M$"
+      ],
+      [
+       "2056",
+       "74 / 72",
+       "1,17 M$",
+       "2,89 M$",
+       "0 $",
+       "1,04 M$"
+      ],
+      [
+       "2057",
+       "75 / 73",
+       "1,14 M$",
+       "2,91 M$",
+       "0 $",
+       "997 K$"
+      ],
+      [
+       "2058",
+       "76 / 74",
+       "1,12 M$",
+       "2,94 M$",
+       "0 $",
+       "973 K$"
+      ],
+      [
+       "2059",
+       "77 / 75",
+       "1,1 M$",
+       "2,98 M$",
+       "0 $",
+       "950 K$"
+      ],
+      [
+       "2060",
+       "78 / 76",
+       "1,09 M$",
+       "3,02 M$",
+       "0 $",
+       "930 K$"
+      ],
+      [
+       "2061",
+       "79 / 77",
+       "1,07 M$",
+       "3,06 M$",
+       "0 $",
+       "911 K$"
+      ],
+      [
+       "2062",
+       "80 / 78",
+       "1,06 M$",
+       "3,11 M$",
+       "0 $",
+       "895 K$"
+      ],
+      [
+       "2063",
+       "81 / 79",
+       "1,04 M$",
+       "3,17 M$",
+       "0 $",
+       "882 K$"
+      ],
+      [
+       "2064",
+       "82 / 80",
+       "1,03 M$",
+       "3,22 M$",
+       "0 $",
+       "872 K$"
+      ],
+      [
+       "2065",
+       "83 / 81",
+       "1,02 M$",
+       "3,29 M$",
+       "0 $",
+       "865 K$"
+      ],
+      [
+       "2066",
+       "84 / 82",
+       "1,01 M$",
+       "3,36 M$",
+       "0 $",
+       "863 K$"
+      ],
+      [
+       "2067",
+       "85 / 83",
+       "1 M$",
+       "3,44 M$",
+       "0 $",
+       "864 K$"
+      ],
+      [
+       "2068",
+       "86 / 84",
+       "998 K$",
+       "3,52 M$",
+       "0 $",
+       "871 K$"
+      ],
+      [
+       "2069",
+       "87 / 85",
+       "994 K$",
+       "3,62 M$",
+       "0 $",
+       "883 K$"
+      ],
+      [
+       "2070",
+       "88 / 86",
+       "992 K$",
+       "3,72 M$",
+       "0 $",
+       "901 K$"
+      ],
+      [
+       "2071",
+       "89 / 87",
+       "991 K$",
+       "3,83 M$",
+       "0 $",
+       "926 K$"
+      ],
+      [
+       "2072",
+       "90 / 88",
+       "992 K$",
+       "3,95 M$",
+       "0 $",
+       "959 K$"
+      ],
+      [
+       "2073",
+       "null / 89",
+       "996 K$",
+       "4,08 M$",
+       "0 $",
+       "1,01 M$"
+      ],
+      [
+       "2074",
+       "null / 90",
+       "1,01 M$",
+       "4,25 M$",
+       "0 $",
+       "1,08 M$"
+      ],
+      [
+       "2075",
+       "null / 90",
+       "1,01 M$",
+       "4,33 M$",
+       "0 $",
+       "1,11 M$"
+      ]
+     ],
+     "nota": "Patrimonio (hoy): en dólares de hoy, descontada la inflación."
+    },
+    {
+     "t": "filas",
+     "titulo": "Ingresos registrados",
+     "filas": [
+      [
+       "Sueldo · Daniel",
+       "160.000 $ al año, 2026–2044"
+      ],
+      [
+       "Sueldo · Emily",
+       "120.000 $ al año, 2026–2044"
+      ],
+      [
+       "Pensión pública (Social Security) · Daniel",
+       "81.535 $ al año, 2049–2073"
+      ],
+      [
+       "Pensión de viudedad · Emily",
+       "22.655 $ al año, 2073–2075"
+      ],
+      [
+       "Pensión pública (Social Security) · Emily",
+       "76.045 $ al año, 2051–2075"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "universidad",
+   "nombre": "Universidad",
+   "icon": "cap",
+   "sub": "Lo que falta para estudiar de Oliver y Sophia",
+   "cifra": "107 K$",
+   "cifraLab": "faltan para la universidad",
+   "estado": "mid",
+   "titular": "Hay 30.000 $ en cuentas 529 y faltan 106.552 $.",
+   "conexiones": [
+    "Colchón",
+    "Ahorro",
+    "impuestos"
+   ],
+   "kpis": [
+    {
+     "lab": "Falta",
+     "val": "107 K$",
+     "sub": "en dólares de hoy",
+     "tono": "coste"
+    },
+    {
+     "lab": "Ahorrar al año",
+     "val": "1.928 $",
+     "sub": "y subirlo un 3 % cada año",
+     "tono": ""
+    },
+    {
+     "lab": "En cuentas 529",
+     "val": "30.000 $",
+     "sub": "8.000 $ al año",
+     "tono": ""
+    },
+    {
+     "lab": "Oliver",
+     "val": "2033",
+     "sub": "empieza, 6,8 años",
+     "tono": ""
+    },
+    {
+     "lab": "Sophia",
+     "val": "2035",
+     "sub": "empieza, 8,8 años",
+     "tono": ""
+    }
+   ],
+   "graf": {
+    "tipo": "barras",
+    "titulo": "Lo que falta por hijo",
+    "items": [
+     {
+      "lab": "Oliver",
+      "v": 50742.14,
+      "txt": "falta 50.742 $",
+      "tono": "coste"
+     },
+     {
+      "lab": "Sophia",
+      "v": 55810.24,
+      "txt": "falta 55.810 $",
+      "tono": "coste"
+     }
+    ],
+    "leyenda": {
+     "coste": "Falta dinero",
+     "bueno": "Cubierto"
+    }
+   },
+   "lectura": [
+    "Oliver (11 años) empieza en <b>agosto de 2033</b>. Lleva ahorrado 16.221 $ y faltan <b>50.742 $</b>.",
+    "Sophia (9 años) empieza en <b>agosto de 2035</b>. Lleva ahorrado 13.779 $ y faltan <b>55.810 $</b>.",
+    "Para llegar, habría que ahorrar unos <b>1.928 $</b> más al año, subiendo un 3 % cada año. Es una cifra del primer año.",
+    "El cálculo supone que ese dinero rinde un 7,3 % al año."
+   ],
+   "asesor": "Cuánto ahorrar para la universidad sin quitar dinero a lo demás, y en qué cuenta.",
+   "capas": [
+    {
+     "t": "tabla",
+     "titulo": "Cada hijo, en detalle",
+     "cab": [
+      "",
+      "Oliver",
+      "Sophia"
+     ],
+     "filas": [
+      [
+       "Edad hoy",
+       "11",
+       "9"
+      ],
+      [
+       "Empieza",
+       "agosto de 2033",
+       "agosto de 2035"
+      ],
+      [
+       "Termina",
+       "enero de 2037",
+       "enero de 2039"
+      ],
+      [
+       "Años hasta empezar",
+       "6,8",
+       "8,8"
+      ],
+      [
+       "Coste al año de la meta",
+       "15.000 $",
+       "15.000 $"
+      ],
+      [
+       "Lo que hace falta (dólares de hoy)",
+       "66.963 $",
+       "69.589 $"
+      ],
+      [
+       "Ahorrado",
+       "16.221 $",
+       "13.779 $"
+      ],
+      [
+       "Aportación actual al año",
+       "4.326 $",
+       "3.674 $"
+      ],
+      [
+       "Falta",
+       "50.742 $",
+       "55.810 $"
+      ],
+      [
+       "Ahorro necesario al año",
+       "5.621 $",
+       "4.306 $"
+      ],
+      [
+       "Ahorro extra al año",
+       "1.296 $",
+       "632 $"
+      ],
+      [
+       "Lo que rinde lo ahorrado",
+       "283 $",
+       "240 $"
+      ],
+      [
+       "Peso en el total",
+       "54 %",
+       "46 %"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Totales",
+     "filas": [
+      [
+       "Metas de universidad, al año",
+       "30.000 $"
+      ],
+      [
+       "Lo que hace falta en total (dólares de hoy)",
+       "136.552 $"
+      ],
+      [
+       "En cuentas 529",
+       "30.000 $"
+      ],
+      [
+       "Aportación anual a las 529",
+       "8.000 $"
+      ],
+      [
+       "Falta",
+       "106.552 $"
+      ],
+      [
+       "Ahorro necesario al año",
+       "9.928 $"
+      ],
+      [
+       "Ahorro extra al año",
+       "1.928 $"
+      ],
+      [
+       "Subida anual del ahorro",
+       "3 %"
+      ],
+      [
+       "Rentabilidad supuesta",
+       "7,3 %"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "flujo",
+   "nombre": "A dónde va cada dólar",
+   "icon": "chart",
+   "sub": "Del sueldo a impuestos, casa, deudas, ahorro y gastos",
+   "cifra": "9 %",
+   "cifraLab": "de lo que se gana va a ahorro",
+   "estado": "low",
+   "titular": "De 280.000 $ al año, 78.678 $ son impuestos y sobran 15.032 $.",
+   "conexiones": [
+    "Ahorro",
+    "Deudas",
+    "impuestos"
+   ],
+   "kpis": [
+    {
+     "lab": "Ingresos",
+     "val": "280 K$",
+     "sub": "al año, brutos",
+     "tono": ""
+    },
+    {
+     "lab": "Impuestos",
+     "val": "79 K$",
+     "sub": "tipo efectivo 28,1 %",
+     "tono": ""
+    },
+    {
+     "lab": "Ahorro",
+     "val": "9,3 %",
+     "sub": "26.000 $ al año",
+     "tono": ""
+    },
+    {
+     "lab": "Sobra",
+     "val": "15 K$",
+     "sub": "al año",
+     "tono": "bueno"
+    }
+   ],
+   "graf": {
+    "tipo": "flujo",
+    "titulo": "Cómo se reparten 280.000 $ al año",
+    "total": 280000,
+    "grupos": [
+     {
+      "lab": "Gastos",
+      "v": 84000,
+      "partes": [
+       {
+        "lab": "Gastos del día a día",
+        "v": 84000
+       }
+      ]
+     },
+     {
+      "lab": "Impuestos",
+      "v": 78677.99,
+      "partes": [
+       {
+        "lab": "Impuesto federal",
+        "v": 44667.99
+       },
+       {
+        "lab": "Seguridad Social y Medicare (FICA)",
+        "v": 21690
+       },
+       {
+        "lab": "Impuesto estatal",
+        "v": 12320
+       }
+      ]
+     },
+     {
+      "lab": "Vivienda",
+      "v": 60450,
+      "partes": [
+       {
+        "lab": "Hipoteca",
+        "v": 49200
+       },
+       {
+        "lab": "Impuesto de la vivienda",
+        "v": 7500
+       },
+       {
+        "lab": "Seguro de hogar",
+        "v": 3750
+       }
+      ]
+     },
+     {
+      "lab": "Ahorro",
+      "v": 26000,
+      "partes": [
+       {
+        "lab": "Cuenta de bróker",
+        "v": 12000
+       },
+       {
+        "lab": "Cuenta 529 (universidad)",
+        "v": 8000
+       },
+       {
+        "lab": "Efectivo",
+        "v": 6000
+       }
+      ]
+     },
+     {
+      "lab": "Deudas",
+      "v": 15840,
+      "partes": [
+       {
+        "lab": "Préstamo del coche",
+        "v": 7440
+       },
+       {
+        "lab": "Tarjeta",
+        "v": 5400
+       },
+       {
+        "lab": "Préstamo de estudios",
+        "v": 3000
+       }
+      ]
+     },
+     {
+      "lab": "Sobra",
+      "v": 15032.01,
+      "partes": [],
+      "sobra": true
+     }
+    ]
+   },
+   "lectura": [
+    "Entran <b>280.000 $</b> al año (Daniel 160.000 $, Emily 120.000 $). Los impuestos se llevan <b>78.678 $</b>, un 28,1 %.",
+    "Se ahorra el <b>9,3 %</b> de lo que se gana, 26.000 $ al año contando lo de la empresa. El 20 % es la referencia habitual.",
+    "Al final del año sobran <b>15.032 $</b>."
+   ],
+   "asesor": "",
+   "capas": [
+    {
+     "t": "tabla",
+     "titulo": "Lo que entra",
+     "cab": [
+      "",
+      "Daniel",
+      "Emily",
+      "Conjunto",
+      "Total"
+     ],
+     "filas": [
+      [
+       "Sueldos",
+       "160 K$",
+       "120 K$",
+       "0 $",
+       "280 K$"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Lo que sale, partida a partida",
+     "cab": [
+      "",
+      "Daniel",
+      "Emily",
+      "Conjunto",
+      "Total"
+     ],
+     "filas": [
+      [
+       "<b>Gastos</b>",
+       "84 K$",
+       "0 $",
+       "0 $",
+       "84 K$"
+      ],
+      [
+       "· Gastos del día a día",
+       "84 K$",
+       "0 $",
+       "0 $",
+       "84 K$"
+      ],
+      [
+       "<b>Impuestos</b>",
+       "12 K$",
+       "9.180 $",
+       "57 K$",
+       "79 K$"
+      ],
+      [
+       "· Impuesto federal",
+       "0 $",
+       "0 $",
+       "45 K$",
+       "45 K$"
+      ],
+      [
+       "· Seguridad Social y Medicare (FICA)",
+       "12 K$",
+       "9.180 $",
+       "270 $",
+       "22 K$"
+      ],
+      [
+       "· Impuesto estatal",
+       "0 $",
+       "0 $",
+       "12 K$",
+       "12 K$"
+      ],
+      [
+       "<b>Vivienda</b>",
+       "0 $",
+       "0 $",
+       "60 K$",
+       "60 K$"
+      ],
+      [
+       "· Hipoteca",
+       "0 $",
+       "0 $",
+       "49 K$",
+       "49 K$"
+      ],
+      [
+       "· Impuesto de la vivienda",
+       "0 $",
+       "0 $",
+       "7.500 $",
+       "7.500 $"
+      ],
+      [
+       "· Seguro de hogar",
+       "0 $",
+       "0 $",
+       "3.750 $",
+       "3.750 $"
+      ],
+      [
+       "<b>Ahorro</b>",
+       "0 $",
+       "26 K$",
+       "0 $",
+       "26 K$"
+      ],
+      [
+       "· Cuenta de bróker",
+       "0 $",
+       "12 K$",
+       "0 $",
+       "12 K$"
+      ],
+      [
+       "· Cuenta 529 (universidad)",
+       "0 $",
+       "8.000 $",
+       "0 $",
+       "8.000 $"
+      ],
+      [
+       "· Efectivo",
+       "0 $",
+       "6.000 $",
+       "0 $",
+       "6.000 $"
+      ],
+      [
+       "<b>Deudas</b>",
+       "8.400 $",
+       "0 $",
+       "7.440 $",
+       "16 K$"
+      ],
+      [
+       "· Préstamo del coche",
+       "0 $",
+       "0 $",
+       "7.440 $",
+       "7.440 $"
+      ],
+      [
+       "· Tarjeta",
+       "5.400 $",
+       "0 $",
+       "0 $",
+       "5.400 $"
+      ],
+      [
+       "· Préstamo de estudios",
+       "3.000 $",
+       "0 $",
+       "0 $",
+       "3.000 $"
+      ],
+      [
+       "<b>Sobra</b>",
+       "55 K$",
+       "85 K$",
+       "-125 K$",
+       "15 K$"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Cuadre de cuentas del análisis",
+     "filas": [
+      [
+       "Ingresos brutos",
+       "280.000 $"
+      ],
+      [
+       "Impuestos",
+       "78.678 $"
+      ],
+      [
+       "Tipo efectivo",
+       "28,1 %"
+      ],
+      [
+       "Ingresos netos estimados",
+       "201.322 $"
+      ],
+      [
+       "Ahorro declarado",
+       "26.000 $"
+      ],
+      [
+       "Pago de deudas declarado",
+       "15.840 $"
+      ],
+      [
+       "Gasto declarado",
+       "144.450 $"
+      ],
+      [
+       "Gasto que sale de las cuentas",
+       "144.450 $"
+      ],
+      [
+       "Diferencia",
+       "15.032 $ (7,5 % de los ingresos netos)"
+      ],
+      [
+       "¿Gasto probablemente infradeclarado?",
+       "No"
+      ]
+     ],
+     "nota": "Si el gasto declarado no cuadra con ingresos, impuestos y ahorro, el análisis marca las cifras de gasto y lo que sobra como poco fiables."
+    }
+   ]
+  },
+  {
+   "id": "impuestos",
+   "nombre": "Impuestos y cuentas",
+   "icon": "coins",
+   "sub": "Cuentas con ventajas fiscales que quedan por usar",
+   "cifra": "13.860 $",
+   "cifraLab": "de impuestos al año que se podrían ahorrar",
+   "estado": "mid",
+   "titular": "Usando el margen de Cuenta de salud (HSA) y 401(k), se pagarían unos 13.860 $ menos de impuestos al año.",
+   "conexiones": [
+    "flujo",
+    "jubilacion",
+    "cartera"
+   ],
+   "kpis": [
+    {
+     "lab": "Ahorro fiscal posible",
+     "val": "13.860 $",
+     "sub": "al año",
+     "tono": "bueno"
+    },
+    {
+     "lab": "Tramo marginal",
+     "val": "24 %",
+     "sub": "en la jubilación, 22 %",
+     "tono": ""
+    },
+    {
+     "lab": "Cuenta de salud (HSA)",
+     "val": "8.750 $",
+     "sub": "de margen al año sin usar",
+     "tono": ""
+    },
+    {
+     "lab": "401(k)",
+     "val": "49 K$",
+     "sub": "de margen al año sin usar",
+     "tono": ""
+    }
+   ],
+   "graf": {
+    "tipo": "barras",
+    "titulo": "Aportación al año: lo que se pone y el máximo",
+    "items": [
+     {
+      "lab": "Cuenta de salud (HSA)",
+      "v": 0,
+      "ref": 8750,
+      "txt": "0 $ de 8.750 $",
+      "tono": "coste"
+     },
+     {
+      "lab": "Cuentas 529 (universidad)",
+      "v": 8000,
+      "ref": 1928,
+      "txt": "8.000 $ de 1.928 $",
+      "tono": "bueno"
+     },
+     {
+      "lab": "401(k)",
+      "v": 0,
+      "ref": 49000,
+      "txt": "0 $ de 49.000 $",
+      "tono": "coste"
+     }
+    ],
+    "leyenda": {
+     "coste": "Queda margen",
+     "bueno": "Al máximo"
+    }
+   },
+   "lectura": [
+    "Cuenta de salud (HSA): hoy 0 $ al año, se puede llegar a 8.750 $; ahorraría unos <b>2.100 $</b> de impuestos al año.",
+    "401(k): hoy 0 $ al año, se puede llegar a 49.000 $; ahorraría unos <b>11.760 $</b> de impuestos al año.",
+    "La cuenta de salud (HSA) solo sirve si el seguro médico lo permite; hay que comprobarlo primero.",
+    "En cuentas que tributan al sacar el dinero hay 250.000 $; queda una ventana de 13 años para pasar parte a Roth.",
+    "Lo invertido en cuentas que tributan cuesta unos <b>659 $</b> al año en impuestos."
+   ],
+   "asesor": "Qué cuentas llenar primero y cuánto cabe en el presupuesto real.",
+   "capas": [
+    {
+     "t": "tabla",
+     "titulo": "Mapa de cuentas: de quién es y cómo tributa",
+     "cab": [
+      "",
+      "Tributa cada año",
+      "Tributa al sacar el dinero",
+      "Libre de impuestos",
+      "Total"
+     ],
+     "filas": [
+      [
+       "Emily",
+       "64 K$",
+       "100 K$",
+       "30 K$",
+       "194 K$"
+      ],
+      [
+       "Daniel",
+       "—",
+       "150 K$",
+       "—",
+       "150 K$"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Todas las cuentas",
+     "cab": [
+      "Cuenta",
+      "De",
+      "Cómo tributa",
+      "Saldo",
+      "Aportación al año",
+      "Empresa"
+     ],
+     "filas": [
+      [
+       "Cuenta corriente",
+       "Emily",
+       "Tributa cada año",
+       "5.000 $",
+       "0 $",
+       "0 $"
+      ],
+      [
+       "Cuenta de ahorro",
+       "Emily",
+       "Tributa cada año",
+       "9.000 $",
+       "6.000 $",
+       "0 $"
+      ],
+      [
+       "401(k) tradicional",
+       "Daniel",
+       "Tributa al sacar el dinero",
+       "150.000 $",
+       "0 $",
+       "0 $"
+      ],
+      [
+       "401(k) tradicional",
+       "Emily",
+       "Tributa al sacar el dinero",
+       "100.000 $",
+       "0 $",
+       "0 $"
+      ],
+      [
+       "Cuenta 529 (universidad)",
+       "Emily",
+       "Libre de impuestos",
+       "30.000 $",
+       "8.000 $",
+       "0 $"
+      ],
+      [
+       "Cuenta de bróker",
+       "Emily",
+       "Tributa cada año",
+       "50.000 $",
+       "12.000 $",
+       "0 $"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Margen fiscal por cuenta",
+     "cab": [
+      "Cuenta",
+      "Hoy",
+      "Máximo",
+      "Margen",
+      "Ahorro fiscal"
+     ],
+     "filas": [
+      [
+       "Cuenta de salud (HSA)",
+       "0 $",
+       "8.750 $",
+       "8.750 $",
+       "2.100 $"
+      ],
+      [
+       "Cuentas 529 (universidad)",
+       "8.000 $",
+       "1.928 $",
+       "0 $",
+       "—"
+      ],
+      [
+       "401(k)",
+       "0 $",
+       "49.000 $",
+       "49.000 $",
+       "11.760 $"
+      ]
+     ],
+     "nota": "Ahorro fiscal al tramo marginal actual (24 %)."
+    },
+    {
+     "t": "filas",
+     "titulo": "Cuenta de salud (HSA)",
+     "filas": [
+      [
+       "¿Tiene?",
+       "No"
+      ],
+      [
+       "Saldo",
+       "0 $"
+      ],
+      [
+       "Aportación actual",
+       "0 $"
+      ],
+      [
+       "Máximo al año",
+       "8.750 $"
+      ],
+      [
+       "Margen",
+       "8.750 $"
+      ],
+      [
+       "Ahorro fiscal al año",
+       "2.100 $"
+      ],
+      [
+       "Años hasta Medicare · Daniel",
+       "21"
+      ],
+      [
+       "Años hasta Medicare · Emily",
+       "23"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Antes o después de impuestos (Roth)",
+     "filas": [
+      [
+       "Tramo marginal hoy",
+       "24 %"
+      ],
+      [
+       "Tramo esperado en la jubilación",
+       "22 %"
+      ],
+      [
+       "Saldo que tributa al sacar",
+       "250.000 $"
+      ],
+      [
+       "Umbral que el análisis vigila",
+       "1 M$"
+      ],
+      [
+       "Años de ventana para pasar a Roth",
+       "13"
+      ],
+      [
+       "Años sacando más de lo obligatorio (RMD)",
+       "0"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "El orden en que conviene poner cada dólar",
+     "cab": [
+      "#",
+      "Paso",
+      "Hoy",
+      "Objetivo",
+      "Estado"
+     ],
+     "filas": [
+      [
+       "1",
+       "Reserva mínima para imprevistos (3 meses)",
+       "19.000 $",
+       "40.073 $",
+       "A medias"
+      ],
+      [
+       "2",
+       "Cubrir los seguros básicos",
+       "450.000 $",
+       "3,8 M$",
+       "A medias"
+      ],
+      [
+       "3",
+       "Apartar el efectivo de los gastos ya previstos",
+       "0 $",
+       "4.500 $",
+       "Sin empezar"
+      ],
+      [
+       "4",
+       "Cobrar toda la aportación de la empresa (plan principal)",
+       "0 $",
+       "6.400 $",
+       "Sin empezar"
+      ],
+      [
+       "5",
+       "Cobrar toda la aportación de la empresa (segundo plan)",
+       "0 $",
+       "4.800 $",
+       "Sin empezar"
+      ],
+      [
+       "6",
+       "Cobrar la aportación a la cuenta de salud (HSA)",
+       "No aplica",
+       "—",
+       "No aplica"
+      ],
+      [
+       "7",
+       "Plan de compra de acciones de la empresa (ESPP)",
+       "No aplica",
+       "—",
+       "No aplica"
+      ],
+      [
+       "8",
+       "Pagar la deuda cara (más del 7 %)",
+       "46.000 $",
+       "0 $",
+       "Sin empezar"
+      ],
+      [
+       "9",
+       "Completar la reserva (6 meses)",
+       "14.500 $",
+       "80.145 $",
+       "Sin empezar"
+      ],
+      [
+       "10",
+       "Aportar a la Roth IRA",
+       "0 $",
+       "—",
+       "—"
+      ],
+      [
+       "11",
+       "Llenar la cuenta de salud (HSA)",
+       "0 $",
+       "8.750 $",
+       "Sin empezar"
+      ],
+      [
+       "12",
+       "Aportar a las cuentas 529 (universidad)",
+       "8.000 $",
+       "1.928 $",
+       "Cubierto"
+      ],
+      [
+       "13",
+       "Llenar el 401(k)",
+       "0 $",
+       "49.000 $",
+       "Sin empezar"
+      ],
+      [
+       "14",
+       "Invertir en la cuenta de bróker",
+       "12.000 $",
+       "—",
+       "—"
+      ],
+      [
+       "15",
+       "Pagar la deuda barata (personal, coche)",
+       "0 $",
+       "—",
+       "—"
+      ],
+      [
+       "16",
+       "Adelantar pagos de la hipoteca",
+       "560.000 $",
+       "—",
+       "—"
+      ]
+     ],
+     "nota": "Es la cascada del análisis: primero la reserva y los seguros, luego la deuda cara, después las cuentas con ventaja fiscal."
+    },
+    {
+     "t": "filas",
+     "titulo": "Coste fiscal de lo invertido",
+     "filas": [
+      [
+       "Impuestos al año por lo invertido en cuentas que tributan",
+       "659 $"
+      ],
+      [
+       "De ello, por monetarios (va en Efectivo)",
+       "0 $"
+      ],
+      [
+       "Coste fiscal analizado (sin monetarios)",
+       "659 $"
+      ],
+      [
+       "Impuestos que se ahorran al año por tener fondos en cuentas libres de impuestos",
+       "211 $"
+      ],
+      [
+       "Impuestos que se aplazan al año en cuentas diferidas (se pagan al sacar)",
+       "3.655 $"
+      ],
+      [
+       "De ello, impuesto extra a rentas de inversión (NIIT)",
+       "78 $"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Qué genera impuestos en las cuentas que tributan",
+     "cab": [
+      "Cuenta",
+      "Fondo",
+      "Saldo",
+      "Tipo de renta",
+      "Impuesto al año"
+     ],
+     "filas": [
+      [
+       "Taxable Brokerage",
+       "SCHP",
+       "10.000 $",
+       "Dividendo no cualificado",
+       "135 $"
+      ],
+      [
+       "Taxable Brokerage",
+       "JNK",
+       "15.000 $",
+       "Dividendo no cualificado",
+       "332 $"
+      ],
+      [
+       "Taxable Brokerage",
+       "SCHD",
+       "20.000 $",
+       "Dividendo no cualificado",
+       "192 $"
+      ],
+      [
+       "Taxable Brokerage",
+       "Cash (USD)",
+       "5.000 $",
+       "Sin histórico de repartos",
+       "—"
+      ],
+      [
+       "Total taxable",
+       "-",
+       "50.000 $",
+       "—",
+       "659 $"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cartera",
+   "nombre": "Cómo se ha portado la cartera",
+   "icon": "stack",
+   "sub": "Los últimos 3 años, frente a una cartera de referencia",
+   "cifra": "13,7 %",
+   "cifraLab": "al año en 3 años (referencia 14,6 %)",
+   "estado": "mid",
+   "titular": "Lo invertido está un 57 % en bolsa; el perfil dinámico pide un 80 %.",
+   "conexiones": [
+    "Inversiones",
+    "impuestos",
+    "Colchón"
+   ],
+   "kpis": [
+    {
+     "lab": "Rentabilidad",
+     "val": "13,7 %",
+     "sub": "al año; referencia 14,6 %",
+     "tono": "coste"
+    },
+    {
+     "lab": "Se mueve",
+     "val": "8,1 %",
+     "sub": "al año; referencia 8,6 %",
+     "tono": ""
+    },
+    {
+     "lab": "Peor caída",
+     "val": "10 %",
+     "sub": "recuperada en 61 días",
+     "tono": "coste"
+    },
+    {
+     "lab": "En bolsa (lo invertido)",
+     "val": "57 %",
+     "sub": "objetivo 80 %",
+     "tono": "coste"
+    }
+   ],
+   "graf": {
+    "tipo": "pares",
+    "titulo": "Reparto de hoy y el que propone el análisis",
+    "series": [
+     "Hoy",
+     "Propuesto"
+    ],
+    "items": [
+     {
+      "lab": "Bolsa EE. UU.",
+      "a": 0.4639,
+      "b": 0.4647
+     },
+     {
+      "lab": "Bolsa internacional",
+      "a": 0.0793,
+      "b": 0.1979
+     },
+     {
+      "lab": "Renta fija EE. UU.",
+      "a": 0.3159,
+      "b": 0.2523
+     },
+     {
+      "lab": "Renta fija internacional",
+      "a": 0.044,
+      "b": 0.0224
+     },
+     {
+      "lab": "Efectivo",
+      "a": 0.0966,
+      "b": 0.0624
+     }
+    ]
+   },
+   "graf2": {
+    "tipo": "pares",
+    "titulo": "Cómo le habría ido en mercados reales",
+    "series": [
+     "Hoy",
+     "Propuesto"
+    ],
+    "signo": true,
+    "items": [
+     {
+      "lab": "Subida tras 2008 (2009-11)",
+      "a": 0.5135,
+      "b": 0.3326
+     },
+     {
+      "lab": "Crisis de 2008 (2007-09)",
+      "a": -0.2042,
+      "b": -0.0988
+     },
+     {
+      "lab": "Caída de 2018",
+      "a": -0.0657,
+      "b": -0.0788
+     },
+     {
+      "lab": "Caída del COVID (2020)",
+      "a": -0.1261,
+      "b": -0.1273
+     }
+    ]
+   },
+   "lectura": [
+    "En los 3 años hasta noviembre de 2026, la cartera del hogar ganó un <b>13,7 % al año</b> (46,9 % en total). Una cartera de referencia con el mismo reparto ganó un 14,6 % al año.",
+    "Cuando el mercado sube, se lleva <b>0,87 veces</b> lo que la referencia; cuando baja, pierde <b>0,97 veces</b>. Por cada punto de riesgo gana 1,24 sobre el efectivo, frente a 1,28 de la referencia.",
+    "Contando el efectivo, solo el 54 % del total está en bolsa; lo invertido en sí va al 57 % y ganó un 14,2 % al año.",
+    "El sector con más peso es <b>tecnología</b>, con el 32 % de la bolsa: una concentración que conviene vigilar.",
+    "La propuesta pasa de <b>8,12 %</b> a <b>8,39 %</b> de oscilación al año, con una rentabilidad simulada del 16,51 % (hoy 13,65 %)."
+   ],
+   "asesor": "Cuánto riesgo queréis de verdad (Daniel es dinámico; Emily, equilibrado) y cómo acercar la cartera a ello.",
+   "capas": [
+    {
+     "t": "filas",
+     "titulo": "Rentabilidad y riesgo, hogar frente a referencia",
+     "filas": [
+      [
+       "Rentabilidad al año (3 años)",
+       "13,7 % · referencia 14,6 %"
+      ],
+      [
+       "Rentabilidad acumulada (3 años)",
+       "46,9 % · referencia 50,5 %"
+      ],
+      [
+       "Rentabilidad último año",
+       "6,9 % · referencia 6,9 %"
+      ],
+      [
+       "Volatilidad al año",
+       "8,1 % · referencia 8,6 %"
+      ],
+      [
+       "Peor caída",
+       "-10 % · referencia -10,5 %"
+      ],
+      [
+       "Días en recuperarse",
+       "61"
+      ],
+      [
+       "Rentabilidad por unidad de riesgo (Sharpe)",
+       "1,24 · referencia 1,28"
+      ],
+      [
+       "Captura en subidas",
+       "0,87"
+      ],
+      [
+       "Captura en bajadas",
+       "0,97"
+      ],
+      [
+       "Coste de la volatilidad",
+       "1.135 $ al año (0,33 puntos)"
+      ],
+      [
+       "Tipo sin riesgo usado",
+       "3,59 %"
+      ],
+      [
+       "Periodo",
+       "noviembre de 2023 a noviembre de 2026"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "De dónde sale la diferencia con la referencia",
+     "filas": [
+      [
+       "Por el reparto entre bolsa, bonos y efectivo",
+       "-1,93 % al año (-6.642 $)"
+      ],
+      [
+       "Por los fondos elegidos",
+       "-0,9 % al año (-3.111 $)"
+      ],
+      [
+       "Total",
+       "-2,84 % al año (-9.753 $)"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Cada cuenta invertida",
+     "cab": [
+      "Cuenta",
+      "Saldo",
+      "Rentab. al año",
+      "Volatilidad",
+      "Sharpe"
+     ],
+     "filas": [
+      [
+       "401(k) - Daniel",
+       "150.000 $",
+       "15,8 %",
+       "10 %",
+       "1,23"
+      ],
+      [
+       "401(k) - Emily",
+       "100.000 $",
+       "13,5 %",
+       "8,4 %",
+       "1,17"
+      ],
+      [
+       "529 College Savings",
+       "30.000 $",
+       "13,7 %",
+       "12 %",
+       "0,85"
+      ],
+      [
+       "Taxable Brokerage",
+       "50.000 $",
+       "11,1 %",
+       "6 %",
+       "1,25"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Lo invertido a largo plazo (4 cuentas)",
+     "filas": [
+      [
+       "Saldo",
+       "330.000 $"
+      ],
+      [
+       "Perfil objetivo",
+       "dinámico"
+      ],
+      [
+       "En bolsa, hoy y objetivo",
+       "56,6 % → 80 %"
+      ],
+      [
+       "En renta fija, hoy y objetivo",
+       "41,3 % → 17,8 %"
+      ],
+      [
+       "Años hasta el objetivo",
+       "18"
+      ],
+      [
+       "Rentabilidad al año",
+       "14,2 %"
+      ],
+      [
+       "Volatilidad",
+       "8,5 %"
+      ],
+      [
+       "Referencia con el reparto actual",
+       "14,4 % al año, volatilidad 7,9 %"
+      ],
+      [
+       "Referencia con el reparto objetivo",
+       "17,6 % al año, volatilidad 10 %"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Reparto por tipo de activo",
+     "cab": [
+      "",
+      "Hoy",
+      "Propuesto"
+     ],
+     "filas": [
+      [
+       "Bolsa EE. UU.",
+       "46 %",
+       "46 %"
+      ],
+      [
+       "Bolsa internacional",
+       "8 %",
+       "20 %"
+      ],
+      [
+       "Renta fija EE. UU.",
+       "32 %",
+       "25 %"
+      ],
+      [
+       "Renta fija internacional",
+       "4 %",
+       "2 %"
+      ],
+      [
+       "Efectivo",
+       "10 %",
+       "6 %"
+      ],
+      [
+       "Otros",
+       "0 %",
+       "0 %"
+      ],
+      [
+       "Rentabilidad simulada al año",
+       "13,65 %",
+       "16,51 %"
+      ],
+      [
+       "Volatilidad",
+       "8,12 %",
+       "8,39 %"
+      ],
+      [
+       "Coste medio de los fondos",
+       "0,11 %",
+       "—"
+      ]
+     ],
+     "nota": "Simulación de 3 años con los pesos de hoy; no son resultados reales."
+    },
+    {
+     "t": "tabla",
+     "titulo": "Crisis y subidas recientes: hogar frente a referencia",
+     "cab": [
+      "Momento",
+      "Caída hogar",
+      "Caída referencia",
+      "Días en recuperar"
+     ],
+     "filas": [
+      [
+       "Última subida de tipos de la Fed, al 5,25–5,50 % (julio 2023)",
+       "-3,9 %",
+       "-4,1 %",
+       "11"
+      ],
+      [
+       "Giro de la Fed (diciembre 2023)",
+       "-1,5 %",
+       "-1,7 %",
+       "7"
+      ],
+      [
+       "Caída mundial con el VIX por encima de 60 (agosto 2024)",
+       "-3,1 %",
+       "-3,2 %",
+       "sin recuperar en la ventana"
+      ],
+      [
+       "Primera bajada de tipos de la Fed, 0,5 puntos (septiembre 2024)",
+       "-2,8 %",
+       "-2,9 %",
+       "sin recuperar en la ventana"
+      ],
+      [
+       "Victoria electoral de Trump (noviembre 2024)",
+       "-1,8 %",
+       "-1,6 %",
+       "sin recuperar en la ventana"
+      ],
+      [
+       "Sacudida por DeepSeek (IA, enero 2025)",
+       "-0,3 %",
+       "-0,3 %",
+       "0"
+      ],
+      [
+       "Anuncio de aranceles del «Liberation Day» (abril 2025)",
+       "-8,1 %",
+       "-7,8 %",
+       "sin recuperar en la ventana"
+      ],
+      [
+       "Subida por la pausa de aranceles de 90 días (abril 2025)",
+       "-2,3 %",
+       "-3,1 %",
+       "sin recuperar en la ventana"
+      ],
+      [
+       "Tregua arancelaria EE. UU.-China en Ginebra (mayo 2025)",
+       "-0,1 %",
+       "-0,1 %",
+       "0"
+      ],
+      [
+       "El Supremo anula los aranceles del «Liberation Day»",
+       "-0,8 %",
+       "-1,2 %",
+       "sin recuperar en la ventana"
+      ],
+      [
+       "Ataques de EE. UU. e Israel a Irán (Operation Epic Fury)",
+       "-0,7 %",
+       "-0,6 %",
+       "sin recuperar en la ventana"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Mercados reales: hoy y propuesto",
+     "cab": [
+      "Momento",
+      "Hoy",
+      "Propuesto"
+     ],
+     "filas": [
+      [
+       "Subida tras 2008 (2009-11)",
+       "+51,3 %",
+       "+33,3 %"
+      ],
+      [
+       "Crisis de 2008 (2007-09)",
+       "-20,4 %",
+       "-9,9 %"
+      ],
+      [
+       "Caída de 2018",
+       "-6,6 %",
+       "-7,9 %"
+      ],
+      [
+       "Caída del COVID (2020)",
+       "-12,6 %",
+       "-12,7 %"
+      ],
+      [
+       "Crisis de bancos regionales (SVB, Credit Suisse)",
+       "+2,5 %",
+       "+3,6 %"
+      ],
+      [
+       "Subida por el giro de la Fed (final de 2023)",
+       "+11,7 %",
+       "+12,6 %"
+      ],
+      [
+       "Choque de aranceles del «Liberation Day»",
+       "-3,2 %",
+       "-3,9 %"
+      ],
+      [
+       "Choque geopolítico (Irán y el estrecho de Ormuz)",
+       "+3,8 %",
+       "+4,5 %"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Sectores de la bolsa",
+     "cab": [
+      "Sector",
+      "Peso",
+      "Umbral",
+      "Nivel"
+     ],
+     "filas": [
+      [
+       "Tecnología",
+       "35,6 %",
+       ">35 %",
+       "Normal"
+      ],
+      [
+       "Finanzas",
+       "12,1 %",
+       "<20 %",
+       "Normal"
+      ],
+      [
+       "Salud",
+       "9,7 %",
+       "<20 %",
+       "Normal"
+      ],
+      [
+       "Comunicaciones",
+       "8,8 %",
+       "<20 %",
+       "Normal"
+      ],
+      [
+       "Consumo cíclico",
+       "8,8 %",
+       "<20 %",
+       "Normal"
+      ],
+      [
+       "Industria",
+       "8 %",
+       "<20 %",
+       "Normal"
+      ],
+      [
+       "Consumo básico",
+       "5,7 %",
+       "<20 %",
+       "Normal"
+      ],
+      [
+       "Energía",
+       "4,9 %",
+       "<20 %",
+       "Normal"
+      ],
+      [
+       "Materias primas",
+       "2,6 %",
+       "<20 %",
+       "Normal"
+      ],
+      [
+       "Inmobiliario",
+       "1,9 %",
+       "<20 %",
+       "Normal"
+      ],
+      [
+       "Servicios públicos",
+       "1,8 %",
+       "<20 %",
+       "Normal"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Países y regiones",
+     "cab": [
+      "Región",
+      "Peso"
+     ],
+     "filas": [
+      [
+       "EE. UU.",
+       "88,6 %"
+      ],
+      [
+       "Asia emergente",
+       "4,4 %"
+      ],
+      [
+       "Asia desarrollada",
+       "3,5 %"
+      ],
+      [
+       "Latinoamérica",
+       "0,9 %"
+      ],
+      [
+       "Europa sin euro",
+       "0,6 %"
+      ],
+      [
+       "Reino Unido",
+       "0,6 %"
+      ],
+      [
+       "Oriente Medio",
+       "0,6 %"
+      ],
+      [
+       "Zona euro",
+       "0,3 %"
+      ],
+      [
+       "África",
+       "0,3 %"
+      ],
+      [
+       "Europa emergente",
+       "0,1 %"
+      ],
+      [
+       "Canadá",
+       "0 %"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Concentración",
+     "filas": [
+      [
+       "Fondos y posiciones",
+       "12"
+      ],
+      [
+       "Expuesto a bolsa",
+       "186.947 $"
+      ],
+      [
+       "Acciones sueltas",
+       "0 (0 %)"
+      ],
+      [
+       "Total invertible",
+       "330.000 $"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Todos los fondos, cuenta a cuenta",
+     "cab": [
+      "Cuenta",
+      "Fondo",
+      "Tipo",
+      "Importe",
+      "Peso en la cuenta",
+      "Coste anual"
+     ],
+     "filas": [
+      [
+       "Taxable Brokerage",
+       "Schwab U.S. TIPS ETF™ (SCHP)",
+       "Bonos ligados a la inflación",
+       "10.000 $",
+       "20 %",
+       "0,03 %"
+      ],
+      [
+       "Taxable Brokerage",
+       "SPDR Bloomberg High Yield Bond ETF (JNK)",
+       "Bonos de alto rendimiento",
+       "15.000 $",
+       "30 %",
+       "0,4 %"
+      ],
+      [
+       "401(k) - Emily",
+       "Fidelity Series 5+ Year Inflation-Protected Bond Index Fund (FSTDX)",
+       "Bonos ligados a la inflación",
+       "18.000 $",
+       "18 %",
+       "0 %"
+      ],
+      [
+       "401(k) - Emily",
+       "Cash (USD)",
+       "Monetario (efectivo)",
+       "2.000 $",
+       "2 %",
+       "—"
+      ],
+      [
+       "Taxable Brokerage",
+       "Schwab US Dividend Equity ETF (SCHD)",
+       "Bolsa de EE. UU. de valor",
+       "20.000 $",
+       "40 %",
+       "0,06 %"
+      ],
+      [
+       "529 College Savings",
+       "Vanguard FTSE Emerging Markets ETF (VWO)",
+       "Bolsa de países emergentes",
+       "25.000 $",
+       "83 %",
+       "0,06 %"
+      ],
+      [
+       "401(k) - Daniel",
+       "Cash (USD)",
+       "Monetario (efectivo)",
+       "5.000 $",
+       "3 %",
+       "—"
+      ],
+      [
+       "529 College Savings",
+       "Cash (USD)",
+       "Monetario (efectivo)",
+       "5.000 $",
+       "17 %",
+       "—"
+      ],
+      [
+       "Taxable Brokerage",
+       "Cash (USD)",
+       "Monetario (efectivo)",
+       "5.000 $",
+       "10 %",
+       "—"
+      ],
+      [
+       "401(k) - Daniel",
+       "iShares iBoxx $ Inv Grade Corporate Bond ETF (LQD)",
+       "Bonos de empresa",
+       "55.000 $",
+       "37 %",
+       "0,14 %"
+      ],
+      [
+       "401(k) - Emily",
+       "Vanguard Wellington Fund Investor Shares (VWELX)",
+       "Fondo mixto equilibrado",
+       "80.000 $",
+       "80 %",
+       "0,24 %"
+      ],
+      [
+       "401(k) - Daniel",
+       "Vanguard Morningstar Total Stock Market ETF (VTI)",
+       "Bolsa de EE. UU. (grandes empresas)",
+       "90.000 $",
+       "60 %",
+       "0,03 %"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Lo que pasaba en el mercado",
+     "cab": [
+      "Etapa",
+      "Desde",
+      "Hasta"
+     ],
+     "filas": [
+      [
+       "Higher-for-longer plateau",
+       "julio de 2023",
+       "septiembre de 2024"
+      ],
+      [
+       "Q4 2023 rate-pivot rally",
+       "octubre de 2023",
+       "diciembre de 2023"
+      ],
+      [
+       "Fed easing cycle — initial phase",
+       "septiembre de 2024",
+       "noviembre de 2024"
+      ],
+      [
+       "Post-election \"Trump trade\"",
+       "noviembre de 2024",
+       "febrero de 2025"
+      ],
+      [
+       "Pre-Liberation Day correction",
+       "febrero de 2025",
+       "abril de 2025"
+      ],
+      [
+       "Tariff shock & recovery",
+       "abril de 2025",
+       "diciembre de 2025"
+      ],
+      [
+       "Sticky-inflation / geopolitical risk regime",
+       "febrero de 2026",
+       "noviembre de 2026"
+      ]
+     ],
+     "nota": "Etapas del mercado en la ventana de 3 años, tal como las nombra el análisis."
+    }
+   ]
+  },
+  {
+   "id": "supuestos",
+   "nombre": "Cómo se ha calculado",
+   "icon": "help",
+   "sub": "Supuestos, fuentes y avisos del informe",
+   "cifra": "3 %",
+   "cifraLab": "de inflación al año supuesta",
+   "estado": "neutro",
+   "titular": "Proyección hasta los 91 años, con un único escenario y sin comisiones.",
+   "conexiones": [
+    "jubilacion",
+    "cartera"
+   ],
+   "kpis": [
+    {
+     "lab": "Inflación",
+     "val": "3 %",
+     "sub": "general; salud y educación 5 %",
+     "tono": ""
+    },
+    {
+     "lab": "Hasta los",
+     "val": "91 años",
+     "sub": "esperanza de vida del plan",
+     "tono": ""
+    },
+    {
+     "lab": "Rentabilidad media",
+     "val": "7,58 %",
+     "sub": "supuesta para la jubilación",
+     "tono": ""
+    },
+    {
+     "lab": "Periodo analizado",
+     "val": "2023–2026",
+     "sub": "para la cartera",
+     "tono": ""
+    }
+   ],
+   "lectura": [
+    "Las proyecciones usan un único escenario fijo (no simulaciones): ingresos, gastos, impuestos y patrimonio mes a mes. No dan probabilidades ni márgenes.",
+    "Impuestos: tramos federales y estatales, FICA, Medicare y ganancias de capital. No incluye el impuesto mínimo alternativo (AMT).",
+    "Pensión pública (Social Security): estimada con la fórmula oficial (PIA). No se modelan WEP ni GPO."
+   ],
+   "capas": [
+    {
+     "t": "filas",
+     "titulo": "Inflación supuesta",
+     "filas": [
+      [
+       "General",
+       "3 %"
+      ],
+      [
+       "Salud",
+       "5 %"
+      ],
+      [
+       "Educación",
+       "5 %"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Rentabilidad esperada por perfil",
+     "cab": [
+      "Perfil",
+      "Al año"
+     ],
+     "filas": [
+      [
+       "1 · Preservar capital",
+       "5,86 %"
+      ],
+      [
+       "2 · Prudente",
+       "6,67 %"
+      ],
+      [
+       "3 · Equilibrado",
+       "7,30 %"
+      ],
+      [
+       "4 · Dinámico",
+       "7,76 %"
+      ],
+      [
+       "5 · Atrevido",
+       "8,18 %"
+      ]
+     ]
+    },
+    {
+     "t": "tabla",
+     "titulo": "Rentabilidad esperada por tipo de activo",
+     "cab": [
+      "Activo",
+      "Al año"
+     ],
+     "filas": [
+      [
+       "Bolsa EE. UU.",
+       "7,70 %"
+      ],
+      [
+       "Bolsa internacional",
+       "7,63 %"
+      ],
+      [
+       "Renta fija EE. UU.",
+       "5,48 %"
+      ],
+      [
+       "Renta fija internacional",
+       "5,57 %"
+      ],
+      [
+       "Efectivo",
+       "3,20 %"
+      ],
+      [
+       "Otros / alternativos",
+       "9,17 %"
+      ]
+     ]
+    },
+    {
+     "t": "filas",
+     "titulo": "Vuestros datos de partida",
+     "filas": [
+      [
+       "Daniel",
+       "44 años, jubilación a los 62, perfil dinámico"
+      ],
+      [
+       "Emily",
+       "42 años, jubilación a los 60, perfil equilibrado"
+      ],
+      [
+       "Oliver",
+       "11 años"
+      ],
+      [
+       "Sophia",
+       "9 años"
+      ],
+      [
+       "Residencia",
+       "Denver, CO"
+      ],
+      [
+       "Declaración de impuestos",
+       "MARRIED_JOINTLY"
+      ],
+      [
+       "Tipo sin riesgo",
+       "3,59 %"
+      ],
+      [
+       "Comisión de asesoramiento aplicada",
+       "0 %"
+      ]
+     ]
+    },
+    {
+     "t": "texto",
+     "titulo": "Método y avisos",
+     "parrafos": [
+      "Las proyecciones usan un único escenario fijo (no simulaciones): ingresos, gastos, impuestos y patrimonio mes a mes. No dan probabilidades ni márgenes.",
+      "Impuestos: tramos federales y estatales, FICA, Medicare y ganancias de capital. No incluye el impuesto mínimo alternativo (AMT).",
+      "Pensión pública (Social Security): estimada con la fórmula oficial (PIA). No se modelan WEP ni GPO.",
+      "La rentabilidad esperada viene de las previsiones a largo plazo de J.P. Morgan por clase de activo; la firma puede ajustarlas.",
+      "Rentabilidad y volatilidad de la cartera actual y de la propuesta: simulación de 3 años con los pesos de hoy aplicados a precios históricos (no son resultados reales), sin comisiones de asesoramiento.",
+      "Datos de mercado: Morningstar (ETF y fondos) y Bavest (acciones y cripto).",
+      "Invertir conlleva riesgo, incluida la pérdida del capital. Rentabilidades pasadas no garantizan las futuras. El informe apoya la conversación con el asesor y no es una recomendación de compra o venta."
+     ]
+    }
+   ]
+  }
+ ],
+ "notaCapas": [
+  {
+   "t": "tabla",
+   "titulo": "Las cinco áreas",
+   "cab": [
+    "Área",
+    "Nota",
+    "Puntos"
+   ],
+   "filas": [
+    [
+     "Ahorro",
+     "54",
+     "16/30"
+    ],
+    [
+     "Deudas",
+     "76",
+     "15/20"
+    ],
+    [
+     "Inversiones",
+     "51",
+     "8/15"
+    ],
+    [
+     "Colchón",
+     "85",
+     "13/15"
+    ],
+    [
+     "Seguros",
+     "0",
+     "0/20"
+    ]
+   ]
+  },
+  {
+   "t": "tabla",
+   "titulo": "Cada paso del plan",
+   "cab": [
+    "Paso",
+    "Esfuerzo",
+    "Nota",
+    "Quita un techo"
+   ],
+   "filas": [
+    [
+     "Subir el seguro de vida",
+     "bajo",
+     "52 → 57",
+     "No"
+    ],
+    [
+     "Seguro extra de responsabilidad civil",
+     "bajo",
+     "52 → 56",
+     "No"
+    ],
+    [
+     "Ahorrar 15.032 $ más al año",
+     "medio",
+     "52 → 55",
+     "No"
+    ]
+   ]
+  },
+  {
+   "t": "filas",
+   "titulo": "La escala",
+   "filas": [
+    [
+     "Nota publicada",
+     "52"
+    ],
+    [
+     "Banda",
+     "vulnerable"
+    ],
+    [
+     "Escala",
+     "0 a 100"
+    ]
+   ]
+  }
+ ],
+ "narrativa": [
+  {
+   "clave": "fh.summary_main",
+   "punto": "__nota",
+   "titulo": "Resumen del informe",
+   "en": "- You have a solid base to work from. Two salaries bring in $280,000 a year, your net worth is $511,000, and you have $330,000 in investable assets. Your home is about two-thirds of your assets, but only $190,000 of it is equity against a $560,000 mortgage. Bills are being met, and about $15,032 a year is left over after your outflows.\n- The central tension is that several needs draw on that same $15,032: retirement saving, a larger cash reserve, protection cover and college funding. Nothing here ranks them, so it is a tradeoff for the two of you to weigh together, calmly and without blame.\n- Retirement is the largest gap. Nothing is going into your two 401(k)s today, and each of you could contribute up to $24,500 a year. Closing the gap would take about $34,165 more a year, which is more than twice your free cash flow. As a projection to age 91, income covers about 49% of a $124,071 yearly need, savings pay about $62,932 a year, and your savings last with about $260,272 left at the end.\n- Your cushion and your family's protection are thinner than they could be. Accessible cash of $19,000 is about $92,360 short of the cash target once your near-term vacation goal is included. Life cover is $250,000 for Daniel and $200,000 for Emily, well below the recommended ranges. There is no umbrella policy, against a recommended $1,000,000.\n- You do have strengths to build on. Your debt payments are manageable, with housing and debt together about 27% of income. The 529 holds $30,000 with $8,000 going in each year, though a $106,552 college funding gap remains. The $18,000 card at 24.9% is on track to be cleared by January 2034 at current payments.\n- A realistic direction is to decide together how the $15,032 is shared among the cash reserve, life and umbrella cover, retirement contributions and the 529. Checking whether your employers offer a 401(k) match is a good first look, since none is recorded today.",
+   "es": null
+  },
+  {
+   "clave": "fh.summary_recommendations",
+   "punto": "__nota",
+   "titulo": "Recomendaciones del informe",
+   "en": "- Start by strengthening your protection, since it matters most to you: review life cover for both of you, which sits well below the recommended ranges, and look at adding umbrella liability cover, since none is in place today.\n- Build your cash reserve toward the recommended 8 to 9 months of essential expenses, because accessible cash currently covers only a small fraction of that.\n- Raise your retirement saving, which is currently $0 in contributions, and confirm with each employer whether a match exists so you know what your deferrals could earn.\n- Treat the 24.9% credit card as the costliest debt, and look at whether a higher monthly payment fits alongside your other goals.\n- Talk through together how protection, cash, retirement and the 529 compete for the same yearly free cash flow, so that the trade-offs are a shared choice rather than a default.",
+   "es": null
+  },
+  {
+   "clave": "ia.summary_main",
+   "punto": "__nota",
+   "titulo": "Resumen del análisis de inversiones",
+   "en": "- **Your portfolio's job** — Your portfolio is meant to fund a comfortable retirement. The biggest gap is retirement: the projected shortfall is $1,427,456 in today's dollars, and closing it would take about $34,165 a year of additional savings. Savings left at the end of the plan are $260,272.\n\n- **Your numbers in plain English** — Retirement spending needs about $124,071 a year, and the plan leaves $62,932 a year for savings to cover. Your strengths are earned income and positive free cash flow of $15,032 a year. Non-mortgage debt payments are $15,840 a year; total debt payments, including the mortgage, are $65,040 a year, and debt-only DTI is 23.2%.\n\n- **Where to start** — Savings and cash compete for the same $15,032 a year, so take them in steps. Retirement saving is the largest need, at $34,165 a year. Rebuilding cash matters too: accessible cash is $92,360 short of a $111,360 to $124,717.50 target. Protection is covered elsewhere in this report.\n\n- **One caveat** — Free cash flow of $15,032 a year leaves a thin margin against these needs, so treat savings amounts as a starting point to confirm together. Long-term care is not planned for.\n\n- **Worth watching** — Annual salary is 54.79% of your net worth, so your household leans heavily on earned income. Keep this in view, with no action now.",
+   "es": null
+  },
+  {
+   "clave": "fh.retirement_short_observations",
+   "punto": "jubilacion",
+   "titulo": "Lo que dice el informe",
+   "en": "- Your plan projects that your money lasts to age 91, with $260,272 of savings left in today's dollars. That is a projection over the plan horizon, not a certainty, and it depends on savings covering about half of your retirement spending.\n- Income is projected to cover 49% of your $124,071 yearly retirement spending need, and Social Security supplies nearly all of it. The rest, about $62,932 a year on average, would come from savings, so what you build before retiring matters a great deal.\n- Drawing an average of 5.5% of your savings at the start of retirement is a meaningful pace. It holds through age 91 in the projection, but the cushion at the end is modest, and no long-term care cost is included.\n- Nothing is going into retirement contributions today. You could each contribute up to $24,500 a year to a 401(k), and each of you currently contributes $0. Whether an employer match is available isn't confirmed.\n- Emily plans to stop work at 60 and Daniel at 62, and your risk comfort differs (Daniel Growth, Emily Moderate). Since the plan leans on savings, it is worth checking that reliance against each of your comfort levels.",
+   "es": null
+  },
+  {
+   "clave": "fh.retirement_what_to_look_into",
+   "punto": "jubilacion",
+   "titulo": "Para revisar",
+   "en": "**We should look into**: how retirement saving and the emergency reserve could share your limited cash flow, and confirming any employer match.",
+   "es": null
+  },
+  {
+   "clave": "fh.assets_short_observations",
+   "punto": "Inversiones",
+   "titulo": "Lo que dice el informe",
+   "en": "- Most of your wealth sits in your home: $750,000 of your $1,129,000 in total assets, or 66.4%. Only $190,000 of that is yours after the mortgage, so the home is 37.2% of your net worth, while your $330,000 of invested savings are 64.6%. Your net worth rests more on investments than on the house, and home equity is harder to use for emergencies or retirement.\n- You hold $14,000 in cash, just 1.2% of your total assets. About $6,000 a year goes into cash and $12,000 a year into your brokerage account, so your current saving is going to cash and taxable savings. The cash cushion is the thinnest part of the picture, while the invested savings give you a steadier base.\n- Your $560,000 mortgage against the $750,000 home leaves 25.3% equity. That is above the 20% level and below the 50% level, so you own a modest share of the home and still owe about three-quarters of its value.\n- Your two 401(k)s hold $250,000 combined ($150,000 Daniel, $100,000 Emily), but nothing is going into them each year. Your invested savings are 60.2% in stocks against an 80.0% target, so they are currently less stock-heavy than that target.",
+   "es": null
+  },
+  {
+   "clave": "fh.assets_what_to_look_into",
+   "punto": "Inversiones",
+   "titulo": "Para revisar",
+   "en": "**We should look into**: starting regular contributions to the two 401(k)s, how the 529 college plan's yearly funding compares with its target, and an HSA, plus whether each employer offers a match, which is the data to confirm.",
+   "es": null
+  },
+  {
+   "clave": "fh.debt_short_observations",
+   "punto": "Deudas",
+   "titulo": "Lo que dice el informe",
+   "en": "- Your debt is large but manageable: $618,000 in total, or 220.7% of your gross income, with $560,000 of it in the mortgage at 6.5%. Debt payments take 23.2% of your income, and housing-related obligations are 27.2%. That is below the 36%, 43% and 50% levels lenders commonly use, so this is a heavy load rather than a crisis.\n- Your home equity is $190,000, or 25.3% of the home's value. That is only modestly above the 20% mark, so it is a cushion but not a large one.\n- The $18,000 card at 24.9% is your most expensive debt by a wide margin. At $450 a month it is projected to be paid off in January 2034, about 7 years out. That is a projection and assumes the payment stays the same.\n- Your accessible cash of $19,000 covers about 1.4 months of essential expenses, far below the $106,860 to $120,217.50 (8 to 9 months) that would be a full reserve. Thin cash matters because an unexpected cost would have to be met from limited savings, or could land on the high-rate card.\n- Your annual cash flow is $15,032, and the card, the cash reserve and your other goals all compete for it. The card's rate costs the most per dollar owed, while the $87,860 gap to the minimum reserve is the larger shortfall in dollars. Both matter, and the data does not settle which should come first.",
+   "es": null
+  },
+  {
+   "clave": "fh.debt_what_to_look_into",
+   "punto": "Deudas",
+   "titulo": "Para revisar",
+   "en": "**We should look into**: how the mortgage payment fits alongside the emergency reserve and retirement saving, and when the 24.9% credit card will be paid off, currently January 2034 at current payments.",
+   "es": null
+  },
+  {
+   "clave": "fh.savings_short_observations",
+   "punto": "Ahorro",
+   "titulo": "Lo que dice el informe",
+   "en": "- You have about $15,032 a year (5.4% of income) left after taxes, housing, debt payments, expenses and current savings. That is a thin cushion, and every savings goal has to draw on it.\n- Your emergency cash of $19,000 covers about 1.4 months of essential spending, against a recommended 8 to 9 months. The $87,860 shortfall to the minimum matters because a surprise would test this cushion first.\n- Nothing is going into retirement accounts today, and about $34,165 a year of extra saving is called for. Projections show a retirement gap of $1,427,456 at your target retirement ages.\n- That extra retirement saving is more than double your $15,032 of yearly cash flow, so the retirement gap can't be closed from today's cash flow alone.\n- Your current savings go to the 529 ($8,000 a year) and a taxable account ($12,000 a year), and education would still need about $1,928 a year more, rising each year. Retirement is the largest long-term figure, while emergency cash is the nearest protection, so the balance among the three is a tradeoff to work through.",
+   "es": null
+  },
+  {
+   "clave": "fh.savings_what_to_look_into",
+   "punto": "Ahorro",
+   "titulo": "Para revisar",
+   "en": "**We should look into**: building up the emergency cash reserve, directing more saving toward retirement, and confirming whether a workplace match applies.",
+   "es": null
+  },
+  {
+   "clave": "fh.protection_emergency_fund_short_observations",
+   "punto": "Colchón",
+   "titulo": "Lo que dice el informe",
+   "en": "- Your accessible cash of $19,000 covers about 1.4 months of essential expenses, against a recommended 8 to 9 months for your household ($106,860 to $120,218). That leaves a shortfall of $87,860, which grows to $92,360 once the $4,500 vacation payment is set aside, and cover then drops to 1.1 months. With two incomes at risk ($160,000 and $120,000) and two children, this cushion is what you would lean on first if a paycheck were interrupted.\n- One thing working in your favor: you hold $5,000 in money market alongside your bank cash, and you have no excess cash sitting idle.",
+   "es": null
+  },
+  {
+   "clave": "fh.protection_intro",
+   "punto": "Seguros",
+   "titulo": "Lo que dice el informe",
+   "en": "Protection keeps one bad event from undoing the rest of your plan, and the question is whether your cash, life insurance and liability cover would hold up if a paycheck stopped or a claim arrived. The sections below look at your emergency fund, life insurance and umbrella cover in turn, and each shows a meaningful gap that can be closed in steps.",
+   "es": null
+  },
+  {
+   "clave": "fh.protection_life_insurance_short_observations",
+   "punto": "Seguros",
+   "titulo": "Seguro de vida",
+   "en": "- Daniel has $250,000 of life insurance against a recommended $1,600,000 to $2,400,000, a shortfall of $1,350,000. Emily has $200,000 against $1,200,000 to $1,800,000, a shortfall of $1,000,000. You both hold some cover and neither of you is over-covered, but the gaps are large for a household with two children, a mortgage and college costs ahead.\n- Your household relies on both paychecks: $160,000 from Daniel and $120,000 from Emily. If either income were lost, the remaining one would have to carry the household's costs.\n- Obligations that would remain include a $560,000 mortgage, a vehicle loan, a student loan and an $18,000 credit card balance. College costs of $120,000 for Oliver and Sophia are also ahead, and the funding gap after current 529 balances is $107,000 (rounded).",
+   "es": null
+  },
+  {
+   "clave": "fh.protection_umbrella_short_observations",
+   "punto": "Seguros",
+   "titulo": "Responsabilidad civil",
+   "en": "- You have no umbrella policy, and the recommended minimum is $1,000,000, so that whole amount is currently uncovered. An umbrella adds liability protection above home and auto cover, which matters because one large claim could otherwise reach your savings and future earnings.\n- A claim could reach your home and vehicle, worth $785,000 with $197,000 of equity, and also the $344,000 you hold in liquid assets. Against a net worth of $511,000, an uncovered claim could be significant for your household.\n- Your home and your Toyota Highlander are both flagged as not insured in the data. That may only reflect missing detail, since nothing further is held on other property cover. Confirming what home and auto cover you already have would clarify what an umbrella would sit on top of.\n- Your two incomes ($160,000 and $120,000) are part of what a claim could put at risk, not only your assets. With two children at home, that adds weight to the missing layer. No cost for umbrella cover is available, so what it would take to close the gap is unknown.",
+   "es": null
+  },
+  {
+   "clave": "ia.snapshot_main",
+   "punto": "cartera",
+   "titulo": "Foto de las cuentas",
+   "en": "Your household's net worth is $511,000, which includes your home and cash as well as your investments. Both of you earn salaries; income is a large part of your overall wealth and the cash on hand is small next to what a reserve would call for.",
+   "es": null
+  },
+  {
+   "clave": "ia.portfolio_today_intro",
+   "punto": "cartera",
+   "titulo": "La tensión principal",
+   "en": "The central tension is that your household's wealth leans heavily on two salaries, while the cushions that would protect that income are still thin. Savings, reserves and protection all draw on the same limited yearly cash flow, so the portfolio is being asked to do more than it can yet do on its own. The sections that follow weigh the portfolio in that light: what it needs to do for your family, and what it is actually doing today.",
+   "es": null
+  },
+  {
+   "clave": "ia.portfolio_today_what_it_needs_to_do",
+   "punto": "cartera",
+   "titulo": "Lo que debería hacer la cartera",
+   "en": "- **Retirement income** — The plan shows a retirement shortfall of $1,427,456 in today's dollars, and closing it would take about $34,165 a year of additional saving. Your two 401(k)s hold $250,000 and are the main pool for this long-term job. Neither you nor Emily is contributing to them today; each of you could contribute up to $24,500 a year. Daniel plans to retire at 62 and Emily at 60.\n- **Safety cushion** — Your accessible cash is $19,000, which covers about 1.4 months of essential spending. The cash target is $111,360 to $124,718 (8 to 9 months of essentials plus the $4,500 vacation due in January 2027), so the gap is $92,360. This money protects the family from a job or medical shock so long-term investments don't have to be sold at a bad time. Closing the gap will take time, because it draws on the same $15,032 of yearly free cash flow as your other goals.\n- **College funding** — The 529 holds $30,000 and receives $8,000 a year. A college funding gap of $106,552 remains. Its job is to cover education costs, so it is kept separate from your retirement and reserve money.\n- **Flexible savings** — The taxable brokerage account holds $50,000, including $5,000 of cash that counts toward your reserve. No specific purpose is defined for the rest, so it is treated as flexible money until you decide what it is for.",
+   "es": null
+  },
+  {
+   "clave": "ia.portfolio_today_what_its_actually_doing",
+   "punto": "cartera",
+   "titulo": "Lo que hace de verdad",
+   "en": "- **Income-dependent wealth** — Your two salaries total $280,000, which is 54.79% of your $511,000 net worth. Your position leans on continued earnings more than on assets that can stand alone, so a pause in either paycheck would reach your plans quickly. No employer stock is identifiable, and unvested equity is $0.\n- **Thin cushion** — Accessible cash is $19,000, about 1.4 months of essential expenses, against a target of $111,360 to $124,717.50. That leaves a $92,360 gap. A job loss or medical bill would therefore be more likely to force sales of investments, possibly at a poor moment.\n- **Steady results, concentrated equity** — Your portfolio returned 13.7% a year over three years with volatility of 8.1%, close to a diversified portfolio at the same equity level. Technology is 35.6% of your stock holdings and the United States 88.6%. You hold no single stocks, but your equity funds are likely to move together.\n- **Savings squeezed by competing needs** — You have $15,032 a year of free cash flow, while closing the retirement gap of $1,427,456 would take $34,165 a year more. Nothing is going into either 401(k), and an $18,000 card at 24.9% also competes. Because the cash gap draws on the same dollars, no single need can be fully funded.",
+   "es": null
+  },
+  {
+   "clave": "ia.portfolio_today_performance_timeline",
+   "punto": "cartera",
+   "titulo": "Cómo se ha portado",
+   "en": "Over the three years to November 2026, your portfolio grew an average of 13.7% a year. Its swings were modest: the worst fall from a peak was 10.0%, and it recovered from that in 61 days. A diversified portfolio holding the same share of stocks returned 14.6% a year with a worst fall of 10.6%, so your result was close, a little lower in return and a little smoother along the way. The return you earned for each unit of risk taken was 1.24, against 1.28 for that comparison, which is a small difference.\n\nThe most meaningful behavior shows up in the tariff-related market events. When tariffs were announced on 2 April 2025, your portfolio fell 8.1% while the comparison fell 7.8%, so it fell about as much. When a pause was announced on 9 April 2025, your portfolio fell 2.3% against 3.1%, holding up better. Across the whole period your portfolio took part in about 87% of the market's gains and about 97% of its losses. In plain terms, it gave up more of the upside than it saved on the downside, though the paths stayed close throughout.\n\nThe evidence is limited to one three-year window and a few dated events, so a different period or a new market event could change the reading. A mix with more stocks, the kind your long-term goals are measured against, returned 17.6% a year over the same window, with a worst fall of 12.8%. That shows a more stock-heavy mix earned more in this period, with deeper falls. It describes how the mixes differ, not a sign that your portfolio did anything wrong.",
+   "es": null
+  },
+  {
+   "clave": "ia.portfolio_today_whats_working",
+   "punto": "cartera",
+   "titulo": "Lo que funciona",
+   "en": "- **Positive cash flow** — You have $15,032 a year of free cash flow after expenses, debt payments and current savings. Your two incomes cover what you owe and leave a margin you can direct toward goals, even though it is thinner than the retirement and cash targets require.\n- **Debt payments** — Your debt-only DTI is 23.2%, within the levels lenders commonly use.\n- **Manageable housing cost** — Your housing-obligations ratio is 27.2%. Housing costs share your income with other needs, including savings and building the cash reserve.\n- **No single-stock risk** — You hold 0 individual stocks, and no two holdings in the same account duplicate each other. Technology, at 35.6% of your stock holdings, comes from funds, and Financial Services is next at 12.1%. No single company drives your investment results.\n- **Steady three-year results** — Your portfolio returned 13.7% annualized over three years, with volatility of 8.1% and a Sharpe of 1.24. A diversified portfolio with the same overall equity allocation delivered 14.6%, 8.6% and 1.28. Your worst drop was 9.97%, recovered in 61 days.",
+   "es": null
+  },
+  {
+   "clave": "ia.portfolio_today_priorities",
+   "punto": "cartera",
+   "titulo": "Lo que hay que cambiar",
+   "en": "- **Cash reserve** — Accessible cash is $19,000, about 1.4 months of essential spending, against a minimum target of $111,360, a gap of $92,360. A job loss or medical event could force you to sell long-term investments, so this cushion needs to grow as cash flow allows.\n- **Retirement savings** — The plan shows a retirement gap of $1,427,456, and closing it would take about $34,165 a year of added saving. Nothing goes into either 401(k) today, and Daniel and Emily could each contribute up to $24,500. Free cash flow is $15,032, so this shortfall needs steady, long-term attention.\n- **Income dependence** — Your $280,000 of salaries equals 54.79% of your $511,000 net worth, so your finances rest heavily on two paychecks. Reserves and protection need to strengthen so a pause in either income does not reach your long-term plans. The same limited cash flow serves all of these needs.",
+   "es": null
+  },
+  {
+   "clave": "ia.recommendations_main",
+   "punto": "cartera",
+   "titulo": "Lo que recomienda el análisis",
+   "en": "- **Protect your income with life cover** — The target is about $1,616,000 of added coverage, worth 5 points on your Financial Health score of 52. Please treat this as an amount to confirm against current policies, not an exact shortfall. It protects the family's income and home if one of you were lost.\n- **Add umbrella liability cover** — No umbrella cover is evident, and $1,000,000 is the recommended amount, worth 4 points of score. It guards your savings and home against a large liability claim. Together with life cover, these two steps are worth 8 points.\n- **Rebuild your cash reserve** — Your accessible cash is about $19,000, which leaves a gap of $92,360 against a total cash target of $111,360 to $124,717.50. Without it, a job loss or large bill could force you to sell investments at a poor time. Closing it will take time, so steady progress as cash flow allows is a sound goal.\n- **Build retirement savings in steps** — The projected retirement gap is $1,427,456, and closing it would take about $34,165 a year of added savings. Your free cash flow is $15,032 a year, so the need is larger than today's margin. Please confirm whether either employer offers a match, since that could make each dollar go further.\n- **Use your yearly margin deliberately** — Protection, the reserve and retirement all compete for the same $15,032 a year. Non-mortgage debt payments are $15,840 a year; total debt payments, including the mortgage, are $65,040 a year, or 23.2% of income. Raising annual savings alone would lift your score from 52 to 55. We suggest weighing these needs together, taking small, clear steps rather than all at once.\n- **Keep income dependence in view** — Your salaries equal 54.79% of your net worth, so the household leans heavily on earned income. That is another reason protection matters. Safeguarding your ability to earn supports every other goal here.",
+   "es": null
+  },
+  {
+   "clave": "ia.recommendations_scenarios",
+   "punto": "cartera",
+   "titulo": "Cómo se comporta en mercados reales",
+   "en": "- **Steady through the last three years** — Your portfolio earned about 13.7% a year over the past three years. Its worst drop was about 10.0%, and it recovered in 61 days. That is a little smoother than a diversified portfolio with the same overall stock share, which earned about 14.6% a year. These are past results, not a promise about what comes next.\n- **Held up better in two of the three tariff shocks** — When the 90-day tariff pause was announced in April 2025, your portfolio fell 2.3% while the comparison fell 3.1%. When the Supreme Court struck down the tariffs in February 2026, you fell 0.8% against 1.2%. In both, you lost less than the comparison.\n- **The sharpest fall was about the same as the comparison** — When the tariffs were first announced in early April 2025, your portfolio fell 8.1% against 7.8% for the comparison. That is slightly deeper, but very close. Across these three events, your portfolio behaved much like a diversified portfolio of similar risk. These events are history and don't tell us how a future downturn will go.",
+   "es": null
+  },
+  {
+   "clave": "ia.portfolio_today_verdict",
+   "punto": "impuestos",
+   "titulo": "Cuentas de jubilación",
+   "en": "Your two traditional 401(k)s are performing well, with Daniel's returning 15.8% and Emily's 13.5% annualized over three years, and the bonds held inside them sit in the right kind of account for their tax treatment. The weak point is that nothing is going into either plan: $0 is contributed, although you and Emily could each contribute up to $24,500 a year, traditional and Roth together. Without a change, the projected retirement gap is $1,427,456 in today's dollars, savings left at the end of the plan are $260,272, and closing the gap would take about $34,165 more savings a year. Your savings capacity is $15,032 a year, but it is still well short of that, and your cash reserve, the 529 and the 24.9% credit card compete for the same dollars. Contributing to these tax-deferred plans could lower your tax by about $11,760 a year, and estimated employer contributions of $6,400 and $4,800 are not being captured, though the match formulas are not in the data, so treat those amounts as unconfirmed. Agreeing a clear contribution path now, with the order of your savings decided alongside rebuilding your cash reserve, is the most important step you can take.",
+   "es": null
+  },
+  {
+   "clave": "ia.portfolio_today_also_meaningful",
+   "punto": "impuestos",
+   "titulo": "Cuenta de salud (HSA)",
+   "en": "An HSA is a secondary item for you, well behind retirement saving and the emergency reserve, so it can wait until those larger priorities are settled. You have no HSA today and have contributed $0. Whether your health plan qualifies is not in the data, so the first step is to confirm eligibility. If your plan qualifies, you could contribute up to $8,750, and at your 24% marginal tax rate that would lower your tax by about $2,100 a year. It would also give you a dedicated place to set money aside for health costs. That benefit applies only if the plan qualifies. The data holds no HSA balance, no HSA investments and no tax-drag findings for an HSA, so nothing more can be said about the account yet. Tax-loss harvesting does not apply to an HSA, because a loss inside it gives no tax deduction.",
+   "es": null
+  },
+  {
+   "clave": "score.message",
+   "punto": "__nota",
+   "titulo": "Qué significa la nota",
+   "en": "With a score of 52, your financial health is below average, affecting not just your financial life but your overall well-being. Let's work together to take immediate steps toward organizing and clarifying your financial situation. Let me help you take control of your finances and improve the quality of your life.",
+   "es": null
+  }
+ ],
  "lectura": "A Daniel y Emily les mueve ante todo proteger a los niños y tener colchón líquido. Les preocupa cuánto cubren los seguros y cuánto aguanta su efectivo antes de tocarlo.",
  "porqueOrden": "Empezamos por la protección, luego la liquidez, el coste de la deuda y cerramos con la noticia sobre la jubilación.",
  "preguntas": [

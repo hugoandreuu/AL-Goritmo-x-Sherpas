@@ -23,6 +23,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { leerPuntos, NARRATIVA, cifrasIguales } from './puntos.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'app', 'estudios');
@@ -589,6 +590,7 @@ function aplicar(E, ok) {
 }
 
 const CACHE = slug => path.join(OUT, 'llm', slug + '.json');
+const TRAD = slug => path.join(OUT, 'llm', slug + '.informe.json');
 
 // Reaplica una respuesta del LLM ya guardada, pasándola otra vez por el control de cifras.
 function reaplicar(E, guardado) {
@@ -937,6 +939,20 @@ async function main() {
     E.pareja = leerPareja(E, d.ia);
     const T = leerTemas(E, d.fh, d.ia);
     E.areas.forEach(a => { Object.assign(a, T[a.nombre] || {}); });
+    // Puntos del informe más allá de las cinco áreas, capas de detalle y textos del informe (con su traducción guardada).
+    const PU = leerPuntos(E, d.fh, d.ia);
+    const CONEX = { Ahorro: ['flujo', 'impuestos', 'jubilacion'], Deudas: ['Colchón', 'flujo'], Inversiones: ['cartera', 'jubilacion'], 'Colchón': ['Deudas', 'Seguros', 'universidad'], Seguros: ['Colchón', 'Deudas'] };
+    E.areas.forEach(a => { a.capas = (PU.extra[a.nombre] || {}).capas || []; a.conexiones = CONEX[a.nombre] || []; });
+    E.puntos = PU.puntos; E.notaCapas = PU.notaCapas;
+    const trad = fs.existsSync(TRAD(slug)) ? JSON.parse(fs.readFileSync(TRAD(slug), 'utf8')) : {};
+    E.narrativa = Object.entries(NARRATIVA).map(([clave, [punto, titulo]]) => {
+      const [parte, campo] = clave.split('.'), en = get(parte === 'fh' ? d.fh : d.ia, 'narrative.' + campo);
+      if (!en) return null;
+      const es = trad[clave] && cifrasIguales(en, trad[clave]) ? trad[clave] : null;
+      if (trad[clave] && !es) g.avisos.push(`Traducción de ${clave} descartada: no coinciden las cifras con el original.`);
+      return { clave, punto, titulo, en, es };
+    }).filter(Boolean);
+    ['explainer', 'message'].forEach(c => { const en = get(d.fh, 'score.' + c); if (en) { const clave = 'score.' + c, es = trad[clave] && cifrasIguales(en, trad[clave]) ? trad[clave] : null; E.narrativa.push({ clave, punto: '__nota', titulo: c === 'explainer' ? 'Cómo se calcula la nota' : 'Qué significa la nota', en, es }); } });
     let crudo = null;
     if (!sinLlm) {
       try {
