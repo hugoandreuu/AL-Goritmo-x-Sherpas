@@ -124,35 +124,27 @@
   }
   // Tarjeta al final de cada revelación: qué parte de la ruta toca, sin decir aún cuál es la solución.
   function rvRoute(q) {
-    const p = pasoDe(q), i = p ? E.pasos.indexOf(p) : -1, ase = w('vuestro', 'tu') + ' asesor';
+    const p = pasoDe(q), ase = w('vuestro', 'tu') + ' asesor';
     let body;
     if (q.tono !== 'malo') {
       body = `<div class="rr-k good">${ic('check', 15)}Esto ya está bien</div><p class="small muted rr-sal">${esc(q.salida || `Es parte de la base de ${w('vuestra', 'tu')} ruta: no hay que tocarlo.`)}</p>`;
       return `<div class="rv-route" data-st="fade">${body}</div>`;
     }
-    if (p) {
-      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan tiene un paso para esto</div>
-        <div class="rr-stop found"><b class="rr-n">?</b><div><b>Paso ${i + 1} de ${E.pasos.length} de ${w('vuestro', 'tu')} plan</b><small>Qué hacer y cuánto sube ${w('vuestra', 'tu')} nota, ${w('lo veis', 'lo ves')} con ${ase}.</small></div></div>`
-        + meetBox(`${w('Vuestro', 'Tu')} asesor ${w('os', 'te')} enseña este paso con ${w('vuestras', 'tus')} cifras y cómo darlo.`);
-    } else if (q.tema === 'nota' && E.pasos.length) {
-      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan, entero</div>
-        <p class="small" style="margin:0">De ${E.nota.hoy} a ${E.nota.max} en ${E.pasos.length} ${E.pasos.length === 1 ? 'paso' : 'pasos'}. Cuáles son, ${w('lo descubrís', 'lo descubres')} con ${ase}.</p>`
-        + meetBox(`En 30 minutos ${w('os', 'te')} enseña ${E.pasos.length === 1 ? 'el paso' : `los ${E.pasos.length} pasos`} en orden.`);
-    } else {
+    // Si el plan tiene un paso para esto (o es la nota), no se añade nada: el paso y la reunión llegan en el cierre.
+    if (p || q.tema === 'nota') return '';
+    {
       const ya = S.doubts.some(d => d.id === 'rq-' + q.id);
       body = `<div class="rr-k">${ic('chat', 15)}Para trabajarlo con ${ase}</div>${q.salida ? `<p class="small muted rr-sal">${esc(q.salida)}</p>` : ''}`
-        + meetBox(`${w('Vuestro', 'Tu')} asesor lo revisa ${w('con vosotros', 'contigo')} y ${w('os', 'te')} dice cómo mejorarlo.`)
         + (ya ? `<p class="saved">${ic('check', 15)}Apuntado como pregunta</p>` : `<button class="link block" data-act="rask" data-k="${q.id}">${ic('pen', 16)} Apuntarlo como pregunta para ${ase}</button>`);
     }
     return `<div class="rv-route" data-st="fade">${body}</div>`;
   }
-  // Modo pareja: al ver cada respuesta, la parada que toca queda encontrada y se ofrece la reunión.
-  // El paso del plan ya sale justo encima (pjPropLine), así que aquí no se repite.
+  // Modo pareja: al ver cada respuesta, la parada que toca queda encontrada. El paso ya sale encima (pjPropLine)
+  // y la reunión se pide en el cierre, así que aquí no se pinta nada.
   function pjRoute(q) {
     if (!E.pasos.length) return '';
     if (q) { const p = pasoDe(q); if (p) vistos()[p.key] = true; else if (q.id === 'nota') E.pasos.forEach(x => { vistos()[x.key] = true; }); }
-    return `<div class="rv-route pj-route">
-      ${meetBox('Vuestro asesor lo revisa con los dos y os enseña cómo mejorarlo.')}</div>`;
+    return ''; // la reunión se pide una vez, en el cierre
   }
 
   // ------------------------------------------------------------------ iconos (trazo, 24x24)
@@ -502,8 +494,11 @@
           <button class="segb" style="--i:0" data-act="level" data-v="new" aria-pressed="${S.prefs.level === 'new'}">${ic('seed', 22)}<b>${w('Somos nuevos', 'Soy nuevo')} en esto</b><span>Sin tecnicismos y paso a paso</span></button>
           <button class="segb" style="--i:1" data-act="level" data-v="pro" aria-pressed="${S.prefs.level === 'pro'}">${ic('chart', 22)}<b>${w('Sabemos', 'Sé')} de finanzas</b><span>Con el detalle técnico a la vista</span></button></div>`;
     } else if (step === 'gain') {
-      head = `<h2 class="q">Si esto estuviera resuelto, ¿qué cambiaría en casa?</h2><p class="muted">${w('Elegid', 'Elige')} la que más se parezca.</p>`;
-      body = E.ganancias.map(([i, t], k) => `<button class="opt" style="--i:${k}" data-act="gain" data-v="${esc(t)}" aria-pressed="${S.gain === t}">${optBody(i, esc(t))}</button>`).join('');
+      // Como «¿qué os ronda la cabeza?»: tarjetas de color arriba y respuesta abierta (con micrófono) debajo.
+      head = `<h2 class="q">Si esto estuviera resuelto, ¿qué cambiaría en casa?</h2><p class="muted">${w('Elegid', 'Elige')} la que más se parezca o ${w('contadlo con vuestras', 'cuéntalo con tus')} palabras.</p>`;
+      body = `<div class="sugg-grid">${E.ganancias.map(([i, t], k) => `<button class="sg" style="--i:${k}" data-act="gsugg" data-v="${esc(t)}" aria-pressed="${S.gain === t}"><span class="sg-ic">${ic(i, 18)}</span><span class="sg-t">${esc(t)}</span></button>`).join('')}</div>
+        <p class="tiny sugg-t">O ${w('escribidlo con vuestras', 'escríbelo con tus')} palabras:</p>
+        <textarea id="gainfree" class="free" rows="2" maxlength="200" placeholder="Por ejemplo: ${w('saldríamos a cenar sin mirar la cuenta', 'saldría a cenar sin mirar la cuenta')}">${esc(S.gain || '')}</textarea>`;
       dk = dock(`Ver ${w('vuestro', 'tu')} plan`, S.gain, 'toplan');
     } else if (perm) {
       head = `<div class="permic">${ic('shield', 30)}</div><h2 class="q">Lo siguiente no es fácil, pero tiene arreglo.</h2><p class="muted">Hablamos de proteger a ${esc(E.fam.hijos.map(k => k.nombre).join(' y '))}. ¿Lo vemos ahora?</p>`;
@@ -1940,6 +1935,13 @@
       const bt = document.getElementById('pjsave'); if (bt) bt.disabled = false;
       save(); return;
     }
+    if (t.id === 'gainfree') {
+      const txt = t.value.trim(); S.gain = txt || null; save();
+      app.querySelectorAll('.sg').forEach(x => x.setAttribute('aria-pressed', String(!!txt && x.dataset.v === txt)));
+      const bt = app.querySelector('[data-act="toplan"]'); if (bt) bt.disabled = !txt;
+      if (window.Fondo) { Fondo.pulse(); Fondo.tint(txt ? 'pick' : null); }
+      return;
+    }
     if (t.id === 'worry' || t.id === 'note') {
       if (window.Fondo) Fondo.pulse();
       const bt = t.id === 'worry' ? app.querySelector('[data-act="worry"]:not([data-v])') : app.querySelector('.savebtn');
@@ -2069,7 +2071,8 @@
       }
       case 'nb': nbSheet(); break;
       case 'next': go(); break;
-      case 'toplan': preparePlan(); break;
+      case 'toplan': { const t = document.getElementById('gainfree'); if (t && t.value.trim()) S.gain = t.value.trim(); preparePlan(); break; }
+      case 'gsugg': { S.gain = v; save(); const t = document.getElementById('gainfree'); if (t) t.value = v; marcaSugg(b); const bt = app.querySelector('[data-act="toplan"]'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } break; }
       case 'nextslide': rulTo(Math.round(RUL.rot) + 1, 1); break;
       case 'prev': rulTo(Math.round(RUL.rot) - 1, -1); break;
       case 'goslide': rulTo(+v); break;
