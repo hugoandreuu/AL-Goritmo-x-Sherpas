@@ -1229,8 +1229,7 @@
     const nx = ns, nds = nodos();
     main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestro', 'Tu')} informe, de lo más urgente a lo que está bien</div>
       <p class="muted" style="margin-top:-2px">${nds.length} puntos. Toca uno para ver lo esencial, sus gráficas y, si ${w('queréis', 'quieres')}, todo el detalle. Las cinco áreas con nota son las que calculan ${w('vuestra', 'tu')} nota; ahí ${w('votáis', 'votas')} los pasos del plan.</p>
-      <div class="nodos">${nds.map(nodoCard).join('')}</div>
-      <div class="temas" style="margin-top:14px">${rutaCard()}</div></div>`;
+      <div class="nodos">${nds.map(nodoCard).join('')}${rutaCard()}</div></div>`;
 
     main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Vuestro', 'Tu')} siguiente paso</div>
       <div class="card close"><div class="meter">
