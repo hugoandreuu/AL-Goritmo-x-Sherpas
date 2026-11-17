@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node scripts/serve.mjs",
     "estudio": "node scripts/estudio.mjs",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "corto": "node scripts/corto.mjs"
   }
 }

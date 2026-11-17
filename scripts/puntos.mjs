@@ -371,6 +371,23 @@ export function trozos(txt) {
 // Control de cifras de una traducción: los mismos números que el original (en inglés 1,234.5; en español 1.234,5).
 const numsEn = s => (String(s).match(/\d[\d,]*(?:\.\d+)?/g) || []).map(x => +x.replace(/,/g, '')).filter(n => n >= 10);
 const numsEs = s => (String(s).match(/\d[\d.]*(?:,\d+)?/g) || []).map(x => +x.replace(/\./g, '').replace(',', '.')).filter(n => n >= 10);
+// Control de cifras de un resumen corto: toda cifra del resumen está en el original (no se inventa ninguna).
+export function cifrasDentro(en, es) {
+  const set = new Set(numsEn(en).map(String));
+  return numsEs(es).every(n => set.has(String(n)));
+}
+// Resumen corto en español de un texto del informe: puntos { c: cifra, t: texto, k: tono }.
+// Se descarta entero si alguna cifra no está en el original.
+export const TONOS = ['bien', 'mal', 'ojo', 'info', 'rev'];
+export function cortoValido(en, pts) {
+  if (!Array.isArray(pts) || !pts.length) return 'vacío';
+  for (const p of pts) {
+    if (!p || typeof p.t !== 'string' || !p.t.trim()) return 'punto sin texto';
+    if (!TONOS.includes(p.k)) return `tono desconocido: ${p.k}`;
+    if (!cifrasDentro(en, `${p.c || ''} ${p.t}`)) return `cifra que no está en el original: «${p.c ? p.c + ' ' : ''}${p.t}»`;
+  }
+  return null;
+}
 export function cifrasIguales(en, es) {
   const a = numsEn(en).sort((x, y) => x - y), z = numsEs(es).sort((x, y) => x - y);
   const set = new Set(z.map(String));

@@ -4077,196 +4077,715 @@
    "punto": "__nota",
    "titulo": "Resumen del informe",
    "en": "- You're in a sound position: your net worth is $1,395,000 with no debt, and about 65% of it is your home, which you own outright. Your $80,000 in cash covers 7.9 months of essential expenses, above the 5 to 6 months we'd suggest.\n- The central tension is that you save 24% of your income, $60,000 a year, but it isn't yet pointed at your long-term goals. It goes to taxable accounts, while retirement accounts and college funds hold $0. Your yearly cash flow is about $6,418 short.\n- Retirement, college and your cash cushion all draw on the same cash. After $18,500 of near-term goals, only $750 of your cash is above the reserve. The studies don't rank these goals, so weighing them against each other is your call.\n- As a projection to age 91, your savings and investments run out at age 73. Guaranteed income covers 25% of a $153,672 yearly need, leaving about $115,335 a year to come from savings. On the college side, $98,838 is still needed beyond current 529 balances, with Ethan starting in August 2026 and Ava in August 2028.\n- Your children rely on your $250,000 income, and that income is protected: $2,000,000 of term life insurance sits within the recommended $1,250,000 to $2,500,000, a $2,000,000 umbrella policy meets the recommended minimum, and long-term disability cover pays $12,500 a month if you can't work. Your protection is in place and does not compete with your savings goals.\n- A realistic direction is to weigh retirement saving and college funding against your cash flow, one clear step at a time. You could contribute up to $7,500 to a deductible traditional IRA and up to $4,400 to an HSA if your health plan qualifies. You've contributed $0 to each so far, and both can be part of that weighing.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "1.395.000 $",
+     "t": "de patrimonio neto, sin deudas; la casa es tuya.",
+     "k": "bien"
+    },
+    {
+     "c": "60.000 $",
+     "t": "ahorras al año (24 %), pero nada va a la jubilación ni al 529.",
+     "k": "ojo"
+    },
+    {
+     "c": "-6.418 $",
+     "t": "al año, y solo 750 $ por encima de la reserva tras los gastos previstos.",
+     "k": "ojo"
+    },
+    {
+     "c": "73 años",
+     "t": "se acaba el ahorro; los ingresos garantizados cubren el 25 %.",
+     "k": "mal"
+    },
+    {
+     "c": "98.838 $",
+     "t": "faltan para la universidad de Ethan y Ava.",
+     "k": "mal"
+    },
+    {
+     "c": "2.000.000 $",
+     "t": "de seguro de vida y de umbrella, más incapacidad: protección en orden.",
+     "k": "bien"
+    }
+   ]
   },
   {
    "clave": "fh.summary_recommendations",
    "punto": "__nota",
    "titulo": "Recomendaciones del informe",
    "en": "- Keep your life, disability and umbrella coverage in place so Ethan and Ava stay protected, and plan for the premium cost within your yearly cash flow.\n- Weigh retirement saving against college funding as one tradeoff with a clear plan, since both draw on the same cash that now runs a yearly shortfall.\n- Look at the tax-advantaged accounts you are eligible for, such as a deductible traditional IRA and an HSA if your health plan qualifies, as part of that weighing.\n- Confirm whether a workplace retirement plan is available to you, since that is not yet known and shapes your options.\n- Plan how your cash will cover near-term goals like Ethan's college payments while keeping a cushion above your emergency reserve.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Mantener vida, incapacidad y umbrella, y prever las primas.",
+     "k": "rev"
+    },
+    {
+     "t": "Decidir con un plan cuánto va a jubilación y cuánto a universidad.",
+     "k": "rev"
+    },
+    {
+     "t": "Aprovechar un IRA deducible y una HSA si tu seguro lo permite.",
+     "k": "rev"
+    },
+    {
+     "t": "Confirmar si tienes plan de jubilación en el trabajo.",
+     "k": "rev"
+    },
+    {
+     "t": "Pagar los gastos cercanos sin quedarte sin colchón.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "ia.summary_main",
    "punto": "__nota",
    "titulo": "Resumen del análisis de inversiones",
    "en": "- **Your portfolio's job** — Your portfolio is meant to fund retirement at 65 and your children's college costs, all from one salary. Today it sits almost entirely in taxable and cash accounts, with nothing in retirement accounts. The projection shows savings running out at age 73, and that is your main gap.\n\n- **What the numbers say** — Guaranteed income covers 25% of your $153,672 yearly retirement spending need. Your average yearly draw would be 12.2% of savings at the start of retirement. Your strengths are real: $80,000 in cash covering 7.9 months of essentials, no debt, and a 24% savings rate.\n\n- **Directions to consider** — Protection is now in place, with $2,000,000 of term life inside the recommended $1,250,000 to $2,500,000, a $2,000,000 umbrella that meets the minimum, and long-term disability cover. So the studies point first to retirement saving: you could contribute up to $4,400 to an HSA and up to $7,500 to a deductible traditional IRA, with nothing contributed to either today. Then comes the $98,838 college need, with Ethan's $12,500 payment due August 2027.\n\n- **One caveat** — We don't know whether an employer 401(k) is available to you, so we draw no conclusion there. Cost basis and purchase dates are missing for your taxable holdings, which limits tax-lot analysis. Roth IRA contributions are not permitted for you.\n\n- **Worth watching** — Cash above your reserve and near-term goals is only $750 after $18,500 of goals. After expenses and savings you are about $6,418 a year short. Technology is 30.6% of your stock holdings. None of this is urgent, but keep an eye on it.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "73 años",
+     "t": "se acaba el ahorro: es el hueco principal.",
+     "k": "mal"
+    },
+    {
+     "c": "25 %",
+     "t": "de los 153.672 $ al año de jubilación lo cubren los ingresos garantizados.",
+     "k": "ojo"
+    },
+    {
+     "c": "80.000 $",
+     "t": "en efectivo (7,9 meses), sin deudas y ahorrando el 24 %.",
+     "k": "bien"
+    },
+    {
+     "c": "7.500 $",
+     "t": "en un IRA y 4.400 $ en una HSA: hoy, nada aportado.",
+     "k": "rev"
+    },
+    {
+     "c": "30,6 %",
+     "t": "de la bolsa en tecnología. No es urgente.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "fh.retirement_short_observations",
    "punto": "jubilacion",
    "titulo": "Lo que dice el informe",
    "en": "- Your projection shows savings and investments running out at age 73, with about $1,448,673 of planned spending unpaid by the end of the plan at 91. That gap of roughly 18 years is the central retirement question, though it is a projection and not a certainty.\n- Income covers only 25% of a $153,672 yearly spending need, and all of it is Social Security at about $38,336 a year. The other 75% would have to come from savings, since no other income source is in the plan.\n- That leaves an average draw of about $115,335 a year, or 12.2% of savings at the start of retirement. This is a lifetime average, so it isn't directly comparable to the 4% sustainable rate. It does show how heavily the plan leans on savings.\n- Your retirement accounts hold 0 today. You could contribute up to $7,500 to a deductible traditional IRA and up to $4,400 to an HSA, with 0 contributed to either. Whether a 401(k) is available to you isn't in the data, so there is no conclusion about it.\n- Net worth runs out at age 90 and ends the plan at -$33,615 in today's dollars. It stays positive until then largely because it includes your home, which isn't a source of spendable income in this projection. College costs for Ethan and Ava compete for the same dollars as retirement saving, so that tradeoff matters more now than the home's cushion.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "73 años",
+     "t": "se acaba el ahorro; quedan 1.448.673 $ de gasto sin cubrir hasta los 91.",
+     "k": "mal"
+    },
+    {
+     "c": "25 %",
+     "t": "del gasto (153.672 $ al año) lo cubre la Seguridad Social, unos 38.336 $.",
+     "k": "ojo"
+    },
+    {
+     "c": "115.335 $",
+     "t": "al año tendrían que salir de tus ahorros, un 12,2 %.",
+     "k": "mal"
+    },
+    {
+     "c": "7.500 $",
+     "t": "podrías poner en un IRA deducible y 4.400 $ en una HSA.",
+     "k": "rev"
+    },
+    {
+     "t": "La universidad compite por el mismo dinero que la jubilación.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "fh.retirement_what_to_look_into",
    "punto": "jubilacion",
    "titulo": "Para revisar",
    "en": "**We should look into**: the gap between guaranteed income and retirement spending that has savings running out at 73, how retirement saving and college funding can fit together, and confirming whether a 401(k) is available to you.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "El hueco entre ingresos garantizados y gasto.",
+     "k": "rev"
+    },
+    {
+     "t": "Cómo encajar jubilación y universidad.",
+     "k": "rev"
+    },
+    {
+     "t": "Confirmar si tienes 401(k).",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "fh.assets_short_observations",
    "punto": "Inversiones",
    "titulo": "Lo que dice el informe",
    "en": "- Most of your wealth is your home: $900,000 of your $1,395,000 in assets, about 65%, with no mortgage or other debt against it. That is a solid base, but a home is not money you can easily spend, so it does little to fund college or retirement.\n- Your invested savings are $335,000, with 85.1% in stocks against an 80.0% target. That fits your growth approach and a long stretch until age 65, though it sits a little above where you aim to be.\n- Your $80,000 in cash is a real strength for handling surprises. Against that, college starts for Ethan in 2026 and Ava in 2028, with $0 in 529 plans and $98,837.55 still needed, and a yearly cash shortfall of $6,418 on $129,600 of expenses. Those would draw on the same cash, so the cushion may be thinner than it looks.\n- No retirement accounts are listed, so retirement at 65, 17 years away, rests on your invested savings, cash and the home. You could contribute up to $7,500 to an IRA and up to $4,400 to a health savings account, and none has been contributed so far.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "900.000 $",
+     "t": "en casa, sin hipoteca: el 65 % de lo que tienes. No se gasta fácil.",
+     "k": "info"
+    },
+    {
+     "c": "335.000 $",
+     "t": "invertidos, 85,1 % en bolsa frente al 80,0 % objetivo.",
+     "k": "info"
+    },
+    {
+     "c": "98.837,55 $",
+     "t": "faltan para la universidad y el mes sale 6.418 $ en negativo.",
+     "k": "ojo"
+    },
+    {
+     "t": "Ninguna cuenta de jubilación: dependes de lo invertido, el efectivo y la casa.",
+     "k": "mal"
+    }
+   ]
   },
   {
    "clave": "fh.assets_what_to_look_into",
    "punto": "Inversiones",
    "titulo": "Para revisar",
    "en": "**We should look into**: building retirement savings in tax-advantaged accounts, easing the tax cost of your taxable holdings, spreading the technology and US stock concentration, and confirming the cost basis and purchase dates still missing for those taxable holdings.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Ahorrar para la jubilación en cuentas con ventaja fiscal.",
+     "k": "rev"
+    },
+    {
+     "t": "Bajar lo que pagas de impuestos por tus inversiones.",
+     "k": "rev"
+    },
+    {
+     "t": "Repartir más allá de tecnología y EE. UU.",
+     "k": "rev"
+    },
+    {
+     "t": "Completar el coste y las fechas de compra que faltan.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "fh.debt_short_observations",
    "punto": "Deudas",
    "titulo": "Lo que dice el informe",
    "en": "- You have no debt: your balance is $0 and your debt-to-income ratio is 0%. With no loan payments, your income is free for college funding and retirement, and that matters more because your yearly cash flow is a shortfall of $6,418.\n- Your home is owned outright, with $900,000 in equity and no mortgage. Housing costs of $1,125 a month take 5.4% of your income, far below the 36% level where lenders start to see strain.\n- Your card and vehicle payments are $0, so nothing is competing for your cash each month.\n- Your $80,000 in cash is above the $50,625 to $60,750 reserve, but only $750 sits above both the reserve and your near-term goals (a $6,000 vacation and Ethan's $12,500 college payment in 2027). That cushion is thin, and it is a bigger pressure point than debt.\n- If you ever considered borrowing for college, the 5.4% ratio leaves a wide margin. Whether to borrow or use cash is a trade-off to weigh against the thin cushion and the negative cash flow.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "0 $",
+     "t": "de deuda: todo tu sueldo queda libre.",
+     "k": "bien"
+    },
+    {
+     "c": "5,4 %",
+     "t": "de los ingresos va a vivienda (1.125 $ al mes), lejos del 36 %.",
+     "k": "bien"
+    },
+    {
+     "c": "750 $",
+     "t": "por encima de la reserva y los gastos previstos: el colchón es fino.",
+     "k": "ojo"
+    }
+   ]
   },
   {
    "clave": "fh.debt_what_to_look_into",
    "punto": "Deudas",
    "titulo": "Para revisar",
    "en": "**We should look into**: keeping the household debt-free as college costs begin, whether college can be paid from cash and savings rather than borrowing given the thin cushion and current cash flow, and confirming that the Amex Gold and Porsche Cayenne showing no balance reflects today's position.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Seguir sin deudas cuando empiece la universidad.",
+     "k": "rev"
+    },
+    {
+     "t": "Si pagar la universidad con ahorro en vez de pedir prestado.",
+     "k": "rev"
+    },
+    {
+     "t": "Confirmar que la Amex Gold y el Porsche siguen a cero.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "fh.savings_short_observations",
    "punto": "Ahorro",
    "titulo": "Lo que dice el informe",
    "en": "- You save $60,000 a year, 24% of your income, which is a strong habit. But your yearly outflows come to 102.6% of income, so you run about $6,418 a year short (-2.6%). With $80,000 in cash and no debt, this is a tension between goals and cash on hand, not a sign of distress.\n- None of your savings goes to retirement accounts. $50,000 a year (20% of income) goes to taxable accounts, and your retirement balances are 0. The projection shows your savings running out at age 73, so where the savings go matters as much as how much you save.\n- College funding still needed is $98,838, with nothing in 529 accounts. Ethan's $12,500 payment is due in August 2027, and a $6,000 vacation in January 2027 brings near-term goals to $18,500. College and retirement are competing for the same limited yearly cash flow. Retirement carries the larger long-term risk, but college is the nearer one.\n- Your cash covers 7.9 months of essential expenses, above the 5 to 6 month range. After the $18,500 of near-term goals, it covers 6.1 months, and only $750 sits above both the reserve and those goals. The yearly shortfall draws on that same cash, so the reserve is sound today but has little slack if goals recur.\n- Taxes on your taxable holdings cost about $3,032 a year. Cost basis and purchase dates are missing for those holdings, so it is not yet clear which could be sold with less tax.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "60.000 $",
+     "t": "ahorras al año (24 %), pero el mes sale 6.418 $ en negativo.",
+     "k": "ojo"
+    },
+    {
+     "c": "50.000 $",
+     "t": "al año van a cuentas normales; nada a la jubilación.",
+     "k": "mal"
+    },
+    {
+     "c": "98.838 $",
+     "t": "faltan para la universidad; Ethan paga 12.500 $ en agosto de 2027.",
+     "k": "ojo"
+    },
+    {
+     "c": "750 $",
+     "t": "por encima de la reserva tras 18.500 $ de gastos previstos.",
+     "k": "ojo"
+    },
+    {
+     "c": "3.032 $",
+     "t": "al año en impuestos por tus inversiones.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "fh.savings_what_to_look_into",
    "punto": "Ahorro",
    "titulo": "Para revisar",
    "en": "**We should look into**: using an HSA and a deductible traditional IRA, easing the yearly tax cost on your taxable holdings, and balancing college and retirement saving while cashflow is negative. It would also help to confirm whether a workplace 401(k) exists.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Usar una HSA y un IRA deducible.",
+     "k": "rev"
+    },
+    {
+     "t": "Bajar los impuestos de tus inversiones.",
+     "k": "rev"
+    },
+    {
+     "t": "Equilibrar universidad y jubilación.",
+     "k": "rev"
+    },
+    {
+     "t": "Confirmar si hay 401(k) en el trabajo.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "fh.protection_emergency_fund_short_observations",
    "punto": "Colchón",
    "titulo": "Lo que dice el informe",
    "en": "- Your $80,000 of cash covers 7.9 months of essential expenses, above the recommended 5 to 6 months for your household, so you have no shortfall. That is a real strength, especially with two children relying on your income.\n- Once your near-term goals are set aside, a vacation and Ethan's college payment totaling $18,500, your cover comes to 6.1 months. Only $750 sits above both the reserve and those goals, so the cushion is thinner than the headline suggests while you fund your children's college.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "80.000 $",
+     "t": "cubren 7,9 meses, por encima de los 5 a 6 recomendados.",
+     "k": "bien"
+    },
+    {
+     "c": "750 $",
+     "t": "de margen tras las vacaciones y el pago de Ethan (18.500 $).",
+     "k": "ojo"
+    }
+   ]
   },
   {
    "clave": "fh.protection_intro",
    "punto": "Seguros",
    "titulo": "Lo que dice el informe",
    "en": "Your cash is a real strength, covering 7.9 months of essential expenses against the 5 to 6 months generally recommended, though the cushion narrows once near-term goals such as Ethan's college are set aside. Because Ethan and Ava depend on your $250,000 income, you now hold $2,000,000 of term life insurance, a $2,000,000 umbrella policy and long-term disability cover, and this section looks at how your reserve, life cover and liability protection fit together.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "El efectivo es un punto fuerte, aunque baja con los gastos de la universidad.",
+     "k": "bien"
+    },
+    {
+     "c": "2.000.000 $",
+     "t": "de vida y de umbrella, más incapacidad, para Ethan y Ava.",
+     "k": "bien"
+    }
+   ]
   },
   {
    "clave": "fh.protection_life_insurance_short_observations",
    "punto": "Seguros",
    "titulo": "Seguro de vida",
    "en": "- You hold $2,000,000 of 20-year term life insurance, within the recommended range of $1,250,000 to $2,500,000 for your household. That leaves no shortfall and no excess. You are the only adult, and Ethan (18) and Ava (16) both depend on you, so this cover sits where your household is most exposed.\n- Your $250,000 income is what supports both children. Their college costs of $12,500 per year each begin in August 2026 for Ethan and August 2028 for Ava.\n- College funding of $98,838 is still needed beyond current 529 balances. Your life cover would help meet that obligation if your income stopped.\n- Your credit card and vehicle balances are zero, so no debt adds to the amount of cover needed.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "2.000.000 $",
+     "t": "de seguro de vida, dentro de lo recomendado (1.250.000 $ a 2.500.000 $).",
+     "k": "bien"
+    },
+    {
+     "c": "250.000 $",
+     "t": "de sueldo sostienen a Ethan y Ava.",
+     "k": "info"
+    },
+    {
+     "c": "98.838 $",
+     "t": "de universidad que el seguro ayudaría a cubrir.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "fh.protection_umbrella_short_observations",
    "punto": "Seguros",
    "titulo": "Responsabilidad civil",
    "en": "- You hold a $2,000,000 umbrella policy, which meets the minimum recommended cover of $2,000,000, so there is no gap. This cover is in place for the part of your protection where one liability claim could do the most damage.\n- A claim could still reach the $980,000 of equity in your home ($900,000) and your Porsche Cayenne ($80,000), and the umbrella sits in front of both. They still show as uninsured, so the underlying home and auto cover is worth confirming.\n- Your liquid assets of $415,000 are also behind this cover, against a net worth of $1,395,000. That is a large share of what you have built, which is why the cover matters more than the dollar figure alone suggests.\n- Your strong cash and the lack of debt balances add to that resilience. Together with the umbrella, they put your liability protection on firm footing.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "2.000.000 $",
+     "t": "de umbrella: cumple el mínimo.",
+     "k": "bien"
+    },
+    {
+     "t": "Casa y Porsche Cayenne aparecen sin seguro: conviene confirmarlo.",
+     "k": "rev"
+    },
+    {
+     "c": "415.000 $",
+     "t": "líquidos protegidos por esta póliza.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.snapshot_main",
    "punto": "cartera",
    "titulo": "Foto de las cuentas",
    "en": "This snapshot draws on the accounts you hold: a brokerage account of about $300,000, two custodial accounts for Ethan and Ava of about $35,000 combined, and $80,000 of cash in checking and savings. All of it is held by you, as the only adult in the household. Taken together, your investments lean heavily toward stocks, held mostly through broad US funds.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "300.000 $",
+     "t": "en la cuenta de bolsa, 35.000 $ en las cuentas de los hijos y 80.000 $ en efectivo.",
+     "k": "info"
+    },
+    {
+     "t": "Mucha bolsa, casi toda en fondos de EE. UU.",
+     "k": "ojo"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_intro",
    "punto": "cartera",
    "titulo": "La tensión principal",
    "en": "This portfolio leans toward stock growth, yet it has to carry several jobs at once: income in retirement, two college starts, and a near-term cash need, all drawing on the same limited pool of savings. Growth-oriented investing, concentrated in one market and one sector, brings larger swings in value, while some of what the household must fund falls due within a few years and cannot easily wait out a downturn. The evaluation that follows looks at how well the portfolio's present behavior fits those competing jobs for you and your two children.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "La cartera busca crecer, pero debe pagar jubilación, dos universidades y gastos cercanos.",
+     "k": "ojo"
+    },
+    {
+     "t": "Parte del dinero se necesita pronto y no puede esperar a que pase una caída.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_what_it_needs_to_do",
    "punto": "cartera",
    "titulo": "Lo que debería hacer la cartera",
    "en": "- **Retirement income** — You plan to retire at 65, and guaranteed income covers about 25% of what you expect to spend. The projection shows savings and investments running out at age 73, so this money has to help close that gap over the long term. Your retirement accounts hold nothing today, so your brokerage account, cash and guaranteed income carry this job.\n- **College for Ethan and Ava** — Ava starts in August 2028, and Ethan's next payment of $12,500 is due August 2027. About $98,838 is still needed beyond current college-account balances, which are $0. Part of this money has a short timeline, and it competes with retirement for the same savings.\n- **Near-term cash** — Your $80,000 of cash covers about 7.9 months of essential expenses, or 6.1 months after the vacation in January 2027 and Ethan's college payment. Those goals total $18,500. That leaves only about $750 above your reserve, so this money has to stay available and steady, especially while your yearly cash flow runs about $6,418 short.\n- **Children's custodial money** — The two custodial accounts hold about $35,000 combined and are held for Ethan and Ava. Their job is to serve the children, separate from your own retirement and cash needs.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "25 %",
+     "t": "del gasto de jubilación garantizado; el ahorro se acaba a los 73.",
+     "k": "mal"
+    },
+    {
+     "c": "98.838 $",
+     "t": "para la universidad; Ethan paga 12.500 $ en agosto de 2027.",
+     "k": "ojo"
+    },
+    {
+     "c": "750 $",
+     "t": "por encima de la reserva: este dinero tiene que estar disponible.",
+     "k": "ojo"
+    },
+    {
+     "c": "35.000 $",
+     "t": "en las cuentas de Ethan y Ava, aparte de lo tuyo.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_what_its_actually_doing",
    "punto": "cartera",
    "titulo": "Lo que hace de verdad",
    "en": "- **Stock-heavy growth** — Your long-term accounts are 84.6% stocks against an 80.0% target, and the children's accounts are almost entirely stocks. That gives strong growth potential and bigger swings in value. Over three years the mix returned 15.6% a year, in line with a comparable diversified portfolio. Money needed for college within a few years rides the same swings.\n\n- **One sector, one market** — Technology is 30.6% of your stock holdings and 92.6% is in the United States, above the 85% line. Both come from the funds you own, since you hold no individual stocks. In practice, your results lean heavily on one sector and one country. Your $250,000 salary is also 17.9% of your net worth.\n\n- **Tax cost in taxable accounts** — Every investment dollar sits in taxable accounts, which lose about $3,032 a year to tax. Dividends taxed at 35.8% drive most of it. JNK costs $1,229 and SCHD in your brokerage account costs $853. Because 93.0% of the bill sits in the brokerage account, that account sets most of your yearly drag.\n\n- **No retirement balances** — Your retirement accounts hold nothing, so retirement depends on the brokerage account, your cash and guaranteed income. Your $80,000 of cash covers 7.9 months of essentials, but only $750 sits above the reserve and near-term goals. With a $6,418 yearly shortfall, that cushion is thin if goals recur.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "84,6 %",
+     "t": "en bolsa; dio un 15,6 % al año, pero el dinero de la universidad oscila igual.",
+     "k": "ojo"
+    },
+    {
+     "c": "92,6 %",
+     "t": "en EE. UU. y 30,6 % en tecnología.",
+     "k": "ojo"
+    },
+    {
+     "c": "3.032 $",
+     "t": "al año en impuestos; JNK 1.229 $ y SCHD 853 $.",
+     "k": "mal"
+    },
+    {
+     "t": "Nada en cuentas de jubilación.",
+     "k": "mal"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_performance_timeline",
    "punto": "cartera",
    "titulo": "Cómo se ha portado",
    "en": "Over the three years from November 2023 to November 2026, your portfolio grew an average of 15.56% a year. A diversified portfolio holding the same overall share of stocks grew 16.97% a year, so you trailed it by about 1.4 percentage points. Against the Growth benchmark set at your target mix, which returned 17.62%, the shortfall was about $2,270 over the period. That is a small gap, and the paths stayed close. Your value swung less than the comparison (8.88% against 10.30%). Your return for each unit of risk taken was 1.35 against 1.30. Your worst fall was 11.95%, against 13.35% for the comparison, and it was recovered in 78 days.\n\nThe most meaningful pattern is how you moved in rising and falling markets. You captured about 66% of the market's gains and about 90% of its losses. So you gave up more of the upside than you saved on the downside. Your three long-term investment accounts, about $335,000 together, returned about 19.4% a year. That was slightly ahead of their own comparison on return for each unit of risk (1.43 against 1.40). Three years is a short history, so treat these readings as a description of the period, not a forecast.\n\nTwo moments in the data show the cushioning. In the April 2025 tariff-pause rally, you fell 2.52% against 3.78% for the comparison. After the Federal Reserve's final rate hike in July 2023, you fell 4.60% against 5.60%. Both differences are modest and come from a short record, so they show a tendency and do not prove one.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "15,56 %",
+     "t": "al año en 3 años, frente al 16,97 % de una cartera parecida.",
+     "k": "info"
+    },
+    {
+     "c": "11,95 %",
+     "t": "de peor caída (la referencia, 13,35 %), recuperada en 78 días.",
+     "k": "bien"
+    },
+    {
+     "c": "66 %",
+     "t": "de las subidas y 90 % de las bajadas.",
+     "k": "ojo"
+    },
+    {
+     "t": "Tres años es poco: no es una previsión.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_whats_working",
    "punto": "cartera",
    "titulo": "Lo que funciona",
    "en": "- **Cash reserve** — You hold $80,000 in checking and savings, covering 7.9 months of essential expenses, or 6.1 months after your January 2027 vacation and Ethan's August 2027 college payment. You carry no debt, so an income disruption would not force you to sell investments in a downturn.\n\n- **Saving habit** — You save $60,000 a year, which is 24% of your $250,000 gross pay and above the 20% benchmark we look for. Money moves into investments every year as a set habit, not from whatever remains at year-end.\n\n- **Simple, low-cost structure** — You hold eight positions in broad, low-cost ETFs, such as VTI at a 0.03% expense ratio, and no individual stocks. No single company can sink the portfolio, and none of your funds duplicate each other within the same category.\n\n- **Resilience in market stress** — Your portfolio returned 15.6% annualized over three years with 8.9% volatility and a Sharpe ratio of 1.35, against 1.30 for a comparable diversified portfolio. In the April 2025 tariff pause you fell 2.52% against 3.78%, and in the July 2023 Fed final hike 4.60% against 5.60%.\n\n- **Money set aside for the children** — Your two custodial accounts hold about $35,000 combined in VTI and SCHD: $20,000 for Ethan and $15,000 for Ava. They returned about 21.7% and 21.9% annualized over three years, showing you have funded the children's future steadily.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "80.000 $",
+     "t": "de colchón y sin deudas: no tendrías que vender en una caída.",
+     "k": "bien"
+    },
+    {
+     "c": "60.000 $",
+     "t": "ahorras al año, el 24 % del sueldo.",
+     "k": "bien"
+    },
+    {
+     "t": "Ocho fondos baratos y sin acciones sueltas.",
+     "k": "bien"
+    },
+    {
+     "c": "35.000 $",
+     "t": "ya apartados para Ethan y Ava.",
+     "k": "bien"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_priorities",
    "punto": "cartera",
    "titulo": "Lo que hay que cambiar",
    "en": "- **Retirement shortfall** — Your projection shows savings and investments running out at age 73, with an average draw of 12.2% at the start of retirement and $0 in retirement accounts. This is the largest planning gap, so the portfolio needs a clearer, deliberate role in funding retirement income.\n\n- **Yearly shortfall** — After expenses of $129,600, which now include the new insurance premiums, your savings capacity is a shortfall of $6,418 a year. You are saving while running a small negative balance, so the cash cushion of about $750 will not refill from cashflow.\n\n- **College funding** — About $98,838 is still needed for college, and your 529 balance is $0. Ethan's $12,500 payment is due in August 2027. This competes with retirement while you run a $6,418 yearly shortfall, so how existing savings are directed matters most.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "73 años",
+     "t": "se acaba el ahorro y hay 0 $ en cuentas de jubilación.",
+     "k": "mal"
+    },
+    {
+     "c": "6.418 $",
+     "t": "de déficit al año: el colchón de 750 $ no se rellena.",
+     "k": "ojo"
+    },
+    {
+     "c": "98.838 $",
+     "t": "para la universidad, con el 529 a 0 $.",
+     "k": "ojo"
+    }
+   ]
   },
   {
    "clave": "ia.recommendations_main",
    "punto": "cartera",
    "titulo": "Lo que recomienda el análisis",
    "en": "- **Protect the children first** — Your $2,000,000 of term life insurance sits within the recommended range of $1,250,000 to $2,500,000, and long-term disability cover is in place. With two dependents, this protects Ethan and Ava if your income stopped. Keeping this cover in place as they head to college is worthwhile.\n- **Close the umbrella and property gap** — Your $2,000,000 umbrella policy meets the recommended minimum, so there is no umbrella gap. Your home and the Porsche Cayenne still show as uninsured. Because your assets are substantial, one liability claim could reach your savings, so confirming cover on both is worthwhile.\n- **Start building retirement savings** — Your retirement account balances are $0, and the projection shows savings running out at age 73. Retirement is 17 years away, so steady contributions can still change this. The sooner this is addressed, the more it can help you provide for the years ahead.\n- **Use tax-advantaged accounts if they are open to you** — If your health plan qualifies, you could contribute up to $4,400 to an HSA, with $0 contributed so far. That is worth about $1,408 a year in tax at 32%. Whether you have a workplace 401(k) is unknown, so we draw no conclusion there. After expenses and savings you are about $6,418 a year short, so redirecting what you already save, rather than adding more, keeps this realistic.\n- **Plan for college within your cash** — College funding still needed is $98,838, and Ethan's $12,500 payment is due August 2027. Your $80,000 of cash is strong, but only $750 sits above your reserve and near-term goals. With a yearly shortfall of $6,418 rather than a surplus, savings will not refill that cushion, and college and retirement saving compete for money that is not there yet.\n- **Keep an eye on concentration and tax cost** — Technology is 30.6% of your stock holdings and US exposure is 92.6%. Your investments also cost about $3,032 a year in tax, with JNK the largest piece at $1,229. Broadening exposure and easing that tax cost would make your portfolio more resilient. Cost basis and purchase dates are missing, so adding them would help.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Mantener el seguro de vida y de incapacidad mientras Ethan y Ava estudian.",
+     "k": "rev"
+    },
+    {
+     "t": "Confirmar el seguro de la casa y del Porsche Cayenne.",
+     "k": "rev"
+    },
+    {
+     "c": "73 años",
+     "t": "se acaba el ahorro: empezar a aportar a la jubilación ya.",
+     "k": "rev"
+    },
+    {
+     "c": "1.408 $",
+     "t": "menos de impuestos al año con 4.400 $ en una HSA.",
+     "k": "rev"
+    },
+    {
+     "c": "3.032 $",
+     "t": "al año en impuestos: repartir mejor y rebajarlos.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "ia.recommendations_scenarios",
    "punto": "cartera",
    "titulo": "Cómo se comporta en mercados reales",
    "en": "- **Calmer than a comparable portfolio in three of the sharpest pullbacks** — In the 90-day tariff pause episode (April 2025), your portfolio fell 2.52% while a diversified portfolio with the same overall stock share fell 3.78%. When the Fed ended its rate hikes (July 2023), you fell 4.60% against 5.60%. When the Supreme Court struck down the tariffs (February 2026), you fell 0.96% against 1.68%. In each case you lost less than the comparison: 1.26, 1.00 and 0.72 percentage points less. These are past results and do not promise the same in future.\n- **A fair picture, including the weak spot** — In the Liberation Day tariff drop (April 2025), you fell 9.87% against 9.51%, slightly more than the comparison. That was your largest single-event fall. Over the full three years the portfolio's worst peak-to-trough fall was 11.95%, milder than the 13.35% for the comparison portfolio, and it recovered in 78 days.\n- **Smoother ride, with a trade-off** — Your portfolio earned 15.56% a year over three years, against 16.97% for the comparison. It moved less, with volatility of 8.88% against 10.30%. It kept about 66% of the market's gains in rising periods and took about 90% of its losses in falling ones. So it gave up more of the upside than it saved on the downside. Return per unit of risk was 1.35 against 1.30, so overall efficiency is in line.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "2,52 %",
+     "t": "cayó en la pausa de aranceles de abril de 2025 (la referencia, 3,78 %).",
+     "k": "bien"
+    },
+    {
+     "c": "9,87 %",
+     "t": "cayó con el anuncio de aranceles de abril de 2025, algo más que la referencia (9,51 %).",
+     "k": "ojo"
+    },
+    {
+     "c": "66 %",
+     "t": "de las subidas y 90 % de las bajadas: menos vaivén, menos ganancia.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_verdict",
    "punto": "impuestos",
    "titulo": "Cuentas de jubilación",
    "en": "You hold no retirement accounts today, so the balances are 0, but what you are doing right is saving steadily: your 24% savings rate ($60,000 a year) is strong, and because it sits in cash and taxable accounts it stays accessible. The vulnerability is that nothing is building in a retirement account, so your projection shows savings and investments running out at age 73, with $1,448,673 of planned spending unpaid by the end of the plan at age 91. Guaranteed income of $38,336 a year covers 25% of the $153,672 yearly spending need, which leaves a $115,335 annual gap and an average draw of 12.2% of savings at the start of retirement. You have 17 years until your target retirement age of 65, so there is still time to change this, but college costs for Ethan and Ava will compete for your savings, which now run a yearly shortfall of $6,418 after the new insurance premiums. You could contribute up to $7,500 to a deductible traditional IRA, with 0 contributed so far, while Roth IRA contributions are not permitted for you; the employer-plan limit is $24,500, but whether you have a 401(k) is not in the data, so no conclusion can be drawn there. The next step is a clear, sequenced path for retirement saving, set against the college timeline, that redirects part of what you already save rather than adding to it.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "60.000 $",
+     "t": "ahorras al año: buen hábito, pero nada en cuentas de jubilación.",
+     "k": "ojo"
+    },
+    {
+     "c": "1.448.673 $",
+     "t": "de gasto sin cubrir; el ahorro se acaba a los 73.",
+     "k": "mal"
+    },
+    {
+     "c": "17 años",
+     "t": "hasta los 65: aún hay tiempo para cambiarlo.",
+     "k": "info"
+    },
+    {
+     "c": "7.500 $",
+     "t": "en un IRA deducible, redirigiendo parte de lo que ya ahorras.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_also_meaningful",
    "punto": "impuestos",
    "titulo": "Cuenta de salud (HSA)",
    "en": "You have no HSA today: nothing has been contributed, and you could contribute up to $4,400 a year if your health plan is HSA-eligible. At your 32% rate, that would save about $1,408 in tax each year, a concrete return for a small change. Your yearly cashflow is currently about $6,418 short, so treat this as a secondary step. Retirement funding, where your savings run out at age 73, and closing that shortfall come first. An HSA contribution fits after those, and you can size it to what your cashflow allows, for example by redirecting part of the $60,000 you already save each year instead of adding new money. Eligibility and your health plan are not in the data yet, so confirm that your plan qualifies before you contribute. The tax-drag review shows no HSA-related cost, so the case rests on the tax savings from contributing.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "4.400 $",
+     "t": "al año en una HSA ahorrarían unos 1.408 $ de impuestos.",
+     "k": "rev"
+    },
+    {
+     "t": "Va después de la jubilación; confirma antes que tu seguro lo permite.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "score.explainer",
    "punto": "__nota",
    "titulo": "Cómo se calcula la nota",
    "en": "## Key takeaways\n- The published score is 82, in the strong band. Liquidity, debt and protection are solid, and no binding limit caps the score. The score before the limit is the same.\n- Protection does not hold the score back. The weaker areas are cash flow and investing, mainly one large VTI position.\n- The top move is homeowners insurance on the primary home to close a coverage gap. The published score moves from 82 to 84 after that move.\n- Cutting VTI concentration is the next move. Adding $58,300 toward that change lifts the published score from 82 to 83.\n\n## Cash flow\n- The savings rate is 24%, but retirement accounts receive none of it.\n- Housing obligations are 5.4% of income, which is light and does not strain the household.\n- College payments begin in August 2026 and August 2028, so these goals draw on the same cash as everyday savings.\n\n## Debt\n- The household has no debt. Debt-only DTI is 0% and the home is owned outright.\n- Debt is a strength and does not drag on the score.\n\n## Protection\n- Life cover of $2,000,000 gives a 193% mortality ratio, and an umbrella policy is in place. Protection does not hold the score back.\n- The primary home and the Porsche Cayenne still show as uninsured. Homeowners cover on the home is the top move.\n\n## Liquidity\n- Cash is $80,000, covering 7.9 months of essential expenses. That falls to 6.1 months after near-term goals of $18,500.\n- Cash above the reserve and goals is only $750, so the cushion is thin.\n\n## Investing\n- VTI is 39% of investable assets. Technology is 30.6% of equity and US exposure is 92.6%, so the mix is concentrated.\n- The invested mix is about 85% growth. Moving to 80% growth, about $17,100 of the invested book, is another listed move.\n- Retirement accounts hold 0. Projected savings run out at age 73, with guaranteed income covering 25% of the spending need.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "82",
+     "t": "de nota, banda fuerte. Liquidez, deudas y seguros van bien.",
+     "k": "bien"
+    },
+    {
+     "c": "84",
+     "t": "con seguro de hogar para la casa: el mejor paso.",
+     "k": "rev"
+    },
+    {
+     "c": "39 %",
+     "t": "de lo invertible en VTI: reducirlo sube la nota a 83.",
+     "k": "ojo"
+    },
+    {
+     "c": "24 %",
+     "t": "de ahorro, pero nada va a la jubilación; el ahorro se acaba a los 73.",
+     "k": "mal"
+    }
+   ]
   },
   {
    "clave": "score.message",
    "punto": "__nota",
    "titulo": "Qué significa la nota",
    "en": "A score of 82 places you above average, with some strong areas in your financial life but lacking a cohesive strategy for achieving your goals. Don't settle for just above average; develop a plan to make informed decisions and optimize your financial resources.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "82",
+     "t": "de nota: por encima de la media, pero falta un plan que lo una todo.",
+     "k": "info"
+    }
+   ]
   }
  ],
  "lectura": "Samantha prioriza proteger a Ethan y Ava y asegurarse de tener tranquilidad a largo plazo. Lo que más le moverá es saber hasta cuándo le duran los ahorros. También le interesará la concentración de sus inversiones y confirmar que su colchón es suficiente.",

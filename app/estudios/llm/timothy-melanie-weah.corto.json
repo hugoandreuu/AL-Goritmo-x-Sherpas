@@ -1,0 +1,156 @@
+{
+  "fh.summary_main": [
+    { "c": "270.000 $", "t": "al año entre los dos; 210.000 $ invertidos y 150.000 $ en efectivo.", "k": "info" },
+    { "c": "93 %", "t": "del gasto de jubilación cubierto y el dinero no se acaba. Punto fuerte.", "k": "bien" },
+    { "c": "60.223 $", "t": "de efectivo por encima de la reserva, parado mientras hay huecos.", "k": "ojo" },
+    { "c": "140.000 $", "t": "de seguro de vida Timothy (mínimo 750.000 $) y 110.000 $ Melanie (600.000 $). Sin umbrella.", "k": "mal" },
+    { "c": "113.509 $", "t": "faltan para la universidad: 0 $ en el 529.", "k": "mal" }
+  ],
+  "fh.summary_recommendations": [
+    { "t": "Usar parte del efectivo sobrante para el seguro de vida de los dos.", "k": "rev" },
+    { "t": "Valorar una póliza de responsabilidad civil (umbrella).", "k": "rev" },
+    { "t": "Quitar la tarjeta, la deuda más cara, con ese mismo efectivo.", "k": "rev" },
+    { "t": "Empezar a ahorrar para la universidad de Liam y Josh.", "k": "rev" },
+    { "t": "Acordar juntos cuánto riesgo queréis en las inversiones.", "k": "rev" }
+  ],
+  "ia.summary_main": [
+    { "t": "Jubilación en camino, sin hueco en el plan.", "k": "bien" },
+    { "c": "113.508,60 $", "t": "faltan para la universidad; no hay nada apartado.", "k": "mal" },
+    { "c": "22,8 %", "t": "de los ingresos ahorráis. El efectivo rinde un 0,09 %.", "k": "ojo" },
+    { "c": "7.000 $", "t": "al año podría dar poner a trabajar el efectivo.", "k": "info" },
+    { "c": "36.960,75 $", "t": "de margen al año, pero los gastos parecen infravalorados: confirmarlos.", "k": "rev" }
+  ],
+  "fh.retirement_short_observations": [
+    { "c": "93 %", "t": "de los 184.303,51 $ al año que necesitaréis lo cubren los ingresos.", "k": "bien" },
+    { "c": "171.055,83 $", "t": "al año de ingresos garantizados (Seguridad Social y rentas).", "k": "info" },
+    { "c": "2.371.900,89 $", "t": "quedarían al final del plan: buen margen.", "k": "bien" },
+    { "c": "2030", "t": "y otros años el mes saldrá negativo. Sin coste de cuidados a largo plazo.", "k": "ojo" }
+  ],
+  "fh.retirement_what_to_look_into": [
+    { "t": "Lo seguros que son los ingresos de la Seguridad Social y las rentas.", "k": "rev" },
+    { "t": "Cómo se pagan los años con el mes en negativo.", "k": "rev" },
+    { "t": "Confirmar el gasto real.", "k": "rev" }
+  ],
+  "fh.assets_short_observations": [
+    { "c": "350.000 $", "t": "en casa, el 44,4 % de todo; solo 50.000 $ de hipoteca.", "k": "info" },
+    { "c": "150.000 $", "t": "en efectivo frente a 210.000 $ invertidos: mucho dinero que no crece.", "k": "ojo" },
+    { "c": "81,2 %", "t": "en bolsa frente al 98,0 % objetivo; perfiles distintos.", "k": "info" },
+    { "c": "8.000 $", "t": "y 6.000 $ al año de las empresas: no dejáis nada sin cobrar.", "k": "bien" }
+  ],
+  "fh.assets_what_to_look_into": [
+    { "t": "Cómo encajan los 150.000 $ de efectivo con lo invertido.", "k": "rev" },
+    { "t": "Si os convienen IRA y una HSA.", "k": "rev" },
+    { "t": "Si el 81,2 % en bolsa encaja con cada uno.", "k": "rev" }
+  ],
+  "fh.debt_short_observations": [
+    { "c": "93.000 $", "t": "de deuda: el 13,2 % de los ingresos. Manejable.", "k": "bien" },
+    { "c": "18 %", "t": "de interés en la tarjeta Chase de 18.000 $: la única deuda cara.", "k": "mal" },
+    { "c": "15,1 %", "t": "de los ingresos con la vivienda, muy por debajo del 36 %.", "k": "bien" },
+    { "c": "2039", "t": "se acabaría la tarjeta a 300 $ al mes (septiembre).", "k": "ojo" },
+    { "c": "60.222,50 $", "t": "por encima de la reserva: compararlo con la tarjeta.", "k": "rev" }
+  ],
+  "fh.debt_what_to_look_into": [
+    { "t": "La tarjeta frente al efectivo de sobra.", "k": "rev" },
+    { "t": "Cuándo se acaba la tarjeta al ritmo actual.", "k": "rev" },
+    { "t": "Confirmar el gasto mensual.", "k": "rev" }
+  ],
+  "fh.savings_short_observations": [
+    { "c": "61.500 $", "t": "ahorráis al año, el 22,8 %, con todo lo de las empresas.", "k": "bien" },
+    { "c": "36.960,75 $", "t": "de margen al año, aunque el gasto puede estar infravalorado.", "k": "ojo" },
+    { "c": "60.222,50 $", "t": "por encima de la reserva y de las vacaciones de 6.000 $.", "k": "info" },
+    { "c": "4.609,22 $", "t": "más al año para la universidad: hoy hay 0 $ en el 529.", "k": "mal" },
+    { "c": "5.250,10 $", "t": "podría poner cada uno en su Roth IRA.", "k": "rev" }
+  ],
+  "fh.savings_what_to_look_into": [
+    { "t": "Confirmar el gasto real del día a día.", "k": "rev" },
+    { "t": "Usar el efectivo sobrante para universidad y la tarjeta al 18 %.", "k": "rev" },
+    { "t": "Si encajan aportaciones al Roth IRA.", "k": "rev" }
+  ],
+  "fh.protection_emergency_fund_short_observations": [
+    { "c": "16 meses", "t": "de gastos cubre el efectivo (150.801 $); se recomiendan 8 a 9.", "k": "bien" },
+    { "c": "60.223 $", "t": "por encima de la reserva y los gastos previstos, disponibles.", "k": "info" }
+  ],
+  "fh.protection_intro": [
+    { "t": "El colchón es un punto fuerte.", "k": "bien" },
+    { "t": "Seguro de vida y responsabilidad civil son lo más expuesto, con Liam y Josh a cargo.", "k": "mal" }
+  ],
+  "fh.protection_life_insurance_short_observations": [
+    { "c": "610.000 $", "t": "le faltan a Timothy (tiene 140.000 $).", "k": "mal" },
+    { "c": "490.000 $", "t": "le faltan a Melanie (tiene 110.000 $).", "k": "mal" },
+    { "t": "Dos sueldos, 150.000 $ y 120.000 $, y dos niños pequeños.", "k": "info" },
+    { "c": "113.509 $", "t": "de universidad y 93.000 $ de deudas seguirían ahí.", "k": "info" }
+  ],
+  "fh.protection_umbrella_short_observations": [
+    { "c": "0 $", "t": "de responsabilidad civil frente a 1.000.000 $ recomendado.", "k": "mal" },
+    { "c": "360.000 $", "t": "líquidos quedarían al alcance de una demanda.", "k": "ojo" },
+    { "t": "Casa y coches están asegurados, pero eso no cubre este hueco.", "k": "info" }
+  ],
+  "ia.snapshot_main": [
+    { "c": "210.000 $", "t": "invertidos en cuentas de jubilación y de bolsa, aparte de 150.000 $ en efectivo.", "k": "info" },
+    { "c": "77 %", "t": "de lo invertido está en bolsa.", "k": "ojo" }
+  ],
+  "ia.portfolio_today_intro": [
+    { "t": "Las inversiones van más arriesgadas que el perfil moderado que decís.", "k": "ojo" },
+    { "t": "Mucho efectivo que no rinde, mientras la tarjeta cara sigue abierta.", "k": "mal" }
+  ],
+  "ia.portfolio_today_what_it_needs_to_do": [
+    { "c": "93 %", "t": "del gasto de jubilación cubierto: solo hay que mantener el rumbo.", "k": "bien" },
+    { "c": "113.508,60 $", "t": "para la universidad (Liam en 2038, Josh en 2041).", "k": "mal" },
+    { "c": "150.800 $", "t": "de efectivo: la reserva está más que cubierta.", "k": "bien" },
+    { "c": "210.000 $", "t": "para crecer a largo plazo, con un riesgo cómodo para los dos.", "k": "info" }
+  ],
+  "ia.portfolio_today_what_its_actually_doing": [
+    { "c": "77 %", "t": "en bolsa frente al 60 % objetivo: oscilará más.", "k": "ojo" },
+    { "c": "30 %", "t": "de la bolsa en tecnología, a través de fondos.", "k": "info" },
+    { "c": "12.740 $", "t": "en un fondo apalancado (UPRO) en el Roth de Timothy.", "k": "ojo" },
+    { "c": "0,09 %", "t": "rinde el efectivo, mientras la tarjeta cobra un 18 %.", "k": "mal" }
+  ],
+  "ia.portfolio_today_performance_timeline": [
+    { "c": "11,7 %", "t": "al año en 3 años, frente al 12,7 % de una cartera parecida.", "k": "info" },
+    { "c": "9 %", "t": "de peor caída, recuperada en 37 días.", "k": "bien" },
+    { "c": "41 %", "t": "dio el Roth de Timothy, con mucho vaivén por el fondo apalancado.", "k": "ojo" },
+    { "t": "Son tres episodios: no es una previsión.", "k": "info" }
+  ],
+  "ia.portfolio_today_whats_working": [
+    { "c": "2.371.900,89 $", "t": "al final del plan y ningún hueco de jubilación.", "k": "bien" },
+    { "c": "61.500 $", "t": "ahorráis al año, un 22,78 % de los ingresos.", "k": "bien" },
+    { "c": "14.000 $", "t": "al año de las empresas, sin dejar nada.", "k": "bien" },
+    { "c": "16 meses", "t": "de colchón: un imprevisto no obliga a vender.", "k": "bien" }
+  ],
+  "ia.portfolio_today_priorities": [
+    { "c": "77 %", "t": "en bolsa, tecnología al 30 % y 12.740 $ en UPRO: bajar el riesgo.", "k": "ojo" },
+    { "c": "60.222,50 $", "t": "sobrantes mientras la tarjeta (18.000 $) cobra un 18 % y el 529 está a 0.", "k": "mal" },
+    { "c": "2.808 $", "t": "al año ganaríais con un buen tipo para el efectivo.", "k": "rev" }
+  ],
+  "ia.recommendations_main": [
+    { "c": "7.000 $", "t": "al año podría dar poner a trabajar el efectivo sobrante.", "k": "rev" },
+    { "c": "18.000 $", "t": "de tarjeta al 18 %: valorar pagarla con parte del efectivo.", "k": "rev" },
+    { "c": "4.609 $", "t": "más al año para empezar la universidad de Liam y Josh.", "k": "rev" },
+    { "c": "5.760 $", "t": "menos de impuestos si aportáis más al 401(k) (10.500 $ y 13.500 $).", "k": "rev" },
+    { "c": "77,4 %", "t": "en bolsa frente al 60,0 %: acordar el riesgo.", "k": "rev" }
+  ],
+  "ia.recommendations_scenarios": [
+    { "c": "11,7 %", "t": "al año en 3 años, con vaivenes muy parecidos a la referencia.", "k": "info" },
+    { "c": "7,1 %", "t": "cayó con los aranceles de abril de 2025 (la referencia, 6,2 %).", "k": "ojo" },
+    { "c": "9,15 %", "t": "fue la peor caída del hogar gracias al efectivo; 37 días en recuperarse.", "k": "bien" }
+  ],
+  "ia.portfolio_today_verdict": [
+    { "c": "22,8 %", "t": "ahorráis y las empresas ponen 6.000 $ y 8.000 $: plan cubierto.", "k": "bien" },
+    { "c": "77,4 %", "t": "en bolsa frente al 60,0 %, con UPRO y tecnología al 30,0 %.", "k": "ojo" },
+    { "c": "5.760 $", "t": "de impuestos menos: Timothy puede sumar 10.500 $ y Melanie 13.500 $.", "k": "rev" }
+  ],
+  "ia.portfolio_today_also_meaningful": [
+    { "t": "La HSA va después de la tarjeta al 18 %.", "k": "info" },
+    { "c": "8.750 $", "t": "entre los dos, unos 2.100 $ menos de impuestos si el seguro lo permite.", "k": "rev" }
+  ],
+  "score.explainer": [
+    { "c": "60", "t": "de nota; sin dos techos sería unos 68.", "k": "ojo" },
+    { "c": "18 %", "t": "de la tarjeta y el hueco del seguro de vida (33 %) ponen techo.", "k": "mal" },
+    { "c": "6.800 $", "t": "pagados a la tarjeta desde el efectivo: nota de 60 a 62.", "k": "rev" },
+    { "c": "73", "t": "con la tarjeta y el seguro de vida en 491.800 $.", "k": "bien" },
+    { "c": "16 meses", "t": "de efectivo: lo más fuerte.", "k": "bien" }
+  ],
+  "score.message": [
+    { "c": "60", "t": "de nota: vais tirando, pero hay margen para ordenar y sacar más partido.", "k": "ojo" }
+  ]
+}

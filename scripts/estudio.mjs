@@ -23,7 +23,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { leerPuntos, NARRATIVA, cifrasIguales } from './puntos.mjs';
+import { leerPuntos, NARRATIVA, cifrasIguales, cortoValido } from './puntos.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'app', 'estudios');
@@ -591,6 +591,7 @@ function aplicar(E, ok) {
 
 const CACHE = slug => path.join(OUT, 'llm', slug + '.json');
 const TRAD = slug => path.join(OUT, 'llm', slug + '.informe.json');
+const CORTO = slug => path.join(OUT, 'llm', slug + '.corto.json');
 
 // Reaplica una respuesta del LLM ya guardada, pasándola otra vez por el control de cifras.
 function reaplicar(E, guardado) {
@@ -953,6 +954,9 @@ async function main() {
       return { clave, punto, titulo, en, es };
     }).filter(Boolean);
     ['explainer', 'message'].forEach(c => { const en = get(d.fh, 'score.' + c); if (en) { const clave = 'score.' + c, es = trad[clave] && cifrasIguales(en, trad[clave]) ? trad[clave] : null; E.narrativa.push({ clave, punto: '__nota', titulo: c === 'explainer' ? 'Cómo se calcula la nota' : 'Qué significa la nota', en, es }); } });
+    // Resumen corto en español de cada texto del informe (app/estudios/llm/<caso>.corto.json), con control de cifras.
+    const corto = fs.existsSync(CORTO(slug)) ? JSON.parse(fs.readFileSync(CORTO(slug), 'utf8')) : {};
+    E.narrativa.forEach(n => { const mal = corto[n.clave] ? cortoValido(n.en, corto[n.clave]) : 'falta'; if (mal) { if (corto[n.clave]) g.avisos.push(`Resumen corto de ${n.clave} descartado: ${mal}.`); } else n.corto = corto[n.clave]; });
     let crudo = null;
     if (!sinLlm) {
       try {

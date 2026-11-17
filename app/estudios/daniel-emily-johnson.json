@@ -4620,189 +4620,657 @@
    "punto": "__nota",
    "titulo": "Resumen del informe",
    "en": "- You have a solid base to work from. Two salaries bring in $280,000 a year, your net worth is $511,000, and you have $330,000 in investable assets. Your home is about two-thirds of your assets, but only $190,000 of it is equity against a $560,000 mortgage. Bills are being met, and about $15,032 a year is left over after your outflows.\n- The central tension is that several needs draw on that same $15,032: retirement saving, a larger cash reserve, protection cover and college funding. Nothing here ranks them, so it is a tradeoff for the two of you to weigh together, calmly and without blame.\n- Retirement is the largest gap. Nothing is going into your two 401(k)s today, and each of you could contribute up to $24,500 a year. Closing the gap would take about $34,165 more a year, which is more than twice your free cash flow. As a projection to age 91, income covers about 49% of a $124,071 yearly need, savings pay about $62,932 a year, and your savings last with about $260,272 left at the end.\n- Your cushion and your family's protection are thinner than they could be. Accessible cash of $19,000 is about $92,360 short of the cash target once your near-term vacation goal is included. Life cover is $250,000 for Daniel and $200,000 for Emily, well below the recommended ranges. There is no umbrella policy, against a recommended $1,000,000.\n- You do have strengths to build on. Your debt payments are manageable, with housing and debt together about 27% of income. The 529 holds $30,000 with $8,000 going in each year, though a $106,552 college funding gap remains. The $18,000 card at 24.9% is on track to be cleared by January 2034 at current payments.\n- A realistic direction is to decide together how the $15,032 is shared among the cash reserve, life and umbrella cover, retirement contributions and the 529. Checking whether your employers offer a 401(k) match is a good first look, since none is recorded today.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "280.000 $",
+     "t": "al año entre los dos sueldos; 511.000 $ de patrimonio neto.",
+     "k": "bien"
+    },
+    {
+     "c": "15.032 $",
+     "t": "os sobran al año, y de ahí tiran jubilación, colchón, seguros y universidad.",
+     "k": "ojo"
+    },
+    {
+     "c": "34.165 $",
+     "t": "más al año harían falta para la jubilación: más del doble de lo que sobra.",
+     "k": "mal"
+    },
+    {
+     "c": "92.360 $",
+     "t": "os faltan de efectivo. Seguros de vida bajos y sin umbrella.",
+     "k": "mal"
+    },
+    {
+     "c": "27 %",
+     "t": "de los ingresos van a vivienda y deudas: manejable.",
+     "k": "bien"
+    }
+   ]
   },
   {
    "clave": "fh.summary_recommendations",
    "punto": "__nota",
    "titulo": "Recomendaciones del informe",
    "en": "- Start by strengthening your protection, since it matters most to you: review life cover for both of you, which sits well below the recommended ranges, and look at adding umbrella liability cover, since none is in place today.\n- Build your cash reserve toward the recommended 8 to 9 months of essential expenses, because accessible cash currently covers only a small fraction of that.\n- Raise your retirement saving, which is currently $0 in contributions, and confirm with each employer whether a match exists so you know what your deferrals could earn.\n- Treat the 24.9% credit card as the costliest debt, and look at whether a higher monthly payment fits alongside your other goals.\n- Talk through together how protection, cash, retirement and the 529 compete for the same yearly free cash flow, so that the trade-offs are a shared choice rather than a default.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Primero, la protección: seguro de vida de los dos y responsabilidad civil.",
+     "k": "rev"
+    },
+    {
+     "t": "Ir llenando el colchón hasta 8 a 9 meses de gastos básicos.",
+     "k": "rev"
+    },
+    {
+     "t": "Empezar a ahorrar para la jubilación (hoy, 0 $) y preguntar por la aportación de la empresa.",
+     "k": "rev"
+    },
+    {
+     "t": "La tarjeta al 24,9 % es la deuda más cara.",
+     "k": "rev"
+    },
+    {
+     "t": "Decidir juntos cómo repartir el margen de cada año.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "ia.summary_main",
    "punto": "__nota",
    "titulo": "Resumen del análisis de inversiones",
    "en": "- **Your portfolio's job** — Your portfolio is meant to fund a comfortable retirement. The biggest gap is retirement: the projected shortfall is $1,427,456 in today's dollars, and closing it would take about $34,165 a year of additional savings. Savings left at the end of the plan are $260,272.\n\n- **Your numbers in plain English** — Retirement spending needs about $124,071 a year, and the plan leaves $62,932 a year for savings to cover. Your strengths are earned income and positive free cash flow of $15,032 a year. Non-mortgage debt payments are $15,840 a year; total debt payments, including the mortgage, are $65,040 a year, and debt-only DTI is 23.2%.\n\n- **Where to start** — Savings and cash compete for the same $15,032 a year, so take them in steps. Retirement saving is the largest need, at $34,165 a year. Rebuilding cash matters too: accessible cash is $92,360 short of a $111,360 to $124,717.50 target. Protection is covered elsewhere in this report.\n\n- **One caveat** — Free cash flow of $15,032 a year leaves a thin margin against these needs, so treat savings amounts as a starting point to confirm together. Long-term care is not planned for.\n\n- **Worth watching** — Annual salary is 54.79% of your net worth, so your household leans heavily on earned income. Keep this in view, with no action now.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "1.427.456 $",
+     "t": "le faltan a la jubilación; cerrarlo pide 34.165 $ más al año.",
+     "k": "mal"
+    },
+    {
+     "c": "124.071 $",
+     "t": "al año de gasto en la jubilación; 62.932 $ saldrían del ahorro.",
+     "k": "info"
+    },
+    {
+     "c": "92.360 $",
+     "t": "os faltan para el efectivo recomendado.",
+     "k": "ojo"
+    },
+    {
+     "c": "54,79 %",
+     "t": "de vuestro patrimonio equivale a los sueldos: dependéis mucho de ellos.",
+     "k": "ojo"
+    }
+   ]
   },
   {
    "clave": "fh.retirement_short_observations",
    "punto": "jubilacion",
    "titulo": "Lo que dice el informe",
    "en": "- Your plan projects that your money lasts to age 91, with $260,272 of savings left in today's dollars. That is a projection over the plan horizon, not a certainty, and it depends on savings covering about half of your retirement spending.\n- Income is projected to cover 49% of your $124,071 yearly retirement spending need, and Social Security supplies nearly all of it. The rest, about $62,932 a year on average, would come from savings, so what you build before retiring matters a great deal.\n- Drawing an average of 5.5% of your savings at the start of retirement is a meaningful pace. It holds through age 91 in the projection, but the cushion at the end is modest, and no long-term care cost is included.\n- Nothing is going into retirement contributions today. You could each contribute up to $24,500 a year to a 401(k), and each of you currently contributes $0. Whether an employer match is available isn't confirmed.\n- Emily plans to stop work at 60 and Daniel at 62, and your risk comfort differs (Daniel Growth, Emily Moderate). Since the plan leans on savings, it is worth checking that reliance against each of your comfort levels.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "91 años",
+     "t": "llega el dinero, con 260.272 $ al final. Es una proyección.",
+     "k": "bien"
+    },
+    {
+     "c": "49 %",
+     "t": "del gasto (124.071 $ al año) lo cubren los ingresos; el resto, 62.932 $, el ahorro.",
+     "k": "ojo"
+    },
+    {
+     "c": "0 $",
+     "t": "aportáis hoy a la jubilación. Cada uno podría poner hasta 24.500 $ al año.",
+     "k": "mal"
+    },
+    {
+     "t": "Emily se jubila a los 60 y Daniel a los 62, con perfiles de riesgo distintos.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "fh.retirement_what_to_look_into",
    "punto": "jubilacion",
    "titulo": "Para revisar",
    "en": "**We should look into**: how retirement saving and the emergency reserve could share your limited cash flow, and confirming any employer match.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Cómo repartir el poco margen entre jubilación y colchón.",
+     "k": "rev"
+    },
+    {
+     "t": "Confirmar si la empresa hace aportación.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "fh.assets_short_observations",
    "punto": "Inversiones",
    "titulo": "Lo que dice el informe",
    "en": "- Most of your wealth sits in your home: $750,000 of your $1,129,000 in total assets, or 66.4%. Only $190,000 of that is yours after the mortgage, so the home is 37.2% of your net worth, while your $330,000 of invested savings are 64.6%. Your net worth rests more on investments than on the house, and home equity is harder to use for emergencies or retirement.\n- You hold $14,000 in cash, just 1.2% of your total assets. About $6,000 a year goes into cash and $12,000 a year into your brokerage account, so your current saving is going to cash and taxable savings. The cash cushion is the thinnest part of the picture, while the invested savings give you a steadier base.\n- Your $560,000 mortgage against the $750,000 home leaves 25.3% equity. That is above the 20% level and below the 50% level, so you own a modest share of the home and still owe about three-quarters of its value.\n- Your two 401(k)s hold $250,000 combined ($150,000 Daniel, $100,000 Emily), but nothing is going into them each year. Your invested savings are 60.2% in stocks against an 80.0% target, so they are currently less stock-heavy than that target.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "750.000 $",
+     "t": "en casa, el 66,4 % de lo que tenéis; vuestra, solo 190.000 $.",
+     "k": "info"
+    },
+    {
+     "c": "14.000 $",
+     "t": "en efectivo, apenas el 1,2 %: lo más flojo.",
+     "k": "mal"
+    },
+    {
+     "c": "250.000 $",
+     "t": "en los dos 401(k), pero no entra nada cada año.",
+     "k": "ojo"
+    },
+    {
+     "c": "60,2 %",
+     "t": "en bolsa frente al 80,0 % objetivo.",
+     "k": "ojo"
+    }
+   ]
   },
   {
    "clave": "fh.assets_what_to_look_into",
    "punto": "Inversiones",
    "titulo": "Para revisar",
    "en": "**We should look into**: starting regular contributions to the two 401(k)s, how the 529 college plan's yearly funding compares with its target, and an HSA, plus whether each employer offers a match, which is the data to confirm.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Empezar a aportar a los dos 401(k).",
+     "k": "rev"
+    },
+    {
+     "t": "Si el 529 recibe lo que necesita cada año.",
+     "k": "rev"
+    },
+    {
+     "t": "Una HSA, y si la empresa aporta.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "fh.debt_short_observations",
    "punto": "Deudas",
    "titulo": "Lo que dice el informe",
    "en": "- Your debt is large but manageable: $618,000 in total, or 220.7% of your gross income, with $560,000 of it in the mortgage at 6.5%. Debt payments take 23.2% of your income, and housing-related obligations are 27.2%. That is below the 36%, 43% and 50% levels lenders commonly use, so this is a heavy load rather than a crisis.\n- Your home equity is $190,000, or 25.3% of the home's value. That is only modestly above the 20% mark, so it is a cushion but not a large one.\n- The $18,000 card at 24.9% is your most expensive debt by a wide margin. At $450 a month it is projected to be paid off in January 2034, about 7 years out. That is a projection and assumes the payment stays the same.\n- Your accessible cash of $19,000 covers about 1.4 months of essential expenses, far below the $106,860 to $120,217.50 (8 to 9 months) that would be a full reserve. Thin cash matters because an unexpected cost would have to be met from limited savings, or could land on the high-rate card.\n- Your annual cash flow is $15,032, and the card, the cash reserve and your other goals all compete for it. The card's rate costs the most per dollar owed, while the $87,860 gap to the minimum reserve is the larger shortfall in dollars. Both matter, and the data does not settle which should come first.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "618.000 $",
+     "t": "de deuda, casi todo hipoteca (560.000 $ al 6,5 %). Pesada, no crítica.",
+     "k": "ojo"
+    },
+    {
+     "c": "27,2 %",
+     "t": "de los ingresos va a vivienda y deudas, por debajo del 36 %.",
+     "k": "bien"
+    },
+    {
+     "c": "24,9 %",
+     "t": "de interés en la tarjeta de 18.000 $. A 450 $ al mes, se acaba en enero de 2034.",
+     "k": "mal"
+    },
+    {
+     "c": "87.860 $",
+     "t": "os faltan para la reserva mínima.",
+     "k": "mal"
+    }
+   ]
   },
   {
    "clave": "fh.debt_what_to_look_into",
    "punto": "Deudas",
    "titulo": "Para revisar",
    "en": "**We should look into**: how the mortgage payment fits alongside the emergency reserve and retirement saving, and when the 24.9% credit card will be paid off, currently January 2034 at current payments.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Cómo encaja la hipoteca con el colchón y la jubilación.",
+     "k": "rev"
+    },
+    {
+     "t": "Cuándo acabar la tarjeta al 24,9 % (hoy, enero de 2034).",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "fh.savings_short_observations",
    "punto": "Ahorro",
    "titulo": "Lo que dice el informe",
    "en": "- You have about $15,032 a year (5.4% of income) left after taxes, housing, debt payments, expenses and current savings. That is a thin cushion, and every savings goal has to draw on it.\n- Your emergency cash of $19,000 covers about 1.4 months of essential spending, against a recommended 8 to 9 months. The $87,860 shortfall to the minimum matters because a surprise would test this cushion first.\n- Nothing is going into retirement accounts today, and about $34,165 a year of extra saving is called for. Projections show a retirement gap of $1,427,456 at your target retirement ages.\n- That extra retirement saving is more than double your $15,032 of yearly cash flow, so the retirement gap can't be closed from today's cash flow alone.\n- Your current savings go to the 529 ($8,000 a year) and a taxable account ($12,000 a year), and education would still need about $1,928 a year more, rising each year. Retirement is the largest long-term figure, while emergency cash is the nearest protection, so the balance among the three is a tradeoff to work through.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "15.032 $",
+     "t": "os sobran al año, un 5,4 % de los ingresos. Margen fino.",
+     "k": "ojo"
+    },
+    {
+     "c": "1,4 meses",
+     "t": "de gastos cubre el efectivo; se recomiendan 8 a 9.",
+     "k": "mal"
+    },
+    {
+     "c": "34.165 $",
+     "t": "más al año pide la jubilación: no sale solo del margen actual.",
+     "k": "mal"
+    },
+    {
+     "c": "8.000 $",
+     "t": "al año al 529 y 12.000 $ a la cuenta de bolsa.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "fh.savings_what_to_look_into",
    "punto": "Ahorro",
    "titulo": "Para revisar",
    "en": "**We should look into**: building up the emergency cash reserve, directing more saving toward retirement, and confirming whether a workplace match applies.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Ir llenando el colchón.",
+     "k": "rev"
+    },
+    {
+     "t": "Ahorrar más para la jubilación.",
+     "k": "rev"
+    },
+    {
+     "t": "Confirmar si la empresa aporta.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "fh.protection_emergency_fund_short_observations",
    "punto": "Colchón",
    "titulo": "Lo que dice el informe",
    "en": "- Your accessible cash of $19,000 covers about 1.4 months of essential expenses, against a recommended 8 to 9 months for your household ($106,860 to $120,218). That leaves a shortfall of $87,860, which grows to $92,360 once the $4,500 vacation payment is set aside, and cover then drops to 1.1 months. With two incomes at risk ($160,000 and $120,000) and two children, this cushion is what you would lean on first if a paycheck were interrupted.\n- One thing working in your favor: you hold $5,000 in money market alongside your bank cash, and you have no excess cash sitting idle.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "19.000 $",
+     "t": "cubren 1,4 meses; se recomiendan 106.860 $ a 120.218 $.",
+     "k": "mal"
+    },
+    {
+     "c": "92.360 $",
+     "t": "faltan contando las vacaciones de 4.500 $.",
+     "k": "mal"
+    },
+    {
+     "c": "5.000 $",
+     "t": "en un fondo monetario y nada de efectivo parado.",
+     "k": "bien"
+    }
+   ]
   },
   {
    "clave": "fh.protection_intro",
    "punto": "Seguros",
    "titulo": "Lo que dice el informe",
    "en": "Protection keeps one bad event from undoing the rest of your plan, and the question is whether your cash, life insurance and liability cover would hold up if a paycheck stopped or a claim arrived. The sections below look at your emergency fund, life insurance and umbrella cover in turn, and each shows a meaningful gap that can be closed in steps.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Colchón, seguro de vida y responsabilidad civil: los tres tienen un hueco que se puede cerrar por pasos.",
+     "k": "ojo"
+    }
+   ]
   },
   {
    "clave": "fh.protection_life_insurance_short_observations",
    "punto": "Seguros",
    "titulo": "Seguro de vida",
    "en": "- Daniel has $250,000 of life insurance against a recommended $1,600,000 to $2,400,000, a shortfall of $1,350,000. Emily has $200,000 against $1,200,000 to $1,800,000, a shortfall of $1,000,000. You both hold some cover and neither of you is over-covered, but the gaps are large for a household with two children, a mortgage and college costs ahead.\n- Your household relies on both paychecks: $160,000 from Daniel and $120,000 from Emily. If either income were lost, the remaining one would have to carry the household's costs.\n- Obligations that would remain include a $560,000 mortgage, a vehicle loan, a student loan and an $18,000 credit card balance. College costs of $120,000 for Oliver and Sophia are also ahead, and the funding gap after current 529 balances is $107,000 (rounded).",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "1.350.000 $",
+     "t": "le faltan a Daniel (tiene 250.000 $).",
+     "k": "mal"
+    },
+    {
+     "c": "1.000.000 $",
+     "t": "le faltan a Emily (tiene 200.000 $).",
+     "k": "mal"
+    },
+    {
+     "t": "Dependéis de los dos sueldos: 160.000 $ y 120.000 $.",
+     "k": "info"
+    },
+    {
+     "c": "120.000 $",
+     "t": "de universidad para Oliver y Sophia, además de la hipoteca.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "fh.protection_umbrella_short_observations",
    "punto": "Seguros",
    "titulo": "Responsabilidad civil",
    "en": "- You have no umbrella policy, and the recommended minimum is $1,000,000, so that whole amount is currently uncovered. An umbrella adds liability protection above home and auto cover, which matters because one large claim could otherwise reach your savings and future earnings.\n- A claim could reach your home and vehicle, worth $785,000 with $197,000 of equity, and also the $344,000 you hold in liquid assets. Against a net worth of $511,000, an uncovered claim could be significant for your household.\n- Your home and your Toyota Highlander are both flagged as not insured in the data. That may only reflect missing detail, since nothing further is held on other property cover. Confirming what home and auto cover you already have would clarify what an umbrella would sit on top of.\n- Your two incomes ($160,000 and $120,000) are part of what a claim could put at risk, not only your assets. With two children at home, that adds weight to the missing layer. No cost for umbrella cover is available, so what it would take to close the gap is unknown.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "0 $",
+     "t": "de responsabilidad civil frente a 1.000.000 $ recomendado.",
+     "k": "mal"
+    },
+    {
+     "t": "Una demanda podría llegar a casa, coche y 344.000 $ líquidos.",
+     "k": "ojo"
+    },
+    {
+     "t": "Casa y Toyota aparecen sin seguro en los datos: confirmarlo.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "ia.snapshot_main",
    "punto": "cartera",
    "titulo": "Foto de las cuentas",
    "en": "Your household's net worth is $511,000, which includes your home and cash as well as your investments. Both of you earn salaries; income is a large part of your overall wealth and the cash on hand is small next to what a reserve would call for.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "511.000 $",
+     "t": "de patrimonio neto, con casa, efectivo e inversiones.",
+     "k": "info"
+    },
+    {
+     "t": "Los sueldos pesan mucho y el efectivo es poco para una reserva.",
+     "k": "ojo"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_intro",
    "punto": "cartera",
    "titulo": "La tensión principal",
    "en": "The central tension is that your household's wealth leans heavily on two salaries, while the cushions that would protect that income are still thin. Savings, reserves and protection all draw on the same limited yearly cash flow, so the portfolio is being asked to do more than it can yet do on its own. The sections that follow weigh the portfolio in that light: what it needs to do for your family, and what it is actually doing today.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "Todo depende de dos sueldos y los colchones que los protegen aún son finos.",
+     "k": "ojo"
+    },
+    {
+     "t": "Ahorro, reserva y seguros tiran del mismo margen.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_what_it_needs_to_do",
    "punto": "cartera",
    "titulo": "Lo que debería hacer la cartera",
    "en": "- **Retirement income** — The plan shows a retirement shortfall of $1,427,456 in today's dollars, and closing it would take about $34,165 a year of additional saving. Your two 401(k)s hold $250,000 and are the main pool for this long-term job. Neither you nor Emily is contributing to them today; each of you could contribute up to $24,500 a year. Daniel plans to retire at 62 and Emily at 60.\n- **Safety cushion** — Your accessible cash is $19,000, which covers about 1.4 months of essential spending. The cash target is $111,360 to $124,718 (8 to 9 months of essentials plus the $4,500 vacation due in January 2027), so the gap is $92,360. This money protects the family from a job or medical shock so long-term investments don't have to be sold at a bad time. Closing the gap will take time, because it draws on the same $15,032 of yearly free cash flow as your other goals.\n- **College funding** — The 529 holds $30,000 and receives $8,000 a year. A college funding gap of $106,552 remains. Its job is to cover education costs, so it is kept separate from your retirement and reserve money.\n- **Flexible savings** — The taxable brokerage account holds $50,000, including $5,000 of cash that counts toward your reserve. No specific purpose is defined for the rest, so it is treated as flexible money until you decide what it is for.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "1.427.456 $",
+     "t": "de hueco de jubilación; los 401(k) tienen 250.000 $ y no reciben nada.",
+     "k": "mal"
+    },
+    {
+     "c": "92.360 $",
+     "t": "de efectivo para no vender inversiones en mal momento.",
+     "k": "ojo"
+    },
+    {
+     "c": "106.552 $",
+     "t": "le faltan a la universidad; el 529 tiene 30.000 $.",
+     "k": "ojo"
+    },
+    {
+     "c": "50.000 $",
+     "t": "en la cuenta de bolsa, sin un fin decidido.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_what_its_actually_doing",
    "punto": "cartera",
    "titulo": "Lo que hace de verdad",
    "en": "- **Income-dependent wealth** — Your two salaries total $280,000, which is 54.79% of your $511,000 net worth. Your position leans on continued earnings more than on assets that can stand alone, so a pause in either paycheck would reach your plans quickly. No employer stock is identifiable, and unvested equity is $0.\n- **Thin cushion** — Accessible cash is $19,000, about 1.4 months of essential expenses, against a target of $111,360 to $124,717.50. That leaves a $92,360 gap. A job loss or medical bill would therefore be more likely to force sales of investments, possibly at a poor moment.\n- **Steady results, concentrated equity** — Your portfolio returned 13.7% a year over three years with volatility of 8.1%, close to a diversified portfolio at the same equity level. Technology is 35.6% of your stock holdings and the United States 88.6%. You hold no single stocks, but your equity funds are likely to move together.\n- **Savings squeezed by competing needs** — You have $15,032 a year of free cash flow, while closing the retirement gap of $1,427,456 would take $34,165 a year more. Nothing is going into either 401(k), and an $18,000 card at 24.9% also competes. Because the cash gap draws on the same dollars, no single need can be fully funded.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "54,79 %",
+     "t": "del patrimonio equivale a los sueldos: una pausa se nota rápido.",
+     "k": "ojo"
+    },
+    {
+     "c": "92.360 $",
+     "t": "de hueco de efectivo: un imprevisto obligaría a vender.",
+     "k": "mal"
+    },
+    {
+     "c": "13,7 %",
+     "t": "al año en 3 años; tecnología es el 35,6 % de la bolsa.",
+     "k": "info"
+    },
+    {
+     "c": "24,9 %",
+     "t": "de la tarjeta compite con la jubilación por el mismo dinero.",
+     "k": "mal"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_performance_timeline",
    "punto": "cartera",
    "titulo": "Cómo se ha portado",
    "en": "Over the three years to November 2026, your portfolio grew an average of 13.7% a year. Its swings were modest: the worst fall from a peak was 10.0%, and it recovered from that in 61 days. A diversified portfolio holding the same share of stocks returned 14.6% a year with a worst fall of 10.6%, so your result was close, a little lower in return and a little smoother along the way. The return you earned for each unit of risk taken was 1.24, against 1.28 for that comparison, which is a small difference.\n\nThe most meaningful behavior shows up in the tariff-related market events. When tariffs were announced on 2 April 2025, your portfolio fell 8.1% while the comparison fell 7.8%, so it fell about as much. When a pause was announced on 9 April 2025, your portfolio fell 2.3% against 3.1%, holding up better. Across the whole period your portfolio took part in about 87% of the market's gains and about 97% of its losses. In plain terms, it gave up more of the upside than it saved on the downside, though the paths stayed close throughout.\n\nThe evidence is limited to one three-year window and a few dated events, so a different period or a new market event could change the reading. A mix with more stocks, the kind your long-term goals are measured against, returned 17.6% a year over the same window, with a worst fall of 12.8%. That shows a more stock-heavy mix earned more in this period, with deeper falls. It describes how the mixes differ, not a sign that your portfolio did anything wrong.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "13,7 %",
+     "t": "al año en 3 años, frente al 14,6 % de una cartera parecida.",
+     "k": "info"
+    },
+    {
+     "c": "10,0 %",
+     "t": "de peor caída, recuperada en 61 días.",
+     "k": "bien"
+    },
+    {
+     "c": "87 %",
+     "t": "de las subidas y 97 % de las bajadas del mercado.",
+     "k": "ojo"
+    },
+    {
+     "t": "Es una sola ventana de tres años: no es una previsión.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_whats_working",
    "punto": "cartera",
    "titulo": "Lo que funciona",
    "en": "- **Positive cash flow** — You have $15,032 a year of free cash flow after expenses, debt payments and current savings. Your two incomes cover what you owe and leave a margin you can direct toward goals, even though it is thinner than the retirement and cash targets require.\n- **Debt payments** — Your debt-only DTI is 23.2%, within the levels lenders commonly use.\n- **Manageable housing cost** — Your housing-obligations ratio is 27.2%. Housing costs share your income with other needs, including savings and building the cash reserve.\n- **No single-stock risk** — You hold 0 individual stocks, and no two holdings in the same account duplicate each other. Technology, at 35.6% of your stock holdings, comes from funds, and Financial Services is next at 12.1%. No single company drives your investment results.\n- **Steady three-year results** — Your portfolio returned 13.7% annualized over three years, with volatility of 8.1% and a Sharpe of 1.24. A diversified portfolio with the same overall equity allocation delivered 14.6%, 8.6% and 1.28. Your worst drop was 9.97%, recovered in 61 days.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "15.032 $",
+     "t": "de margen al año: los ingresos cubren lo que debéis.",
+     "k": "bien"
+    },
+    {
+     "c": "23,2 %",
+     "t": "de los ingresos va a deudas, dentro de lo normal.",
+     "k": "bien"
+    },
+    {
+     "t": "Sin acciones sueltas: ninguna empresa decide vuestros resultados.",
+     "k": "bien"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_priorities",
    "punto": "cartera",
    "titulo": "Lo que hay que cambiar",
    "en": "- **Cash reserve** — Accessible cash is $19,000, about 1.4 months of essential spending, against a minimum target of $111,360, a gap of $92,360. A job loss or medical event could force you to sell long-term investments, so this cushion needs to grow as cash flow allows.\n- **Retirement savings** — The plan shows a retirement gap of $1,427,456, and closing it would take about $34,165 a year of added saving. Nothing goes into either 401(k) today, and Daniel and Emily could each contribute up to $24,500. Free cash flow is $15,032, so this shortfall needs steady, long-term attention.\n- **Income dependence** — Your $280,000 of salaries equals 54.79% of your $511,000 net worth, so your finances rest heavily on two paychecks. Reserves and protection need to strengthen so a pause in either income does not reach your long-term plans. The same limited cash flow serves all of these needs.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "92.360 $",
+     "t": "para la reserva mínima de 111.360 $.",
+     "k": "mal"
+    },
+    {
+     "c": "34.165 $",
+     "t": "más al año para la jubilación; cada uno puede aportar hasta 24.500 $.",
+     "k": "mal"
+    },
+    {
+     "c": "54,79 %",
+     "t": "del patrimonio son los sueldos: reforzar reservas y seguros.",
+     "k": "ojo"
+    }
+   ]
   },
   {
    "clave": "ia.recommendations_main",
    "punto": "cartera",
    "titulo": "Lo que recomienda el análisis",
    "en": "- **Protect your income with life cover** — The target is about $1,616,000 of added coverage, worth 5 points on your Financial Health score of 52. Please treat this as an amount to confirm against current policies, not an exact shortfall. It protects the family's income and home if one of you were lost.\n- **Add umbrella liability cover** — No umbrella cover is evident, and $1,000,000 is the recommended amount, worth 4 points of score. It guards your savings and home against a large liability claim. Together with life cover, these two steps are worth 8 points.\n- **Rebuild your cash reserve** — Your accessible cash is about $19,000, which leaves a gap of $92,360 against a total cash target of $111,360 to $124,717.50. Without it, a job loss or large bill could force you to sell investments at a poor time. Closing it will take time, so steady progress as cash flow allows is a sound goal.\n- **Build retirement savings in steps** — The projected retirement gap is $1,427,456, and closing it would take about $34,165 a year of added savings. Your free cash flow is $15,032 a year, so the need is larger than today's margin. Please confirm whether either employer offers a match, since that could make each dollar go further.\n- **Use your yearly margin deliberately** — Protection, the reserve and retirement all compete for the same $15,032 a year. Non-mortgage debt payments are $15,840 a year; total debt payments, including the mortgage, are $65,040 a year, or 23.2% of income. Raising annual savings alone would lift your score from 52 to 55. We suggest weighing these needs together, taking small, clear steps rather than all at once.\n- **Keep income dependence in view** — Your salaries equal 54.79% of your net worth, so the household leans heavily on earned income. That is another reason protection matters. Safeguarding your ability to earn supports every other goal here.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "1.616.000 $",
+     "t": "más de seguro de vida: +5 puntos sobre vuestra nota de 52.",
+     "k": "rev"
+    },
+    {
+     "c": "1.000.000 $",
+     "t": "de umbrella: +4 puntos. Con el seguro de vida, 8.",
+     "k": "rev"
+    },
+    {
+     "c": "92.360 $",
+     "t": "para la reserva, poco a poco.",
+     "k": "rev"
+    },
+    {
+     "c": "34.165 $",
+     "t": "más al año para la jubilación, y preguntar por la aportación de la empresa.",
+     "k": "rev"
+    },
+    {
+     "c": "55",
+     "t": "sería la nota solo subiendo el ahorro anual.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.recommendations_scenarios",
    "punto": "cartera",
    "titulo": "Cómo se comporta en mercados reales",
    "en": "- **Steady through the last three years** — Your portfolio earned about 13.7% a year over the past three years. Its worst drop was about 10.0%, and it recovered in 61 days. That is a little smoother than a diversified portfolio with the same overall stock share, which earned about 14.6% a year. These are past results, not a promise about what comes next.\n- **Held up better in two of the three tariff shocks** — When the 90-day tariff pause was announced in April 2025, your portfolio fell 2.3% while the comparison fell 3.1%. When the Supreme Court struck down the tariffs in February 2026, you fell 0.8% against 1.2%. In both, you lost less than the comparison.\n- **The sharpest fall was about the same as the comparison** — When the tariffs were first announced in early April 2025, your portfolio fell 8.1% against 7.8% for the comparison. That is slightly deeper, but very close. Across these three events, your portfolio behaved much like a diversified portfolio of similar risk. These events are history and don't tell us how a future downturn will go.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "10,0 %",
+     "t": "de peor caída en 3 años, recuperada en 61 días.",
+     "k": "bien"
+    },
+    {
+     "c": "2,3 %",
+     "t": "cayó en la pausa de aranceles de abril de 2025 (la referencia, 3,1 %).",
+     "k": "bien"
+    },
+    {
+     "c": "8,1 %",
+     "t": "cayó al anunciarse los aranceles, casi igual que la referencia.",
+     "k": "info"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_verdict",
    "punto": "impuestos",
    "titulo": "Cuentas de jubilación",
    "en": "Your two traditional 401(k)s are performing well, with Daniel's returning 15.8% and Emily's 13.5% annualized over three years, and the bonds held inside them sit in the right kind of account for their tax treatment. The weak point is that nothing is going into either plan: $0 is contributed, although you and Emily could each contribute up to $24,500 a year, traditional and Roth together. Without a change, the projected retirement gap is $1,427,456 in today's dollars, savings left at the end of the plan are $260,272, and closing the gap would take about $34,165 more savings a year. Your savings capacity is $15,032 a year, but it is still well short of that, and your cash reserve, the 529 and the 24.9% credit card compete for the same dollars. Contributing to these tax-deferred plans could lower your tax by about $11,760 a year, and estimated employer contributions of $6,400 and $4,800 are not being captured, though the match formulas are not in the data, so treat those amounts as unconfirmed. Agreeing a clear contribution path now, with the order of your savings decided alongside rebuilding your cash reserve, is the most important step you can take.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "15,8 %",
+     "t": "al año el 401(k) de Daniel y 13,5 % el de Emily.",
+     "k": "bien"
+    },
+    {
+     "c": "0 $",
+     "t": "aportados; cada uno podría poner hasta 24.500 $ al año.",
+     "k": "mal"
+    },
+    {
+     "c": "11.760 $",
+     "t": "menos de impuestos al año si aportáis.",
+     "k": "info"
+    },
+    {
+     "c": "6.400 $",
+     "t": "y 4.800 $ de la empresa que quizá no estáis cobrando (por confirmar).",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "ia.portfolio_today_also_meaningful",
    "punto": "impuestos",
    "titulo": "Cuenta de salud (HSA)",
    "en": "An HSA is a secondary item for you, well behind retirement saving and the emergency reserve, so it can wait until those larger priorities are settled. You have no HSA today and have contributed $0. Whether your health plan qualifies is not in the data, so the first step is to confirm eligibility. If your plan qualifies, you could contribute up to $8,750, and at your 24% marginal tax rate that would lower your tax by about $2,100 a year. It would also give you a dedicated place to set money aside for health costs. That benefit applies only if the plan qualifies. The data holds no HSA balance, no HSA investments and no tax-drag findings for an HSA, so nothing more can be said about the account yet. Tax-loss harvesting does not apply to an HSA, because a loss inside it gives no tax deduction.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "t": "La HSA va después de la jubilación y del colchón.",
+     "k": "info"
+    },
+    {
+     "c": "8.750 $",
+     "t": "podríais aportar si el seguro médico lo permite: unos 2.100 $ menos de impuestos.",
+     "k": "rev"
+    }
+   ]
   },
   {
    "clave": "score.message",
    "punto": "__nota",
    "titulo": "Qué significa la nota",
    "en": "With a score of 52, your financial health is below average, affecting not just your financial life but your overall well-being. Let's work together to take immediate steps toward organizing and clarifying your financial situation. Let me help you take control of your finances and improve the quality of your life.",
-   "es": null
+   "es": null,
+   "corto": [
+    {
+     "c": "52",
+     "t": "de nota: por debajo de la media. Toca ordenar las cosas paso a paso.",
+     "k": "ojo"
+    }
+   ]
   }
  ],
  "lectura": "A Daniel y Emily les mueve ante todo proteger a los niños y tener colchón líquido. Les preocupa cuánto cubren los seguros y cuánto aguanta su efectivo antes de tocarlo.",
