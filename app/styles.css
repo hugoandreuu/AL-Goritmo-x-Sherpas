@@ -1755,3 +1755,23 @@ i.pa { background: var(--accent); } i.pb { background: var(--navy); }
 .tpage .capa > summary svg { color: var(--sh-blue); }
 .tpage .capa:hover { background: #f7f9ff; }
 .tpage .capa[open] { border-left-color: var(--sh-deep); background: #fbfcff; }
+/* lo desplegado en «Ver más»: tablas, puntos del informe y todas las cifras, también con color */
+.tpage .capa[open] > summary { background: linear-gradient(90deg, #eef1ff 0%, #f6f3ff 100%); border-radius: 0 12px 0 0; color: var(--sh-deep); }
+.tpage .capa-tag { background: var(--sh-cta); color: #fff; }
+.tpage .pt { background: var(--tb); border-left: 4px solid var(--tc); padding-left: 9px; }
+.tpage .pt-ic { background: var(--tc); color: #fff; box-shadow: 0 3px 8px color-mix(in srgb, var(--tc) 30%, transparent); }
+.tpage .pt .pt-c { color: var(--tc); }
+.tpage .pt.k-info { --tc: var(--sh-deep); --tb: #eef1ff; }
+.tpage .pt.k-rev { background: #f7f5ff; border: 1px dashed var(--sh-light); border-left: 4px solid var(--sh-lav); }
+.tpage .tbl { border-color: #dfe5fb; }
+.tpage .tbl th { background: linear-gradient(90deg, #e9ecff 0%, #f1edff 100%); color: var(--sh-deep); font-weight: 700; }
+.tpage .tbl tbody tr:nth-child(even) td { background: #f8f9ff; }
+.tpage .tbl td:first-child { font-weight: 600; color: var(--ink); }
+.tpage .tbl td:last-child { color: var(--sh-deep); font-weight: 700; }
+.tpage .itile { position: relative; overflow: hidden; border: 0; background: linear-gradient(160deg, #eef2ff 0%, #f7f5ff 100%); box-shadow: inset 0 0 0 1px #dfe5fb; padding-top: 13px; }
+.tpage .itile::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--sh-cta); }
+.tpage .itile > b, .tpage .itile b.n { color: var(--sh-deep); }
+.tpage .itile small { color: #5b63a8; }
+.tpage .cf-chip { border-color: var(--sh-light); color: var(--sh-deep); }
+.tpage .cf-chip[aria-pressed="true"] { background: var(--sh-cta); border-color: var(--sh-deep); }
+.tpage .cf-h { color: var(--sh-deep); }
