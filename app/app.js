@@ -51,7 +51,7 @@
     try { localStorage.setItem('plan-v2-caso', slug); } catch (e) { /* nada */ }
     LAST_SCORE = null;
     document.querySelector('.brand').innerHTML = `<span class="logo" aria-hidden="true"></span>Plan ${esc(E.fam.apellido)} <small>· prototipo</small>`;
-    document.title = `${w('Vuestro', 'Tu')} plan en 5 minutos`;
+    document.title = `${w('Vuestro', 'Tu')} plan de futuro`;
   }
 
   // Nota según los pasos marcados. Solo notas que trae el plan: la de cada paso y las combinaciones que da.
@@ -233,7 +233,9 @@
   const origen = q => `<div class="origin">${ic(q.calc ? 'chart' : 'check', 14)}<span>${q.calc ? `Cuenta nuestra con cifras de ${w('vuestro', 'tu')} estudio: ${esc(q.calc)}` : `Cifra de ${w('vuestro', 'tu')} estudio`}</span></div>`;
   const proBlock = q => PRO() && q.pro ? `<div class="protech"><span class="tag navy">Para quien sabe de finanzas</span><p>${esc(q.pro)}</p><div class="src">Origen en el estudio: ${esc(q.origen)}</div></div>` : '';
 
-  const REACT = [['wow', () => w('No lo sabíamos', 'No lo sabía'), 'eye'], ['worry', () => w('Nos preocupa', 'Me preocupa'), 'help'], ['fix', () => w('Queremos arreglarlo', 'Quiero arreglarlo'), 'check']];
+  const REACT = [['wow', () => w('No lo sabíamos', 'No lo sabía'), 'eye'], ['worry', () => w('Nos preocupa', 'Me preocupa'), 'help'], ['fix', () => w('Queremos arreglarlo', 'Quiero arreglarlo'), 'check'], ['calm', () => w('Nos quedamos tranquilos', 'Me quedo tranquilo'), 'check'], ['keep', () => w('Queremos mantenerlo', 'Quiero mantenerlo'), 'heart']];
+  // En un dato que ya está bien no tiene sentido «arreglarlo»: otras tres reacciones.
+  const reactsDe = q => REACT.filter(([v]) => (q.tono === 'malo' ? ['wow', 'worry', 'fix'] : ['wow', 'calm', 'keep']).includes(v));
   let PEND = null, JUST = false, REVEAL_T = null;
 
   // --- C. Revelación: caja del dato, regla de la distancia, frase letra a letra, imagen, frase que toca y salida.
@@ -260,12 +262,12 @@
         <b class="big ${q.mid ? 'mid' : ''}"${count ? ` data-count='${JSON.stringify(count)}'` : ''}>${esc(q.plan)}</b><em>${esc(q.unidad)}</em>
         ${b === 'clavado' && !bad ? `<svg class="rv-tick" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>` : ''}</div>
       ${ruler(q, a.value)}
-      <div class="rv-prec" data-st="type"><small class="rv-band">${esc(BANDA[b]())}</small><h2 class="rv-type" data-text="${esc(tit)}">${esc(tit)}</h2></div>
+      <div class="rv-prec" data-st="type">${b === 'clavado' ? `<small class="rv-band">${esc(BANDA[b]())}</small>` : ''}<h2 class="rv-type" data-text="${esc(tit)}">${esc(tit)}</h2></div>
       <div class="rv-vis" data-st="vis">${vis(q)}</div>
       ${q.siente ? `<p class="rv-feel" data-st="fade">${q.siente}</p>` : ''}
       ${rvRoute(q)}
       <div class="rv-note" data-st="fade"><div class="rv-note-q">¿Qué ${w('os pasa', 'te pasa')} por la cabeza al ver esto?</div>
-        <div class="rx-row">${REACT.map(([v, l, i]) => `<button class="rx" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}"><span class="sg-ic">${ic(i, 18)}</span><span>${l()}</span></button>`).join('')}</div>
+        <div class="rx-row">${reactsDe(q).map(([v, l, i]) => `<button class="rx" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}"><span class="sg-ic">${ic(i, 18)}</span><span>${l()}</span></button>`).join('')}</div>
         <p class="saved rx-ok" ${r ? '' : 'hidden'}>${ic('check', 15)}Apuntado para ${w('vuestro', 'tu')} asesor</p>
         ${(S.notes || {})[q.id] ? '' : `<button class="link addnote" data-act="addnote">${ic('pen', 16)}Añadir algo con ${w('vuestras', 'tus')} palabras</button>`}
         <div class="note-w" ${(S.notes || {})[q.id] ? '' : 'hidden'}><label for="note" class="sr">Con ${w('vuestras', 'tus')} palabras</label>
@@ -374,7 +376,7 @@
   // --- B. Quiz abierto: primero sus palabras, después las preguntas del plan que tocan eso.
   function buildQuiz(match) {
     const ids = E.preguntas.map(q => q.id), first = ids.filter(id => match.includes(id));
-    QUIZ = [...(E.fam.pl ? ['who'] : []), 'phrase', 'level', ...first, ...ids.filter(id => !first.includes(id)), 'gain'];
+    QUIZ = [...(E.fam.pl ? ['who'] : []), 'phrase', ...first, ...ids.filter(id => !first.includes(id)), 'gain'];
   }
   const sinTilde = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   function temasDe(txt) {
@@ -474,7 +476,7 @@
     let head = '', body = '', dk = '';
     if (step === 'who') {
       const ad = E.fam.adultos;
-      head = `<h2 class="q">¿Quién mira el plan?</h2>`;
+      head = `<h2 class="q">¿Quién va a contestar?</h2>`;
       body = [['juntos', 'Los dos juntos', 'heart']].concat([['a', ad[0].nombre, 'eye'], ['b', ad[1].nombre, 'eye']]).map(([v, l, i], k) => `<button class="opt" style="--i:${k}" data-act="who" data-v="${v}" aria-pressed="${S.who === v}">${optBody(i, esc(l))}</button>`).join('');
     } else if (step === 'phrase') {
       head = `<h2 class="q">¿Qué es lo que más ${w('os ronda', 'te ronda')} la cabeza con el dinero?</h2><p class="muted">Con ${w('vuestras', 'tus')} palabras. ${SR ? `O ${w('decidlo', 'dilo')} en voz alta con el micrófono.` : `También ${w('podéis', 'puedes')} dictarlo con el micrófono del teclado.`}</p>`;
@@ -594,7 +596,9 @@
   // Filas del camino: de hoy a la jubilación. Lo que pasaría sin hacer nada se dice como tal.
   function caminoFilas() {
     const L = E.linea, fin = L.findIndex(x => x.c === 'end');
-    return (fin >= 0 ? L.slice(0, fin + 1) : L).map(x => x.c === 'warn' ? Object.assign({}, x, { t: /^sin cambios|si no se hace/i.test(x.t) ? x.t : `Si no se hace nada: ${low1(x.t)}` }) : x);
+    // Lo que pasa después de la jubilación y avisa (p. ej. «Aquí se acaban los ahorros») también sale, como en el informe.
+    const antes = (fin >= 0 ? L.slice(0, fin + 1) : L).map(x => x.c === 'warn' ? Object.assign({}, x, { t: /^sin cambios|si no se hace/i.test(x.t) ? x.t : `Si no se hace nada: ${low1(x.t)}` }) : x);
+    return fin >= 0 ? antes.concat(L.slice(fin + 1).filter(x => x.c === 'warn')) : antes; // tras la jubilación, el aviso tal cual lo dice el informe
   }
   // El roadmap se convierte en la barra de la ruta del informe.
   function alInforme() {
@@ -827,7 +831,7 @@
     return { open, resolved, yes: v.filter(x => x === 'yes').length, no: v.filter(x => x === 'no').length, pending: v.filter(x => x == null).length, n: E.pasos.length };
   }
   function nextStep() {
-    if (S.stage === 'pareja' && pjDone()) return { title: 'Reunión para empezar vuestro plan', mins: 30, days: 5, text: `Con vuestro asesor: ${pjConLista()}. Ya tiene lo que habéis contestado; no hace falta preparar nada.` };
+    if ((S.stage === 'pareja' || S.mode === 'pareja') && pjDone()) return { title: 'Reunión para empezar vuestro plan', mins: 30, days: 5, text: `Con vuestro asesor: ${pjConLista()}. Ya tiene lo que habéis contestado; no hace falta preparar nada.` };
     const c = counts();
     if (c.yes === c.n && c.open === 0) return { title: w('Listos para empezar', 'Todo listo para empezar'), mins: 20, days: 2, text: `${w('Habéis', 'Has')} aceptado todos los pasos y no queda ninguna duda. Una reunión corta para arrancar.` };
     if (c.pending === c.n && c.open === 0) return { title: `Primero, ${w('decidid', 'decide')} los pasos`, mins: 30, days: 5, text: `${w('Contestad', 'Contesta')} «¿${w('Os', 'Te')} convence?» en cada paso. Cuantas más dudas queden resueltas aquí, más corta será la reunión.` };
@@ -1246,8 +1250,9 @@
 
   function renderPlan() {
     const ns = nextStep(), c = counts(), acc = accepted(), sc = scoreFor(acc), max = E.nota.max;
-    let main = `<section class="planhero"><div class="kicker" style="margin:0">Plan de ${esc(E.fam.titulo)}</div>
-      <h1>«${esc(S.phrase || `${w('Vuestro', 'Tu')} plan`)}»</h1>
+    const dePareja = S.mode === 'pareja' && pjDone(); // ya vieron nota, pasos y reunión en el cierre de pareja
+    let main = `<section class="planhero ${dePareja ? 'corto' : ''}"><div class="kicker" style="margin:0">Plan de ${esc(E.fam.titulo)}</div>
+      <h1>${S.phrase ? `«${esc(S.phrase)}»` : esc(E.nota.max > E.nota.hoy ? `${w('Vuestro', 'Tu')} camino de ${E.nota.hoy} a ${E.nota.max}` : `${w('Vuestro', 'Tu')} plan, hoy en ${E.nota.hoy}`)}</h1>
       <div class="heroscore">${ring(sc.v, max)}
         <div><b class="hs-t">${acc.length ? `La nota que ${w('tendríais', 'tendrías')} al hacer lo elegido` : `${w('Vuestra', 'Tu')} nota de salud financiera, hoy`}</b>
         <p class="muted small" style="margin:.3em 0 0">${acc.length ? `Hoy es <b>${(() => { const h = E.pasos.filter(p => (S.done || {})[p.key]).map(p => p.key); return h.length ? scoreFor(h).v : E.nota.hoy; })()}</b>. ` : ''}${max > E.nota.hoy ? `Con todos los pasos de ${w('vuestro', 'tu')} plan llega a <b>${max}</b>. ` : ''}${w('Habéis elegido', 'Has elegido')} ${acc.length} de ${c.n}.${sc.parcial ? ' El plan da la nota de cada paso por separado.' : ''}</p></div></div></section>`;
@@ -1257,10 +1262,10 @@
       <div class="nodos">${nds.map(nodoCard).join('')}${rutaCard()}</div></div>`;
 
     main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Vuestro', 'Tu')} siguiente paso</div>
-      <div class="card close"><div class="meter">
+      <div class="card close">${dePareja && !c.yes ? '' : `<div class="meter">
         <div><b>${c.yes}/${c.n}</b><span class="tiny">pasos aceptados</span></div>
         <div><b>${c.resolved}</b><span class="tiny">dudas resueltas</span></div>
-        <div><b>${c.open}</b><span class="tiny">para la reunión</span></div></div>
+        <div><b>${c.open}</b><span class="tiny">para la reunión</span></div></div>`}
         ${S.gain ? `<p class="quote">Con esto resuelto: <b>«${esc(S.gain)}»</b></p>` : ''}
         ${S.booking ? bookedCard() : `<h2 style="margin-top:14px">${nx.title}</h2><p>${nx.text}</p>
         <ul class="ticks"><li>${ic('check', 16)}${w('Salís', 'Sales')} con el orden de ${w('vuestros', 'tus')} pasos y respuesta a ${w('vuestras', 'tus')} dudas</li><li>${ic('check', 16)}${nx.mins} minutos por videollamada</li><li>${ic('check', 16)}No hay que preparar nada</li></ul>
@@ -1270,7 +1275,7 @@
         ${S.booking ? '' : `<button class="link" style="width:100%" data-act="later">${window.__PREVIEW__ ? (S.later ? 'Sin prisa: el plan sigue aquí' : 'Ahora no') : S.later ? 'Recordatorios a los 3 y 30 días, en el calendario' : `Ahora no. ${w('Recordádnoslo', 'Recuérdamelo')} en 3 y en 30 días`}</button>`}</div>
       ${weekCard()}
       ${E.primer && (S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>Cómo comprobamos que el primer paso está hecho</small></span>${ic('arrow', 18)}</button>` : ''}
-      ${S.booking ? fold('hoja', ic('list', 16), `Lo que recibe ${w('vuestro', 'tu')} asesor`, `La hoja con ${w('vuestras', 'tus')} respuestas y dudas`, advisorSheet(), false) : ''}</div>`;
+      ${fold('hoja', ic('list', 16), S.booking ? `Lo que recibe ${w('vuestro', 'tu')} asesor` : `Lo que recibirá ${w('vuestro', 'tu')} asesor`, `La hoja con ${w('vuestras', 'tus')} respuestas y dudas${S.booking ? '' : ', antes de pedir nada'}`, advisorSheet(), false)}</div>`;
 
     main += `<p class="foot">Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor.</p>`;
 
@@ -1286,9 +1291,9 @@
     const acc = by('yes'), dud = by('doubt'), no = by('no'), open = S.doubts.filter(d => d.status === 'open'), res = S.doubts.filter(d => d.status === 'resolved');
     const ad = E.fam.adultos, quien = !E.fam.pl ? ad[0].nombre : S.who === 'juntos' ? `${ad[0].nombre} y ${ad[1].nombre}` : S.who === 'b' ? ad[1].nombre : ad[0].nombre;
     const catLabel = id => (E.dudas.find(c => c.id === id) || {}).label;
-    return `<div class="card" id="hoja"><div class="spread"><h3>Hoja para el asesor</h3><span class="tag good">Reunión pedida</span></div>
-      <p class="small"><b>${esc(b.label)}</b> · ${b.mins} min · ${esc(E.fam.titulo)} (${esc(quien)})</p>
-      <p class="tiny">Prototipo: no se envía nada. En producción, esta hoja le llega al asesor al confirmar.</p>
+    return `<div class="card" id="hoja"><div class="spread"><h3>Hoja para el asesor</h3>${b ? '<span class="tag good">Reunión pedida</span>' : '<span class="tag acc">Sin reunión todavía</span>'}</div>
+      <p class="small">${b ? `<b>${esc(b.label)}</b> · ${b.mins} min · ` : ''}${esc(E.fam.titulo)} (${esc(quien)})</p>
+      <p class="tiny">Prototipo: no se envía nada. En producción, esta hoja le llega al asesor al pedir la reunión.</p>
       ${E.lectura ? `<h3 style="margin-top:14px">Lectura del caso</h3><p>${esc(E.lectura)}</p>` : ''}
       ${S.phrase ? `<h3 style="margin-top:14px">Lo que más le${E.fam.pl ? 's' : ''} importa</h3><p>«${esc(S.phrase)}»</p>` : ''}
       ${S.gain ? `<h3>Qué cambiaría en casa, con sus palabras</h3><p>«${esc(S.gain)}»</p>` : ''}
@@ -1736,18 +1741,17 @@
           <button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>El calendario os lo recuerda y el enlace abre la comprobación del saldo</small></span>${ic('arrow', 18)}</button>`
           : `<button class="btn ghost block" data-act="cal" data-k="pay">${ic('cal', 18)} Elegir el día</button>`}</div>` : ''}
       <details class="pj-gets"><summary>${ic('chat', 14)} Lo que vuestro asesor ya sabe de vosotros</summary><ul>${pjGets().map(t => `<li>${esc(t)}</li>`).join('')}</ul></details>
-      <div class="pj-cta"><button class="btn ghost block" data-act="pjplan">Ver vuestro plan ${ic('arrow', 18)}</button><button class="link block" data-act="pjagain">Volver a empezar</button></div>
+      <div class="pj-cta"><button class="btn ghost block" data-act="pjplan">Ver el informe completo ${ic('arrow', 18)}</button><button class="link block" data-act="pjagain">Volver a empezar</button></div>
       <div class="dock pj-dock">${S.booking ? `<div class="datechip"><span class="dc-ic">${ic('chat', 22)}</span><div><small>Vuestra reunión</small><b>${esc(S.booking.label)}</b></div><button class="link small" data-act="book">Cambiar</button></div>`
         : `<button class="btn block pj-bigbtn" data-act="book">${ic('cal', 18)} Pedir reunión con el asesor</button>`}</div></div>`;
   }
   function pjIntro() {
     return `<div class="narrow pj-intro"><div class="pj-duo">${pAv('a', 'xl')}${pAv('b', 'xl')}</div>
       <h1 class="pj-h1">Vuestro dinero,<br>visto por los dos</h1>
-      <p class="muted">Cada uno contesta en privado y luego lo veis juntos. Unos 4 minutos.</p>
-      <ol class="pj-rules"><li><span>1</span><p>Cada uno, <b>en privado</b>: qué le ronda la cabeza con el dinero. Eso solo lo verá vuestro asesor.</p></li>
-        <li><span>2</span><p>Después, qué creéis de unas cifras de vuestro estudio y qué haríais ante una caída.</p></li>
-        <li><span>3</span><p>Lo destapáis <b>juntos</b>, lo comparáis con el estudio y veis qué propone vuestro plan.</p></li></ol>
-      <p class="tiny pj-trust">${ic('lock', 14)} Empieza ${esc(pName('a'))}. ${esc(pName('b'))}, no mires hasta que te toque.</p>
+      <p class="muted">Unos 4 minutos.</p>
+      <ol class="pj-rules"><li><span>1</span><p>Cada uno contesta <b>en privado</b>.</p></li>
+        <li><span>2</span><p>Lo destapáis <b>juntos</b> y lo comparáis con vuestro estudio.</p></li></ol>
+      <p class="tiny pj-trust">${ic('lock', 14)} ${esc(pName('b'))}, no mires hasta que te toque.</p>
       ${dock(`Empieza ${esc(pName('a'))}`, true, 'pjgo')}</div>`;
   }
   function renderPareja() {
@@ -1817,7 +1821,7 @@
     const ad = E.fam.adultos, enPareja = S.mode === 'pareja' && S.pj && S.pj.step > 0, enSolo = S.mode === 'solo' && S.qi > 0;
     return `<div class="doors"><p class="d-q">¿Quién va a ver el plan?</p>
       <button class="door duo" data-act="mode" data-v="pareja"><span class="pj-duo sm">${pAv('a')}${pAv('b')}</span>
-        <span class="d-tx"><b>${enPareja ? 'Seguir donde lo dejasteis' : 'Los dos juntos'}</b><span>En pareja, con un solo móvil. Cada uno contesta en privado.</span><small>Unos 3 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button>
+        <span class="d-tx"><b>${enPareja ? 'Seguir donde lo dejasteis' : 'Los dos juntos'}</b><span>En pareja, con un solo móvil. Cada uno contesta en privado.</span><small>Unos 4 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button>
       <button class="door solo" data-act="mode" data-v="solo"><span class="d-ic">${ic('eye', 22)}</span>
         <span class="d-tx"><b>${enSolo ? 'Seguir donde lo dejasteis' : 'Solo el quiz'}</b><span>Sin juego. Juntos, o ${esc(ad[0].nombre)} o ${esc(ad[1].nombre)} por su cuenta.</span><small>Unos 5 minutos</small></span><span class="arr">${ic('arrow', 20)}</span></button></div>`;
   }
