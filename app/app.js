@@ -494,8 +494,11 @@
           <button class="segb" style="--i:0" data-act="level" data-v="new" aria-pressed="${S.prefs.level === 'new'}">${ic('seed', 22)}<b>${w('Somos nuevos', 'Soy nuevo')} en esto</b><span>Sin tecnicismos y paso a paso</span></button>
           <button class="segb" style="--i:1" data-act="level" data-v="pro" aria-pressed="${S.prefs.level === 'pro'}">${ic('chart', 22)}<b>${w('Sabemos', 'Sé')} de finanzas</b><span>Con el detalle técnico a la vista</span></button></div>`;
     } else if (step === 'gain') {
-      head = `<h2 class="q">Si esto estuviera resuelto, ¿qué cambiaría en casa?</h2><p class="muted">${w('Elegid', 'Elige')} la que más se parezca.</p>`;
-      body = E.ganancias.map(([i, t], k) => `<button class="opt" style="--i:${k}" data-act="gain" data-v="${esc(t)}" aria-pressed="${S.gain === t}">${optBody(i, esc(t))}</button>`).join('');
+      // Como «¿qué os ronda la cabeza?»: tarjetas de color arriba y respuesta abierta (con micrófono) debajo.
+      head = `<h2 class="q">Si esto estuviera resuelto, ¿qué cambiaría en casa?</h2><p class="muted">${w('Elegid', 'Elige')} la que más se parezca o ${w('contadlo con vuestras', 'cuéntalo con tus')} palabras.</p>`;
+      body = `<div class="sugg-grid">${E.ganancias.map(([i, t], k) => `<button class="sg" style="--i:${k}" data-act="gsugg" data-v="${esc(t)}" aria-pressed="${S.gain === t}"><span class="sg-ic">${ic(i, 18)}</span><span class="sg-t">${esc(t)}</span></button>`).join('')}</div>
+        <p class="tiny sugg-t">O ${w('escribidlo con vuestras', 'escríbelo con tus')} palabras:</p>
+        <textarea id="gainfree" class="free" rows="2" maxlength="200" placeholder="Por ejemplo: ${w('saldríamos a cenar sin mirar la cuenta', 'saldría a cenar sin mirar la cuenta')}">${esc(S.gain || '')}</textarea>`;
       dk = dock(`Ver ${w('vuestro', 'tu')} plan`, S.gain, 'toplan');
     } else if (perm) {
       head = `<div class="permic">${ic('shield', 30)}</div><h2 class="q">Lo siguiente no es fácil, pero tiene arreglo.</h2><p class="muted">Hablamos de proteger a ${esc(E.fam.hijos.map(k => k.nombre).join(' y '))}. ¿Lo vemos ahora?</p>`;
@@ -1932,6 +1935,13 @@
       const bt = document.getElementById('pjsave'); if (bt) bt.disabled = false;
       save(); return;
     }
+    if (t.id === 'gainfree') {
+      const txt = t.value.trim(); S.gain = txt || null; save();
+      app.querySelectorAll('.sg').forEach(x => x.setAttribute('aria-pressed', String(!!txt && x.dataset.v === txt)));
+      const bt = app.querySelector('[data-act="toplan"]'); if (bt) bt.disabled = !txt;
+      if (window.Fondo) { Fondo.pulse(); Fondo.tint(txt ? 'pick' : null); }
+      return;
+    }
     if (t.id === 'worry' || t.id === 'note') {
       if (window.Fondo) Fondo.pulse();
       const bt = t.id === 'worry' ? app.querySelector('[data-act="worry"]:not([data-v])') : app.querySelector('.savebtn');
@@ -2061,7 +2071,8 @@
       }
       case 'nb': nbSheet(); break;
       case 'next': go(); break;
-      case 'toplan': preparePlan(); break;
+      case 'toplan': { const t = document.getElementById('gainfree'); if (t && t.value.trim()) S.gain = t.value.trim(); preparePlan(); break; }
+      case 'gsugg': { S.gain = v; save(); const t = document.getElementById('gainfree'); if (t) t.value = v; marcaSugg(b); const bt = app.querySelector('[data-act="toplan"]'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } break; }
       case 'nextslide': rulTo(Math.round(RUL.rot) + 1, 1); break;
       case 'prev': rulTo(Math.round(RUL.rot) - 1, -1); break;
       case 'goslide': rulTo(+v); break;
