@@ -1836,3 +1836,16 @@ body:has(.tpage), body:has(.plan-grid) { background: radial-gradient(70% 45% at 
 .tpage .pt.k-mal { --tc: var(--st-low); --tb: var(--st-low-soft); }
 .tpage .rp-bars b.neg { color: var(--st-low); }
 .plan-grid .rg-now, .tpage .rg-now { stroke: var(--sh-violet); }
+
+/* ---- Revisión del jurado (17 nov): botones fijos que tapaban contenido a 390x844. */
+/* «.grow» es también una rejilla global (gráfico de crecimiento): en la barra inferior el icono caía encima del texto. */
+.cta-in .btn.grow { display: inline-flex; gap: 8px; }
+/* Con la malla de fondo el dock era transparente y el botón (sobre todo desactivado) dejaba ver lo de debajo:
+   ahora lleva un velo con desenfoque que oculta el contenido que pasa por detrás. */
+body.fondo-on .dock, body[data-pj] .dock, .pj-dock { background: linear-gradient(to top, rgba(245,242,255,.97) 62%, rgba(245,242,255,0)); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); padding-top: 18px; }
+.qstage .dock .btn[data-act="worry"]:disabled, .qstage .dock .btn[data-act="pjfrase"]:disabled, .dock .btn#pjfsave:disabled { opacity: 1; background: #d7d9f0; color: #fff; box-shadow: none; }
+/* Deja sitio al final de la página para que el último bloque pueda subir por encima del botón fijo. */
+.pj-map { padding-bottom: 24px; }
+.planhero.corto .heroscore { display: none; }
+/* En las pantallas con campo de texto el botón va al final, sin quedarse fijo encima del campo. */
+.dock:has(#pjfsave), .dock:has(.btn[data-act="worry"]), .dock:has(.btn[data-act="toplan"]) { position: static; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
