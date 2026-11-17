@@ -124,35 +124,27 @@
   }
   // Tarjeta al final de cada revelación: qué parte de la ruta toca, sin decir aún cuál es la solución.
   function rvRoute(q) {
-    const p = pasoDe(q), i = p ? E.pasos.indexOf(p) : -1, ase = w('vuestro', 'tu') + ' asesor';
+    const p = pasoDe(q), ase = w('vuestro', 'tu') + ' asesor';
     let body;
     if (q.tono !== 'malo') {
       body = `<div class="rr-k good">${ic('check', 15)}Esto ya está bien</div><p class="small muted rr-sal">${esc(q.salida || `Es parte de la base de ${w('vuestra', 'tu')} ruta: no hay que tocarlo.`)}</p>`;
       return `<div class="rv-route" data-st="fade">${body}</div>`;
     }
-    if (p) {
-      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan tiene un paso para esto</div>
-        <div class="rr-stop found"><b class="rr-n">?</b><div><b>Paso ${i + 1} de ${E.pasos.length} de ${w('vuestro', 'tu')} plan</b><small>Qué hacer y cuánto sube ${w('vuestra', 'tu')} nota, ${w('lo veis', 'lo ves')} con ${ase}.</small></div></div>`
-        + meetBox(`${w('Vuestro', 'Tu')} asesor ${w('os', 'te')} enseña este paso con ${w('vuestras', 'tus')} cifras y cómo darlo.`);
-    } else if (q.tema === 'nota' && E.pasos.length) {
-      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan, entero</div>
-        <p class="small" style="margin:0">De ${E.nota.hoy} a ${E.nota.max} en ${E.pasos.length} ${E.pasos.length === 1 ? 'paso' : 'pasos'}. Cuáles son, ${w('lo descubrís', 'lo descubres')} con ${ase}.</p>`
-        + meetBox(`En 30 minutos ${w('os', 'te')} enseña ${E.pasos.length === 1 ? 'el paso' : `los ${E.pasos.length} pasos`} en orden.`);
-    } else {
+    // Si el plan tiene un paso para esto (o es la nota), no se añade nada: el paso y la reunión llegan en el cierre.
+    if (p || q.tema === 'nota') return '';
+    {
       const ya = S.doubts.some(d => d.id === 'rq-' + q.id);
       body = `<div class="rr-k">${ic('chat', 15)}Para trabajarlo con ${ase}</div>${q.salida ? `<p class="small muted rr-sal">${esc(q.salida)}</p>` : ''}`
-        + meetBox(`${w('Vuestro', 'Tu')} asesor lo revisa ${w('con vosotros', 'contigo')} y ${w('os', 'te')} dice cómo mejorarlo.`)
         + (ya ? `<p class="saved">${ic('check', 15)}Apuntado como pregunta</p>` : `<button class="link block" data-act="rask" data-k="${q.id}">${ic('pen', 16)} Apuntarlo como pregunta para ${ase}</button>`);
     }
     return `<div class="rv-route" data-st="fade">${body}</div>`;
   }
-  // Modo pareja: al ver cada respuesta, la parada que toca queda encontrada y se ofrece la reunión.
-  // El paso del plan ya sale justo encima (pjPropLine), así que aquí no se repite.
+  // Modo pareja: al ver cada respuesta, la parada que toca queda encontrada. El paso ya sale encima (pjPropLine)
+  // y la reunión se pide en el cierre, así que aquí no se pinta nada.
   function pjRoute(q) {
     if (!E.pasos.length) return '';
     if (q) { const p = pasoDe(q); if (p) vistos()[p.key] = true; else if (q.id === 'nota') E.pasos.forEach(x => { vistos()[x.key] = true; }); }
-    return `<div class="rv-route pj-route">
-      ${meetBox('Vuestro asesor lo revisa con los dos y os enseña cómo mejorarlo.')}</div>`;
+    return ''; // la reunión se pide una vez, en el cierre
   }
 
   // ------------------------------------------------------------------ iconos (trazo, 24x24)
