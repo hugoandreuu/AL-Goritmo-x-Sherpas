@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Banco de preguntas: Michael, Johnson y Samantha
 
 > Complemento de BASES.md §7 (Weah). Ronda 2. Rutas en `financial-health.json` de cada caso. "Derivado" = calculado por la app a partir de campos guardados (nunca por la IA).

@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Traductor de jerga (glosario EN / ES)
 
 Para el "traductor de jerga" de la app (BASES.md, 6.2 punto 8). Novato = texto por defecto; Experto = interruptor novato/experto.

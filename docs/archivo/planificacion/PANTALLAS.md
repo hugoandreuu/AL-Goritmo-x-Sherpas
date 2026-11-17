@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # PANTALLAS.md: especificación pantalla por pantalla del núcleo (caso Weah)
 
 > **Versión v7** (alineada con BASES.md v7, §16 a §19). Para desarrollador y redactor. Cubre SOLO el "núcleo" de BASES.md §0. Fuera de aquí: ciclo "hoy vs mañana", otros 3 casos, inglés, pregunta de riesgo en pareja como ciclo propio, .ics, días 14/21/30, audio, dos móviles. Todas las cifras salen de BASES.md o del JSON del caso Weah. Los textos entre comillas son microcopy final (ES). Rutas JSON relativas a `cases/timothy-melanie-weah/financial-health.json` salvo que se indique (BASES §7). Las cifras de maqueta rotuladas "ejemplo" no son datos del plan.

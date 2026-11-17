@@ -1,6 +1,8 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Versión única: la app como antesala del asesor
 
-Sábado 14 de noviembre de 2026. Junta tres cosas: el plan de Daniel recortado ([veredicto-plan-pareja.md](veredicto-plan-pareja.md)), la respuesta del mentor de Sherpas y los mecanismos del hilo de psicología ([sesgos-por-pantalla.md](sesgos-por-pantalla.md)).
+Sábado 14 de noviembre de 2026. Junta tres cosas: el plan de Daniel recortado ([veredicto-plan-pareja.md](veredicto-plan-pareja.md)), la respuesta del mentor de Sherpas y los mecanismos del hilo de psicología ([sesgos-por-pantalla.md](../../brainstorming/sesgos-por-pantalla.md)).
 
 La app sigue sin nombre decidido. Los textos de ejemplo son propuestas de redacción, no textos cerrados.
 

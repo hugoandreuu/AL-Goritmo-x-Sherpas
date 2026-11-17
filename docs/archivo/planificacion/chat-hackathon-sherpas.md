@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Chat del proyecto Hackathon Sherpas
 
 Exportado el sábado 14 de noviembre de 2026 a las 17:38 (hora de Madrid). Las horas están en hora de Madrid. Incluye los mensajes del chat principal del proyecto, sin el contenido interno de los hilos de trabajo.

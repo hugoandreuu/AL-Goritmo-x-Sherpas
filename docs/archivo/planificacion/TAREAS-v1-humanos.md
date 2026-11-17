@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # TAREAS.md: backlog del MVP (13-18 nov)
 
 > Fuentes: BASES.md §0 (v7), PANTALLAS.md (v7), PLAN-TECNICO.md y los casos de `/home/user/AL-Goritmo-x-Sherpas/cases/`. Hoy es viernes 13 nov, el día de la idea. Días de trabajo: sábado 14, domingo 15, lunes 16, martes 17 y miércoles 18. Entrega el miércoles 18 a las 23:59 (PLAN-TECNICO fija entregar antes de las 18:00); demo el jueves 19 a las 12:45. Roles: A back/datos/IA · B gancho y ciclos · C pareja/escalera/hoja · D contenidos/QA/pitch.

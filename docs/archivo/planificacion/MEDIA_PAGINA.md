@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Vuestro plan, en vuestras palabras (nombre provisional)
 
 Timothy y Melanie tienen 150.000 $ parados y una tarjeta al 18 % que, a este ritmo, terminarían de pagar en 2039. Su plan de Sherpas ya lo dice, pero nadie se lo ha preguntado. Nuestra app se lo pregunta a cada uno, les enseña la diferencia y vuelve hasta que dan el primer paso.

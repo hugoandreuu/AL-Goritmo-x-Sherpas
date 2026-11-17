@@ -77,8 +77,6 @@
     return E.pasos.find(p => ks.includes(p.key)) || null;
   };
   const vistos = () => (S.seen = S.seen || {});
-  // Nota a la que llegaría la ruta sumando este paso a los ya elegidos (solo notas del plan). Si no la sube, se dice.
-  const conPaso = p => { const now = scoreFor(accepted()).v, v = scoreFor([...new Set([...accepted(), p.key])]).v; return v > now ? `con este paso, nota ${v}` : accepted().includes(p.key) ? `nota ${v}` : 'no mueve la nota por sí solo'; };
   function descubrir(q) { // al revelar: la parada que arregla esto queda descubierta
     const p = pasoDe(q);
     if (p) vistos()[p.key] = true;
@@ -789,14 +787,6 @@
     rulLayout(true);
     rulUi();
   }
-  // Abrir página: la tarjeta del centro crece hasta ocupar la pantalla (y vuelve a su sitio al cerrar).
-  function rulOpen(k) {
-    const card = app.querySelector('.rul-card.front'), r = card ? card.getBoundingClientRect() : null;
-    S.rulOpen = k; RUL.ovY = 0; render();
-    const f = app.querySelector('.rul-full'); if (!f || !r || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    f.classList.remove('open'); f.style.clipPath = `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 24px)`;
-    requestAnimationFrame(() => requestAnimationFrame(() => { f.classList.add('open'); f.style.clipPath = 'inset(0 0 0 0 round 0)'; }));
-  }
   function rulClose() {
     const f = app.querySelector('.rul-full'), done = () => { S.rulOpen = null; render(); };
     if (!f || matchMedia('(prefers-reduced-motion: reduce)').matches) return done();
@@ -1500,11 +1490,6 @@
   const vidaK = () => { const q = vidaQ(), k = E.fam.hijos[0]; return q && q.vis && q.vis.base != null && k ? k.nombre : null; };
   const vidaDijo = (v, html) => { const q = vidaQ(), k = vidaK(), B = t => (html ? `<b>${t}</b>` : t);
     return k ? `creíais que el seguro llegaba hasta los ${v} años de ${esc(k)}; llega hasta los ${B(q.real)}` : `decíais ${esc(showV(q, v))}; el estudio dice ${B(esc(q.plan))}`; };
-  // Una sola medida por frase: la edad del hijo para lo que creían y lo que hay; años de gastos para lo que recomienda el plan.
-  const vidaFound = () => { const q = vidaQ(), v = q.vis || {}, k = vidaK();
-    if (!k) return `${cap1(vidaDijo(S.pj.vida, true))}.${vidaRec() ? ` Lo que recomienda el plan: ${esc(vidaRec())}.` : ''}`;
-    const rec = v.total ? ` El plan recomienda <b>${v.total} años</b> de gastos${v.base + v.total <= 25 ? `, hasta los ${v.base + v.total} de ${esc(k)}` : ''}; hoy son ${v.on}.` : '';
-    return `Creíais que el seguro llegaba hasta los ${S.pj.vida} años de ${esc(k)}; llega hasta los <b>${q.real}</b>.${rec}`; };
   const vidaJunto = () => { const q = vidaQ(), k = vidaK(); return k ? `creían que cubría hasta los ${S.pj.vida} años de ${k} (estudio: hasta los ${q.real})` : `${showV(q, S.pj.vida)} (estudio: ${q.plan})`; };
   const cap1 = t => t.charAt(0).toUpperCase() + t.slice(1);
   const titVida = () => { const q = vidaQ(), k = vidaK(); return k ? `Hoy, hasta los ${q.real} años de ${k}` : `Hoy, ${q.plan}`; };

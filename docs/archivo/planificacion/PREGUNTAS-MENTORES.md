@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Preguntas para el canal de mentores (Discord)
 
 > Solo se pegan las frases en negrita. El canal es compartido con otros equipos: no contar la idea. Las líneas "→" son para el equipo.

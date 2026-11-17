@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Brainstorm: psicología y enganche (hilo "Idear enganche y motivación familiar")
 
 Fecha: 12 nov 2026. Fuente: README del reto y persona.md de las 4 familias.

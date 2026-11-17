@@ -1,7 +1,7 @@
 {
   "name": "al-goritmo-x-sherpas",
   "private": true,
-  "description": "Vuestro plan en 5 minutos: el plan de cada familia, contado a partir de sus datos en Sherpas y de lo que contesta.",
+  "description": "Vuestro plan de futuro: el plan de cada familia, contado a partir de sus datos en Sherpas y de lo que contesta.",
   "type": "module",
   "engines": {
     "node": ">=20"

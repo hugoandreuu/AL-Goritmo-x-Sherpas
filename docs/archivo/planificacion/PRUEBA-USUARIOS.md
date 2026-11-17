@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Prueba con usuarios: martes 17
 
 Objetivo: 5-6 sesiones, flujo P01-P13 (BASES §18). Una pareja cuenta como una sesión. Método: Nielsen Norman Group ("Why You Only Need to Test with 5 Users": los problemas de uso se repiten pronto; "Thinking Aloud") y Steve Krug (*Don't Make Me Think*, *Rocket Surgery Made Easy*: pruebas pequeñas y frecuentes, sin laboratorio). Se detectan problemas de uso; no se mide ningún porcentaje.
