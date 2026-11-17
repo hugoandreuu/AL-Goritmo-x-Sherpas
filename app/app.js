@@ -94,13 +94,13 @@
     const fases = ['quiz', 'story', 'plan'], cur = enQuiz ? 0 : fases.indexOf(S.stage === 'tema' ? (S.temaFrom === 'plan' ? 'plan' : 'story') : S.stage);
     const estado = nDone ? `${hechos.length ? `${hechos.length} ${hechos.length === 1 ? 'hecha' : 'hechas'} y ` : ''}${nDone} de ${P.length} ${P.length === 1 ? 'elegida' : 'elegidas'}${sc > hoy ? `. Hechas, la nota llegaría a ${sc}` : ''}`
       : enQuiz ? `${nSeen} de ${P.length} ${P.length === 1 ? 'parada encontrada' : 'paradas encontradas'}. Cuáles son, ${w('lo veis', 'lo ves')} con ${w('vuestro', 'tu')} asesor` : `${P.length} ${P.length === 1 ? 'parada' : 'paradas'} hasta ${E.nota.max}`;
-    return `<nav class="route" data-act="rmeet" aria-label="${w('Vuestra', 'Tu')} ruta: nota de hoy ${hoy}${nDone ? `, con los pasos elegidos llegaría a ${sc}` : ''}; con todo el plan, ${E.nota.max}. ${esc(estado)}">
+    return `<nav class="route${enQuiz ? '' : ' con-nota'}" data-act="rmeet" aria-label="${w('Vuestra', 'Tu')} ruta: nota de hoy ${hoy}${nDone ? `, con los pasos elegidos llegaría a ${sc}` : ''}; con todo el plan, ${E.nota.max}. ${esc(estado)}">
       <div class="rt-top"><ol class="rt-fases">${fases.map((f, i) => `<li class="${i < cur ? 'past' : i === cur ? 'cur' : ''}">${FASE[f]}</li>`).join('')}</ol>
         <span class="rt-sc"><span>Hoy</span><b id="rt-now">${hoy}</b>${nDone && sc > hoy ? `<span class="rt-goal">→ ${sc}</span>` : `<span>/ 100</span>`}</span></div>
       <div class="rt-track"><span class="rt-end lo" title="Nota de hoy">${lo}</span>
         <div class="rt-line"><i class="rt-fill" style="width:${nDone === P.length ? 100 : nDone / (P.length + 1) * 100}%"></i>
         ${P.map((p, i) => { const st = enQuiz ? (seen[p.key] ? 'found' : 'off') : acc.includes(p.key) ? 'done' : 'seen';
-          return `<button class="rt-stop ${st}" id="rs-${p.key}" style="left:${(i + 1) / (P.length + 1) * 100}%;view-transition-name:vt-${p.key}" data-act="stop" data-s="${p.key}" aria-label="Parada ${i + 1}: ${st === 'off' ? 'por encontrar' : st === 'found' ? `encontrada; cuál es, ${w('lo veis', 'lo ves')} con ${w('vuestro', 'tu')} asesor` : esc(pTitulo(p)) + (st === 'done' ? ', elegida' : '')}">${st === 'done' ? ic('check', 13) : enQuiz ? '?' : i + 1}</button>`; }).join('')}</div>
+          return `<button class="rt-stop ${st}" id="rs-${p.key}" style="left:${(i + 1) / (P.length + 1) * 100}%;view-transition-name:vt-${p.key}" data-act="stop" data-s="${p.key}" aria-label="Parada ${i + 1}: ${st === 'off' ? 'por encontrar' : st === 'found' ? `encontrada; cuál es, ${w('lo veis', 'lo ves')} con ${w('vuestro', 'tu')} asesor` : esc(pTitulo(p)) + (st === 'done' ? ', elegida' : '')}">${st === 'done' ? ic('check', 13) : enQuiz ? '?' : i + 1}${enQuiz ? '' : `<span class="rt-n" aria-hidden="true">${(n => n.solo ? '+' + Math.max(0, n.v - E.nota.hoy) : n.v)(notaPaso(i))}</span>`}</button>`; }).join('')}</div>
         <span class="rt-end hi" title="Nota con todo el plan">${hi}</span></div>
       <p class="rt-st">${esc(estado)}</p></nav>`;
   }
