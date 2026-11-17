@@ -1216,7 +1216,7 @@
     } else {
       const n = nodo(k); if (!n) { volverTema(); return; }
       titulo = n.nombre;
-      const head = `<header class="tp-h"><div class="tp-hh"><span class="ar-ic">${ic(n.icon, 20)}</span><div><h1>${esc(n.nombre)}</h1><small class="muted">${esc(n.sub || '')}</small></div></div>${cifraBig(n)}${n.titular ? `<p class="tp-tit">${esc(n.titular)}</p>` : ''}</header>`;
+      const head = `<header class="tp-h est-${n.estado}"><div class="tp-hh"><span class="ar-ic">${ic(n.icon, 20)}</span><div><h1>${esc(n.nombre)}</h1><small class="muted">${esc(n.sub || '')}</small></div></div>${cifraBig(n)}${n.titular ? `<p class="tp-tit">${esc(n.titular)}</p>` : ''}</header>`;
       if (n.tipo === 'area') {
         const { x } = n, { a, pasos } = x;
         html = `${head}${kpisHtml(a.kpis)}
