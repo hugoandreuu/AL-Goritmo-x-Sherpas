@@ -3,7 +3,7 @@
 - Caso: `samantha-lewis`
 - Datos: archivos de `cases/` (los mismos JSON que sirve el MCP)
 - Frases: escritas por el LLM de Sherpas (`gpt-5-mini`, el 2026-11-14), con control de cifras
-- Generado: 2026-11-16
+- Generado: 2026-11-17
 
 ## Lo que lee el LLM de esta familia
 
@@ -53,7 +53,7 @@ Hoy 82 de 100. Con los pasos del plan, 84.
 - Origen: `key_metrics.facts.cash`
 - Si acierta: «Eso es. Aquí vas bien.»
 - Si el dato es mayor de lo que dijo: «Más de lo que pensabas.»
-- Si es menor: «Algo menos de lo que pensabas, pero dentro de lo recomendado.»
+- Si es menor: «Algo menos de lo que pensabas, pero por encima del mínimo recomendado.»
 - Para que lo sienta: Tu efectivo cubre **7,9 meses** de gastos básicos, por encima de la reserva recomendada. Eso te da margen para afrontar los pagos de Ethan y los imprevistos sin agobios inmediatos.
 - Salida: Este punto ya está. No hay que tocarlo.
 - Escrito por el LLM: q, siente

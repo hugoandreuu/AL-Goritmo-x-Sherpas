@@ -269,7 +269,7 @@ function leer(fh) {
       q: `Si mañana ${t('os quedarais', 'te quedaras')} sin ingresos, ¿cuántos meses de gastos básicos cubre ${t('vuestro', 'tu')} efectivo?`, sub: 'Lo que hay en cuentas, sin tocar inversiones.',
       plan: mTxt, unidad: 'de gastos básicos', mid: true, vis: { t: 'meses', tiene: meses, min: rmin, max: rmax, tras: menos ? tras : null },
       titulares: ok && !menos
-        ? { cerca: t('Eso es. Aquí vais bien.', 'Eso es. Aquí vas bien.'), mas: t('Más de lo que pensabais.', 'Más de lo que pensabas.'), menos: t('Algo menos de lo que pensabais, pero dentro de lo recomendado.', 'Algo menos de lo que pensabas, pero dentro de lo recomendado.') }
+        ? { cerca: t('Eso es. Aquí vais bien.', 'Eso es. Aquí vas bien.'), mas: t('Más de lo que pensabais.', 'Más de lo que pensabas.'), menos: t('Algo menos de lo que pensabais, pero por encima del mínimo recomendado.', 'Algo menos de lo que pensabas, pero por encima del mínimo recomendado.') }
         : { cerca: t('Lo teníais claro. Mirad lo que recomienda el plan.', 'Lo tenías claro. Mira lo que recomienda el plan.'), mas: t('Algo más de lo que pensabais, pero no llega a lo recomendado.', 'Algo más de lo que pensabas, pero no llega a lo recomendado.'), menos: t('Menos de lo que pensabais.', 'Menos de lo que pensabas.') },
       siente: `El plan recomienda entre ${b(rmin + ' y ' + rmax + ' meses')}. ${t('Tenéis', 'Tienes')} ${b(dec(meses, 1))}.${menos ? ` Y apartando lo que ya ${t('tenéis', 'tienes')} comprometido a corto plazo, quedan ${b(dec(tras, 1))}.` : ''}`,
       salida: ok && !menos ? (pasos.some(p => p.key === 'card') ? `Con parte de ese efectivo es con lo que ${t('vuestro', 'tu')} plan propone pagar la tarjeta.` : 'Este punto ya está. No hay que tocarlo.') : `${t('Vuestro', 'Tu')} plan propone acercar ese colchón a lo recomendado. El cómo se ve con ${t('vuestro', 'tu')} asesor.`,
@@ -303,8 +303,11 @@ function leer(fh) {
     const corte = agota ? +(agota.label.match(/age (\d+)/) || [])[1] : null;
     const pasoRet = pasos.find(p => p.key === 'withdraw');
     const cuota = get(R, 'incomeShareOfNeed.value');
+    // Aunque la proyección diga que los ahorros llegan, el plan puede marcar un hueco en las cuentas de jubilación
+    // (p. ej. Johnson: quedan 260 K$ al final, pero faltan 1,43 M$). Entonces no se dice «no hay que correr».
+    const hueco = !agota ? Math.round(get(fh, 'key_metrics.ratios.retirementSavings.planningGapAtRetirementAgeInTodaysDollars') || 0) : 0;
     Q.push({
-      id: 'jubilacion', tema: 'jubilacion', tono: agota ? 'malo' : 'bueno', tipo: 'opciones', icon: 'sun',
+      id: 'jubilacion', tema: 'jubilacion', tono: agota || hueco > 0 ? 'malo' : 'bueno', tipo: 'opciones', icon: 'sun',
       opciones: ['Sí, con margen', 'Justo justo', 'No llega', 'Ni idea'], rangos: [3, 2, 1, null], real: agota ? 2 : 0, cerca: agota ? [2] : [0, 1],
       q: `¿${t('Os', 'Te')} llega para ${t('jubilaros', 'jubilarte')} a los ${lista(edadJ.map(String))} y vivir de ello?`, sub: '',
       plan: agota ? `hasta los ${corte}` : 'Sí, llega', unidad: agota ? `${t('os', 'te')} duran los ahorros` : `y al final del plan quedan ${M(queda.value)}`, mid: true,
@@ -315,9 +318,9 @@ function leer(fh) {
       siente: agota
         ? `${t('Os jubiláis', 'Te jubilas')} a los ${lista(edadJ.map(String))} y el plan llega hasta los ${finEdad}. Los ahorros se acaban a los ${b(String(corte))}.`
         : `${t('Os jubiláis', 'Te jubilas')} a los ${lista(edadJ.map(String))} y los ahorros no se acaban: al final del plan quedan ${b(M(queda.value))}.`,
-      salida: agota ? (pasoRet ? `${t('Vuestro', 'Tu')} plan trae un paso para esto, y solo con él la nota pasa de ${nota} a ${pasoRet.nota}.` : `Es de lo primero que se ve con ${t('vuestro', 'tu')} asesor: cuánto ahorrar y cuándo ${t('jubilaros', 'jubilarte')}.`) : `Aquí no hay que correr. Lo que frena ${t('vuestro', 'tu')} plan está en otra parte.`,
+      salida: agota ? (pasoRet ? `${t('Vuestro', 'Tu')} plan trae un paso para esto, y solo con él la nota pasa de ${nota} a ${pasoRet.nota}.` : `Es de lo primero que se ve con ${t('vuestro', 'tu')} asesor: cuánto ahorrar y cuándo ${t('jubilaros', 'jubilarte')}.`) : hueco > 0 ? `Llega, pero con poco margen: el plan calcula que a ${t('vuestras', 'tus')} cuentas de jubilación les faltan ${M(hueco)} (en dinero de hoy). Se ve con ${t('vuestro', 'tu')} asesor.` : `Aquí no hay que correr. Lo que frena ${t('vuestro', 'tu')} plan está en otra parte.`,
       calc: null,
-      hechos: [`Edad de jubilación: ${lista(edadJ.map(String))}`, `El plan llega hasta los ${finEdad} años`, agota ? `Los ahorros se acaban a los ${corte} años` : `Ahorros que quedan al final del plan: ${M(queda.value)}`, cuota ? `Parte del gasto de jubilación que cubren los ingresos: ${String(cuota).replace('%', ' %')}` : null, pasoRet ? `Paso del plan: ${pasoRet.titulo} (nota ${pasoRet.nota})` : null].filter(Boolean),
+      hechos: [`Edad de jubilación: ${lista(edadJ.map(String))}`, `El plan llega hasta los ${finEdad} años`, agota ? `Los ahorros se acaban a los ${corte} años` : `Ahorros que quedan al final del plan: ${M(queda.value)}`, cuota ? `Parte del gasto de jubilación que cubren los ingresos: ${String(cuota).replace('%', ' %')}` : null, pasoRet ? `Paso del plan: ${pasoRet.titulo} (nota ${pasoRet.nota})` : null, hueco > 0 ? `Hueco en las cuentas de jubilación (dinero de hoy): ${M(hueco)}` : null].filter(Boolean),
       freno: { kick: 'La jubilación', h2: agota ? `Los ahorros se acaban a los ${corte}. El plan llega hasta los ${finEdad}.` : `${t('Llegáis', 'Llegas')}: al final del plan quedan ${M(queda.value)}.` },
       filas: [['Edad de jubilación', lista(edadJ.map(String))], agota ? ['Los ahorros se acaban a los', String(corte)] : ['Queda al final del plan', M(queda.value)]].concat(cuota ? [['Gasto cubierto por ingresos', String(cuota).replace('%', ' %')]] : []),
       pro: `${cuota ? `Ingresos sobre necesidad anual en jubilación: ${String(cuota).replace('%', ' %')}. ` : ''}${agota ? `Agotamiento de activos líquidos a los ${corte}.` : `Remanente al final del plan: ${M(queda.value)} en dólares de hoy.`}`,
@@ -771,7 +774,7 @@ function leerTemas(E, fh, ia) {
   const SAL2 = { Taxes: 'impuestos', 'Debt Payments': 'deudas', 'Housing Expenses': 'vivienda', Savings: 'ahorro', Expenses: 'gastos del día a día' };
   const de100 = sal.map(r => `${Math.round(r[2] * 100)} a ${SAL2[r[0]] || r[0]}`);
   Object.assign(out['Ahorro'], {
-    kpis: [k('Ingresos al año', ingresos != null ? Mk(ingresos) : null), k('Ahorro al año', sl.savingAmount != null ? Mk(sl.savingAmount) : null, sl.ratio != null ? `${pct(sl.ratio)} de los ingresos` : '', 'bueno'),
+    kpis: [k('Ingresos al año', ingresos != null ? Mk(ingresos) : null), k('Ahorro al año', sl.savingAmount != null ? Mk(sl.savingAmount) : null, sl.ratio != null ? `${pct(sl.ratio)} de los ingresos` : '', sl.ratio == null ? '' : sl.ratio >= 0.2 ? 'bueno' : sl.ratio < 0.1 ? 'coste' : ''),
       k(ES('Sobra al año'), sobraAnio != null ? Mk(Math.round(sobraAnio)) : null, est ? 'el gasto declarado puede ser bajo' : 'tras gastos y ahorro', sobraAnio < 0 ? 'coste' : ''), match.length ? k('Aportación de la empresa', Mk(cobra), sinCobrar > 0 ? `${Mk(sinCobrar)} sin cobrar` : 'la máxima', sinCobrar > 0 ? 'coste' : 'bueno') : null].filter(Boolean),
     desglose: sal.length ? { titulo: 'A dónde va lo que entra cada año', filas: sal.map(r => [r[0] === 'Expenses' ? ES(SALIDA[r[0]]) : SALIDA[r[0]] || r[0], M(Math.round(r[1]))]).concat(sobraAnio != null ? [[ES(sobraAnio < 0 ? 'Falta' : 'Sobra'), M(Math.round(sobraAnio))]] : []), total: ['Ingresos', M(ingresos)] } : null,
     lectura: [de100.length ? `De cada 100 $ que entran, ${lista(de100)}.` : null,
@@ -790,9 +793,12 @@ function leerTemas(E, fh, ia) {
     asesor: ld.length ? `Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla.` : '',
   });
   const eqInv = tot.investablePortfolioValue ? tot.equityExposure / tot.investablePortfolioValue : null, crisis = env.find(e => e.name === 'Global Financial Crisis');
+  // Mismo criterio que la tarjeta «Cómo se ha portado la cartera» (puntos.mjs): verde solo si no queda por debajo de su referencia.
+  const refRent = get(ia, 'key_metrics.performanceAnalysis.sameRiskBenchmark.return3yAnnualized');
+  const tonoRent = h.return3yAnnualized != null && refRent != null ? (h.return3yAnnualized - refRent < 0 ? 'coste' : 'bueno') : '';
   Object.assign(out['Inversiones'], {
     kpis: [k('Invertido', invertible != null ? Mk(invertible) : null), k('Patrimonio neto', get(km, 'netWorthStatement.netWorth.total') != null ? Mk(get(km, 'netWorthStatement.netWorth.total')) : null),
-      k('Rentabilidad', h.return3yAnnualized != null ? pct(h.return3yAnnualized) : null, 'al año, últimos 3 años', 'bueno'), k('Peor caída', h.maxDrawdown3y != null ? pct(Math.abs(h.maxDrawdown3y)) : null, h.maxDrawdownRecoveryDays ? `recuperada en ${h.maxDrawdownRecoveryDays} días` : '', 'coste')].filter(Boolean),
+      k('Rentabilidad', h.return3yAnnualized != null ? pct(h.return3yAnnualized) : null, 'al año, últimos 3 años', tonoRent), k('Peor caída', h.maxDrawdown3y != null ? pct(Math.abs(h.maxDrawdown3y)) : null, h.maxDrawdownRecoveryDays ? `recuperada en ${h.maxDrawdownRecoveryDays} días` : '', 'coste')].filter(Boolean),
     desglose: la.length ? { titulo: `Dónde está ${t('vuestro', 'tu')} patrimonio`, filas: la.map(r => [TIPO_ACTIVO[r[0]] || r[0], M(r[2])]), total: ['Total', M(get(km, 'assetsAndInvestments.totalAssetsAndEquity.totalAssets'))] } : null,
     lectura: [eqInv != null ? `El ${b(pct(eqInv))} de lo invertido está en bolsa.` : null,
       h.currentEquityPct != null && eqP != null ? `Contando el efectivo, el reparto hoy es ${b(`${Math.round(h.currentEquityPct * 100)} / ${100 - Math.round(h.currentEquityPct * 100)}`)} (bolsa / resto). El análisis propone ${b(`${Math.round(eqP * 100)} / ${100 - Math.round(eqP * 100)}`)}${pa.expectedPerformance != null && ta.expectedPerformance != null ? `, con una rentabilidad esperada del ${P(ta.expectedPerformance, 2)} en vez del ${P(pa.expectedPerformance, 2)}` : ''}.` : null,
@@ -801,7 +807,7 @@ function leerTemas(E, fh, ia) {
   });
   Object.assign(out['Colchón'], {
     kpis: [k('Efectivo', ac != null ? Mk(ac) : null), k('Cubre', !isNaN(mc) ? `${dec(mc, 1)} meses` : null, 'de gastos básicos'), k('Recomendado', ef.minRecommendedEFMonths ? `${ef.minRecommendedEFMonths} a ${ef.maxRecommendedEFMonths} meses` : null, er.min != null ? `${Mk(er.min)} a ${Mk(er.max)}` : ''),
-      sobra > 0 ? k('Sobra', Mk(sobra), 'tras reserva y gastos previstos', 'bueno') : falta > 0 ? k('Falta', Mk(falta), 'para reserva y gastos previstos', 'coste') : null].filter(Boolean),
+      sobra > 0 ? k('Sobra', Mk(sobra), 'tras reserva y gastos previstos', ef.color === 'R' ? '' : 'bueno') : falta > 0 ? k('Falta', Mk(falta), 'para reserva y gastos previstos', 'coste') : null].filter(Boolean),
     desglose: C.totalCashNeeded ? { titulo: 'Lo que pide el plan tener en efectivo', filas: [['Reserva para imprevistos', `${M(er.min)} a ${M(er.max)}`], ...(C.nearTermGoals || []).map(g => [`Gasto ya previsto: ${/vacation/i.test(g.label) ? 'vacaciones' : /home|real estate|house/i.test(g.label) ? 'casa' : /vehicle|car/i.test(g.label) ? 'coche' : 'otro'}`, M(g.value)]), [`Lo que ${t('tenéis', 'tienes')}`, M(ac)]], total: ['Total que pide', `${M(C.totalCashNeeded.min)} a ${M(C.totalCashNeeded.max)}`] } : null,
     lectura: [!isNaN(mc) ? `${t('Vuestro', 'Tu')} efectivo cubre ${b(dec(mc, 1) + ' meses')} de gastos básicos; el plan pide de ${ef.minRecommendedEFMonths} a ${ef.maxRecommendedEFMonths}.` : null,
       sobra > 0 ? `Por encima de la reserva y de los gastos ya previstos sobran ${b(M(sobra))}.` : falta > 0 ? `Para la reserva y los gastos ya previstos faltan ${b(M(falta))}.` : null,
@@ -809,6 +815,7 @@ function leerTemas(E, fh, ia) {
     asesor: sobra > 0 ? `Qué hacer con el efectivo que sobra: deudas, seguros o inversión.` : `Cómo llegar a la reserva sin dejar de lado lo demás.`,
   });
   const faltan = vidas.filter(v => (v.hoy || 0) < v.min);
+  const casa = get(R, 'realEstateEquity.realEstateAssets') || 0, sinHogar = casa > 0 && !pol.some(x => (x.type || x.insurance_type) === 'HOMEOWNERS_INSURANCE');
   Object.assign(out['Seguros'], {
     kpis: [...vidas.map(v => k(`Vida${E.fam.pl ? ' · ' + v.n : ''}`, Mk(v.hoy || 0), `pide ${Mk(v.min)} como mínimo`, (v.hoy || 0) < v.min ? 'coste' : 'bueno')), um.recommendedCoverage ? k('Responsabilidad civil', Mk(um.currentCoverage || 0), `pide ${Mk(um.recommendedCoverage)}`, (um.currentCoverage || 0) < um.recommendedCoverage ? 'coste' : 'bueno') : null, k('Pólizas', String(pol.length), 'en el plan')].filter(Boolean),
     desglose: vidas.length || um.recommendedCoverage ? { titulo: 'Lo que hay y lo que falta', filas: [...vidas.map(v => [`Vida · ${v.n}`, `${M(v.hoy || 0)} de ${M(v.min)}`]), um.recommendedCoverage ? ['Responsabilidad civil', `${M(um.currentCoverage || 0)} de ${M(um.recommendedCoverage)}`] : null].filter(Boolean),
@@ -816,9 +823,24 @@ function leerTemas(E, fh, ia) {
     lectura: [...faltan.map(v => `A ${v.n} le faltan como mínimo ${b(M(v.min - (v.hoy || 0)))} de seguro de vida.`),
       um.recommendedCoverage && (um.currentCoverage || 0) < um.recommendedCoverage ? `${(um.currentCoverage || 0) ? 'Falta' : 'No hay'} seguro de responsabilidad civil: el plan pide ${b(M(um.recommendedCoverage))}.` : null,
       ki.length ? `${lista(ki.map(k2 => k2.first_name))} ${ki.length > 1 ? 'dependen' : 'depende'} de ${t('vuestros', 'tus')} ingresos.` : null,
-      !faltan.length && !(um.recommendedCoverage && (um.currentCoverage || 0) < um.recommendedCoverage) ? `Los seguros que pide el plan están cubiertos.` : null].filter(Boolean),
+      sinHogar ? `No consta seguro de hogar para la vivienda (${b(M(casa))}).` : null,
+      !faltan.length && !(um.recommendedCoverage && (um.currentCoverage || 0) < um.recommendedCoverage) ? (sinHogar ? `El seguro de vida y el de responsabilidad civil que pide el plan están cubiertos.` : `Los seguros que pide el plan están cubiertos.`) : null].filter(Boolean),
     asesor: faltan.length || (um.currentCoverage || 0) < (um.recommendedCoverage || 0) ? `Cuánto contratar y cuánto cuesta: el plan no trae precios.` : '',
   });
+
+  // Alertas por área. La nota de cada área es la de Sherpas (score.pillars) y no se toca, pero a veces
+  // va alta con el dato principal de esa área en rojo (p. ej. Johnson: colchón 85/100 con 1,4 meses de
+  // los 8 a 9 que pide el plan). La alerta baja el estado que enseña la app (color y etiqueta) y dice por qué.
+  const alerta = (nivel, txt) => ({ nivel, txt });
+  const minM = Number(ef.minRecommendedEFMonths);
+  if (!isNaN(mc) && minM && mc < minM) out['Colchón'].alerta = alerta(mc < minM / 2 ? 'low' : 'mid', `${t('Vuestro', 'Tu')} efectivo cubre ${dec(mc, 1)} meses de gastos básicos y el plan pide de ${minM} a ${ef.maxRecommendedEFMonths}.`);
+  else if (ef.color === 'R' && sobra > 0) out['Colchón'].alerta = alerta('mid', `Sobran ${M(sobra)} de efectivo por encima de lo recomendado, y apenas rinden.`);
+  if (sobraAnio != null && sobraAnio < 0) out['Ahorro'].alerta = alerta('mid', `Este año se gasta más de lo que entra: faltan ${M(Math.round(-sobraAnio))}.`);
+  else if (sinCobrar > 0) out['Ahorro'].alerta = alerta('mid', `La empresa podría aportar ${M(sinCobrar)} más al año que hoy no se cobran.`);
+  if (cara && cara.tipo === 'Tarjeta' && cara.tipoInt >= 0.15) out['Deudas'].alerta = alerta('mid', `Hay deuda de tarjeta: ${M(cara.saldo)} al ${P(cara.tipoInt, 1)}.`);
+  if (faltan.length) out['Seguros'].alerta = alerta(ki.length ? 'low' : 'mid', `Falta seguro de vida: el plan pide más de lo que ${t('tenéis', 'tienes')}.`);
+  else if (sinHogar) out['Seguros'].alerta = alerta('mid', `No consta seguro de hogar para una vivienda de ${M(casa)}.`);
+  else if (um.recommendedCoverage && (um.currentCoverage || 0) < um.recommendedCoverage) out['Seguros'].alerta = alerta('mid', `No hay seguro de responsabilidad civil y el plan lo pide.`);
 
   // Roadmap · informe: «Retirement & Goals» + educación + proyección del patrimonio
   const yearly = get(fh, 'projections.yearly') || [], gs = get(fh, 'goals.goalsSummary') || [], cg = get(fh, 'goals.chartGoals') || [];

@@ -1815,7 +1815,7 @@ i.pa { background: var(--accent); } i.pb { background: var(--navy); }
 .nodo .nd-pie .tag.acc { background: #fff; color: var(--sh-deep); box-shadow: inset 0 0 0 1.5px var(--sh-light); }
 
 /* ---- Sin naranja en el plan y en las páginas de tema (hugo, 17 nov): tonos tenues y fondo morado Sherpas.
-   «A reforzar» pasa a frambuesa apagado y «Mejorable» a ocre suave; las cabeceras y las cifras de coste van
+   «Urgente» (antes «A reforzar») pasa a frambuesa apagado y «Mejorable» a ocre suave; las cabeceras y las cifras de coste van
    en claro, con el color solo en el número, la etiqueta y el icono. */
 :root { --st-low: #b0436a; --st-low-soft: #fbeef3; --st-mid: #9a7413; --st-mid-soft: #fbf5e3; --sh-bg: #f2efff; }
 body:has(.tpage), body:has(.plan-grid) { background: radial-gradient(70% 45% at 0% 0%, #e7e1ff 0%, transparent 70%), radial-gradient(60% 40% at 100% 10%, #e0e8ff 0%, transparent 70%), var(--sh-bg) fixed; }
@@ -1851,3 +1851,5 @@ body.fondo-on .dock, body[data-pj] .dock, .pj-dock { background: linear-gradient
 .dock:has(#pjfsave), .dock:has(.btn[data-act="worry"]), .dock:has(.btn[data-act="toplan"]) { position: static; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 /* Mientras el botón está escondido (aún sin contestar), el dock no pinta su velo: no queda una caja vacía. */
 .dock:not(:has(.btn:enabled)) { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+/* Mientras el botón está escondido (aún sin contestar), el dock no pinta su velo: no queda una caja vacía. */
+.dock:not(:has(.btn:enabled))::before { display: none; }
