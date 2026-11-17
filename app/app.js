@@ -82,8 +82,6 @@
     const p = pasoDe(q);
     if (p) vistos()[p.key] = true;
     else if (q.tema === 'nota' && q.tono === 'malo') E.pasos.forEach(x => { vistos()[x.key] = true; });
-    // La sorpresa más grande es la primera revelación mala y lejos de lo que pensaban: solo ahí se ofrece la reunión.
-    if (S.bigQ == null && q.tono === 'malo' && banda(q, S.a[q.id].value) === 'lejos') S.bigQ = q.id;
   }
   const FASE = { quiz: 'Descubrir', story: 'Repasar', plan: 'Decidir', tema: 'Repasar' };
   function routeBar() {
@@ -91,16 +89,17 @@
     const acc = accepted(), sc = scoreFor(acc).v, lo = E.nota.hoy, hi = Math.max(E.nota.max, lo + 1), seen = vistos();
     const hechos = P.filter(p => (S.done || {})[p.key]).map(p => p.key), hoy = hechos.length ? scoreFor(hechos).v : lo;
     const nDone = acc.length, nSeen = P.filter(p => seen[p.key] || acc.includes(p.key)).length;
-    const fases = ['quiz', 'story', 'plan'], cur = fases.indexOf(S.stage === 'tema' ? 'story' : S.stage);
+    const enQuiz = S.stage === 'quiz' || S.stage === 'pareja';
+    const fases = ['quiz', 'story', 'plan'], cur = enQuiz ? 0 : fases.indexOf(S.stage === 'tema' ? 'story' : S.stage);
     const estado = nDone ? `${hechos.length ? `${hechos.length} ${hechos.length === 1 ? 'hecha' : 'hechas'} y ` : ''}${nDone} de ${P.length} ${P.length === 1 ? 'elegida' : 'elegidas'}${sc > hoy ? `. Hechas, la nota llegaría a ${sc}` : ''}`
-      : S.stage === 'quiz' ? `${nSeen} de ${P.length} ${P.length === 1 ? 'parada descubierta' : 'paradas descubiertas'}` : `${P.length} ${P.length === 1 ? 'parada' : 'paradas'} hasta ${E.nota.max}`;
+      : enQuiz ? `${nSeen} de ${P.length} ${P.length === 1 ? 'parada encontrada' : 'paradas encontradas'}. Cuáles son, ${w('lo veis', 'lo ves')} con ${w('vuestro', 'tu')} asesor` : `${P.length} ${P.length === 1 ? 'parada' : 'paradas'} hasta ${E.nota.max}`;
     return `<nav class="route" aria-label="${w('Vuestra', 'Tu')} ruta: nota de hoy ${hoy}${nDone ? `, con los pasos elegidos llegaría a ${sc}` : ''}; con todo el plan, ${E.nota.max}. ${esc(estado)}">
       <div class="rt-top"><ol class="rt-fases">${fases.map((f, i) => `<li class="${i < cur ? 'past' : i === cur ? 'cur' : ''}">${FASE[f]}</li>`).join('')}</ol>
         <span class="rt-sc"><span>Hoy</span><b id="rt-now">${hoy}</b>${nDone && sc > hoy ? `<span class="rt-goal">→ ${sc}</span>` : `<span>/ 100</span>`}</span></div>
       <div class="rt-track"><span class="rt-end lo" title="Nota de hoy">${lo}</span>
         <div class="rt-line"><i class="rt-fill" style="width:${nDone === P.length ? 100 : nDone / (P.length + 1) * 100}%"></i>
-        ${P.map((p, i) => { const st = acc.includes(p.key) ? 'done' : seen[p.key] || S.stage !== 'quiz' ? 'seen' : 'off';
-          return `<button class="rt-stop ${st}" id="rs-${p.key}" style="left:${(i + 1) / (P.length + 1) * 100}%" data-act="stop" data-s="${p.key}" aria-label="Parada ${i + 1}: ${st === 'off' ? 'por descubrir' : esc(pTitulo(p)) + (st === 'done' ? ', en la ruta' : '')}">${st === 'done' ? ic('check', 13) : st === 'off' ? '?' : i + 1}</button>`; }).join('')}</div>
+        ${P.map((p, i) => { const st = enQuiz ? (seen[p.key] ? 'found' : 'off') : acc.includes(p.key) ? 'done' : 'seen';
+          return `<button class="rt-stop ${st}" id="rs-${p.key}" style="left:${(i + 1) / (P.length + 1) * 100}%" data-act="stop" data-s="${p.key}" aria-label="Parada ${i + 1}: ${st === 'off' ? 'por encontrar' : st === 'found' ? `encontrada; cuál es, ${w('lo veis', 'lo ves')} con ${w('vuestro', 'tu')} asesor` : esc(pTitulo(p)) + (st === 'done' ? ', elegida' : '')}">${st === 'done' ? ic('check', 13) : enQuiz ? '?' : i + 1}</button>`; }).join('')}</div>
         <span class="rt-end hi" title="Nota con todo el plan">${hi}</span></div>
       <p class="rt-st">${esc(estado)}</p></nav>`;
   }
@@ -112,31 +111,42 @@
     nu.classList.add('bump'); setTimeout(() => nu.classList.remove('bump'), 700);
   }
   // Tarjeta al final de cada revelación: la parada de la ruta que arregla lo que acaban de ver.
+  // La reunión en cada problema: el plan se desvela en parte; la solución se trabaja con el asesor.
+  function meetBox(txt) {
+    return S.booking
+      ? `<p class="saved">${ic('check', 15)}Lo añadimos a ${w('vuestra', 'tu')} reunión: ${esc(S.booking.short)}</p>`
+      : `<div class="rr-meet"><p>${txt}</p><button class="btn block" data-act="book">${ic('cal', 18)} Reservar reunión</button><small class="rr-fine">30 minutos por videollamada · sin compromiso</small></div>`;
+  }
+  // Tarjeta al final de cada revelación: qué parte de la ruta toca, sin decir aún cuál es la solución.
   function rvRoute(q) {
-    const p = pasoDe(q), i = p ? E.pasos.indexOf(p) : -1, yes = p && S.steps[p.key] === 'yes';
-    const big = S.bigQ === q.id && E.pasos.length;
-    const meet = big ? (S.booking
-      ? `<p class="saved">${ic('check', 15)}Reunión pedida: ${esc(S.booking.short)}</p>`
-      : `<div class="rr-meet"><p>Es lo que más se aleja de lo que ${w('pensabais', 'pensabas')}. Si ${w('preferís', 'prefieres')} verlo con una persona:</p><button class="btn soft block" data-act="book" data-k="quiz">${ic('cal', 18)} Elegir día con ${w('vuestro', 'tu')} asesor</button></div>`) : '';
+    const p = pasoDe(q), i = p ? E.pasos.indexOf(p) : -1, ase = w('vuestro', 'tu') + ' asesor';
     let body;
-    if (p) {
-      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan da un paso para esto</div>
-        <div class="rr-stop ${yes ? 'done' : ''}"><b class="rr-n">${yes ? ic('check', 15) : i + 1}</b><div><b>${esc(pTitulo(p))}</b><small>Parada ${i + 1} · ${quienTxt(p)} · ${conPaso(p)}</small></div></div>
-        ${q.salida ? `<p class="small muted rr-sal">${esc(q.salida)}</p>` : ''}
-        ${yes ? `<p class="saved">${ic('check', 15)}En ${w('vuestra', 'tu')} ruta. Lo ${w('decidís', 'decides')} del todo en el plan.</p>`
-          : `<button class="btn block" data-act="rtake" data-s="${p.key}">${ic('plus', 18)} ${w('Lo queremos', 'Lo quiero')} en ${w('nuestra', 'mi')} ruta</button>`}`;
-    } else if (q.tema === 'nota' && q.tono === 'malo' && E.pasos.length) {
-      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestra', 'Tu')} ruta, entera</div>
-        <p class="small" style="margin:0">De ${E.nota.hoy} a ${E.nota.max} en ${E.pasos.length} ${E.pasos.length === 1 ? 'parada' : 'paradas'}. Ya ${w('las veis', 'las ves')} arriba; ${w('las decidís', 'las decides')} en el plan.</p>
-        <ol class="rr-list">${E.pasos.map((x, k) => `<li><b class="rr-n sm">${S.steps[x.key] === 'yes' ? ic('check', 12) : k + 1}</b>${esc(pTitulo(x))}</li>`).join('')}</ol>`;
-    } else if (q.tono !== 'malo') {
+    if (q.tono !== 'malo') {
       body = `<div class="rr-k good">${ic('check', 15)}Esto ya está bien</div><p class="small muted rr-sal">${esc(q.salida || `Es parte de la base de ${w('vuestra', 'tu')} ruta: no hay que tocarlo.`)}</p>`;
+      return `<div class="rv-route" data-st="fade">${body}</div>`;
+    }
+    if (p) {
+      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan tiene una parada para esto</div>
+        <div class="rr-stop found"><b class="rr-n">?</b><div><b>Parada ${i + 1} de ${w('vuestra', 'tu')} ruta</b><small>Qué hacer y cuánto sube ${w('vuestra', 'tu')} nota, ${w('lo veis', 'lo ves')} con ${ase}.</small></div></div>`
+        + meetBox(`${w('Vuestro', 'Tu')} asesor ${w('os', 'te')} enseña esta parada con ${w('vuestras', 'tus')} cifras y cómo dar el paso.`);
+    } else if (q.tema === 'nota' && E.pasos.length) {
+      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestra', 'Tu')} ruta, entera</div>
+        <p class="small" style="margin:0">De ${E.nota.hoy} a ${E.nota.max} en ${E.pasos.length} ${E.pasos.length === 1 ? 'parada' : 'paradas'}. ${w('Las veis', 'Las ves')} arriba con «?»: cuáles son, ${w('lo descubrís', 'lo descubres')} con ${ase}.</p>`
+        + meetBox(`En 30 minutos ${w('os', 'te')} enseña las ${E.pasos.length} paradas en orden.`);
     } else {
       const ya = S.doubts.some(d => d.id === 'rq-' + q.id);
-      body = `<div class="rr-k">${ic('chat', 15)}Para hablarlo en la reunión</div><p class="small muted rr-sal">${esc(q.salida || '')}</p>
-        ${ya ? `<p class="saved">${ic('check', 15)}Apuntado para ${w('vuestro', 'tu')} asesor</p>` : `<button class="btn soft block" data-act="rask" data-k="${q.id}">${ic('pen', 18)} Apuntarlo para ${w('vuestro', 'tu')} asesor</button>`}`;
+      body = `<div class="rr-k">${ic('chat', 15)}Para trabajarlo con ${ase}</div>${q.salida ? `<p class="small muted rr-sal">${esc(q.salida)}</p>` : ''}`
+        + meetBox(`${w('Vuestro', 'Tu')} asesor lo revisa ${w('con vosotros', 'contigo')} y ${w('os', 'te')} dice cómo mejorarlo.`)
+        + (ya ? `<p class="saved">${ic('check', 15)}Apuntado como pregunta</p>` : `<button class="link block" data-act="rask" data-k="${q.id}">${ic('pen', 16)} Apuntarlo como pregunta para ${ase}</button>`);
     }
-    return `<div class="rv-route" data-st="fade">${body}${meet}</div>`;
+    return `<div class="rv-route" data-st="fade">${body}</div>`;
+  }
+  // Modo pareja: al ver cada respuesta, la parada que toca queda encontrada (con «?») y se ofrece la reunión.
+  function pjRoute(q) {
+    if (!E.pasos.length) return '';
+    if (q) { const p = pasoDe(q); if (p) vistos()[p.key] = true; else if (q.id === 'nota') E.pasos.forEach(x => { vistos()[x.key] = true; }); }
+    return `<div class="rv-route pj-route">${q && pasoDe(q) ? `<div class="rr-k">${ic('flag', 15)}Vuestro plan tiene una parada para esto</div><p class="small muted rr-sal">Cuál es y cuánto sube vuestra nota, lo veis con vuestro asesor.</p>` : ''}
+      ${meetBox('Vuestro asesor lo revisa con los dos y os enseña cómo mejorarlo.')}</div>`;
   }
 
   // ------------------------------------------------------------------ iconos (trazo, 24x24)
@@ -263,7 +273,7 @@
       ${q.siente ? `<p class="rv-feel" data-st="fade">${q.siente}</p>` : ''}
       ${rvRoute(q)}
       <div class="rv-note" data-st="fade"><div class="rv-note-q">¿Qué ${w('os pasa', 'te pasa')} por la cabeza al ver esto?</div>
-        <div class="rx-row">${REACT.filter(([v]) => !(v === 'fix' && pasoDe(q))).map(([v, l, i]) => `<button class="rx" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}"><span class="sg-ic">${ic(i, 18)}</span><span>${l()}</span></button>`).join('')}</div>
+        <div class="rx-row">${REACT.map(([v, l, i]) => `<button class="rx" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}"><span class="sg-ic">${ic(i, 18)}</span><span>${l()}</span></button>`).join('')}</div>
         <p class="saved rx-ok" ${r ? '' : 'hidden'}>${ic('check', 15)}Apuntado para ${w('vuestro', 'tu')} asesor</p>
         ${(S.notes || {})[q.id] ? '' : `<button class="link addnote" data-act="addnote">${ic('pen', 16)}Añadir algo con ${w('vuestras', 'tus')} palabras</button>`}
         <div class="note-w" ${(S.notes || {})[q.id] ? '' : 'hidden'}><label for="note" class="sr">Con ${w('vuestras', 'tus')} palabras</label>
@@ -631,7 +641,7 @@
     const open = S.rulOpen != null ? SLIDES.find(x => rulKey(x) === S.rulOpen) : null;
     app.innerHTML = `<div class="rul-wrap"><div class="narrow">${routeBar()}<div class="segs" aria-label="Tarjeta ${i + 1} de ${n}">${SLIDES.map((x, k) => `<button data-act="goslide" data-v="${k}" class="${k === i ? 'cur' : ''}" aria-label="Ir a ${esc(rulName(x))}"></button>`).join('')}</div></div>
       <div class="rul-stage" data-rul aria-roledescription="carrusel" aria-label="Resumen de ${w('vuestro', 'tu')} plan"><div class="rul-ring">${SLIDES.map((x, k) => `<section class="rul-card" data-i="${k}" aria-label="${esc(rulName(x))}" ${k === i ? '' : 'aria-hidden="true"'}><div class="rul-in slide">${slideHtml(x)}
-        ${rulKey(x) ? `<button class="rul-abrir" data-act="rulopen" data-v="${esc(rulKey(x))}">${ic('plus', 16)}<span>Abrir página</span></button>` : ''}</div></section>`).join('')}</div></div>
+        ${rulKey(x) ? `<button class="rul-abrir" data-act="rulopen" data-v="${esc(rulKey(x))}">${ic('plus', 16)}<span>Abrir en el plan</span></button>` : ''}</div></section>`).join('')}</div></div>
       <div class="narrow rul-nav"><button class="rul-arr" data-act="rulgo" data-v="-1" aria-label="Anterior: ${esc(rulName(prev))}">${back}<span>${esc(rulName(prev))}</span></button><span class="rul-pos">${i + 1} / ${n}</span><button class="rul-arr nx" data-act="rulgo" data-v="1" aria-label="Siguiente: ${esc(rulName(next))}"><span>${esc(rulName(next))}</span>${ic('arrow', 18)}</button></div></div>
       ${open ? `<div class="rul-full open" role="dialog" aria-modal="true" aria-label="${esc(rulName(open))}"><div class="rul-full-in"><div class="rul-full-bar"><button class="link tp-back" data-act="rulclose">${back} Volver a la ruleta</button></div><div class="narrow tpage">${temaBody(S.rulOpen)}<p class="foot">Cifras del informe de ${w('vuestro', 'tu')} estudio. ${fuente()}</p></div></div></div>` : ''}
       <div class="cta-bar"><div class="cta-in">${open ? `<button class="btn ghost grow" data-act="rulclose">Volver a la ruleta</button>` : ''}<button class="btn grow" data-act="fullplan">Ver el plan completo</button></div></div>`;
@@ -832,7 +842,7 @@
       ? (story ? `<ul class="tm-pl">${pasos.map(p => { const y = S.steps[p.key] === 'yes', v = (S.seen || {})[p.key]; return `<li class="${y ? 'done' : v ? 'seen' : ''}"><b class="tm-n">${y ? ic('check', 12) : E.pasos.indexOf(p) + 1}</b><span>${esc(pTitulo(p))}${y ? `<small>En ${w('vuestra', 'tu')} ruta</small>` : v ? `<small>Lo ${w('descubristeis', 'descubriste')} en el quiz</small>` : ''}</span></li>`; }).join('')}</ul>` : pasos.map(pasoTema).join(''))
       : sinPaso(x);
     const men = x.qs.some(q => (S.match || []).includes(q.id)) ? `<span class="porque tm-men">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
-    return `<article class="tema ${nivel(a.nota)}" style="--i:${i}">${men}
+    return `<article class="tema ${nivel(a.nota)}" ${story ? '' : `id="tema-${esc(a.nombre)}"`} style="--i:${i}">${men}
       <div class="tm-open">${cabTema(a, t)}${filasTema(a.resumen)}</div>
       <div class="tm-plan"><div class="kicker" style="margin:0 0 6px">${pasos.length ? `Lo que propone ${w('vuestro', 'tu')} plan` : `${w('Vuestro', 'Tu')} plan`}</div>${plan}</div>
     </article>`;
@@ -1367,6 +1377,7 @@
       ${pjTrack(q)}
       ${pjPropLine(planPara(q.id))}
       ${q.siente ? `<p class="rv-feel on">${q.siente}</p>` : ''}
+      ${pjRoute(q)}
       ${dock('Seguir: vuestro riesgo', true, 'pjgo')}</div>`;
   }
   function pjRevVida() {
@@ -1377,6 +1388,7 @@
       <h2 class="pj-tit">${esc(titVida())}</h2>
       ${pjPropLine(planPara('vida'), rec ? `Lo que recomienda: ${rec}` : '')}
       <div class="rv-vis pj-vis">${vis(q)}</div>
+      ${pjRoute(q)}
       ${dock(notaQ() ? 'Una última pregunta' : 'Ver qué propone vuestro plan', true, 'pjgo')}</div>`;
   }
   function pjScale(rows) {
@@ -1401,6 +1413,7 @@
       <div class="card pj-mapcard">${pjScale(rows)}<p class="tiny"><span class="pj-key fill"></span> indicado en el estudio &nbsp; <span class="pj-key ring"></span> lo que haría ante una caída</p></div>
       ${pjPropLine(riskProp())}
       ${c && c.dias ? `<p class="small pj-note">${ic('clock', 16)} Aquella caída del ${esc(c.txt)} se recuperó en ${c.dias} días.</p>` : ''}
+      ${pjRoute(null)}
       ${dock(vidaQ() ? `Seguir: ${esc(partVida().replace(/^Vuestr/, 'vuestr'))}` : notaQ() ? 'Una última pregunta' : 'Ver qué propone vuestro plan', true, 'pjgo')}</div>`;
   }
   // La fecha la confirman los dos antes de apuntarla.
@@ -1415,6 +1428,7 @@
         <div><small>Vuestro estudio dice</small><b class="pj-big">${n.hoy} de 100</b></div></div>
       ${ar.length ? `<div class="pj-areas">${ar.map(x => `<div class="pj-ar ${x === low ? 'low' : ''}"><span>${esc(x.nombre)}</span><i><b style="width:${x.nota}%"></b></i><em>${x.nota}</em></div>`).join('')}</div>` : ''}
       ${low ? `<h2 class="pj-tit sm">Lo que más baja vuestra nota: ${esc(low1(low.nombre))}</h2>` : ''}
+      ${pjRoute({ id: 'nota' })}
       ${dock('Ver qué propone vuestro plan', true, 'pjgo')}</div>`;
   }
   // Todos los pasos del plan: la nota que deja cada uno (combos), lo que suma y quién lo hace.
@@ -1513,7 +1527,7 @@
     const prog = `<div class="progress thin"><div class="bar"><i style="width:${S.pj.step / (steps.length - 1) * 100}%"></i></div></div>`;
     const key = S.pj.step + ':' + steps[S.pj.step]; PJ_NEW = PJ_IN !== key; PJ_IN = key;
     const V = { intro: pjIntro, frase: () => pjFrase(x), pass: () => pjPass(x), money: () => pjMoney(x), vida: pjVida, nota: pjNota, rev: () => (x === 'money' ? pjRevMoney() : x === 'vida' ? pjRevVida() : x === 'nota' ? pjRevNota() : pjRevRisk()), risk: () => pjRisk(x), map: pjMap }[kind];
-    app.innerHTML = (kind === 'pass' ? '' : prog) + V();
+    app.innerHTML = (kind === 'pass' || kind === 'intro' ? '' : `<div class="narrow">${routeBar()}</div>`) + (kind === 'pass' ? '' : prog) + V();
     // El fondo toma el color de quien contesta: azul uno, teja el otro; neutro cuando lo veis juntos.
     if (x === 'a' || x === 'b') document.body.dataset.pj = x; else delete document.body.dataset.pj;
     if (kind === 'rev' && x === 'nota') animateRing();
@@ -1773,7 +1787,7 @@
       case 'stop': {
         const p = paso(b.dataset.s), i = E.pasos.indexOf(p);
         if (S.stage === 'plan') { const el = document.getElementById('step-' + p.key); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); } }
-        else if (S.stage === 'quiz' && !(S.seen || {})[p.key] && S.steps[p.key] !== 'yes') toast(`Parada ${i + 1}: aparece cuando ${w('descubráis', 'descubras')} lo que arregla`);
+        else if (S.stage === 'quiz' || S.stage === 'pareja') toast((S.seen || {})[p.key] ? `Parada ${i + 1}: cuál es, ${w('lo veis', 'lo ves')} con ${w('vuestro', 'tu')} asesor` : `Parada ${i + 1}: todavía por encontrar`);
         else toast(`Parada ${i + 1}: ${pTitulo(p)} · nota ${p.nota}`);
         break;
       }
@@ -1818,7 +1832,13 @@
       case 'prev': rulTo(Math.round(RUL.rot) - 1, -1); break;
       case 'goslide': rulTo(+v); break;
       case 'rulgo': rulTo(Math.round(RUL.rot) + +v, +v); break;
-      case 'rulopen': rulOpen(v); break;
+      case 'rulopen': { // abre esa parte dentro del plan completo
+        S.rulOpen = null; S.stage = 'plan'; render();
+        const el = v === '__nota' ? null : document.getElementById('tema-' + v);
+        if (!el) { window.scrollTo(0, 0); break; }
+        const top = el.getBoundingClientRect().top + window.scrollY - 170; window.scrollTo(0, Math.max(0, top));
+        el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); break;
+      }
       case 'rulclose': rulClose(); break;
       case 'cff': selCf(b, v); break;
       case 'fullplan': S.rulOpen = null; S.stage = 'plan'; render(); window.scrollTo(0, 0); break;

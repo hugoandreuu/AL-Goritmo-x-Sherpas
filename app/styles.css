@@ -1512,3 +1512,10 @@ body.fondo-on .rul-arr { background: rgba(255,255,255,.85); -webkit-backdrop-fil
 .rt-seg.on { background: linear-gradient(90deg, var(--sky), var(--accent)); }
 .rt-seg:first-child { border-radius: 6px 0 0 6px; } .rt-seg:last-of-type { border-radius: 0 6px 6px 0; }
 .rr-list li > span { display: block; line-height: 1.3; }
+/* En los quizzes la ruta se desvela a medias: la parada encontrada sigue con «?» y se ve con el asesor. */
+.rt-stop.found { background: var(--accent-soft); border: 2px solid var(--accent); color: var(--accent); animation: stopin .6s var(--soft); }
+.rr-stop.found .rr-n { background: #fff; color: var(--accent); border: 2px solid var(--accent); }
+.rr-fine { display: block; text-align: center; font-size: 12.5px; color: #5f6168; }
+.rv-route.pj-route { background: var(--accent-soft); border-radius: 20px; padding: 16px; display: grid; gap: 10px; margin: 14px 0; }
+.rv-route.pj-route .rr-meet { border-top: 0; padding-top: 0; }
+.tema.flash { animation: flash 1.4s var(--soft); }
