@@ -971,12 +971,20 @@
         <span class="pt-txt"><span class="nd-est">${ic(EST_IC[est], 14)}${ESTADO_N[est]}</span><b>${w('Vuestra', 'Tu')} nota de salud financiera</b><small>${E.nota.banda ? `Banda ${esc(E.nota.banda)}. ` : ''}Toca para ver cómo se calcula.</small></span></button>
       <ul class="pt-frases">${frases.map(([i2, f], k) => `<li style="--i:${k}">${ic(i2, 16)}<span>${f}</span></li>`).join('')}</ul></section>`;
   }
-  // Texto del informe (narrative): en español si hay traducción revisada; si no, el original.
+  // Texto del informe (narrative): resumen corto en español, punto a punto, con su cifra destacada y un color
+  // según lo que significa (bien, mal, ojo, dato o «para revisar»). Si no hay resumen, la traducción revisada.
+  // El original en inglés no se enseña: es largo y repite cifras que ya están en la página.
+  const PT_IC = { bien: 'check', mal: 'flag', ojo: 'eye', info: 'list', rev: 'arrow' };
+  const tieneNarr = n => !!((n.corto && n.corto.length) || n.es);
   function narrHtml(n) {
-    const txt = n.es || n.en, md = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
-    const lineas = String(txt).split(/\n+/).map(x => x.trim()).filter(Boolean);
-    const items = lineas.length > 1 || /^- /.test(lineas[0] || '') ? `<ul class="lect">${lineas.map(l => `<li>${md(l.replace(/^- /, ''))}</li>`).join('')}</ul>` : `<p>${md(txt)}</p>`;
-    return `${items}${n.es ? '' : `<p class="tiny">Texto original del informe, en inglés.</p>`}`;
+    if (n.corto && n.corto.length) {
+      const rev = n.corto.every(p => p.k === 'rev');
+      return `<ul class="pts${rev ? ' solo-rev' : ''}">${n.corto.map((p, i) => `<li class="pt k-${p.k}" style="--i:${i}"><span class="pt-ic" aria-hidden="true">${ic(PT_IC[p.k] || 'list', 14)}</span><span class="pt-tx">${p.c ? `<b class="pt-c">${esc(p.c)}</b> ` : ''}${esc(p.t)}</span></li>`).join('')}</ul>`;
+    }
+    if (!n.es) return '';
+    const md = s2 => esc(s2).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    const lineas = String(n.es).split(/\n+/).map(x => x.trim()).filter(Boolean);
+    return lineas.length > 1 || /^- /.test(lineas[0] || '') ? `<ul class="lect">${lineas.map(l => `<li>${md(l.replace(/^- /, ''))}</li>`).join('')}</ul>` : `<p>${md(n.es)}</p>`;
   }
   function capaHtml(c) {
     if (c.t === 'filas') return `<div class="dsg"><table>${c.filas.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</table></div>${c.nota ? `<p class="tiny">${esc(c.nota)}</p>` : ''}`;
@@ -985,8 +993,8 @@
     return '';
   }
   const capasHtml = (capas, narr) => {
-    const bloques = (capas || []).map(c => [c.titulo, capaHtml(c)]).concat((narr || []).map(n => [`${n.titulo} · informe`, narrHtml(n)]));
-    return bloques.length ? `<div class="capas">${bloques.map(([t2, h]) => `<details class="capa"><summary><span>${esc(t2)}</span>${ic('arrow', 16)}</summary><div class="capa-in">${h}</div></details>`).join('')}</div>` : '';
+    const bloques = (capas || []).map(c => [esc(c.titulo), capaHtml(c)]).concat((narr || []).filter(tieneNarr).map(n => [`${esc(n.titulo)}<em class="capa-tag">informe</em>`, narrHtml(n)]));
+    return bloques.length ? `<div class="capas">${bloques.map(([t2, h]) => `<details class="capa"><summary><span>${t2}</span>${ic('arrow', 16)}</summary><div class="capa-in">${h}</div></details>`).join('')}</div>` : '';
   };
   const narrDe = id => (E.narrativa || []).filter(n => n.punto === id);
   const conexHtml = ids => { const ns = (ids || []).map(nodo).filter(Boolean); return ns.length ? `<div class="conex"><span class="small muted">Conectado con</span>${ns.map(n => `<button class="chip sm est-${n.estado}" data-act="tema" data-k="${esc(n.id)}">${ic(n.icon, 14)}${esc(n.nombre)}</button>`).join('')}</div>` : ''; };
@@ -1122,14 +1130,38 @@
     [/lifeInsurance/, 'Seguro de vida'], [/umbrella/, 'Responsabilidad civil'], [/profile\.insurance/, 'Pólizas'], [/case\.household/, 'Familia'],
     [/education/, 'Universidad'], [/^goals/, 'Metas'], [/retirement|projections/, 'Jubilación'],
   ];
+  // Filas con el mismo prefijo («A dónde va: Impuestos», «A dónde va: Deudas»...) se juntan en una ficha visual.
+  function juntarCifras(rows) {
+    const out = [], pre = r => /% del total\)$/.test(String(r[1])) ? 'De qué está hecho el patrimonio' : (/^([^:·]{4,40}):\s+(.+)$/.exec(r[0]) || [])[1];
+    rows.forEach(r => {
+      const p = pre(r), g = p && out.find(o => o.grupo === p);
+      if (g) g.rows.push(r); else if (p && rows.filter(x => pre(x) === p).length > 1) out.push({ grupo: p, rows: [r] }); else out.push(r);
+    });
+    return out;
+  }
+  const pctDe = v => { const m = /(-?[\d.]+(?:,\d+)?)\s?%/.exec(v); return m ? +m[1].replace(/\./g, '').replace(',', '.') : null; };
+  function grupoTile(g, i) {
+    const items = g.rows.map(r => ({ lab: r[0].startsWith(g.grupo + ':') ? r[0].slice(g.grupo.length + 1).trim() : r[0], v: String(r[1]), p: pctDe(String(r[1])) }));
+    const suma = items.reduce((a, x) => a + (x.p || 0), 0), reparto = items.every(x => x.p != null && x.p >= 0) && suma > 60 && suma < 140;
+    if (reparto) {
+      return `<div class="itile ancha rp" style="--i:${i}"><small>${esc(g.grupo)}</small><div class="rp-bar">${items.map((x, j) => `<i class="c${j % 6}" style="flex:${x.p}" title="${esc(x.lab)}: ${esc(x.v)}"></i>`).join('')}</div>
+        <ul class="rp-leg">${items.map((x, j) => `<li><i class="c${j % 6}"></i><span>${esc(x.lab)}</span><b>${numHi(esc(x.v.replace(/\s*\([^)]*%[^)]*\)/, '')))}</b><em>${esc(dec(x.p, x.p % 1 ? 1 : 0))} %</em></li>`).join('')}</ul></div>`;
+    }
+    const conPct = items.every(x => x.p != null && x.v.trim().replace(/[\s%]/g, '').replace(/^-?[\d.,]+$/, '') === ''), mx = Math.max(...items.map(x => Math.abs(x.p || 0))) || 1;
+    if (conPct) {
+      return `<div class="itile ancha rp" style="--i:${i}"><small>${esc(g.grupo)}</small><ul class="rp-bars">${items.map(x => `<li><span>${esc(x.lab)}</span><span class="rp-t"><i class="${x.p < 0 ? 'neg' : 'pos'}" style="width:${Math.max(3, Math.abs(x.p) / mx * 100)}%"></i></span><b class="${x.p < 0 ? 'neg' : 'pos'}">${esc(x.v)}</b></li>`).join('')}</ul></div>`;
+    }
+    return `<div class="itile ancha" style="--i:${i}"><small>${esc(g.grupo)}</small><ul class="rp-list">${items.map(x => `<li><span>${esc(x.lab)}</span><b>${numHi(esc(x.v))}</b></li>`).join('')}</ul></div>`;
+  }
   function cifrasHtml(rows) {
     if (!rows || !rows.length) return '';
     const gs = [], key = S.temaK || S.rulOpen || '';
     rows.forEach(r => { const n = (CF_GRUPOS.find(([re]) => re.test(r[2] || '')) || [0, 'Otras cifras'])[1], g = gs.find(x => x.n === n); if (g) g.rows.push(r); else gs.push({ n, rows: [r] }); });
     const sel = CF_SEL[key] || '*';
-    const tile = (r, i) => `<div class="itile ${String(r[1]).length > 24 ? 'ancha' : ''}" style="--i:${i}"><small>${esc(r[0])}</small><b>${numHi(esc(r[1]))}</b>${PRO() && r[2] ? `<small class="tm-o">${esc(r[2])}</small>` : ''}</div>`;
+    const tile0 = (r, i) => `<div class="itile ${String(r[1]).length > 24 ? 'ancha' : ''}" style="--i:${i}"><small>${esc(r[0])}</small><b>${numHi(esc(r[1]))}</b>${PRO() && r[2] ? `<small class="tm-o">${esc(r[2])}</small>` : ''}</div>`;
+    const tiles = rows2 => juntarCifras(rows2).map((r, i) => r.grupo ? grupoTile(r, i) : tile0(r, i)).join('');
     return `<div class="cfw">${gs.length > 1 ? `<div class="cf-bar" role="group" aria-label="Filtrar cifras">${[['*', 'Todas', rows.length]].concat(gs.map(x => [x.n, x.n, x.rows.length])).map(([v, l, c]) => `<button class="cf-chip" data-act="cff" data-v="${esc(v)}" aria-pressed="${sel === v}"><span>${esc(l)}</span><em>${c}</em></button>`).join('')}</div>` : ''}
-      ${gs.map(x => `<section class="cf-g" data-n="${esc(x.n)}" ${sel === '*' || sel === x.n ? '' : 'hidden'}>${gs.length > 1 ? `<h4 class="cf-h">${esc(x.n)}</h4>` : ''}<div class="itiles">${x.rows.map(tile).join('')}</div></section>`).join('')}</div>`;
+      ${gs.map(x => `<section class="cf-g" data-n="${esc(x.n)}" ${sel === '*' || sel === x.n ? '' : 'hidden'}>${gs.length > 1 ? `<h4 class="cf-h">${esc(x.n)}</h4>` : ''}<div class="itiles">${tiles(x.rows)}</div></section>`).join('')}</div>`;
   }
   function selCf(btn, v) {
     const box = btn.closest('.cfw'); if (!box) return; CF_SEL[S.temaK || S.rulOpen || ''] = v;
@@ -1187,7 +1219,7 @@
         ${sec(2, `Cómo crece ${w('vuestro', 'tu')} patrimonio`, grafLinea(r))}
         ${sec(3, 'Qué significa', lecturaHtml(r.lectura))}
         ${asesorHtml(r.asesor)}${conexHtml(['jubilacion', 'universidad'])}
-        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${filasTema(r.detalle, true)}</details>`;
+        <details class="fold-all"><summary>Todas las cifras de este tema</summary>${cifrasHtml(r.detalle)}</details>`;
     } else {
       const n = nodo(k); if (!n) { volverTema(); return; }
       titulo = n.nombre;
@@ -1199,7 +1231,7 @@
           ${sec(2, 'En gráfico', graf(a.graf) + desgloseHtml(a.desglose))}
           ${sec(3, `Lo que propone ${w('vuestro', 'tu')} plan`, pasos.length ? pasos.map(pasoTema).join('') : sinPaso(x))}
           ${asesorHtml(a.asesor)}${conexHtml(a.conexiones)}
-          ${sec(4, 'Ver más', capasHtml(a.capas, narrDe(a.nombre)) + `<details class="capa"><summary><span>Todas las cifras de este tema</span>${ic('arrow', 16)}</summary><div class="capa-in">${filasTema(a.detalle, true)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></div></details>`)}`;
+          ${sec(4, 'Ver más', capasHtml(a.capas, narrDe(a.nombre)) + `<details class="capa"><summary><span>Todas las cifras de este tema</span>${ic('arrow', 16)}</summary><div class="capa-in">${cifrasHtml(a.detalle)}<p class="tiny">Puntos en la nota: ${esc(a.puntos || a.nota + ' de 100')}.</p></div></details>`)}`;
       } else {
         html = `${head}${kpisHtml(n.kpis)}
           ${sec(1, 'Lo esencial', lecturaHtml(n.lectura))}

@@ -42,6 +42,8 @@ npm run build
 
 El token del MCP dura 72 horas. Sin token, el script lee `cases/`; sin clave del LLM, reutiliza lo que el LLM dejó escrito en `app/estudios/llm/` (o usa frases de plantilla si no hay nada). Cada estudio dice de dónde salieron sus datos y sus frases, y la app lo enseña al pie. Si tu equipo sale a internet por un proxy, lanza `NODE_USE_ENV_PROXY=1 npm run estudio` (Node 22.21 o superior).
 
+Los textos largos del informe de Sherpas vienen en inglés. En la app se enseñan resumidos en español, punto a punto, desde `app/estudios/llm/<caso>.corto.json`. Cada punto lleva su cifra y un tono (`bien`, `mal`, `ojo`, `info` o `rev` para «para revisar»), y se descarta si trae una cifra que no está en el texto original. `npm run estudio` los aplica solo; si solo cambias esos archivos, basta con `npm run corto` y luego `npm run build`.
+
 ## Estructura
 
 ```
