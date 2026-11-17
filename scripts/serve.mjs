@@ -16,7 +16,8 @@ const types = {
 createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
-    if (url.pathname === '/') { res.writeHead(302, { Location: '/app/' }); return res.end(); }
+    // Conserva ?caso=, ?reset y demás atajos al pasar de / a /app/.
+    if (url.pathname === '/') { res.writeHead(302, { Location: '/app/' + url.search }); return res.end(); }
     let file = normalize(join(root, decodeURIComponent(url.pathname)));
     if (!file.startsWith(root) || /[\\/]\.(env|git)/.test(file)) { res.writeHead(403); return res.end('No permitido'); }
     if ((await stat(file)).isDirectory()) file = join(file, 'index.html');
@@ -28,5 +29,5 @@ createServer(async (req, res) => {
     res.end('No encontrado');
   }
 }).listen(port, () => {
-  console.log(`\n  Vuestro plan en 5 minutos → http://localhost:${port}/app/\n  (Ctrl+C para parar)\n`);
+  console.log(`\n  Vuestro plan de futuro → http://localhost:${port}/app/\n  (Ctrl+C para parar)\n`);
 });
