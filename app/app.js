@@ -894,7 +894,7 @@
   const alertaTxt = a => !a.alerta ? '' : nivelArea(a) !== nivel(a.nota) ? `La nota sale de la fórmula del plan, pero ojo: ${low1(a.alerta.txt)}` : `Ojo: ${a.alerta.txt}`;
   // Nota general: el color que le da Sherpas (rojo, amarillo, verde); si no lo trae, por tramos.
   const nivelNota = () => ({ red: 'low', yellow: 'mid', green: 'hi' })[E.nota.color] || nivel(E.nota.hoy);
-  const ESTADO = { low: 'A reforzar', mid: 'Mejorable', hi: 'Bien' };
+  const ESTADO = { low: 'Urgente', mid: 'Revisar pronto', hi: 'Bien' };
   function temasPlan() {
     const usados = new Set();
     const lista = E.areas.map(a => {
@@ -954,7 +954,7 @@
   // --- nodos del informe: las cinco áreas de la nota y los puntos del informe que no puntúan.
   // Cada uno tiene su cifra en grande, su estado (color + icono + texto) y su página con capas.
   const RANGO = { low: 0, mid: 1, hi: 2, neutro: 3 };
-  const ESTADO_N = { low: 'A reforzar', mid: 'Mejorable', hi: 'Bien', neutro: 'Para saber' };
+  const ESTADO_N = { low: 'Urgente', mid: 'Revisar pronto', hi: 'Bien', neutro: 'Para saber' };
   const EST_IC = { low: 'flag', mid: 'eye', hi: 'check', neutro: 'list' };
   const sinTags = h => String(h || '').replace(/<[^>]+>/g, '');
   function nodos() {
@@ -1189,7 +1189,7 @@
       titulo = 'Nota general';
       html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
         <div class="foto">${ring(E.nota.hoy, E.nota.max)}</div>
-        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivelArea(a) === 'low' ? 'coste' : nivelArea(a) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'A reforzar', bueno: 'Bien' }, plano: true }) + conexHtml(E.areas.map(a => a.nombre)))}
+        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivelArea(a) === 'low' ? 'coste' : nivelArea(a) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'Urgente', bueno: 'Bien' }, plano: true }) + conexHtml(E.areas.map(a => a.nombre)))}
         ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s2 => (paso(s2) || {}).titulo || s2).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}
         ${sec(3, 'Ver más', capasHtml(E.notaCapas, narrDe('__nota')))}`;
     } else if (k === '__ruta') {
@@ -1222,7 +1222,7 @@
       titulo = 'Nota general';
       html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
         <div class="foto">${ring(E.nota.hoy, E.nota.max)}</div>
-        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivelArea(a) === 'low' ? 'coste' : nivelArea(a) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'A reforzar', bueno: 'Bien' }, plano: true }) + conexHtml(E.areas.map(a => a.nombre)))}
+        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivelArea(a) === 'low' ? 'coste' : nivelArea(a) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'Urgente', bueno: 'Bien' }, plano: true }) + conexHtml(E.areas.map(a => a.nombre)))}
         ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s2 => (paso(s2) || {}).titulo || s2).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}
         ${sec(3, 'Ver más', capasHtml(E.notaCapas, narrDe('__nota')))}`;
     } else if (k === '__ruta') {
