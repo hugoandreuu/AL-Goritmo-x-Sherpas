@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # La idea, a fondo
 
 Documento de trabajo del equipo. Estado a viernes 13 de noviembre de 2026. Sirve de base para construir el MVP.
@@ -178,4 +180,4 @@ Esto no es el plan de trabajo, solo la lista de lo que la idea obliga a construi
 - Pantallas: entrada, pregunta con deslizador, revelación con solución, resumen con día y hora, ficha del asesor.
 - Recordatorio: archivo de calendario con el paso y el objetivo del cliente.
 
-Material relacionado: maqueta navegable de Michael (enlace privado, lo comparte Hugo), [investigacion-profunda.md](investigacion-profunda.md) para las fuentes y [decisiones.md](decisiones.md) para el resto de ideas descartadas.
+Material relacionado: maqueta navegable de Michael (enlace privado, lo comparte Hugo), [investigacion-profunda.md](../../brainstorming/investigacion-profunda.md) para las fuentes y [decisiones.md](../../brainstorming/decisiones.md) para el resto de ideas descartadas.

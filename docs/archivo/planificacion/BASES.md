@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Bases de la app: "Vuestro plan, en vuestras palabras" (nombre provisional)
 
 > Documento vivo. **Versión 7.2 (ronda 13).** Ficheros complementarios: [PANTALLAS.md](PANTALLAS.md), [PLAN-TECNICO.md](PLAN-TECNICO.md), [PITCH.md](PITCH.md), [glosario.md](glosario.md), [preguntas-otras-familias.md](preguntas-otras-familias.md), [TAREAS.md](TAREAS.md), [MEDIA_PAGINA.md](MEDIA_PAGINA.md), [README-APP.md](README-APP.md), [PRUEBA-USUARIOS.md](PRUEBA-USUARIOS.md).

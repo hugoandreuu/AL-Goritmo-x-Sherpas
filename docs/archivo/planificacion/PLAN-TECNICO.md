@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Plan técnico del MVP (13-18 nov)
 
 > Complemento de [BASES.md](BASES.md). Ronda 2, actualizado en la ronda 9. Entrega: miércoles 18 nov 23:59 (repo público + enlace o pasos de arranque + vídeo + media página). Demo: jueves 19 nov 12:45.

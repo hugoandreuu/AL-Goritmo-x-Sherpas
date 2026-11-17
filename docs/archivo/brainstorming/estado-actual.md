@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Estado actual
 
 > **Actualización 13 nov, 19:45.** Para la entrega del viernes el equipo ha decidido: la idea aún no tiene nombre ("Tú primero" es solo una etiqueta de estas notas), se quita la apertura "¿qué te quita el sueño?" y se quita el modo pareja por ahora. Lo que sigue en pie es el bucle de adivinar, revelar y solución con Michael, y un único paso con día y hora. El resto de este archivo es anterior a esa decisión.
@@ -34,7 +36,7 @@ Antes de enseñar cada dato, la app pide a la familia que lo adivine y luego rev
 - El pitch se abre haciendo adivinar al jurado en directo.
 
 ## Idea C: la combinación que recomienda Claude tras la investigación (13 nov, 18:50)
-Nombre provisional: "Tú primero". Junta la idea B con lo mejor de lo investigado ([investigacion-profunda.md](investigacion-profunda.md)).
+Nombre provisional: "Tú primero". Junta la idea B con lo mejor de lo investigado ([investigacion-profunda.md](../../brainstorming/investigacion-profunda.md)).
 
 1. **Cartas antes que cifras.** Cada persona elige en privado, en su móvil, qué le quita el sueño y qué quiere proteger. En pareja, ninguno ve lo del otro hasta que los dos contestan.
 2. **Adivina y revela, en visual.** Tres a cinco datos del plan, con un deslizador. Se revela el dato, la distancia con su intuición y una frase que lo traduce a su vida. Sin "correcto" ni "incorrecto", y siempre con el botón "prefiero verlo directamente".

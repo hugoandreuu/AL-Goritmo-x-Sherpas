@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Veredicto sobre el plan de Daniel (modo pareja, caso Weah)
 
 Sábado 14 de noviembre de 2026. Revisado: BASES.md v7.2, PLAN-TECNICO, PITCH, PANTALLAS (índice), TAREAS v2, MEDIA_PAGINA, PREGUNTAS-MENTORES y el chat exportado. Comparado con nuestra [idea.md](idea.md) y con los datos de `cases/`.

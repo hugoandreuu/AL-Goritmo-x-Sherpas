@@ -1,4 +1,4 @@
-# Vuestro plan en 5 minutos (MVP)
+# Vuestro plan de futuro: la web
 
 Web estática, sin frameworks ni dependencias. Pinta el **estudio** de un caso: `estudios/<caso>.json`. En `app.js` no hay ninguna cifra del plan escrita a mano.
 
@@ -21,15 +21,16 @@ Las pocas cuentas propias (por ejemplo, años de gastos que cubre el seguro) las
 
 ## Flujo
 
-1. **Portada.** Nombre de la familia y selector de caso de ejemplo.
-2. **Quién mira, qué importa y nivel.** "Somos nuevos" o "Sabemos de finanzas" (añade el bloque técnico y el origen de cada cifra).
-3. **Adivinar y ver.** De 3 a 5 preguntas, las que el estudio trae para ese caso. Tras contestar: "decíais / el plan dice", un titular distinto si acertó, si el dato es mayor o si es menor, una imagen, la frase para sentirlo, la salida y una reacción de un toque.
-4. **Resumen en ruleta.** La nota general y una tarjeta por cada uno de los 5 temas van en una rueda 3D de tarjetas, todas con la misma altura y sobre el fondo de color de la app (el roadmap sale en el plan completo): la del centro se lee y las demás quedan detrás, desenfocadas. Se gira deslizando con el dedo o el ratón, con las flechas de abajo (llevan el nombre de la tarjeta vecina), con las flechas del teclado o tocando una tarjeta lateral; al girar, todas cambian de sitio a la vez. «Abrir página» agranda la tarjeta del centro hasta la pantalla completa con el detalle del tema (`kpis`, `desglose`, `graf`, `lectura`, pasos y «Todas las cifras» en mini tarjetas con filtros); «Volver a la ruleta» la devuelve a su sitio. Qué sección del informe va en cada tema: [docs/estudios/cobertura.md](../docs/estudios/cobertura.md).
-5. **Plan completo: el plan en 5 temas.** El plan es la estructura y las preguntas eran situaciones dentro de él. La pantalla son las cinco áreas con las que el plan calcula la nota (ahorro y jubilación, deudas, inversiones, colchón y seguros), cada una como un bloque breve: su nota, cómo está hoy (el dato del plan y, si contestaron, lo que pensaban) y lo que propone el plan en ese tema (sus pasos con "¿Os convence?", o una línea si no pide nada). Primero van los temas con pasos, en el orden del plan; luego el resto, de peor a mejor nota. Al final, el roadmap y la reunión con la hoja para el asesor. El reparto de preguntas y pasos por tema está en `TEMAS` (`app.js`).
+Si el plan es de dos adultos, la portada pregunta **¿Quién va a ver el plan?**: *Los dos juntos* lleva al modo pareja (abajo) y *Solo el quiz* al recorrido de siempre, que pueden hacer juntos o uno de los dos. Si es de una persona, hay un solo botón, *Empezar*.
+
+1. **Portada.** «Bienvenidos a vuestro plan de futuro», los nombres de la familia y, abajo, el selector de las familias del reto.
+2. **Frase puente** y **quiz**: quién mira el plan (si son dos), qué es lo que más les ronda la cabeza con el dinero (con sus palabras, el micrófono o una frase del estudio) y su nivel ("Somos nuevos" o "Sabemos de finanzas", que añade el detalle técnico y el origen de cada cifra).
+3. **Adivinar y ver.** Las preguntas que el estudio trae para ese caso, ordenadas según lo que dijeron que les preocupa. Tras contestar: "decíais / el plan dice", un titular distinto si acertaron, si el dato es mayor o si es menor, una imagen, la frase para sentirlo y una reacción de un toque. Las dudas que surgen se apuntan en el cuaderno del asesor (arriba). Al final, qué cambiaría en casa con todo resuelto.
+4. **Preparando vuestro plan** y **vuestro camino**: la línea de hoy a la jubilación con los hitos del plan; la nota sube con cada paso hasta la que deja el plan completo.
+5. **Vuestro informe.** La barra con las paradas del plan arriba; los puntos del informe de lo más urgente a lo que está bien (las cinco áreas con nota, donde se vota cada paso con "¿Os convence?", y el roadmap); y el cierre con pasos aceptados, dudas, la reunión (botón fijo abajo) y, una vez pedida, la hoja que recibe el asesor. El reparto de preguntas y pasos por tema está en `TEMAS` (`app.js`); qué sección del informe va en cada tema, en [docs/estudios/cobertura.md](../docs/estudios/cobertura.md).
+6. **Resumen** (botón de arriba en el informe): la nota y los cinco temas en una ruleta 3D de tarjetas que se gira con el dedo, el ratón, las flechas o el teclado; cada tarjeta se abre a pantalla completa con su detalle.
 
 ## Modo pareja: «Vuestro dinero, visto por los dos»
-
-Si el plan es de dos adultos, la portada pregunta **¿Quién va a ver el plan?**: *Los dos juntos* (el juego de pareja) o *Solo el quiz* (sin juego; lo pueden hacer juntos o uno de los dos por su cuenta). En la entrada del modo pareja se elige el nivel (nuevos o saben de finanzas), que cambia cómo se cuenta, no las cifras.
 
 Funciona como el perfil de riesgo de pareja de los asesores: cada uno contesta en privado en el mismo móvil y luego se compara entre sí y con el estudio. No hay ganadores ni "impostores": el objetivo es que la pareja se conozca mejor con el dinero, sin señalar a ninguno. Son 15 pantallas. Mientras contesta uno, el fondo es una malla de puntos de su color (azul o teja; morados si contestan juntos) y la pantalla de pasar el móvil es entera de ese color. La respuesta, lo que veis juntos, es la malla morada. Lo que contestan se contrasta con los **resultados del estudio** (cifras, nota y proyecciones); el **plan** son los pasos a seguir y los objetivos de cada área.
 

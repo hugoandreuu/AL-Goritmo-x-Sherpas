@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # Pitch, media página y preguntas del jurado
 
 > Versión alineada con BASES.md v7 (secciones 0, 6, 10, 12, 16, 17 y 19). Fuente de cifras: solo BASES.md y el JSON del caso Weah; no se añade ninguna cifra nueva. Roles: **P** = presentador (habla), **M** = persona con el móvil (toca, hace de Timothy/Melanie y recibe el mensaje).

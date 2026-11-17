@@ -1,6 +1,6 @@
 # Sesgos y mecanismos psicológicos por pantalla (caso Weah, app complementaria al asesor)
 
-14 nov 2026 · hilo "Idear enganche y motivación familiar". Ideación, no construir. Pantallas = las 8 del [veredicto](veredicto-plan-pareja.md).
+14 nov 2026 · hilo "Idear enganche y motivación familiar". Ideación, no construir. Pantallas = las 8 del [veredicto](../archivo/brainstorming/veredicto-plan-pareja.md).
 
 **Objetivo nuevo (Hugo):** el asesor no se sustituye. La app hace que la pareja llegue a la reunión entendiendo su plan, con un primer paso dado y con ganas de contratar.
 

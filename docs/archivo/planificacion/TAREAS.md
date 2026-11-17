@@ -1,3 +1,5 @@
+> **Archivo.** Documento de trabajo antiguo: describe una idea o un plan que ya no es el de la app. Lo vigente está en el [README](../../../README.md) y en [docs/brainstorming/decisiones.md](../../brainstorming/decisiones.md).
+
 # TAREAS.md: construcción con sesiones de Claude Code (v2)
 
 > Sustituye a la v1 (`TAREAS-v1-humanos.md`, pensada para 4 personas con rol). Fuentes: BASES.md §0 y §16-§21, PANTALLAS.md, PLAN-TECNICO.md, content-es.js, README-APP.md y los casos de `/home/user/AL-Goritmo-x-Sherpas/cases/`.
