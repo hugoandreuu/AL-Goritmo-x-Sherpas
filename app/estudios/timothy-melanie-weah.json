@@ -475,6 +475,10 @@
     "Pagando como hasta ahora, la tarjeta se acaba en <b>septiembre de 2039</b>."
    ],
    "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla.",
+   "alerta": {
+    "nivel": "mid",
+    "txt": "Hay deuda de tarjeta: 18.000 $ al 18 %."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -700,7 +704,7 @@
      "lab": "Rentabilidad",
      "val": "11,7 %",
      "sub": "al año, últimos 3 años",
-     "tono": "bueno"
+     "tono": "coste"
     },
     {
      "lab": "Peor caída",
@@ -852,7 +856,7 @@
      "lab": "Sobra",
      "val": "60 K$",
      "sub": "tras reserva y gastos previstos",
-     "tono": "bueno"
+     "tono": ""
     }
    ],
    "desglose": {
@@ -882,6 +886,10 @@
     "Hoy ese efectivo rinde <b>150 $</b> al año; bien colocado, unos <b>7.101 $</b>."
    ],
    "asesor": "Qué hacer con el efectivo que sobra: deudas, seguros o inversión.",
+   "alerta": {
+    "nivel": "mid",
+    "txt": "Sobran 60.223 $ de efectivo por encima de lo recomendado, y apenas rinden."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -1167,6 +1175,10 @@
     "Liam y Josh dependen de vuestros ingresos."
    ],
    "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios.",
+   "alerta": {
+    "nivel": "low",
+    "txt": "Falta seguro de vida: el plan pide más de lo que tenéis."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -2691,7 +2703,7 @@
       ],
       [
        "2077",
-       "null / 89",
+       "— / 89",
        "3,32 M$",
        "15,3 M$",
        "0 $",
@@ -2699,7 +2711,7 @@
       ],
       [
        "2078",
-       "null / 90",
+       "— / 90",
        "3,35 M$",
        "16 M$",
        "0 $",
@@ -2707,7 +2719,7 @@
       ],
       [
        "2079",
-       "null / 90",
+       "— / 90",
        "3,36 M$",
        "16,1 M$",
        "0 $",
@@ -5067,7 +5079,7 @@
     },
     {
      "c": "2.371.900,89 $",
-     "t": "quedarían al final del plan: buen margen.",
+     "t": "quedarían al final del estudio: buen margen.",
      "k": "bien"
     },
     {
@@ -5476,7 +5488,7 @@
    "corto": [
     {
      "c": "2.371.900,89 $",
-     "t": "al final del plan y ningún hueco de jubilación.",
+     "t": "al final del estudio y ningún hueco de jubilación.",
      "k": "bien"
     },
     {
@@ -5960,7 +5972,7 @@
    "titulares": {
     "cerca": "Eso es. Aquí vais bien.",
     "mas": "Más de lo que pensabais.",
-    "menos": "Algo menos de lo que pensabais, pero dentro de lo recomendado."
+    "menos": "Algo menos de lo que pensabais, pero por encima del mínimo recomendado."
    },
    "siente": "Vuestro efectivo cubre <b>16 meses</b> de gastos básicos. Eso os da margen para decidir sin prisa y usar parte del sobrante en otras prioridades.",
    "salida": "Con parte de ese efectivo es con lo que vuestro plan propone pagar la tarjeta.",
@@ -6020,7 +6032,7 @@
   }
  ],
  "generado": {
-  "fecha": "2026-11-16",
+  "fecha": "2026-11-17",
   "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [],

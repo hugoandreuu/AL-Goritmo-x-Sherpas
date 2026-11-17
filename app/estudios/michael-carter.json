@@ -206,6 +206,10 @@
     "Cobras toda la aportación de la empresa: <b>7.000 $</b> al año."
    ],
    "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año.",
+   "alerta": {
+    "nivel": "mid",
+    "txt": "Este año se gasta más de lo que entra: faltan 8.336 $."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -398,6 +402,10 @@
     "Pagando como hasta ahora, la tarjeta se acaba en <b>julio de 2028</b>."
    ],
    "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla.",
+   "alerta": {
+    "nivel": "mid",
+    "txt": "Hay deuda de tarjeta: 3.500 $ al 20 %."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -612,7 +620,7 @@
      "lab": "Rentabilidad",
      "val": "13,6 %",
      "sub": "al año, últimos 3 años",
-     "tono": "bueno"
+     "tono": "coste"
     },
     {
      "lab": "Peor caída",
@@ -803,6 +811,10 @@
     "Hoy ese efectivo rinde <b>0 $</b> al año; bien colocado, unos <b>230 $</b>."
    ],
    "asesor": "Cómo llegar a la reserva sin dejar de lado lo demás.",
+   "alerta": {
+    "nivel": "mid",
+    "txt": "Tu efectivo cubre 3,2 meses de gastos básicos y el plan pide de 5 a 6."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -995,6 +1007,10 @@
     "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>."
    ],
    "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios.",
+   "alerta": {
+    "nivel": "mid",
+    "txt": "Falta seguro de vida: el plan pide más de lo que tienes."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -5142,7 +5158,7 @@
  ],
  "sinUsar": [],
  "generado": {
-  "fecha": "2026-11-16",
+  "fecha": "2026-11-17",
   "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [

@@ -3,7 +3,7 @@
 - Caso: `timothy-melanie-weah`
 - Datos: archivos de `cases/` (los mismos JSON que sirve el MCP)
 - Frases: escritas por el LLM de Sherpas (`gpt-5-mini`, el 2026-11-14), con control de cifras
-- Generado: 2026-11-16
+- Generado: 2026-11-17
 
 ## Lo que lee el LLM de esta familia
 
@@ -64,7 +64,7 @@ Hoy 60 de 100. Con los pasos del plan, 78.
 - Origen: `key_metrics.facts.cash`
 - Si acierta: «Eso es. Aquí vais bien.»
 - Si el dato es mayor de lo que dijo: «Más de lo que pensabais.»
-- Si es menor: «Algo menos de lo que pensabais, pero dentro de lo recomendado.»
+- Si es menor: «Algo menos de lo que pensabais, pero por encima del mínimo recomendado.»
 - Para que lo sienta: Vuestro efectivo cubre **16 meses** de gastos básicos. Eso os da margen para decidir sin prisa y usar parte del sobrante en otras prioridades.
 - Salida: Con parte de ese efectivo es con lo que vuestro plan propone pagar la tarjeta.
 - Escrito por el LLM: q, siente
