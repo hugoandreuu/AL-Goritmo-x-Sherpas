@@ -183,6 +183,10 @@
     "Este año faltan <b>6.418 $</b>: se gasta más de lo que entra."
    ],
    "asesor": "Confirmar el gasto real del día a día y a qué dedicar lo que sobra cada año.",
+   "alerta": {
+    "nivel": "mid",
+    "txt": "Este año se gasta más de lo que entra: faltan 6.418 $."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -478,7 +482,7 @@
      "lab": "Rentabilidad",
      "val": "15,6 %",
      "sub": "al año, últimos 3 años",
-     "tono": "bueno"
+     "tono": "coste"
     },
     {
      "lab": "Peor caída",
@@ -819,9 +823,14 @@
    },
    "lectura": [
     "Ethan y Ava dependen de tus ingresos.",
-    "Los seguros que pide el plan están cubiertos."
+    "No consta seguro de hogar para la vivienda (<b>900.000 $</b>).",
+    "El seguro de vida y el de responsabilidad civil que pide el plan están cubiertos."
    ],
    "asesor": "",
+   "alerta": {
+    "nivel": "mid",
+    "txt": "No consta seguro de hogar para una vivienda de 900.000 $."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -1715,10 +1724,6 @@
       [
        "Años hasta la jubilación",
        "17"
-      ],
-      [
-       "Rentabilidad media supuesta",
-       "0 %"
       ],
       [
        "Inflación supuesta",
@@ -3835,12 +3840,6 @@
      "tono": ""
     },
     {
-     "lab": "Rentabilidad media",
-     "val": "0 %",
-     "sub": "supuesta para la jubilación",
-     "tono": ""
-    },
-    {
      "lab": "Periodo analizado",
      "val": "2023–2026",
      "sub": "para la cartera",
@@ -4954,7 +4953,7 @@
    "titulares": {
     "cerca": "Eso es. Aquí vas bien.",
     "mas": "Más de lo que pensabas.",
-    "menos": "Algo menos de lo que pensabas, pero dentro de lo recomendado."
+    "menos": "Algo menos de lo que pensabas, pero por encima del mínimo recomendado."
    },
    "siente": "Tu efectivo cubre <b>7,9 meses</b> de gastos básicos, por encima de la reserva recomendada. Eso te da margen para afrontar los pagos de Ethan y los imprevistos sin agobios inmediatos.",
    "salida": "Este punto ya está. No hay que tocarlo.",
@@ -5068,7 +5067,7 @@
  ],
  "sinUsar": [],
  "generado": {
-  "fecha": "2026-11-16",
+  "fecha": "2026-11-17",
   "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [],

@@ -168,7 +168,7 @@
      "lab": "Ahorro al año",
      "val": "26 K$",
      "sub": "9,3 % de los ingresos",
-     "tono": "bueno"
+     "tono": "coste"
     },
     {
      "lab": "Sobra al año",
@@ -478,6 +478,10 @@
     "Pagando como hasta ahora, la tarjeta se acaba en <b>enero de 2034</b>."
    ],
    "asesor": "Comparar la deuda más cara con el efectivo que sobra y el plazo para pagarla.",
+   "alerta": {
+    "nivel": "mid",
+    "txt": "Hay deuda de tarjeta: 18.000 $ al 24,9 %."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -703,7 +707,7 @@
      "lab": "Rentabilidad",
      "val": "13,7 %",
      "sub": "al año, últimos 3 años",
-     "tono": "bueno"
+     "tono": "coste"
     },
     {
      "lab": "Peor caída",
@@ -885,6 +889,10 @@
     "Hoy ese efectivo rinde <b>0 $</b> al año; bien colocado, unos <b>625 $</b>."
    ],
    "asesor": "Cómo llegar a la reserva sin dejar de lado lo demás.",
+   "alerta": {
+    "nivel": "low",
+    "txt": "Vuestro efectivo cubre 1,4 meses de gastos básicos y el plan pide de 8 a 9."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -1136,9 +1144,14 @@
     "A Daniel le faltan como mínimo <b>1,35 M$</b> de seguro de vida.",
     "A Emily le faltan como mínimo <b>1 M$</b> de seguro de vida.",
     "No hay seguro de responsabilidad civil: el plan pide <b>1 M$</b>.",
-    "Oliver y Sophia dependen de vuestros ingresos."
+    "Oliver y Sophia dependen de vuestros ingresos.",
+    "No consta seguro de hogar para la vivienda (<b>750.000 $</b>)."
    ],
    "asesor": "Cuánto contratar y cuánto cuesta: el estudio no trae precios.",
+   "alerta": {
+    "nivel": "low",
+    "txt": "Falta seguro de vida: el plan pide más de lo que tenéis."
+   },
    "capas": [
     {
      "t": "tabla",
@@ -2494,7 +2507,7 @@
       ],
       [
        "2073",
-       "null / 89",
+       "— / 89",
        "996 K$",
        "4,08 M$",
        "0 $",
@@ -2502,7 +2515,7 @@
       ],
       [
        "2074",
-       "null / 90",
+       "— / 90",
        "1,01 M$",
        "4,25 M$",
        "0 $",
@@ -2510,7 +2523,7 @@
       ],
       [
        "2075",
-       "null / 90",
+       "— / 90",
        "1,01 M$",
        "4,33 M$",
        "0 $",
@@ -5531,7 +5544,7 @@
   {
    "id": "jubilacion",
    "tema": "jubilacion",
-   "tono": "bueno",
+   "tono": "malo",
    "tipo": "opciones",
    "icon": "sun",
    "opciones": [
@@ -5569,7 +5582,7 @@
     "menos": "Llegáis, aunque con menos margen del que creíais."
    },
    "siente": "Sí: la proyección llega y al final quedan <b>260.272 $</b>. Eso os da un pequeño colchón para imprevistos y algo de tranquilidad en la jubilación.",
-   "salida": "Aquí no hay que correr. Lo que frena vuestro plan está en otra parte.",
+   "salida": "Llega, pero con poco margen: el plan calcula que a vuestras cuentas de jubilación les faltan 1,43 M$ (en dinero de hoy). Se ve con vuestro asesor.",
    "calc": null,
    "freno": {
     "kick": "La jubilación",
@@ -5631,7 +5644,7 @@
   }
  ],
  "generado": {
-  "fecha": "2026-11-16",
+  "fecha": "2026-11-17",
   "datos": "archivos",
   "textos": "llm:gpt-5-mini",
   "avisos": [

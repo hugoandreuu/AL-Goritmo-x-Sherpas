@@ -183,7 +183,9 @@
   }
   const dock = (label, enabled, act = 'next') => `<div class="dock"><button class="btn block" data-act="${act}" ${enabled ? '' : 'disabled'}>${label}</button></div>`;
 
-  const fmtGuess = (q, v) => q.tipo === 'importe' ? M(v) : q.tipo === 'opciones' ? q.opciones[v] : q.tipo === 'anio' ? String(v) : dec(v, 1) + (q.sufijo || '');
+  // «1 mes», no «1 meses»: el sufijo va en singular cuando la cifra es 1.
+  const sufijoDe = (q, v) => { const sf = q.sufijo || ''; return Math.abs(v) === 1 ? sf.replace(/ meses$/, ' mes').replace(/ años$/, ' año') : sf; };
+  const fmtGuess = (q, v) => q.tipo === 'importe' ? M(v) : q.tipo === 'opciones' ? q.opciones[v] : q.tipo === 'anio' ? String(v) : dec(v, 1) + sufijoDe(q, v);
   function veredicto(q, v) {
     if (q.tipo === 'opciones') {
       if (q.cerca.includes(v)) return 'cerca';
@@ -431,7 +433,7 @@
 
   // --- B. Cada pregunta: aparece sola en el centro, respira y sube para dejar sitio al widget.
   let INTRO = null, INTRO_T = null, ADV_T = null, BUCKET = null;
-  const showV = (q, v) => q.tipo === 'importe' ? M(v) : q.tipo === 'anio' ? String(v) : dec(v, 1) + (q.sufijo || '');
+  const showV = (q, v) => q.tipo === 'importe' ? M(v) : q.tipo === 'anio' ? String(v) : dec(v, 1) + sufijoDe(q, v);
   function numWidget(q, a) {
     const has = a.value != null, st = q.step || 1, mid = Math.round((q.min + q.max) / 2 / st) * st;
     return `<div class="numw"><div class="nw-val ${has ? '' : 'empty'}" id="amt">${has ? showV(q, a.value) : '?'}</div>
@@ -613,7 +615,7 @@
     if (!cam || matchMedia('(prefers-reduced-motion: reduce)').matches) { go(); return; }
     // 1) La línea se pliega: se van los hitos y quedan hoy, las paradas y la meta. 2) Cada parada vuela a su sitio en la barra.
     cam.classList.add('plegar'); window.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => { if (document.startViewTransition) document.startViewTransition(go); else { go(); const r = app.querySelector('.route'); if (r) r.classList.add('llega'); } }, 420);
+    setTimeout(() => { if (document.startViewTransition) { const vt = document.startViewTransition(go); [vt.ready, vt.finished].forEach(pr => pr && pr.catch(() => {})); } else { go(); const r = app.querySelector('.route'); if (r) r.classList.add('llega'); } }, 420);
   }
   // Popup de reunión: al tocar el roadmap, la barra de la ruta o una parada.
   function meetPop(key) {
@@ -635,7 +637,7 @@
       if (x.c === 'step') {
         const k = E.pasos.findIndex(p => p.key === x.key), p = E.pasos[k], done = S.steps[x.key] === 'yes', np = notaPaso(k);
         cls = 'step ' + (done ? 'done' : 'todo'); icon = done ? 'check' : icon; t = pTitulo(p); s = quienTxt(p);
-        pill = `<span class="tr-p">${np.solo ? 'Solo este paso: ' : ''}nota <b>${np.v}</b></span>`;
+        pill = `<span class="tr-p">${np.solo ? 'Solo este paso: ' : k > 0 ? 'Con los anteriores: ' : ''}nota <b>${np.v}</b></span>`; // la nota es acumulada (combos), no la del paso suelto
       } else if (x.c === 'warn' && x.key && S.steps[x.key] === 'yes') { cls = 'ghost'; t = 'Fecha de la tarjeta si no se hiciera nada'; s = ''; }
       else if (x.c === 'now') pill = E.nota.banda ? `<span class="tr-p navy">${esc(E.nota.banda)}</span>` : '';
       return `<div class="tr ${cls}" style="--i:${i}" data-act="rmeet" role="button" tabindex="0"${x.c === 'step' ? ` data-s="${x.key}"` : ''}><span class="tr-w">${esc(x.cuando)}</span><span class="tr-d"${x.c === 'step' && filas ? ` style="view-transition-name:vt-${x.key}"` : ''}>${ic(icon, x.c === 'end' ? 22 : 17)}</span><div class="tr-c"><b>${esc(t)}</b>${s ? `<small>${esc(s)}</small>` : ''}${pill}</div></div>`;
@@ -651,7 +653,7 @@
       return `<div class="kick">${w('Vuestra', 'Tu')} nota general</div><h2>${E.nota.hoy} de 100. Lo que más pesa: ${esc(low1(peor.nombre))}.</h2>
         <div class="card-btn">
         <div class="foto">${ring(E.nota.hoy, max)}<p class="muted small">${w('Vuestra', 'Tu')} nota de salud financiera${E.nota.banda ? `: <b>${esc(E.nota.banda)}</b>` : ''}. ${max > E.nota.hoy ? `Con ${w('vuestro', 'tu')} plan llega a <b>${max}</b>.` : ''}</p></div>
-        <div class="areas">${E.areas.map((a, i) => `<div class="ar ${a.nota < 50 ? 'low' : a.nota < 75 ? 'mid' : 'hi'}" style="--i:${i}"><span class="ar-ic">${ic(a.icon, 18)}</span><b>${esc(a.nombre)}</b><div class="ar-b"><i style="width:${Math.max(3, a.nota)}%"></i></div><em>${a.nota}</em></div>`).join('')}</div>
+        <div class="areas">${E.areas.map((a, i) => `<div class="ar ${nivelArea(a)}" style="--i:${i}"><span class="ar-ic">${ic(a.icon, 18)}</span><b>${esc(a.nombre)}</b><div class="ar-b"><i style="width:${Math.max(3, a.nota)}%"></i></div><em>${a.nota}</em></div>`).join('')}</div>
         </div>
         <p class="tiny" style="margin:0">Las cinco áreas con las que ${w('vuestro', 'tu')} plan calcula la nota, de 0 a 100. En las siguientes tarjetas, una por tema.</p>`;
     }
@@ -661,7 +663,7 @@
       return `<div class="kick">De lo más urgente a lo que está bien</div>
         <div class="nodo-sl est-${n.estado}"><span class="nd-top"><span class="nd-ic">${ic(n.icon, 18)}</span><span class="nd-est">${ic(EST_IC[n.estado], 14)}${ESTADO_N[n.estado]}</span></span>
           <h2 class="nd-nom">${esc(n.nombre)}</h2>${n.sub ? `<p class="muted small" style="margin:0">${esc(n.sub)}</p>` : ''}
-          <span class="nd-cifra"><b>${esc(n.cifra)}</b>${n.de ? `<small>${n.de}</small>` : ''}</span><span class="nd-lab">${esc(n.cifraLab)}</span>
+          <span class="nd-cifra"><b>${esc(n.cifra)}</b>${n.de ? `<small>${n.de}</small>` : ''}</span><span class="nd-lab">${esc(n.cifraLab)}</span>${n.aviso ? `<p class="nd-aviso">${esc(n.aviso)}</p>` : ''}
           ${n.titular ? `<p class="nd-tit">${esc(n.titular)}</p>` : ''}
           ${pasos.length ? `<span class="tag acc" style="justify-self:start">${pasos.length} ${pasos.length === 1 ? 'paso' : 'pasos'} del plan</span>` : ''}</div>`;
     }
@@ -884,6 +886,14 @@
     'Seguros': { sub: () => `Proteger a ${w('vuestra', 'tu')} familia y ${w('vuestra', 'tu')} casa`, temas: ['vida'], pasos: ['life', 'umbrella', 'cover'] }
   };
   const nivel = n => n < 50 ? 'low' : n < 75 ? 'mid' : 'hi';
+  // Estado de un área: el de su nota, salvo que el dato principal del área esté en rojo (alerta del estudio).
+  // Así no sale «Bien» en verde con, p. ej., 1,4 meses de colchón cuando el plan pide de 8 a 9.
+  const ORD_N = { low: 0, mid: 1, hi: 2 };
+  const nivelArea = a => { const n = nivel(a.nota), al = a.alerta && a.alerta.nivel; return al && ORD_N[al] < ORD_N[n] ? al : n; };
+  // Texto de la alerta. Si además baja el estado, se explica por qué la nota no cuadra con la etiqueta.
+  const alertaTxt = a => !a.alerta ? '' : nivelArea(a) !== nivel(a.nota) ? `La nota sale de la fórmula del plan, pero ojo: ${low1(a.alerta.txt)}` : `Ojo: ${a.alerta.txt}`;
+  // Nota general: el color que le da Sherpas (rojo, amarillo, verde); si no lo trae, por tramos.
+  const nivelNota = () => ({ red: 'low', yellow: 'mid', green: 'hi' })[E.nota.color] || nivel(E.nota.hoy);
   const ESTADO = { low: 'A reforzar', mid: 'Mejorable', hi: 'Bien' };
   function temasPlan() {
     const usados = new Set();
@@ -906,8 +916,8 @@
   const dijeron = x => x.qs.filter(q => (S.a[q.id] || {}).revealed).map(q => `<div class="memo">${ic('eye', 16)}<span>${w('Pensabais', 'Pensabas')} <b>${esc(low1(fmtGuess(q, S.a[q.id].value)))}</b>. El estudio dice <b>${esc(q.plan)}</b> ${esc(q.unidad)}.</span></div>`).join('');
   const filasTema = (rows, pro) => rows && rows.length ? `<ul class="tm-res">${rows.map(r => `<li><span class="tm-l">${esc(r[0])}</span><span>${esc(r[1])}${pro && PRO() && r[2] ? `<small class="tm-o">${esc(r[2])}</small>` : ''}</span></li>`).join('')}</ul>` : '';
   const cabTema = (a, t, tag = 'h3') => `<header class="tm-h"><span class="ar-ic">${ic(a.icon, 18)}</span><div class="tm-ht"><${tag}>${esc(a.nombre)}</${tag}><small>${esc(t.sub())}</small></div>
-      <div class="tm-s"><em>${a.nota}<small>/100</small></em><span class="tm-e">${ESTADO[nivel(a.nota)]}</span></div></header>
-      <div class="ar-b"><i style="width:${Math.max(3, a.nota)}%"></i></div>`;
+      <div class="tm-s"><em>${a.nota}<small>/100</small></em><span class="tm-e">${ESTADO[nivelArea(a)]}</span></div></header>
+      <div class="ar-b"><i style="width:${Math.max(3, a.nota)}%"></i></div>${alertaTxt(a) ? `<p class="tm-alerta">${ic('flag', 14)}<span>${esc(alertaTxt(a))}</span></p>` : ''}`;
 
   function pasoTema(p) {
     const i = E.pasos.indexOf(p), v = S.steps[p.key], mine = S.doubts.filter(d => d.paso === p.key);
@@ -919,14 +929,14 @@
         : `<button class="btn block" style="margin-top:12px" data-act="cal" data-k="pay">${ic('cal')} Elegir día y hora</button>`;
     } else if (v === 'yes' && p.quien === 'asesor') after = `<p class="tiny" style="margin:8px 0 0">${ic('chat', 13)} ${w('Vuestro', 'Tu')} asesor lo trae preparado a la reunión.</p>`;
     return `<div class="tm-paso ${v === 'yes' ? 'done' : ''}" id="step-${p.key}">
-      <div class="spread" style="align-items:flex-start"><span class="tiny"><b class="tm-n">${v === 'yes' ? ic('check', 13) : i + 1}</b>Paso ${i + 1} del plan · ${quienTxt(p)}</span><span class="tag acc" title="Nota si solo se hace este paso">Nota ${p.nota}</span></div>
+      <div class="spread" style="align-items:flex-start"><span class="tiny"><b class="tm-n">${v === 'yes' ? ic('check', 13) : i + 1}</b>Paso ${i + 1} del plan · ${quienTxt(p)}</span><span class="tag acc" title="Nota si solo se hace este paso">Solo este paso: nota ${p.nota}</span></div>
       <b class="tm-pt">${esc(pTitulo(p))}</b>${p.porque ? `<p class="small" style="margin:.2em 0 0">${esc(p.porque)}</p>` : ''}
       <div class="vote sm"><span class="small">¿${w('Os', 'Te')} convence?</span>${[['yes', 'Sí'], ['doubt', 'Dudas'], ['no', 'No']].map(([k, l]) => `<button class="chip" data-act="vote" data-s="${p.key}" data-v="${k}" aria-pressed="${v === k}">${l}</button>`).join('')}</div>
       ${after}${mine.length ? `<div style="margin-top:8px">${mine.map(doubtLine).join('')}</div>` : ''}</div>`;
   }
   const sinPaso = (x) => {
     const salida = x.qs.find(q => q.salida);
-    return `<p class="small muted" style="margin:0">${salida ? esc(salida.salida) : nivel(x.a.nota) === 'hi' ? 'Está bien así: el plan no pide cambios en este tema.' : `El plan no propone un paso aquí por ahora. Si ${w('os', 'te')} preocupa, ${w('preguntadlo', 'pregúntalo')} en la reunión.`}</p>`;
+    return `<p class="small muted" style="margin:0">${salida ? esc(salida.salida) : nivelArea(x.a) === 'hi' ? 'Está bien así: el plan no pide cambios en este tema.' : `El plan no propone un paso aquí por ahora. Si ${w('os', 'te')} preocupa, ${w('preguntadlo', 'pregúntalo')} en la reunión.`}</p>`;
   };
   // Tarjeta de tema. En el plan completo lleva los pasos con su voto; en el resumen tras el quiz, solo los títulos.
   function temaCard(x, i, modo) {
@@ -935,7 +945,7 @@
       ? (story ? `<ul class="tm-pl">${pasos.map(p => { const y = S.steps[p.key] === 'yes', v = (S.seen || {})[p.key]; return `<li class="${y ? 'done' : v ? 'seen' : ''}"><b class="tm-n">${y ? ic('check', 12) : E.pasos.indexOf(p) + 1}</b><span>${esc(pTitulo(p))}${y ? `<small>En ${w('vuestra', 'tu')} ruta</small>` : v ? `<small>Lo ${w('descubristeis', 'descubriste')} en el quiz</small>` : ''}</span></li>`; }).join('')}</ul>` : pasos.map(pasoTema).join(''))
       : sinPaso(x);
     const men = x.qs.some(q => (S.match || []).includes(q.id)) ? `<span class="porque tm-men">${ic('chat', 14)}${w('Lo habéis mencionado', 'Lo has mencionado')}</span>` : '';
-    return `<article class="tema ${nivel(a.nota)}" ${story ? '' : `id="tema-${esc(a.nombre)}"`} style="--i:${i}">${men}
+    return `<article class="tema ${nivelArea(a)}" ${story ? '' : `id="tema-${esc(a.nombre)}"`} style="--i:${i}">${men}
       <div class="tm-open">${cabTema(a, t)}${filasTema(a.resumen)}</div>
       <div class="tm-plan"><div class="kicker" style="margin:0 0 6px">${pasos.length ? `Lo que propone ${w('vuestro', 'tu')} plan` : `${w('Vuestro', 'Tu')} plan`}</div>${plan}</div>
     </article>`;
@@ -949,8 +959,10 @@
   const sinTags = h => String(h || '').replace(/<[^>]+>/g, '');
   function nodos() {
     const ts = temasPlan();
-    const areas = ts.map(x => ({ id: x.a.nombre, tipo: 'area', x, nombre: x.a.nombre, icon: x.a.icon, sub: x.t.sub(), estado: nivel(x.a.nota), cifra: String(x.a.nota), de: '/100', cifraLab: 'nota del área',
+    const areas = ts.map(x => ({ id: x.a.nombre, tipo: 'area', x, nombre: x.a.nombre, icon: x.a.icon, sub: x.t.sub(), estado: nivelArea(x.a), cifra: String(x.a.nota), de: '/100', cifraLab: 'nota del área', aviso: alertaTxt(x.a),
       titular: sinTags((x.a.lectura || [])[0] || (x.a.resumen || []).map(r => `${r[0]}: ${r[1]}`)[0] || ''), pasos: x.pasos.length, nota: x.a.nota }));
+    // Si el aviso ya cuenta lo mismo que el titular, el titular no se repite.
+    areas.forEach(n => { if (n.aviso && n.titular && n.aviso.toLowerCase().includes(n.titular.slice(0, 22).toLowerCase())) n.titular = ''; });
     const pts = (E.puntos || []).map(p => ({ ...p, tipo: 'punto', pasos: 0, nota: 50 }));
     return areas.concat(pts).sort((a, b) => RANGO[a.estado] - RANGO[b.estado] || a.nota - b.nota);
   }
@@ -964,9 +976,9 @@
   }
   // Portada: la nota en grande con su color y tres frases (lo mejor, lo que más pesa, el primer paso).
   function portada() {
-    const ns = nodos(), est = nivel(E.nota.hoy), peor = ns.find(n => n.estado !== 'neutro'), mejor = ns.slice().reverse().find(n => n.estado === 'hi'), p0 = E.pasos[0];
+    const ns = nodos(), est = nivelNota(), peor = ns.find(n => n.estado !== 'neutro'), mejor = ns.slice().reverse().find(n => n.estado === 'hi'), p0 = E.pasos[0];
     const frases = [mejor ? [`check`, `Lo más fuerte: <b>${esc(low1(mejor.nombre))}</b> (${esc(mejor.cifra)}${mejor.de || ''}).`] : null,
-      peor ? ['flag', `Lo que más pesa: <b>${esc(low1(peor.nombre))}</b>. ${esc(peor.titular)}`] : null,
+      peor ? ['flag', `Lo que más pesa: <b>${esc(low1(peor.nombre))}</b>. ${esc(peor.titular || (peor.aviso || '').replace(/^.*ojo: /i, ''))}`] : null,
       p0 ? ['arrow', `Primer paso del plan: <b>${esc(low1(pTitulo(p0)))}</b>. Con todo el plan, la nota llega a <b>${E.nota.max}</b>.`] : null].filter(Boolean);
     return `<section class="portada est-${est}"><div class="kicker" style="margin:0">Informe de ${esc(E.fam.titulo)}</div>
       <button class="pt-nota" data-act="tema" data-k="__nota" aria-label="Ver la nota a fondo">${ring(E.nota.hoy, E.nota.max)}
@@ -1177,7 +1189,7 @@
       titulo = 'Nota general';
       html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
         <div class="foto">${ring(E.nota.hoy, E.nota.max)}</div>
-        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'A reforzar (menos de 50)', bueno: 'Bien (75 o más)' }, plano: true }) + conexHtml(E.areas.map(a => a.nombre)))}
+        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivelArea(a) === 'low' ? 'coste' : nivelArea(a) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'A reforzar', bueno: 'Bien' }, plano: true }) + conexHtml(E.areas.map(a => a.nombre)))}
         ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s2 => (paso(s2) || {}).titulo || s2).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}
         ${sec(3, 'Ver más', capasHtml(E.notaCapas, narrDe('__nota')))}`;
     } else if (k === '__ruta') {
@@ -1192,7 +1204,7 @@
     } else {
       const x = temaDe(k); if (!x) return '';
       const { a, t, pasos } = x;
-      html = `<header class="tp-h tema-big ${nivel(a.nota)}">${cabTema(a, t, 'h1')}</header>
+      html = `<header class="tp-h tema-big ${nivelArea(a)}">${cabTema(a, t, 'h1')}</header>
         ${kpisHtml(a.kpis)}
         ${sec(1, 'El desglose', desgloseHtml(a.desglose) + graf(a.graf))}
         ${sec(2, 'Qué significa', lecturaHtml(a.lectura))}
@@ -1205,12 +1217,12 @@
   function renderTema() {
     const k = S.temaK, desdeResumen = S.temaFrom === 'story', origen = desdeResumen ? 'Resumen' : 'Plan';
     let html = '', titulo = '';
-    const cifraBig = n => `<div class="tp-cifra est-${n.estado}"><b>${esc(n.cifra)}</b>${n.de ? `<small>${n.de}</small>` : ''}<span>${esc(n.cifraLab)}</span><span class="nd-est">${ic(EST_IC[n.estado], 14)}${ESTADO_N[n.estado]}</span></div>`;
+    const cifraBig = n => `<div class="tp-cifra est-${n.estado}"><b>${esc(n.cifra)}</b>${n.de ? `<small>${n.de}</small>` : ''}<span>${esc(n.cifraLab)}</span><span class="nd-est">${ic(EST_IC[n.estado], 14)}${ESTADO_N[n.estado]}</span>${n.aviso ? `<p class="nd-aviso">${esc(n.aviso)}</p>` : ''}</div>`;
     if (k === '__nota') {
       titulo = 'Nota general';
       html = `<header class="tp-h"><div class="kicker">${w('Vuestra', 'Tu')} nota general</div><h1>${E.nota.hoy} de 100</h1><p class="muted">${E.nota.banda ? `Banda <b>${esc(E.nota.banda)}</b>. ` : ''}Con los pasos de ${w('vuestro', 'tu')} plan llega a <b>${E.nota.max}</b>.</p></header>
         <div class="foto">${ring(E.nota.hoy, E.nota.max)}</div>
-        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivel(a.nota) === 'low' ? 'coste' : nivel(a.nota) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'A reforzar (menos de 50)', bueno: 'Bien (75 o más)' }, plano: true }) + conexHtml(E.areas.map(a => a.nombre)))}
+        ${sec(1, 'Las cinco áreas', graf({ tipo: 'barras', titulo: 'De 0 a 100', items: E.areas.map(a => ({ lab: a.nombre, v: a.nota, txt: `${a.nota}${a.puntos ? ` · ${a.puntos} puntos` : ''}`, tono: nivelArea(a) === 'low' ? 'coste' : nivelArea(a) === 'hi' ? 'bueno' : '' })), leyenda: { coste: 'A reforzar', bueno: 'Bien' }, plano: true }) + conexHtml(E.areas.map(a => a.nombre)))}
         ${sec(2, 'Cómo sube con cada paso', desgloseHtml({ titulo: 'Nota con los pasos del plan', filas: E.pasos.map(p => [`${p.n}. ${pTitulo(p)}`, `${p.nota}`]).concat(Object.entries(E.combos || {}).map(([c, v]) => [c.split('|').map(s2 => (paso(s2) || {}).titulo || s2).join(' + '), `${v}`])), total: ['Con todo el plan', String(E.nota.max)] }))}
         ${sec(3, 'Ver más', capasHtml(E.notaCapas, narrDe('__nota')))}`;
     } else if (k === '__ruta') {
@@ -1281,7 +1293,7 @@
         <button class="link" style="width:100%" data-act="whatif">Antes, ${w('tenemos', 'tengo')} otra pregunta</button>
         ${S.booking ? '' : `<button class="link" style="width:100%" data-act="later">${window.__PREVIEW__ ? (S.later ? 'Sin prisa: el plan sigue aquí' : 'Ahora no') : S.later ? 'Recordatorios a los 3 y 30 días, en el calendario' : `Ahora no. ${w('Recordádnoslo', 'Recuérdamelo')} en 3 y en 30 días`}</button>`}</div>
       ${weekCard()}
-      ${E.primer && (S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>Cómo comprobamos que el primer paso está hecho</small></span>${ic('arrow', 18)}</button>` : ''}
+      ${E.primer && S.steps[E.primer.key] === 'yes' && (S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>Cómo comprobamos que el primer paso está hecho</small></span>${ic('arrow', 18)}</button>` : ''}
 </div>`;
 
     main += `<p class="foot">Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor.</p>`;
@@ -1459,7 +1471,7 @@
   const numQ = q => q && q.tipo !== 'opciones' && q.id !== 'vida' && q.id !== 'nota' && q.min != null;
   // Entre las preguntas con cifra, la del área que peor va (no se elige un tema cuya área va bien); a igualdad, el orden de frenos del estudio.
   const AREA_DE = { tarjeta_interes: 'Deudas', colchon: 'Colchón' };
-  const areaNota = q => { const a = (E.areas || []).find(x => x.nombre === AREA_DE[q.id]); return a ? a.nota : 50; };
+  const areaNota = q => { const a = (E.areas || []).find(x => x.nombre === AREA_DE[q.id]); return a ? ORD_N[nivelArea(a)] * 1000 + a.nota : 1050; }; // primero el estado (con su alerta), luego la nota
   const moneyQ = () => { const fr = E.frenos || [], c = E.preguntas.filter(numQ); if (!c.length) return null;
     const rk = q => (fr.indexOf(q.id) < 0 ? 99 : fr.indexOf(q.id));
     return c.slice().sort((x, y) => areaNota(x) - areaNota(y) || rk(x) - rk(y))[0]; };
@@ -1679,7 +1691,7 @@
     const rows = P.map((p, i) => { const key = P.slice(0, i + 1).map(x => x.key).sort().join('|'), v = i === 0 ? p.nota : (E.combos || {})[key];
       const nota = v != null ? v : prev, gain = nota - prev; if (p.quien === 'asesor') asesor += gain; prev = nota;
       const jub = /retire/i.test((p.plan && p.plan.action) || '');
-      return `<li class="${mine && mine.steps.has(p.key) ? 'mine' : ''}"><span class="pj-ln">${i + 1}</span><div><b>${esc(PRO() && p.tituloPro ? p.tituloPro : p.titulo)}</b><small>${mine && mine.steps.has(p.key) ? '<i>Vuestro motivo</i> · ' : ''}${p.quien === 'familia' ? 'Lo podéis hacer vosotros' : 'Con vuestro asesor'}${gain === 0 ? ` · No cambia la nota de hoy${jub ? ': es ahorro para la jubilación' : ''}` : ''}</small></div><em>${nota}<small>${gain > 0 ? '+' + gain : '='}</small></em></li>`; }).join('');
+      return `<li class="${mine && mine.steps.has(p.key) ? 'mine' : ''}"><span class="pj-ln">${i + 1}</span><div><b>${esc(PRO() && p.tituloPro ? p.tituloPro : p.titulo)}</b><small>${mine && mine.steps.has(p.key) ? '<i>Vuestro motivo</i> · ' : ''}${p.quien === 'familia' ? 'Lo podéis hacer vosotros' : 'Con vuestro asesor'}${gain === 0 ? ` · ${i ? 'No suma más a los pasos anteriores' : 'No cambia la nota de hoy'}${jub ? ': es ahorro para la jubilación' : ''}` : ''}</small></div><em>${nota}<small>${gain > 0 ? '+' + gain : '='}</small></em></li>`; }).join('');
     return { html: `<ol class="pj-ladder"><li class="now"><span class="pj-ln">${ic('flag', 14)}</span><div><b>Hoy</b></div><em>${n.hoy}</em></li>${rows}</ol>`, total: prev - n.hoy, asesor };
   }
   // Objetivos de la línea del plan, con su año e importe; la jubilación siempre (es la que trae dato).
@@ -2057,7 +2069,7 @@
       case 'perm': { const id = QUIZ[S.qi]; if (v === 'later') { S.a[id] = { permission: 'later' }; go(); } else { S.a[id] = Object.assign(S.a[id] || {}, { permission: 'now' }); render(); } break; }
       case 'reveal': {
         const q = QMAP[QUIZ[S.qi]]; S.a[q.id].revealed = true; descubrir(q);
-        if (document.startViewTransition) { document.startViewTransition(() => playReveal(q)); break; }
+        if (document.startViewTransition) { const vt = document.startViewTransition(() => playReveal(q)); [vt.ready, vt.finished].forEach(pr => pr && pr.catch(() => {})); break; }
         const st = app.querySelector('.qstage'); if (st) st.classList.add('fade-out'); setTimeout(() => playReveal(q), 300); break;
       }
       case 'sugg': { const t = document.getElementById('worry'); t.value = v; marcaSugg(b); t.focus(); const bt = app.querySelector('[data-act="worry"]:not([data-v])'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } verBoton(app.querySelector('[data-act="worry"]:not([data-v])')); break; }

@@ -175,9 +175,9 @@ export function leerPuntos(E, fh, ia) {
         fila('Edad a la que se acaban los ahorros líquidos', dep.ageWhenTheyRunOutOfLiquidAssets), fila('Edad a la que se acaba el patrimonio', dep.ageWhenTheyRunOutOfNetWorth),
         fila('Años que faltarían', dep.shortfallInNumberOfYears), fila('Edad de jubilación que haría falta', dep.requiredRetirementAge)]),
       capaFilas('Lo que pide la jubilación', [fila('Dinero que falta', isNum(gap) ? M(Math.round(gap)) : null), fila('Ahorro extra al año', isNum(rs.requiredExtraSavings) ? M(Math.round(rs.requiredExtraSavings)) : null),
-        fila('Años hasta la jubilación', rs.yearsToRetirement), fila('Rentabilidad media supuesta', P(rs.averagePerformance, 2)), fila('Inflación supuesta', P(rs.generalInflation, 1)),
+        fila('Años hasta la jubilación', rs.yearsToRetirement), fila('Rentabilidad media supuesta', rs.averagePerformance ? P(rs.averagePerformance, 2) : null), fila('Inflación supuesta', P(rs.generalInflation, 1)),
         fila('Otras metas después de jubilarse', og.otherGoalsAfterRetirement ? M(Math.round(og.otherGoalsAfterRetirementAmount)) : 'No'), fila('Meta de herencia', og.legacyGoal ? M(og.legacyGoalAmount) : 'No hay')]),
-      yearly.length ? tabla('Proyección año a año', ['Año', 'Edad', 'Patrimonio (hoy)', 'Patrimonio', 'Deudas', 'Invertible'], yearly.map(y => [String(y.year), `${y.age_client}${y.age_co_client ? ' / ' + y.age_co_client : ''}`, Mk(y.net_worth_todays_dollars), Mk(y.net_worth), Mk(y.total_debts), Mk(y.investable_assets)]), 'Patrimonio (hoy): en dólares de hoy, descontada la inflación.') : null,
+      yearly.length ? tabla('Proyección año a año', ['Año', 'Edad', 'Patrimonio (hoy)', 'Patrimonio', 'Deudas', 'Invertible'], yearly.map(y => [String(y.year), [y.age_client ?? '—', y.age_co_client].filter(v => v != null).join(' / '), Mk(y.net_worth_todays_dollars), Mk(y.net_worth), Mk(y.total_debts), Mk(y.investable_assets)]), 'Patrimonio (hoy): en dólares de hoy, descontada la inflación.') : null,
       capaFilas('Ingresos registrados', (get(fh, 'profile.incomes') || []).map(i => fila(`${INGRESO[i.type] || i.type}${E.fam.pl && i.owner ? ' · ' + i.owner.join(', ') : ''}`, `${M(Math.round(i.yearly))} al año, ${i.starts}–${i.ends}`))),
     ]),
   });
@@ -339,7 +339,7 @@ export function leerPuntos(E, fh, ia) {
     cifra: P(rs.generalInflation ?? 0.03), cifraLab: 'de inflación al año supuesta', estado: 'neutro',
     titular: `Proyección hasta los ${rg.clientProfile?.endOfPlanAge || 91} años, con un único escenario y sin comisiones.`,
     conexiones: ['jubilacion', 'cartera'],
-    kpis: filas([k('Inflación', P(rs.generalInflation ?? 0.03), 'general; salud y educación 5 %'), k('Hasta los', `${rg.clientProfile?.endOfPlanAge || 91} años`, 'esperanza de vida del plan'), k('Rentabilidad media', P(rs.averagePerformance, 2), 'supuesta para la jubilación'), k('Periodo analizado', `${anio(get(pa, 'window.startDate'))}–${anio(get(pa, 'window.endDate'))}`, 'para la cartera')]),
+    kpis: filas([k('Inflación', P(rs.generalInflation ?? 0.03), 'general; salud y educación 5 %'), k('Hasta los', `${rg.clientProfile?.endOfPlanAge || 91} años`, 'esperanza de vida del plan'), k('Rentabilidad media', rs.averagePerformance ? P(rs.averagePerformance, 2) : null, 'supuesta para la jubilación'), k('Periodo analizado', `${anio(get(pa, 'window.startDate'))}–${anio(get(pa, 'window.endDate'))}`, 'para la cartera')]),
     lectura: METODO.textos.slice(0, 3),
     capas: filas([
       capaFilas('Inflación supuesta', METODO.inflacion), tabla('Rentabilidad esperada por perfil', ['Perfil', 'Al año'], METODO.perfiles), tabla('Rentabilidad esperada por tipo de activo', ['Activo', 'Al año'], METODO.clases),

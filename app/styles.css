@@ -1849,3 +1849,45 @@ body.fondo-on .dock, body[data-pj] .dock, .pj-dock { background: linear-gradient
 .planhero.corto .heroscore { display: none; }
 /* En las pantallas con campo de texto el botón va al final, sin quedarse fijo encima del campo. */
 .dock:has(#pjfsave), .dock:has(.btn[data-act="worry"]), .dock:has(.btn[data-act="toplan"]) { position: static; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+/* Aviso cuando la nota del área va alta pero su dato principal está por debajo de lo recomendado */
+.nd-aviso { flex-basis: 100%; margin: 6px 0 0; font-size: 14px; line-height: 1.4; font-weight: 500; color: inherit; }
+.tp-cifra .nd-aviso { color: var(--ink-2); }
+.tm-alerta { display: flex; gap: 6px; align-items: flex-start; margin: 8px 0 0; font-size: 13.5px; line-height: 1.4; color: var(--ink-2); }
+.low .tm-alerta { color: var(--bad); }
+.tm-alerta svg { flex: none; margin-top: 2px; }
+
+/* ---- Botones fijos sin recortes (auditoría 17 nov).
+   Antes el velo del botón era un rectángulo lavanda al 97 % con desenfoque: 16 px más estrecho que la pantalla,
+   del color equivocado sobre la malla (morado, azul, rosa) y con el borde superior duro por el blur. En pantallas
+   cortas (entrada de pareja, «Empieza Timothy») flotaba a media pantalla con su borde inferior visible.
+   Ahora el velo es solo desenfoque, de borde a borde, y se funde arriba y abajo con una máscara: no tiene color
+   propio ni bordes, sea cual sea el fondo y esté o no pegado abajo. */
+body.fondo-on .dock, body[data-pj] .dock, .pj-dock { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; isolation: isolate; }
+body.fondo-on .dock::before, body[data-pj] .dock::before, .pj-dock::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  top: 0; bottom: -40px; left: calc(50% - 50vw); right: calc(50% - 50vw);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 40px, #000 65%, transparent 100%);
+  mask-image: linear-gradient(to top, transparent 0, #000 40px, #000 65%, transparent 100%);
+}
+.rv2 .rv-dock .dock { position: relative; }
+/* Docks que no van fijos (pantallas con campo de texto) y docks con el botón escondido: sin velo. */
+.dock:has(#pjfsave)::before, .dock:has(.btn[data-act="worry"])::before, .dock:has(.btn[data-act="toplan"])::before,
+.dock:has(> .btn:disabled:only-child)::before { display: none; }
+/* «Guardar en secreto» desactivado: blanco sobre lila claro no se leía (contraste 1,4:1). */
+.dock .btn#pjfsave:disabled, .qstage .dock .btn[data-act="worry"]:disabled, .qstage .dock .btn[data-act="pjfrase"]:disabled { background: #e9e7f7; color: #5d6185; opacity: 1; }
+
+/* Barra fija inferior («Volver al plan completo», «Ver el plan completo»…): era una losa blanca al 92 % con una
+   línea arriba que cortaba por la mitad tarjetas y frases sobre el fondo lila. Ahora se funde con el fondo de la
+   página y deja sitio a la sombra del botón. */
+.cta-bar { background: linear-gradient(to top, var(--sh-bg) 55%, color-mix(in srgb, var(--sh-bg) 0%, transparent)); -webkit-backdrop-filter: none; backdrop-filter: none; border-top: 0; padding: 22px 16px calc(14px + env(safe-area-inset-bottom)); }
+body.fondo-on .cta-bar { background: none; isolation: isolate; }
+body.fondo-on .cta-bar::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  -webkit-mask-image: linear-gradient(to top, #000 60%, transparent); mask-image: linear-gradient(to top, #000 60%, transparent);
+}
+/* Ruleta: las tarjetas laterales se recortaban a 16 px del borde; ahora el recorte es el borde de la pantalla. */
+.rul-wrap { margin-inline: -16px; padding-inline: 16px; }
+.rul-nav { position: static; }

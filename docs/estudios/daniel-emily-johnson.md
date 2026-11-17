@@ -3,7 +3,7 @@
 - Caso: `daniel-emily-johnson`
 - Datos: archivos de `cases/` (los mismos JSON que sirve el MCP)
 - Frases: escritas por el LLM de Sherpas (`gpt-5-mini`, el 2026-11-14), con control de cifras
-- Generado: 2026-11-16
+- Generado: 2026-11-17
 
 ## Avisos
 
@@ -64,13 +64,13 @@ Hoy 52 de 100. Con los pasos del plan, 60.
 
 ### 4. ¿Os llega para jubilaros a los 62 y 60 y vivir de ello?
 
-- Dato del plan: **Sí, llega** y al final del estudio quedan 260.272 $ (buena noticia)
+- Dato del plan: **Sí, llega** y al final del estudio quedan 260.272 $ (mala noticia)
 - Origen: `key_metrics.facts.retirement`
 - Si acierta: «Eso es. Llegáis.»
 - Si el dato es mayor de lo que dijo: «Mejor de lo que pensabais.»
 - Si es menor: «Llegáis, aunque con menos margen del que creíais.»
 - Para que lo sienta: Sí: la proyección llega y al final quedan **260.272 $**. Eso os da un pequeño colchón para imprevistos y algo de tranquilidad en la jubilación.
-- Salida: Aquí no hay que correr. Lo que frena vuestro plan está en otra parte.
+- Salida: Llega, pero con poco margen: el plan calcula que a vuestras cuentas de jubilación les faltan 1,43 M$ (en dinero de hoy). Se ve con vuestro asesor.
 - Escrito por el LLM: q, siente
 
 Preguntas posibles que no se usan en este caso: Nota de salud financiera (52 de 100, hoy); Año en que se acaba la tarjeta (enero de 2034 pagando 450 $ al mes).
