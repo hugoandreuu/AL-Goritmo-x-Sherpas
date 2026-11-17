@@ -636,7 +636,9 @@
         pill = `<span class="tr-p">${np.solo ? 'Solo este paso: ' : ''}nota <b>${np.v}</b></span>`;
       } else if (x.c === 'warn' && x.key && S.steps[x.key] === 'yes') { cls = 'ghost'; t = 'Fecha de la tarjeta si no se hiciera nada'; s = ''; }
       else if (x.c === 'now') pill = E.nota.banda ? `<span class="tr-p navy">${esc(E.nota.banda)}</span>` : '';
-      return `<div class="tr ${cls}" style="--i:${i}" data-act="rmeet" role="button" tabindex="0"${x.c === 'step' ? ` data-s="${x.key}"` : ''}><span class="tr-w">${esc(x.cuando)}</span><span class="tr-d"${x.c === 'step' && filas ? ` style="view-transition-name:vt-${x.key}"` : ''}>${ic(icon, x.c === 'end' ? 22 : 17)}</span><div class="tr-c"><b>${esc(t)}</b>${s ? `<small>${esc(s)}</small>` : ''}${pill}</div></div>`;
+      const nk = x.c === 'step' ? notaPaso(E.pasos.findIndex(p => p.key === x.key)) : null;
+      const nTop = !horiz ? '' : `<span class="tr-n">${nk ? `<small>${nk.solo ? 'solo este paso' : 'nota'}</small><b>${nk.v}</b>` : x.c === 'now' ? `<small>nota hoy</small><b>${E.nota.hoy}</b>` : ''}</span>`;
+      return `<div class="tr ${cls}" style="--i:${i}" data-act="rmeet" role="button" tabindex="0"${x.c === 'step' ? ` data-s="${x.key}"` : ''}>${nTop}<span class="tr-w">${esc(x.cuando)}</span><span class="tr-d"${x.c === 'step' && filas ? ` style="view-transition-name:vt-${x.key}"` : ''}>${ic(icon, x.c === 'end' ? 22 : 17)}</span><div class="tr-c"><b>${esc(t)}</b>${s ? `<small>${esc(s)}</small>` : ''}${pill}</div></div>`;
     }).join('');
     return `<div class="tline ${acc.length ? 'has' : ''}${horiz ? ' horiz' : ''}"${horiz ? ' tabindex="0" aria-label="Roadmap. Desliza para ver todos los hitos"' : ''}><i class="tl-spine"></i>${rows}</div>`;
   }
