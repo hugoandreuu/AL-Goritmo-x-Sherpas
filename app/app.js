@@ -43,7 +43,7 @@
     QMAP = Object.fromEntries(E.preguntas.map(q => [q.id, q]));
     buildQuiz([]);
     // Resumen tras el quiz: la nota, una tarjeta por cada uno de los 5 temas y el roadmap.
-    SLIDES = ['foto', ...temasPlan().map(x => 't:' + x.a.nombre)]; // el roadmap sale en el plan completo
+    SLIDES = ['foto', ...nodos().map(n => 'n:' + n.id)]; // la ruleta enseña las mismas tarjetas que el informe, en el mismo orden
     S = fresh();
     if (!limpio) { try { const raw = localStorage.getItem(KEY()); if (raw) S = Object.assign(fresh(), JSON.parse(raw)); } catch (e) { /* nada */ } }
     if (!E.fam.pl) S.who = 'a';
@@ -94,7 +94,7 @@
     const fases = ['quiz', 'story', 'plan'], cur = enQuiz ? 0 : fases.indexOf(S.stage === 'tema' ? (S.temaFrom === 'plan' ? 'plan' : 'story') : S.stage);
     const estado = nDone ? `${hechos.length ? `${hechos.length} ${hechos.length === 1 ? 'hecha' : 'hechas'} y ` : ''}${nDone} de ${P.length} ${P.length === 1 ? 'elegida' : 'elegidas'}${sc > hoy ? `. Hechas, la nota llegaría a ${sc}` : ''}`
       : enQuiz ? `${nSeen} de ${P.length} ${P.length === 1 ? 'parada encontrada' : 'paradas encontradas'}. Cuáles son, ${w('lo veis', 'lo ves')} con ${w('vuestro', 'tu')} asesor` : `${P.length} ${P.length === 1 ? 'parada' : 'paradas'} hasta ${E.nota.max}`;
-    return `<nav class="route" aria-label="${w('Vuestra', 'Tu')} ruta: nota de hoy ${hoy}${nDone ? `, con los pasos elegidos llegaría a ${sc}` : ''}; con todo el plan, ${E.nota.max}. ${esc(estado)}">
+    return `<nav class="route" data-act="rmeet" aria-label="${w('Vuestra', 'Tu')} ruta: nota de hoy ${hoy}${nDone ? `, con los pasos elegidos llegaría a ${sc}` : ''}; con todo el plan, ${E.nota.max}. ${esc(estado)}">
       <div class="rt-top"><ol class="rt-fases">${fases.map((f, i) => `<li class="${i < cur ? 'past' : i === cur ? 'cur' : ''}">${FASE[f]}</li>`).join('')}</ol>
         <span class="rt-sc"><span>Hoy</span><b id="rt-now">${hoy}</b>${nDone && sc > hoy ? `<span class="rt-goal">→ ${sc}</span>` : `<span>/ 100</span>`}</span></div>
       <div class="rt-track"><span class="rt-end lo" title="Nota de hoy">${lo}</span>
@@ -367,7 +367,7 @@
   function preparePlan() {
     const n = E.preguntas.filter(q => (S.a[q.id] || {}).revealed).length;
     const lines = [`Leyendo ${w('vuestras', 'tus')} ${n || ''} respuestas`.replace('  ', ' '), PRO() ? 'Añadiendo el detalle técnico' : 'Quitando los tecnicismos', 'Quedándonos con lo que de verdad importa', `Ordenando los pasos que propone ${w('vuestro', 'tu')} plan`];
-    const go = () => { S.stage = 'story'; S.slide = 0; render(); window.scrollTo(0, 0); };
+    const go = () => { S.stage = 'camino'; render(); window.scrollTo(0, 0); };
     if (REDUCED()) { go(); return; }
     topActions.innerHTML = '';
     app.innerHTML = `<div class="prep" role="status" aria-live="polite"><h2>Preparando ${w('vuestro', 'tu')} plan</h2>
@@ -546,6 +546,73 @@
     return Object.keys(E.combos).length && !s.parcial ? { v: s.v, solo: false } : { v: E.pasos[i].nota, solo: true };
   };
 
+  // ------------------------------------------------------------------ el camino: roadmap animado que se convierte en el informe
+  // Tras los quizzes (o tras la intro si van directos al plan) se dibuja la línea de su vida, de hoy a la jubilación,
+  // con los hitos y las paradas del estudio. La nota sube parada a parada y acaba en una frase. Después, la línea
+  // se encoge hasta ser la barra de la ruta del informe (View Transitions). Solo cifras del estudio.
+  const PASO_MS = 520;
+  let CAM_T = [];
+  const introTxt = () => [
+    [`Este es ${w('vuestro', 'tu')} plan,`, `hecho con ${w('vuestras', 'tus')} cifras.`],
+    [`Hoy ${w('estáis', 'estás')} en ${E.nota.hoy} de 100.`, E.nota.banda ? `Una salud financiera ${low1(E.nota.banda)}.` : ''],
+    E.nota.max > E.nota.hoy ? [`Hay un camino hasta ${E.nota.max}.`, `${w('Os', 'Te')} lo enseñamos.`] : [`Veamos ${w('vuestro', 'tu')} camino,`, 'de hoy a la jubilación.'],
+  ];
+  function renderIntro() {
+    const L = introTxt(), i = Math.min(S.introI || 0, L.length - 1);
+    topActions.innerHTML = '';
+    app.innerHTML = `<div class="narrow"><div class="segs intro-segs" aria-hidden="true">${L.map((_, k) => `<button tabindex="-1" class="${k < i ? 'past' : k === i ? 'cur' : ''}"></button>`).join('')}</div>
+      <button class="bridge" data-act="introsig"><span>${esc(L[i][0])}</span>${L[i][1] ? ` <span>${esc(L[i][1])}</span>` : ''}</button></div>`;
+    clearTimeout(BRIDGE_T); BRIDGE_T = setTimeout(introSig, 2900);
+  }
+  function introSig() {
+    clearTimeout(BRIDGE_T);
+    const br = app.querySelector('.bridge'); if (!br || br.classList.contains('fade-out')) return;
+    br.classList.add('fade-out');
+    setTimeout(() => { S.introI = (S.introI || 0) + 1; if (S.introI >= introTxt().length) { S.introI = 0; S.stage = 'camino'; } render(); window.scrollTo(0, 0); }, 450);
+  }
+  const frasePuedes = () => E.nota.max > E.nota.hoy
+    ? [`Hoy, ${E.nota.hoy}.`, `Con nosotros ${w('podéis', 'puedes')} llegar a ${E.nota.max}.`]
+    : [`${w('Vais', 'Vas')} por buen camino.`, `Con nosotros, ${w('lo mantenéis', 'lo mantienes')}.`];
+  function renderCamino() {
+    CAM_T.forEach(clearTimeout); CAM_T = [];
+    const n = E.linea.length, total = n * PASO_MS + 400, [f1, f2] = frasePuedes();
+    app.innerHTML = `<div class="narrow camino" style="--paso:${PASO_MS}ms;--total:${total}ms">
+      <div class="cm-head"><div class="kicker" style="margin:0">${w('Vuestro', 'Tu')} camino</div><h2>De hoy a ${w('vuestra', 'tu')} jubilación</h2>
+        <div class="cm-nota" aria-live="polite"><small id="cm-l">Hoy</small><b id="cm-n">${E.nota.hoy}</b><span>/ 100</span></div></div>
+      <div class="cm-line" data-act="rmeet" role="button" tabindex="0" aria-label="${w('Vuestro', 'Tu')} camino. Toca para hablarlo con ${w('vuestro', 'tu')} asesor">${lineaHtml()}<i class="cm-dot" aria-hidden="true"></i></div>
+      <div class="cm-fin"><p class="cm-f1">${esc(f1)}</p><p class="cm-f2">${esc(f2)}</p></div>
+      <div class="cm-cta"><button class="btn block" data-act="alinforme">Ver ${w('vuestro', 'tu')} informe</button><button class="link block" data-act="book">${ic('cal', 16)} Reservar reunión con ${w('vuestro', 'tu')} asesor</button></div></div>`;
+    window.scrollTo(0, 0);
+    const el = document.getElementById('cm-n');
+    const sube = to => { const from = +el.textContent; if (to === from) return; const t0 = performance.now(); document.getElementById('cm-l').textContent = 'Con el plan';
+      const tick = now => { const k = Math.min(1, (now - t0) / 600); el.textContent = Math.round(from + (to - from) * k); if (k < 1) requestAnimationFrame(tick); else { el.parentNode.classList.remove('up'); void el.offsetWidth; el.parentNode.classList.add('up'); } };
+      requestAnimationFrame(tick); };
+    // La nota sube cuando aparece cada parada del plan (la nota acumulada que da el estudio para esos pasos).
+    E.linea.forEach((x, i) => { if (x.c !== 'step') return; const k = E.pasos.findIndex(p => p.key === x.key); if (k < 0) return;
+      CAM_T.push(setTimeout(() => sube(notaPaso(k).v), i * PASO_MS + 300)); });
+    CAM_T.push(setTimeout(() => sube(E.nota.max), total - 300));
+    // Si la persona se mueve por la pantalla, la línea la acompaña hasta el final.
+    CAM_T.push(setTimeout(() => { const f = app.querySelector('.cm-fin'); if (f && f.getBoundingClientRect().bottom > innerHeight) f.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, total));
+  }
+  // El roadmap se convierte en la barra de la ruta del informe.
+  function alInforme() {
+    CAM_T.forEach(clearTimeout); CAM_T = [];
+    const go = () => { S.stage = 'plan'; render(); window.scrollTo(0, 0); };
+    if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.startViewTransition(go); else go();
+  }
+  // Popup de reunión: al tocar el roadmap, la barra de la ruta o una parada.
+  function meetPop(key) {
+    const p = key ? paso(key) : null, i = p ? E.pasos.indexOf(p) : -1, oculto = S.stage === 'quiz' || S.stage === 'pareja';
+    const tit = p ? (oculto ? `Parada ${i + 1} de ${w('vuestra', 'tu')} ruta` : pTitulo(p)) : `${w('Vuestro', 'Tu')} camino, de ${E.nota.hoy} a ${E.nota.max}`;
+    const txt = p ? `${w('Vuestro', 'Tu')} asesor ${w('os', 'te')} explica esta parada con ${w('vuestras', 'tus')} cifras: qué hacer, cuándo y cuánto sube ${w('vuestra', 'tu')} nota.`
+      : `${w('Vuestro', 'Tu')} asesor recorre el camino ${w('con vosotros', 'contigo')}, parada a parada, y ${w('os', 'te')} ayuda a dar cada paso.`;
+    sheet(`<div class="kicker">${w('Os', 'Te')} acompañamos</div><h2>${esc(tit)}</h2><p class="muted">${txt}</p>
+      ${S.booking ? `<p class="saved">${ic('check', 15)}Reunión pedida: ${esc(S.booking.short)}. Lo ${w('veréis', 'verás')} ahí.</p><button class="btn block" data-act="close">Seguir</button>`
+        : `<button class="btn block" data-act="book">${ic('cal', 18)} Reservar reunión</button><p class="tiny" style="text-align:center;margin:.5em 0 0">30 minutos por videollamada · sin compromiso</p>`}
+      ${p && !oculto ? `<button class="link" style="width:100%" data-act="verparada" data-s="${p.key}">Ver esta parte del plan</button>` : ''}
+      ${S.booking ? '' : `<button class="link" style="width:100%" data-act="close">Ahora no</button>`}`);
+  }
+
   function lineaHtml() {
     const acc = accepted();
     const rows = E.linea.map((x, i) => {
@@ -556,7 +623,7 @@
         pill = `<span class="tr-p">${np.solo ? 'Solo este paso: ' : ''}nota <b>${np.v}</b></span>`;
       } else if (x.c === 'warn' && x.key && S.steps[x.key] === 'yes') { cls = 'ghost'; t = 'Fecha de la tarjeta si no se hiciera nada'; s = ''; }
       else if (x.c === 'now') pill = E.nota.banda ? `<span class="tr-p navy">${esc(E.nota.banda)}</span>` : '';
-      return `<div class="tr ${cls}" style="--i:${i}"><span class="tr-w">${esc(x.cuando)}</span><span class="tr-d">${ic(icon, x.c === 'end' ? 22 : 17)}</span><div class="tr-c"><b>${esc(t)}</b>${s ? `<small>${esc(s)}</small>` : ''}${pill}</div></div>`;
+      return `<div class="tr ${cls}" style="--i:${i}" data-act="rmeet"${x.c === 'step' ? ` data-s="${x.key}"` : ''}><span class="tr-w">${esc(x.cuando)}</span><span class="tr-d">${ic(icon, x.c === 'end' ? 22 : 17)}</span><div class="tr-c"><b>${esc(t)}</b>${s ? `<small>${esc(s)}</small>` : ''}${pill}</div></div>`;
     }).join('');
     return `<div class="tline ${acc.length ? 'has' : ''}"><i class="tl-spine"></i>${rows}</div>`;
   }
@@ -572,6 +639,16 @@
         <div class="areas">${E.areas.map((a, i) => `<div class="ar ${a.nota < 50 ? 'low' : a.nota < 75 ? 'mid' : 'hi'}" style="--i:${i}"><span class="ar-ic">${ic(a.icon, 18)}</span><b>${esc(a.nombre)}</b><div class="ar-b"><i style="width:${Math.max(3, a.nota)}%"></i></div><em>${a.nota}</em></div>`).join('')}</div>
         </div>
         <p class="tiny" style="margin:0">Las cinco áreas con las que ${w('vuestro', 'tu')} plan calcula la nota, de 0 a 100. En las siguientes tarjetas, una por tema.</p>`;
+    }
+    if (id.startsWith('n:')) {
+      const ns = nodos(), k = ns.findIndex(x => x.id === id.slice(2)), n = ns[k]; if (!n) return '';
+      const pasos = n.tipo === 'area' ? n.x.pasos : [];
+      return `<div class="kick">Punto ${k + 1} de ${ns.length} · de lo más urgente a lo que está bien</div>
+        <div class="nodo-sl est-${n.estado}"><span class="nd-top"><span class="nd-ic">${ic(n.icon, 18)}</span><span class="nd-est">${ic(EST_IC[n.estado], 14)}${ESTADO_N[n.estado]}</span></span>
+          <h2 class="nd-nom">${esc(n.nombre)}</h2>${n.sub ? `<p class="muted small" style="margin:0">${esc(n.sub)}</p>` : ''}
+          <span class="nd-cifra"><b>${esc(n.cifra)}</b>${n.de ? `<small>${n.de}</small>` : ''}</span><span class="nd-lab">${esc(n.cifraLab)}</span>
+          ${n.titular ? `<p class="nd-tit">${esc(n.titular)}</p>` : ''}
+          ${pasos.length ? `<span class="tag acc" style="justify-self:start">${pasos.length} ${pasos.length === 1 ? 'paso' : 'pasos'} del plan</span>` : ''}</div>`;
     }
     if (id.startsWith('t:')) {
       const ts = temasPlan(), k = ts.findIndex(x => 't:' + x.a.nombre === id);
@@ -633,8 +710,8 @@
   const RUL = { rot: null, drag: null, ovY: 0 };
   const rulN = () => SLIDES.length;
   const rulMod = x => ((Math.round(x) % rulN()) + rulN()) % rulN();
-  const rulName = id => id === 'foto' ? 'Nota general' : id === 'ruta' ? 'Roadmap' : id.startsWith('t:') ? id.slice(2) : id;
-  const rulKey = id => id === 'foto' ? '__nota' : id === 'ruta' ? '__ruta' : id.startsWith('t:') ? id.slice(2) : null;
+  const rulName = id => id === 'foto' ? 'Nota general' : id === 'ruta' ? 'Roadmap' : id.startsWith('n:') ? ((nodo(id.slice(2)) || {}).nombre || id.slice(2)) : id.startsWith('t:') ? id.slice(2) : id;
+  const rulKey = id => id === 'foto' ? '__nota' : id === 'ruta' ? '__ruta' : id.startsWith('n:') || id.startsWith('t:') ? id.slice(2) : null;
   function renderStory() {
     if (RUL.rot == null || rulMod(RUL.rot) !== S.slide) RUL.rot = Math.max(0, Math.min(S.slide || 0, rulN() - 1));
     const i = rulMod(RUL.rot), id = SLIDES[i], n = rulN(), prev = SLIDES[(i + n - 1) % n], next = SLIDES[(i + 1) % n];
@@ -1690,6 +1767,7 @@
     if (S.stage === 'plan' || S.stage === 'story') topActions.innerHTML = `${S.stage === 'plan' ? '<button class="pill" data-act="story">Resumen</button>' : ''}<button class="pill" data-act="settings" aria-label="Ajustes"><span aria-hidden="true">⚙</span> <span class="lbl-long">Ajustes</span></button>${talk}`;
     else if (S.stage === 'quiz') topActions.innerHTML = `<button class="pill nb" id="nb" data-act="nb" aria-label="Cuaderno para ${w('vuestro', 'tu')} asesor">${ic('pen', 16)}<b>${nbCount()}</b></button><button class="pill" data-act="skip">Saltar</button>${talk}`;
     else if (S.stage === 'pareja') topActions.innerHTML = `<button class="pill" data-act="skip">Saltar al plan</button>${talk}`;
+    else if (S.stage === 'camino') topActions.innerHTML = `<button class="pill" data-act="alinforme">Ir al informe</button>${talk}`;
     else topActions.innerHTML = '';
     document.querySelectorAll('.lbl-short').forEach(el => { el.style.display = window.innerWidth <= 560 ? 'inline' : 'none'; });
   }
@@ -1748,7 +1826,7 @@
 
   function render() {
     renderTop();
-    if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz' || S.stage === 'pareja' || S.stage === 'story');
+    if (window.Fondo) Fondo.show(S.stage === 'home' || S.stage === 'quiz' || S.stage === 'pareja' || S.stage === 'story' || S.stage === 'intro' || S.stage === 'camino');
     if (S.stage !== 'pareja') { delete document.body.dataset.pj; if (window.Fondo) Fondo.who(null); }
     if (window.Fondo) Fondo.vivo(S.stage === 'pareja' && S.pj && S.pj.step === 0);
     if (S.stage !== 'story') document.body.classList.remove('rul-lock');
@@ -1756,6 +1834,8 @@
     else if (S.stage === 'quiz') renderQuiz();
     else if (S.stage === 'pareja') renderPareja();
     else if (S.stage === 'story') renderStory();
+    else if (S.stage === 'intro') renderIntro();
+    else if (S.stage === 'camino') renderCamino();
     else if (S.stage === 'tema') renderTema();
     else renderPlan();
     save();
@@ -1898,15 +1978,12 @@
       case 'rask': { const q = QMAP[k]; if (!S.doubts.some(d => d.id === 'rq-' + k)) S.doubts.push({ id: 'rq-' + k, topic: 'otra', q: `${q.creian}: ${q.plan} ${q.unidad}. ¿Cómo lo arreglamos?`, covered: 'no', status: 'open' }); fly(b, 'Para la reunión'); keep(); break; }
       case 'vhecho': S.done = S.done || {}; S.done[b.dataset.s] = true; S.steps[b.dataset.s] = 'yes'; keep(); vueltaSheet(+b.dataset.n); break;
       case 'vaun': S.doubts.push({ id: 'vaun-' + b.dataset.s + '-' + Date.now(), topic: 'otra', paso: b.dataset.s, q: `Aún no hemos hecho «${low1(pTitulo(paso(b.dataset.s)))}». ¿Qué nos frena?`, covered: 'no', status: 'open' }); closeSheet(); keep(); toast('Apuntado para la reunión'); break;
-      case 'stop': {
-        const p = paso(b.dataset.s), i = E.pasos.indexOf(p);
-        if ((S.stage === 'plan' || S.stage === 'tema') && !document.getElementById('step-' + p.key)) { const x = temasPlan().find(t => t.pasos.includes(p)); if (x) { S.stage = 'plan'; abrirTema(x.a.nombre); } }
-        if (S.stage === 'plan' || S.stage === 'tema') { const el = document.getElementById('step-' + p.key); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); } }
-        else if (S.stage === 'quiz' || S.stage === 'pareja') toast((S.seen || {})[p.key] ? `Parada ${i + 1}: cuál es, ${w('lo veis', 'lo ves')} con ${w('vuestro', 'tu')} asesor` : `Parada ${i + 1}: todavía por encontrar`);
-        else toast(`Parada ${i + 1}: ${pTitulo(p)} · nota ${p.nota}`);
-        break;
-      }
-      case 'skip': toPlan(); render(); window.scrollTo(0, 0); break;
+      case 'introsig': introSig(); break;
+      case 'alinforme': alInforme(); break;
+      case 'rmeet': meetPop(b.dataset.s || null); break;
+      case 'verparada': { closeSheet(); const p = paso(b.dataset.s), x = temasPlan().find(t => t.pasos.includes(p)); if (x) { if (S.stage !== 'tema') S.stage = 'plan'; abrirTema(x.a.nombre); setTimeout(() => { const el = document.getElementById('step-' + p.key); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('flash'); } }, 80); } break; }
+      case 'stop': meetPop(b.dataset.s); break;
+      case 'skip': toPlan(); S.stage = 'intro'; S.introI = 0; render(); window.scrollTo(0, 0); break;
       case 'caso': closeSheet(); await abrirCaso(v); render(); window.scrollTo(0, 0); break;
       case 'who': S.who = v; render(); advance(); break;
       case 'level': S.prefs.level = v; render(); advance(); break;
@@ -1999,7 +2076,7 @@
       case 'calok': {
         const dt = fromIso(CAL.day, CAL.time), kind = CAL.kind;
         if (kind === 'pay') { S.payDate = { iso: CAL.day, time: CAL.time, label: fmtLong(dt) }; S.steps[E.primer.key] = 'yes'; closeSheet(); keep(); if (S.stage === 'pareja') render(); toast(`Apuntado. Con ese paso, la nota pasa a ${E.primer.nota}`); }
-        else { S.booking = { iso: CAL.day, time: CAL.time, label: fmtSlot(dt), short: fmtSlot(dt), mins: nextStep().mins }; syncOpenQ(); closeSheet(); if (S.stage === 'plan') { render(); const sc = document.getElementById('s-cierre'); if (sc) sc.scrollIntoView({ behavior: 'smooth' }); } else { keep(); if (S.stage === 'pareja') { render(); pjBooked(); } } if (S.stage !== 'pareja') toast('Reunión pedida'); }
+        else { S.booking = { iso: CAL.day, time: CAL.time, label: fmtSlot(dt), short: fmtSlot(dt), mins: nextStep().mins }; syncOpenQ(); closeSheet(); if (S.stage === 'plan') { render(); const sc = document.getElementById('s-cierre'); if (sc) sc.scrollIntoView({ behavior: 'smooth' }); } else { if (S.stage === 'camino') save(); else keep(); if (S.stage === 'pareja') { render(); pjBooked(); } } if (S.stage !== 'pareja') toast('Reunión pedida'); }
         break;
       }
       case 'gocierre': document.getElementById('s-cierre').scrollIntoView({ behavior: 'smooth' }); break;
