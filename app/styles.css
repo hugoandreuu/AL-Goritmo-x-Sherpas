@@ -1692,7 +1692,3 @@ i.pa { background: var(--accent); } i.pb { background: var(--navy); }
 .tline.horiz .tr.step.done .tr-n b { color: var(--good); }
 .tline.horiz .tr.step .tr-p { display: none; }
 .tline.horiz .tr.now .tr-c > b { display: none; }
-/* La nota de cada parada, encima de la barra de ruta (fuera de los quizzes) */
-.route.con-nota .rt-track { margin-top: 18px; }
-.rt-n { position: absolute; left: 50%; bottom: calc(100% + 3px); transform: translateX(-50%); font: 700 12px/1 var(--head); color: var(--accent); white-space: nowrap; pointer-events: none; }
-.rt-stop.done .rt-n { color: var(--good); }
