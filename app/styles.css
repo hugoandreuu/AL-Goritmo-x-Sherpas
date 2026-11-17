@@ -1775,3 +1775,27 @@ i.pa { background: var(--accent); } i.pb { background: var(--navy); }
 .tpage .cf-chip { border-color: var(--sh-light); color: var(--sh-deep); }
 .tpage .cf-chip[aria-pressed="true"] { background: var(--sh-cta); border-color: var(--sh-deep); }
 .tpage .cf-h { color: var(--sh-deep); }
+/* Más llamativo (hugo): cabecera en color lleno, cifras clave en tarjetas de color y bloques con más contraste */
+.tpage .tp-h[class*="est-"] { border: 0; color: #fff; background: radial-gradient(120% 100% at 100% 0%, rgba(255,255,255,.22) 0%, transparent 55%), linear-gradient(135deg, var(--st) 0%, color-mix(in srgb, var(--st) 55%, var(--sh-violet)) 100%); box-shadow: 0 12px 30px color-mix(in srgb, var(--st) 30%, transparent); }
+.tpage .tp-h[class*="est-"] h1, .tpage .tp-h[class*="est-"] .tp-tit { color: #fff; }
+.tpage .tp-h[class*="est-"] small, .tpage .tp-h[class*="est-"] .muted, .tpage .tp-h[class*="est-"] .tp-cifra small, .tpage .tp-h[class*="est-"] .tp-cifra > span:not(.nd-est) { color: rgba(255,255,255,.88); }
+.tpage .tp-h[class*="est-"] .ar-ic { background: #fff; color: var(--st); box-shadow: none; }
+.tpage .tp-h[class*="est-"] .tp-cifra b { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #fff; }
+.tpage .tp-h[class*="est-"] .nd-est { background: #fff; color: var(--st); }
+.tpage .kpi { background: linear-gradient(135deg, #6586fc 0%, #774be5 100%); box-shadow: 0 6px 16px rgba(101,75,229,.25); }
+.tpage .kpi::before { background: rgba(255,255,255,.35); }
+.tpage .kpi b, .tpage .kpi small, .tpage .kpi span { color: #fff; } .tpage .kpi small { opacity: .9; }
+.tpage .kpi.coste, .tpage .kpi.malo { background: linear-gradient(135deg, #e8590c 0%, #b8360a 100%); box-shadow: 0 6px 16px rgba(232,89,12,.25); }
+.tpage .kpi.bueno { background: linear-gradient(135deg, #1a9e4b 0%, #0f6a30 100%); box-shadow: 0 6px 16px rgba(19,115,54,.25); }
+.tpage .kpi.coste::before, .tpage .kpi.malo::before, .tpage .kpi.bueno::before { background: rgba(255,255,255,.35); }
+.tpage .kpi.coste b, .tpage .kpi.malo b, .tpage .kpi.bueno b, .tpage .kpi.coste small, .tpage .kpi.malo small, .tpage .kpi.bueno small { color: #fff; }
+.tpage .lect li { background: linear-gradient(120deg, #e3e9ff 0%, #efe9ff 100%); }
+.tpage .lect li::before { width: 5px; }
+.tpage .tp-sec > .kicker { font-size: 14px; }
+.tpage .tp-sec > .kicker b { width: 30px; height: 30px; border-radius: 10px; }
+.tpage .asesor { background: linear-gradient(127deg, #d9d3fd 0%, #d3defe 100%); }
+.tpage .capa { background: linear-gradient(90deg, #edf0ff 0%, #fff 70%); border-left: 5px solid var(--sh-blue); }
+.tpage .capa > summary { color: var(--sh-deep); }
+.tpage .tp-h.est-low { --hg: linear-gradient(135deg, #f0681c 0%, #b8360a 100%); } .tpage .tp-h.est-mid { --hg: linear-gradient(135deg, #e89a00 0%, #b56400 100%); }
+.tpage .tp-h.est-hi { --hg: linear-gradient(135deg, #1fae55 0%, #0f6a30 100%); } .tpage .tp-h.est-neutro { --hg: linear-gradient(127deg, #948df7 0%, #4565d6 100%); }
+.tpage .tp-h[class*="est-"] { background: radial-gradient(120% 100% at 100% 0%, rgba(255,255,255,.22) 0%, transparent 55%), var(--hg); }
