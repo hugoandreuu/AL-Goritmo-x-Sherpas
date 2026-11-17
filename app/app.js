@@ -626,7 +626,7 @@
       ${S.booking ? '' : `<button class="link" style="width:100%" data-act="close">Ahora no</button>`}`);
   }
 
-  function lineaHtml(filas) {
+  function lineaHtml(filas, horiz) {
     const acc = accepted();
     const rows = (filas || E.linea).map((x, i) => {
       let cls = x.c, icon = x.icon, t = x.t, s = x.s || '', pill = '';
@@ -638,7 +638,7 @@
       else if (x.c === 'now') pill = E.nota.banda ? `<span class="tr-p navy">${esc(E.nota.banda)}</span>` : '';
       return `<div class="tr ${cls}" style="--i:${i}" data-act="rmeet" role="button" tabindex="0"${x.c === 'step' ? ` data-s="${x.key}"` : ''}><span class="tr-w">${esc(x.cuando)}</span><span class="tr-d"${x.c === 'step' && filas ? ` style="view-transition-name:vt-${x.key}"` : ''}>${ic(icon, x.c === 'end' ? 22 : 17)}</span><div class="tr-c"><b>${esc(t)}</b>${s ? `<small>${esc(s)}</small>` : ''}${pill}</div></div>`;
     }).join('');
-    return `<div class="tline ${acc.length ? 'has' : ''}"><i class="tl-spine"></i>${rows}</div>`;
+    return `<div class="tline ${acc.length ? 'has' : ''}${horiz ? ' horiz' : ''}"${horiz ? ' tabindex="0" aria-label="Roadmap. Desliza para ver todos los hitos"' : ''}><i class="tl-spine"></i>${rows}</div>`;
   }
 
   function slideHtml(id) {
@@ -1216,7 +1216,7 @@
   // Roadmap: el camino de hitos, de hoy a la jubilación.
   function rutaCard() {
     return `<article class="tema ruta"><header class="tm-h"><span class="ar-ic">${ic('flag', 18)}</span><div class="tm-ht"><h3>${w('Vuestro', 'Tu')} roadmap</h3><small>El camino de hitos, de hoy a la jubilación</small></div></header>
-      ${lineaHtml()}</article>`;
+      ${lineaHtml(null, true)}<p class="tiny tl-hint">Desliza para ver todo el camino →</p></article>`;
   }
 
   function renderPlan() {

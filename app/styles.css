@@ -1647,3 +1647,24 @@ i.pa { background: var(--accent); } i.pb { background: var(--navy); }
 ::view-transition-group(*) { animation-duration: .7s; animation-timing-function: cubic-bezier(.22,1,.36,1); }
 .route.llega { animation: rise .5s var(--soft); }
 .tr:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 14px; }
+
+/* Roadmap horizontal en el informe completo */
+.tline.horiz { display: flex; gap: 0; padding: 18px 14px 16px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.tline.horiz::after { display: none; }
+.tline.horiz .tl-spine { display: none; }
+.tline.horiz .tr { flex: 0 0 168px; grid-template-columns: minmax(0, 1fr); grid-template-rows: 26px 48px auto; justify-items: center; align-items: center; gap: 8px; min-height: 0; text-align: center; scroll-snap-align: start; animation-name: trinx; }
+.tline.horiz .tr::before { content: ""; position: absolute; z-index: -1; top: calc(26px + 8px + 22px); left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--accent), var(--sky)); }
+.tline.horiz .tr:first-of-type::before { left: 50%; background: var(--navy); }
+.tline.horiz .tr.end::before { right: 50%; background: linear-gradient(90deg, var(--sky), #fd991e); }
+.tline.horiz .tr.warn::before { background: linear-gradient(90deg, var(--sky), #ffc49d); }
+.tline.horiz .tr-w { text-align: center; white-space: nowrap; }
+.tline.horiz .tr-c { width: calc(100% - 12px); align-self: start; justify-items: center; }
+.tline.horiz .tr-p { justify-self: center; }
+.tline.horiz .tr.now .tr-c { padding-left: 12px; }
+.tline.horiz .tr.end { margin-top: 0; }
+.tline.horiz .tr.end .tr-d { margin-left: 0; }
+.tline.horiz .tr.end .tr-c { margin-left: 0; }
+@keyframes trinx { from { opacity: 0; transform: translateX(16px); } }
+.tl-hint { margin: 8px 2px 0; text-align: right; }
+.temas > .tema.ruta { min-width: 0; }
+.tema.ruta .tline.horiz { max-width: 100%; }
