@@ -85,13 +85,17 @@
     else if (q.tema === 'nota' && q.tono === 'malo') E.pasos.forEach(x => { vistos()[x.key] = true; });
   }
   const FASE = { quiz: 'Descubrir', story: 'Repasar', plan: 'Decidir', tema: 'Repasar' };
+  // La barra no sale en las preguntas ni en las revelaciones: aparece en el cierre, con la nota y los pasos ya vistos.
+  // En pareja, el cierre es la pantalla 'map' (lo que propone vuestro plan).
+  const pjCierre = () => S.stage === 'pareja' && !!S.pj && /^map/.test(pjSteps()[S.pj.step] || '');
+  const ocultaRuta = () => S.stage === 'quiz' || (S.stage === 'pareja' && !pjCierre());
   function routeBar() {
     const P = E.pasos; if (!P.length || !E.nota) return '';
     const acc = accepted(), sc = scoreFor(acc).v, lo = E.nota.hoy, hi = Math.max(E.nota.max, lo + 1), seen = vistos();
     const hechos = P.filter(p => (S.done || {})[p.key]).map(p => p.key), hoy = hechos.length ? scoreFor(hechos).v : lo;
     const nDone = acc.length, nSeen = P.filter(p => seen[p.key] || acc.includes(p.key)).length;
-    const enQuiz = S.stage === 'quiz' || S.stage === 'pareja';
-    const fases = ['quiz', 'story', 'plan'], cur = enQuiz ? 0 : fases.indexOf(S.stage === 'tema' ? (S.temaFrom === 'plan' ? 'plan' : 'story') : S.stage);
+    const enQuiz = ocultaRuta();
+    const fases = ['quiz', 'story', 'plan'], cur = enQuiz ? 0 : pjCierre() ? 1 : fases.indexOf(S.stage === 'tema' ? (S.temaFrom === 'plan' ? 'plan' : 'story') : S.stage);
     const estado = nDone ? `${hechos.length ? `${hechos.length} ${hechos.length === 1 ? 'hecha' : 'hechas'} y ` : ''}${nDone} de ${P.length} ${P.length === 1 ? 'elegida' : 'elegidas'}${sc > hoy ? `. Hechas, la nota llegaría a ${sc}` : ''}`
       : enQuiz ? `${nSeen} de ${P.length} ${P.length === 1 ? 'parada encontrada' : 'paradas encontradas'}. Cuáles son, ${w('lo veis', 'lo ves')} con ${w('vuestro', 'tu')} asesor` : `${P.length} ${P.length === 1 ? 'parada' : 'paradas'} hasta ${E.nota.max}`;
     return `<nav class="route" data-act="rmeet" aria-label="${w('Vuestra', 'Tu')} ruta: nota de hoy ${hoy}${nDone ? `, con los pasos elegidos llegaría a ${sc}` : ''}; con todo el plan, ${E.nota.max}. ${esc(estado)}">
@@ -127,13 +131,13 @@
       return `<div class="rv-route" data-st="fade">${body}</div>`;
     }
     if (p) {
-      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan tiene una parada para esto</div>
-        <div class="rr-stop found"><b class="rr-n">?</b><div><b>Parada ${i + 1} de ${w('vuestra', 'tu')} ruta</b><small>Qué hacer y cuánto sube ${w('vuestra', 'tu')} nota, ${w('lo veis', 'lo ves')} con ${ase}.</small></div></div>`
-        + meetBox(`${w('Vuestro', 'Tu')} asesor ${w('os', 'te')} enseña esta parada con ${w('vuestras', 'tus')} cifras y cómo dar el paso.`);
+      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan tiene un paso para esto</div>
+        <div class="rr-stop found"><b class="rr-n">?</b><div><b>Paso ${i + 1} de ${E.pasos.length} de ${w('vuestro', 'tu')} plan</b><small>Qué hacer y cuánto sube ${w('vuestra', 'tu')} nota, ${w('lo veis', 'lo ves')} con ${ase}.</small></div></div>`
+        + meetBox(`${w('Vuestro', 'Tu')} asesor ${w('os', 'te')} enseña este paso con ${w('vuestras', 'tus')} cifras y cómo darlo.`);
     } else if (q.tema === 'nota' && E.pasos.length) {
-      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestra', 'Tu')} ruta, entera</div>
-        <p class="small" style="margin:0">De ${E.nota.hoy} a ${E.nota.max} en ${E.pasos.length} ${E.pasos.length === 1 ? 'parada' : 'paradas'}. ${w('Las veis', 'Las ves')} arriba con «?»: cuáles son, ${w('lo descubrís', 'lo descubres')} con ${ase}.</p>`
-        + meetBox(`En 30 minutos ${w('os', 'te')} enseña las ${E.pasos.length} paradas en orden.`);
+      body = `<div class="rr-k">${ic('flag', 15)}${w('Vuestro', 'Tu')} plan, entero</div>
+        <p class="small" style="margin:0">De ${E.nota.hoy} a ${E.nota.max} en ${E.pasos.length} ${E.pasos.length === 1 ? 'paso' : 'pasos'}. Cuáles son, ${w('lo descubrís', 'lo descubres')} con ${ase}.</p>`
+        + meetBox(`En 30 minutos ${w('os', 'te')} enseña ${E.pasos.length === 1 ? 'el paso' : `los ${E.pasos.length} pasos`} en orden.`);
     } else {
       const ya = S.doubts.some(d => d.id === 'rq-' + q.id);
       body = `<div class="rr-k">${ic('chat', 15)}Para trabajarlo con ${ase}</div>${q.salida ? `<p class="small muted rr-sal">${esc(q.salida)}</p>` : ''}`
@@ -142,11 +146,12 @@
     }
     return `<div class="rv-route" data-st="fade">${body}</div>`;
   }
-  // Modo pareja: al ver cada respuesta, la parada que toca queda encontrada (con «?») y se ofrece la reunión.
+  // Modo pareja: al ver cada respuesta, la parada que toca queda encontrada y se ofrece la reunión.
+  // El paso del plan ya sale justo encima (pjPropLine), así que aquí no se repite.
   function pjRoute(q) {
     if (!E.pasos.length) return '';
     if (q) { const p = pasoDe(q); if (p) vistos()[p.key] = true; else if (q.id === 'nota') E.pasos.forEach(x => { vistos()[x.key] = true; }); }
-    return `<div class="rv-route pj-route">${q && pasoDe(q) ? `<div class="rr-k">${ic('flag', 15)}Vuestro plan tiene una parada para esto</div><p class="small muted rr-sal">Cuál es y cuánto sube vuestra nota, lo veis con vuestro asesor.</p>` : ''}
+    return `<div class="rv-route pj-route">
       ${meetBox('Vuestro asesor lo revisa con los dos y os enseña cómo mejorarlo.')}</div>`;
   }
 
@@ -474,10 +479,9 @@
   function renderQuiz() {
     const step = QUIZ[S.qi];
     clearTimeout(INTRO_T);
-    const rb = QMAP[step] || step === 'gain' ? routeBar() : '';
-    if (PEND === step) { app.innerHTML = `<div class="narrow">${rb}${progress()}${suspense(QMAP[step])}</div>`; window.scrollTo(0, 0); return; }
+    if (PEND === step) { app.innerHTML = `<div class="narrow">${progress()}${suspense(QMAP[step])}</div>`; window.scrollTo(0, 0); return; }
     const q = QMAP[step], a = q ? (S.a[q.id] || {}) : {};
-    if (q && a.revealed) { app.innerHTML = `<div class="narrow">${rb}${progress()}${revealView(q)}</div>`; if (!JUST) animateRing(); return; }
+    if (q && a.revealed) { app.innerHTML = `<div class="narrow">${progress()}${revealView(q)}</div>`; if (!JUST) animateRing(); return; }
     const perm = q && q.permiso && !a.permission, key = step + (perm ? ':permiso' : '');
     const intro = INTRO !== key; INTRO = key;
     if (intro) BUCKET = null;
@@ -515,7 +519,7 @@
       dk = dock(q.tipo === 'anio' ? 'Ver la fecha' : q.tipo === 'opciones' ? 'Ver la respuesta' : 'Ver el dato', has, 'reveal');
     }
     if (window.Fondo) { Fondo.mood(0); Fondo.focus(false); Fondo.tint(quizAnswered(step, a) ? 'pick' : null); }
-    app.innerHTML = `<div class="narrow">${rb}<div class="qstage ${intro ? 'intro' : ''}">${progress()}<div class="qhead">${head}</div><div class="qbody">${body}</div>${dk}</div></div>`;
+    app.innerHTML = `<div class="narrow"><div class="qstage ${intro ? 'intro' : ''}">${progress()}<div class="qhead">${head}</div><div class="qbody">${body}</div>${dk}</div></div>`;
     if (intro) { window.scrollTo(0, 0); introQ(); }
   }
 
@@ -615,14 +619,14 @@
   }
   // Popup de reunión: al tocar el roadmap, la barra de la ruta o una parada.
   function meetPop(key) {
-    const p = key ? paso(key) : null, i = p ? E.pasos.indexOf(p) : -1, oculto = S.stage === 'quiz' || S.stage === 'pareja';
+    const p = key ? paso(key) : null, i = p ? E.pasos.indexOf(p) : -1, oculto = ocultaRuta();
     const tit = p ? (oculto ? `Parada ${i + 1} de ${w('vuestra', 'tu')} ruta` : pTitulo(p)) : `${w('Vuestro', 'Tu')} camino, de ${E.nota.hoy} a ${E.nota.max}`;
     const txt = p ? `${w('Vuestro', 'Tu')} asesor ${w('os', 'te')} explica esta parada con ${w('vuestras', 'tus')} cifras: qué hacer, cuándo y cuánto sube ${w('vuestra', 'tu')} nota.`
       : `${w('Vuestro', 'Tu')} asesor recorre el camino ${w('con vosotros', 'contigo')}, parada a parada, y ${w('os', 'te')} ayuda a dar cada paso.`;
     sheet(`<div class="kicker">${w('Os', 'Te')} acompañamos</div><h2>${esc(tit)}</h2><p class="muted">${txt}</p>
       ${S.booking ? `<p class="saved">${ic('check', 15)}Reunión pedida: ${esc(S.booking.short)}. Lo ${w('veréis', 'verás')} ahí.</p><button class="btn block" data-act="close">Seguir</button>`
         : `<button class="btn block" data-act="book">${ic('cal', 18)} Reservar reunión</button><p class="tiny" style="text-align:center;margin:.5em 0 0">30 minutos por videollamada · sin compromiso</p>`}
-      ${p && !oculto ? `<button class="link" style="width:100%" data-act="verparada" data-s="${p.key}">Ver esta parte del plan</button>` : ''}
+      ${p && !oculto && S.stage !== 'pareja' ? `<button class="link" style="width:100%" data-act="verparada" data-s="${p.key}">Ver esta parte del plan</button>` : ''}
       ${S.booking ? '' : `<button class="link" style="width:100%" data-act="close">Ahora no</button>`}`);
   }
 
@@ -1730,7 +1734,7 @@
     const prog = `<div class="progress thin"><div class="bar"><i style="width:${S.pj.step / (steps.length - 1) * 100}%"></i></div></div>`;
     const key = S.pj.step + ':' + steps[S.pj.step]; PJ_NEW = PJ_IN !== key; PJ_IN = key;
     const V = { intro: pjIntro, frase: () => pjFrase(x), pass: () => pjPass(x), money: () => pjMoney(x), vida: pjVida, nota: pjNota, rev: () => (x === 'money' ? pjRevMoney() : x === 'vida' ? pjRevVida() : x === 'nota' ? pjRevNota() : pjRevRisk()), risk: () => pjRisk(x), map: pjMap }[kind];
-    app.innerHTML = (kind === 'pass' || kind === 'intro' ? '' : `<div class="narrow">${routeBar()}</div>`) + (kind === 'pass' ? '' : prog) + V();
+    app.innerHTML = (kind === 'map' ? `<div class="narrow">${routeBar()}</div>` : '') + (kind === 'pass' ? '' : prog) + V();
     // El fondo toma el color de quien contesta: azul uno, teja el otro; neutro cuando lo veis juntos.
     if (x === 'a' || x === 'b') document.body.dataset.pj = x; else delete document.body.dataset.pj;
     if (kind === 'rev' && x === 'nota') animateRing();
