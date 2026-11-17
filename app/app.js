@@ -565,9 +565,14 @@
     br.classList.add('fade-out');
     setTimeout(() => { S.introI = (S.introI || 0) + 1; if (S.introI >= introTxt().length) { S.introI = 0; S.stage = 'camino'; } render(); window.scrollTo(0, 0); }, 450);
   }
-  const frasePuedes = () => E.nota.max > E.nota.hoy
+  // Si el camino acaba en un aviso tras la jubilación (p. ej. se acaban los ahorros), la frase final habla de eso.
+  const frasePuedes = () => {
+    const L = E.linea || [], fin = L.findIndex(x => x.c === 'end'), aviso = fin >= 0 ? L.slice(fin + 1).filter(x => x.c === 'warn').pop() : null;
+    if (aviso) return [`En ${aviso.anio}, ${low1(aviso.t).replace(/^aquí /, '')}.`, `${w('Lo veis con vuestro', 'Lo ves con tu')} asesor: hoy ${E.nota.hoy}, con el plan ${E.nota.max}.`];
+    return E.nota.max > E.nota.hoy
     ? [`Hoy, ${E.nota.hoy}.`, `Con nosotros ${w('podéis', 'puedes')} llegar a ${E.nota.max}.`]
     : [`${w('Vais', 'Vas')} por buen camino.`, `Con nosotros, ${w('lo mantenéis', 'lo mantienes')}.`];
+  };
   function renderCamino() {
     CAM_T.forEach(clearTimeout); CAM_T = [];
     const filas = caminoFilas(), n = filas.length, total = n * PASO_MS + 400, [f1, f2] = frasePuedes();
@@ -1256,6 +1261,8 @@
       <div class="heroscore">${ring(sc.v, max)}
         <div><b class="hs-t">${acc.length ? `La nota que ${w('tendríais', 'tendrías')} al hacer lo elegido` : `${w('Vuestra', 'Tu')} nota de salud financiera, hoy`}</b>
         <p class="muted small" style="margin:.3em 0 0">${acc.length ? `Hoy es <b>${(() => { const h = E.pasos.filter(p => (S.done || {})[p.key]).map(p => p.key); return h.length ? scoreFor(h).v : E.nota.hoy; })()}</b>. ` : ''}${max > E.nota.hoy ? `Con todos los pasos de ${w('vuestro', 'tu')} plan llega a <b>${max}</b>. ` : ''}${w('Habéis elegido', 'Has elegido')} ${acc.length} de ${c.n}.${sc.parcial ? ' El plan da la nota de cada paso por separado.' : ''}</p></div></div></section>`;
+    // La hoja del asesor, a la vista bajo la portada del informe (antes quedaba plegada al final).
+    main += fold('hoja', ic('list', 16), S.booking ? `Lo que recibe ${w('vuestro', 'tu')} asesor` : `Lo que recibirá ${w('vuestro', 'tu')} asesor`, `La hoja con ${w('vuestras', 'tus')} respuestas y dudas${S.booking ? '' : ', antes de pedir nada'}`, advisorSheet(), false);
     const nx = ns, nds = nodos();
     main += `<div class="section" id="s-pasos"><div class="kicker"><b>1</b>${w('Vuestro', 'Tu')} informe, de lo más urgente a lo que está bien</div>
       <p class="muted" style="margin-top:-2px">${nds.length} puntos. Toca uno para ver lo esencial, sus gráficas y, si ${w('queréis', 'quieres')}, todo el detalle. Las cinco áreas con nota son las que calculan ${w('vuestra', 'tu')} nota; ahí ${w('votáis', 'votas')} los pasos del plan.</p>
@@ -1275,7 +1282,7 @@
         ${S.booking ? '' : `<button class="link" style="width:100%" data-act="later">${window.__PREVIEW__ ? (S.later ? 'Sin prisa: el plan sigue aquí' : 'Ahora no') : S.later ? 'Recordatorios a los 3 y 30 días, en el calendario' : `Ahora no. ${w('Recordádnoslo', 'Recuérdamelo')} en 3 y en 30 días`}</button>`}</div>
       ${weekCard()}
       ${E.primer && (S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>Cómo comprobamos que el primer paso está hecho</small></span>${ic('arrow', 18)}</button>` : ''}
-      ${fold('hoja', ic('list', 16), S.booking ? `Lo que recibe ${w('vuestro', 'tu')} asesor` : `Lo que recibirá ${w('vuestro', 'tu')} asesor`, `La hoja con ${w('vuestras', 'tus')} respuestas y dudas${S.booking ? '' : ', antes de pedir nada'}`, advisorSheet(), false)}</div>`;
+</div>`;
 
     main += `<p class="foot">Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor.</p>`;
 
@@ -1916,6 +1923,8 @@
   }
   if (SR) new MutationObserver(() => addMics()).observe(document.body, { childList: true, subtree: true });
   function keep() { const y = window.scrollY; render(); window.scrollTo(0, y); }
+  // Al tocar una tarjeta, el botón para seguir sube a la vista (en móvil queda debajo del campo).
+  const verBoton = bt => { if (bt) setTimeout(() => bt.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 120); };
   const marcaSugg = b => app.querySelectorAll('.sg').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
   function toast(t) { const el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); el.textContent = t; document.body.appendChild(el); setTimeout(() => el.remove(), 2400); }
 
@@ -2004,7 +2013,7 @@
         break;
       case 'pjgo': if (b.id === 'pjsave') { b.disabled = true; if (window.Fondo) Fondo.pulse(); pjSeal(pjGo); } else pjGo(); break;
       case 'mic': dictar(b); break;
-      case 'pjfsugg': { const t = document.getElementById('pjfrase'); if (!t) break; t.value = v; marcaSugg(b); t.focus(); const bt = document.getElementById('pjfsave'); if (bt) bt.disabled = false; if (window.Fondo) Fondo.pulse(); break; }
+      case 'pjfsugg': { const t = document.getElementById('pjfrase'); if (!t) break; t.value = v; marcaSugg(b); t.focus(); const bt = document.getElementById('pjfsave'); if (bt) bt.disabled = false; if (window.Fondo) Fondo.pulse(); verBoton(document.getElementById('pjfsave')); break; }
       case 'pjfrase': {
         const x = b.dataset.x, t = document.getElementById('pjfrase'), txt = v === 'skip' ? '' : (t ? t.value.trim() : '');
         S.pj.frase[x] = txt || null; pjFraseSet(); save();
@@ -2015,7 +2024,7 @@
       case 'pjpick': { const kind = k, x = b.dataset.x; S.pj[kind][x] = v; save();
         app.querySelectorAll(`[data-act="pjpick"][data-k="${kind}"][data-x="${x}"]`).forEach(el => el.setAttribute('aria-pressed', el.dataset.v === v));
         const bt = document.getElementById('pjsave'); if (bt) bt.disabled = !(S.pj.risk[x] && S.pj.guess[x]); if (window.Fondo) Fondo.pulse(); break; }
-      case 'pjplan': S.prefs.level = S.prefs.level || 'new'; preparePlan(); break;
+      case 'pjplan': S.prefs.level = S.prefs.level || 'new'; S.stage = 'plan'; render(); window.scrollTo(0, 0); break; // ya vieron nota y pasos: sin camino animado
       case 'pjagain': S.pj = pjFresh(); S.doubts = S.doubts.filter(d => !/^pj-/.test(d.id)); render(); window.scrollTo(0, 0); break;
       case 'pjlevel': S.prefs.level = v; save(); app.querySelectorAll('[data-act="pjlevel"]').forEach(el => el.setAttribute('aria-pressed', el.dataset.v === v)); break;
       case 'rtake': { // desde la sorpresa: la parada entra en la ruta y la nota sube
@@ -2051,7 +2060,7 @@
         if (document.startViewTransition) { document.startViewTransition(() => playReveal(q)); break; }
         const st = app.querySelector('.qstage'); if (st) st.classList.add('fade-out'); setTimeout(() => playReveal(q), 300); break;
       }
-      case 'sugg': { const t = document.getElementById('worry'); t.value = v; marcaSugg(b); t.focus(); const bt = app.querySelector('[data-act="worry"]:not([data-v])'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } break; }
+      case 'sugg': { const t = document.getElementById('worry'); t.value = v; marcaSugg(b); t.focus(); const bt = app.querySelector('[data-act="worry"]:not([data-v])'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } verBoton(app.querySelector('[data-act="worry"]:not([data-v])')); break; }
       case 'worry': {
         const t = document.getElementById('worry'), txt = v === 'skip' ? '' : (t ? t.value.trim() : '');
         S.phrase = txt; S.match = temasDe(txt); buildQuiz(S.match);
@@ -2072,7 +2081,7 @@
       case 'nb': nbSheet(); break;
       case 'next': go(); break;
       case 'toplan': { const t = document.getElementById('gainfree'); if (t && t.value.trim()) S.gain = t.value.trim(); preparePlan(); break; }
-      case 'gsugg': { S.gain = v; save(); const t = document.getElementById('gainfree'); if (t) t.value = v; marcaSugg(b); const bt = app.querySelector('[data-act="toplan"]'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } break; }
+      case 'gsugg': { S.gain = v; save(); const t = document.getElementById('gainfree'); if (t) t.value = v; marcaSugg(b); const bt = app.querySelector('[data-act="toplan"]'); if (bt) bt.disabled = false; if (window.Fondo) { Fondo.pulse(); Fondo.tint('pick'); } verBoton(app.querySelector('[data-act="toplan"]')); break; }
       case 'nextslide': rulTo(Math.round(RUL.rot) + 1, 1); break;
       case 'prev': rulTo(Math.round(RUL.rot) - 1, -1); break;
       case 'goslide': rulTo(+v); break;
