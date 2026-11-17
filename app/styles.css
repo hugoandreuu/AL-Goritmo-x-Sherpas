@@ -1682,3 +1682,44 @@ i.pa { background: var(--accent); } i.pb { background: var(--navy); }
 /* El roadmap ocupa dos tarjetas en la rejilla del informe */
 .nodos > .tema.ruta { grid-column: span 2; min-width: 0; margin: 0; }
 .nodos { grid-auto-flow: row dense; }
+
+/* ===== Páginas de tema con color: el estado (bien / mejorable / a reforzar) tiñe la cabecera
+   y la paleta de Sherpas viste el resto. Solo color: misma disposición, mismas cifras y textos. ===== */
+.tpage .tp-h[class*="est-"] { position: relative; overflow: hidden; border-radius: 26px; padding: 18px 18px 16px; border: 1px solid color-mix(in srgb, var(--st) 22%, #fff);
+  background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--st) 16%, transparent) 0%, transparent 60%), linear-gradient(160deg, var(--st-soft) 0%, #fff 85%); animation: rise .45s var(--ease) both; }
+.tpage .tp-h[class*="est-"] .ar-ic { background: var(--st); color: #fff; box-shadow: 0 6px 16px color-mix(in srgb, var(--st) 35%, transparent); }
+.tpage .tp-h .tp-cifra b { background: linear-gradient(120deg, var(--st) 0%, color-mix(in srgb, var(--st) 70%, var(--sh-violet)) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tpage .tp-h .nd-est { background: var(--st); color: #fff; }
+.tpage .tp-h .tp-tit { font-weight: 500; }
+/* cifras clave: cada tarjeta con el color de lo que dice (coste, bueno o neutro con la paleta Sherpas) */
+.tpage .kpi { position: relative; overflow: hidden; border: 0; background: linear-gradient(160deg, #eef2ff 0%, #f7f5ff 100%); box-shadow: inset 0 0 0 1px #dfe5fb; padding-top: 15px; }
+.tpage .kpi::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--sh-cta); }
+.tpage .kpi b { color: var(--sh-deep); }
+.tpage .kpi small { color: #5b63a8; }
+.tpage .kpi.coste, .tpage .kpi.malo { background: linear-gradient(160deg, #ffe9dc 0%, #fff6f0 100%); box-shadow: inset 0 0 0 1px #ffd6bf; }
+.tpage .kpi.coste::before, .tpage .kpi.malo::before { background: linear-gradient(90deg, #f59e3d, var(--bad)); }
+.tpage .kpi.coste b, .tpage .kpi.malo b { color: var(--bad); } .tpage .kpi.coste small, .tpage .kpi.malo small { color: #b3470a; }
+.tpage .kpi.bueno { background: linear-gradient(160deg, #dcf3e4 0%, #f1faf4 100%); box-shadow: inset 0 0 0 1px #bfe3cc; }
+.tpage .kpi.bueno::before { background: linear-gradient(90deg, #1faf54, var(--good)); }
+.tpage .kpi.bueno b { color: var(--good); } .tpage .kpi.bueno small { color: #1d6b3a; }
+/* número de cada bloque con el degradado del botón de Sherpas */
+.tpage .tp-sec > .kicker { color: var(--sh-deep); }
+.tpage .tp-sec > .kicker b { background: var(--sh-cta); box-shadow: 0 3px 10px rgba(69,101,214,.3); }
+/* lo esencial: cada idea en su tarjeta, con barra de color y las cifras resaltadas */
+.tpage .lect { list-style: none; padding: 0; gap: 10px; }
+.tpage .lect li { position: relative; padding: 12px 14px 12px 18px; border-radius: 16px; background: linear-gradient(120deg, #f1f4ff 0%, #f8f6ff 100%); line-height: 1.45; animation: rise .45s var(--ease) both; }
+.tpage .lect li::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 4px; border-radius: 0 4px 4px 0; background: var(--sh-cta); }
+.tpage .lect li:nth-child(2) { animation-delay: 60ms; } .tpage .lect li:nth-child(3) { animation-delay: 120ms; } .tpage .lect li:nth-child(n+4) { animation-delay: 180ms; }
+.tpage .lect li b { color: var(--sh-deep); background: linear-gradient(transparent 62%, rgba(148,141,247,.28) 62%); }
+/* gráficos y desgloses: marco suave en azul Sherpas */
+.tpage .gf, .tpage .dsg { border-color: #dfe5fb; box-shadow: 0 1px 0 #e0e6fb; }
+.tpage .dsg-t, .tpage .gf figcaption { color: var(--sh-deep); }
+.tpage .dsg tr.tot td { border-top-color: var(--sh-deep); color: var(--sh-deep); }
+/* lo que propone el plan y el asesor */
+.tpage .tm-paso:not(.done) { background: linear-gradient(120deg, #eef2ff, #f6f3ff); border-color: #dfe5fb; }
+.tpage .asesor { background: linear-gradient(127deg, #ece9fe 0%, #e3ebff 100%); border-left-color: var(--sh-violet); color: var(--sh-violet); }
+/* ver más: cada capa con su filo de color */
+.tpage .capa { border-color: #e2e6f7; border-left: 4px solid var(--sh-light); transition: border-color .2s var(--ease), background .2s var(--ease); }
+.tpage .capa > summary svg { color: var(--sh-blue); }
+.tpage .capa:hover { background: #f7f9ff; }
+.tpage .capa[open] { border-left-color: var(--sh-deep); background: #fbfcff; }
