@@ -644,7 +644,7 @@
       <div class="rul-stage" data-rul aria-roledescription="carrusel" aria-label="Resumen de ${w('vuestro', 'tu')} plan"><div class="rul-ring">${SLIDES.map((x, k) => `<section class="rul-card" data-i="${k}" aria-label="${esc(rulName(x))}" ${k === i ? '' : 'aria-hidden="true"'}><div class="rul-in slide">${slideHtml(x)}
         ${rulKey(x) ? `<button class="rul-abrir" data-act="rulopen" data-v="${esc(rulKey(x))}">${ic('plus', 16)}<span>Abrir en el plan</span></button>` : ''}</div></section>`).join('')}</div></div>
       <div class="narrow rul-nav"><button class="rul-arr" data-act="rulgo" data-v="-1" aria-label="Anterior: ${esc(rulName(prev))}">${back}<span>${esc(rulName(prev))}</span></button><span class="rul-pos">${i + 1} / ${n}</span><button class="rul-arr nx" data-act="rulgo" data-v="1" aria-label="Siguiente: ${esc(rulName(next))}"><span>${esc(rulName(next))}</span>${ic('arrow', 18)}</button></div></div>
-      ${open ? `<div class="rul-full open" role="dialog" aria-modal="true" aria-label="${esc(rulName(open))}"><div class="rul-full-in"><div class="rul-full-bar"><button class="link tp-back" data-act="rulclose">${back} Volver a la ruleta</button></div><div class="narrow tpage">${temaBody(S.rulOpen)}<p class="foot">Cifras del informe de ${w('vuestro', 'tu')} estudio. ${fuente()}</p></div></div></div>` : ''}
+      ${open ? `<div class="rul-full open" role="dialog" aria-modal="true" aria-label="${esc(rulName(open))}"><div class="rul-full-in"><div class="rul-full-bar"><button class="link tp-back" data-act="rulclose">${back} Volver a la ruleta</button></div><div class="narrow tpage">${temaBody(S.rulOpen)}<p class="foot">Cifras del informe de ${w('vuestro', 'tu')} estudio.</p></div></div></div>` : ''}
       <div class="cta-bar"><div class="cta-in">${open ? `<button class="btn ghost grow" data-act="rulclose">Volver a la ruleta</button>` : ''}<button class="btn grow" data-act="fullplan">Ver el plan completo</button></div></div>`;
     rulLayout(false);
     document.body.classList.toggle('rul-lock', !!open);
@@ -1119,7 +1119,7 @@
       }
     }
     app.innerHTML = `<div class="narrow tpage">${routeBar()}<nav class="migas" aria-label="Estás en"><button class="link" data-act="temaback">${ic('arrow', 14).replace('<svg', '<svg style="transform:rotate(180deg)"')} ${origen}</button><span>›</span><b>${esc(titulo)}</b></nav>${html}
-      <p class="foot">Cifras del informe de ${w('vuestro', 'tu')} estudio. ${fuente()}</p></div>
+      <p class="foot">Cifras del informe de ${w('vuestro', 'tu')} estudio.</p></div>
       <div class="cta-bar"><div class="cta-in">${desdeResumen ? `<button class="btn ghost grow" data-act="temaback">Volver al resumen</button><button class="btn grow" data-act="temaback" data-v="plan">Plan completo</button>` : `<button class="btn grow" data-act="temaback">Volver al plan completo</button>`}</div></div>`;
     if (k === '__nota') animateRing();
   }
@@ -1158,7 +1158,7 @@
       ${E.primer && (S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>Una semana después</b><small>Cómo comprobamos que el primer paso está hecho</small></span>${ic('arrow', 18)}</button>` : ''}
       ${S.booking ? fold('hoja', ic('list', 16), `Lo que recibe ${w('vuestro', 'tu')} asesor`, `La hoja con ${w('vuestras', 'tus')} respuestas y dudas`, advisorSheet(), false) : ''}</div>`;
 
-    main += `<p class="foot">Esto ayuda a entender el plan del asesor. No es consejo nuevo ni lo cambia. Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor. Caso de ejemplo del reto. ${fuente()}</p>`;
+    main += `<p class="foot">Antes de mover dinero, ${w('hablad con vuestro', 'habla con tu')} asesor.</p>`;
 
     app.innerHTML = `<div class="plan-grid solo"><div>${routeBar()}${main}</div></div>
       <div class="cta-bar"><div class="cta-in"><button class="btn ghost" data-act="whatif">${ic('pen', 16)} Preguntar</button>${S.booking
@@ -1712,11 +1712,10 @@
         <p class="h-names">${esc(ad.map(x => x.nombre).join(' y '))}</p>
         ${kids ? `<p class="h-kids">Pensado también para ${esc(kids)}.</p>` : ''}
         ${E.fam.pl ? doors() : `<button class="startbtn" data-act="start"><span>${S.qi > 0 ? `Seguir donde lo ${w('dejasteis', 'dejaste')}` : 'Empezar'}</span><span class="arr">${ic('arrow', 22)}</span></button>`}
-        <p class="h-trust">5 minutos · Sin cuentas · Cifras de ${w('vuestro', 'tu')} estudio<br>${w('Vuestro', 'Tu')} asesor verá las respuestas para preparar la reunión</p>
+        <p class="h-trust">${w('Vuestro', 'Tu')} asesor verá las respuestas para preparar la reunión</p>
       </section>
       <div class="home-foot"><button class="link small" data-act="skip">${w('Preferimos', 'Prefiero')} ir directamente al plan</button>
-        <details class="h-casos"><summary>Prototipo del reto: cambiar de familia</summary>${casePicker()}</details>
-        <p class="foot">Esto ayuda a entender el plan del asesor. No es consejo nuevo ni lo cambia. ${fuente()}</p></div></div>`;
+        <details class="h-casos"><summary>Prototipo del reto: cambiar de familia</summary>${casePicker()}</details></div></div>`;
     clearInterval(homeTimer);
   }
   let BRIDGE_T = null;
