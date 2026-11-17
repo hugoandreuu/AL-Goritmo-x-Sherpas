@@ -1849,3 +1849,5 @@ body.fondo-on .dock, body[data-pj] .dock, .pj-dock { background: linear-gradient
 .planhero.corto .heroscore { display: none; }
 /* En las pantallas con campo de texto el botón va al final, sin quedarse fijo encima del campo. */
 .dock:has(#pjfsave), .dock:has(.btn[data-act="worry"]), .dock:has(.btn[data-act="toplan"]) { position: static; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+/* Mientras el botón está escondido (aún sin contestar), el dock no pinta su velo: no queda una caja vacía. */
+.dock:not(:has(.btn:enabled)) { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
