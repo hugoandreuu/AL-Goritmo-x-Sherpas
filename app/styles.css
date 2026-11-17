@@ -921,7 +921,7 @@ body[data-pj] .dock { background: none; }
 .pj-mk { position: absolute; top: 0; transform: translateX(-50%); display: grid; justify-items: center; animation: pjDrop .5s var(--ease) both; }
 .pj-mk i { width: 16px; height: 16px; border-radius: 50%; margin-top: 40px; box-shadow: 0 0 0 4px #fff; }
 .pj-mk small { position: absolute; top: 14px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
-.pj-mk.bot small { top: 70px; } .pj-mk.bot2 small { top: 88px; }
+.pj-mk.r-bot small { top: 70px; } .pj-mk.r-bot2 small { top: 88px; }
 .pj-mk.a i { background: var(--pa); } .pj-mk.a small { color: var(--pa); }
 .pj-mk.b i { background: var(--pb); } .pj-mk.b small { color: var(--pb); }
 .pj-mk.b { animation-delay: .1s; }
