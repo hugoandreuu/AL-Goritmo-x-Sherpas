@@ -115,14 +115,8 @@
     old.replaceWith(nu);
     nu.classList.add('bump'); setTimeout(() => nu.classList.remove('bump'), 700);
   }
-  // Tarjeta al final de cada revelación: la parada de la ruta que arregla lo que acaban de ver.
-  // La reunión en cada problema: el plan se desvela en parte; la solución se trabaja con el asesor.
-  function meetBox(txt) {
-    return S.booking
-      ? `<p class="saved">${ic('check', 15)}Lo añadimos a ${w('vuestra', 'tu')} reunión: ${esc(S.booking.short)}</p>`
-      : `<div class="rr-meet"><p>${txt}</p><button class="btn block" data-act="book">${ic('cal', 18)} Reservar reunión</button><small class="rr-fine">30 minutos por videollamada · sin compromiso</small></div>`;
-  }
-  // Tarjeta al final de cada revelación: qué parte de la ruta toca, sin decir aún cuál es la solución.
+  // Al final de cada revelación: «Esto ya está bien», o apuntarlo como pregunta si el plan no tiene paso para ello.
+  // Sin llamadas a la reunión durante el quiz: se pide en el cierre.
   function rvRoute(q) {
     const p = pasoDe(q), ase = w('vuestro', 'tu') + ' asesor';
     let body;
@@ -1590,8 +1584,9 @@
   }
   function pjTrack(q) {
     const va = S.pj.money.a, vb = S.pj.money.b, lo = Math.min(q.min, va, vb, q.real), hi = Math.max(q.max, va, vb, q.real), P = v => (v - lo) / (hi - lo || 1) * 100;
-    const used = { top: [], bot: [], bot2: [] };
-    const mk = (cls, v, lab) => { const x = P(v), row = ['top', 'bot', 'bot2'].find(r => used[r].every(y => Math.abs(y - x) > 18)) || 'bot2'; used[row].push(x);
+    // Filas de etiquetas con prefijo propio: «top» chocaba con la clase global .top de la barra de arriba.
+    const used = { 'r-top': [], 'r-bot': [], 'r-bot2': [] };
+    const mk = (cls, v, lab) => { const x = P(v), row = Object.keys(used).find(r => used[r].every(y => Math.abs(y - x) > 18)) || 'r-bot2'; used[row].push(x);
       return `<span class="pj-mk ${cls} ${row}" style="left:${x}%"><i></i><small>${lab}</small></span>`; };
     const da = Math.abs(va - q.real), db = Math.abs(vb - q.real), win = da < db ? 'a' : db < da ? 'b' : '';
     const gap = (c, v) => `<span class="pj-gap ${c}" style="left:${Math.min(P(v), P(q.real))}%;width:${Math.abs(P(v) - P(q.real))}%"></span>`;
@@ -1808,8 +1803,9 @@
   function renderTop() {
     const talk = `<button class="pill talk" data-act="talk"><span class="lbl-long">Hablarlo con una persona</span><span class="lbl-short" aria-hidden="true">Asesor</span></button>`;
     if (S.stage === 'plan' || S.stage === 'story') topActions.innerHTML = `${S.stage === 'plan' ? '<button class="pill" data-act="story">Resumen</button>' : ''}<button class="pill" data-act="settings" aria-label="Ajustes"><span aria-hidden="true">⚙</span> <span class="lbl-long">Ajustes</span></button>${talk}`;
-    else if (S.stage === 'quiz') topActions.innerHTML = `<button class="pill nb" id="nb" data-act="nb" aria-label="Cuaderno para ${w('vuestro', 'tu')} asesor">${ic('pen', 16)}<b>${nbCount()}</b></button><button class="pill" data-act="skip">Saltar</button>${talk}`;
-    else if (S.stage === 'pareja') topActions.innerHTML = `<button class="pill" data-act="skip">Saltar al plan</button>${talk}`;
+    // Durante el quiz y las preguntas de pareja no hay llamadas al asesor: la reunión se pide al terminar.
+    else if (S.stage === 'quiz') topActions.innerHTML = `<button class="pill nb" id="nb" data-act="nb" aria-label="Cuaderno para ${w('vuestro', 'tu')} asesor">${ic('pen', 16)}<b>${nbCount()}</b></button><button class="pill" data-act="skip">Saltar</button>`;
+    else if (S.stage === 'pareja') topActions.innerHTML = `<button class="pill" data-act="skip">Saltar al plan</button>${pjCierre() ? talk : ''}`;
     else if (S.stage === 'camino') topActions.innerHTML = `<button class="pill" data-act="alinforme">Saltar</button>${talk}`;
     else topActions.innerHTML = '';
     document.querySelectorAll('.lbl-short').forEach(el => { el.style.display = window.innerWidth <= 560 ? 'inline' : 'none'; });
