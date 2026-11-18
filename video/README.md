@@ -1,6 +1,6 @@
 # Vídeo de presentación
 
-**El vídeo listo para ver está en [`video/presentacion.mp4`](presentacion.mp4)** (2:01, 1920×1080). Si lo rehaces, sale en `video/salida/presentacion.mp4`; cópialo aquí para subir la versión nueva.
+**El vídeo listo para ver está en [`video/presentacion.mp4`](presentacion.mp4)** (1:59, 1920×1080, con voz en off en español). Si lo rehaces, sale sin voz en `video/salida/presentacion.mp4`; ponle la voz con `python3 video/voz_encima.py` y copia `video/salida/presentacion_voz.mp4` aquí para subir la versión nueva.
 
 Vídeo de 2:01 para presentar la web a los asesores de Sherpas. Todo lo que sale en el móvil son grabaciones reales de la web, hechas por un navegador automático. El montaje (textos, posición del móvil, ficha del asesor y música) se genera con código, así que se puede rehacer cuando cambie algo.
 
@@ -68,6 +68,10 @@ La grabación arranca la web en local con `scripts/serve.mjs`, así que graba la
 - **La cifra sale del móvil:** `cifra=dict(txt, t, y, antes, sub, color)` saca el dato real de la pantalla y lo deja grande al lado; `{n:19-8}` dentro de `txt` lo hace contar (8 años, 60/100).
 - **Ficha del asesor:** las respuestas salen del móvil de la familia (`FICHA_ASESOR['movil']`) y la rellenan una a una.
 - **Cierre con QR:** el móvil gira sobre sí mismo y su pantalla pasa a ser el QR de la demo; ya no hay enlace en texto. El QR es `demo-qr.png`; si cambia la URL de `CIERRE['qr']`, se rehace con `pip install qrcode` y `python3 -c "import qrcode; qrcode.make('URL', border=2).save('video/demo-qr.png')"`.
+
+## Voz en off (español)
+
+Voz de Guido en ElevenLabs (eleven-multilingual-v2, ajustes por defecto) acelerada un 8 % con `atempo=1.08`. Las frases están en `video/voz/*.mp3` y su texto y su momento, por bloque del guion, en `VOZ` dentro de `voz_encima.py`. Ese script pone la voz encima del vídeo ya montado sin volver a renderizar la imagen: iguala el volumen de cada frase, baja la música mientras habla y normaliza a −14 LUFS. Si cambia la duración de un bloque en `guion.py`, la voz le sigue sola; si cambia lo que sale en pantalla, revisa que cada frase siga diciendo lo que se ve.
 
 ## Si una escena falla al grabar
 
