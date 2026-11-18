@@ -6,7 +6,7 @@ Equipo **AL-Goritmo** · reto «Bring the plan to life» de Sherpas · hackathon
 - **Para todos:** la familia adivina cifras de su plan y ve el dato real con una imagen y una frase que lo hace sentir. Después ve su camino hasta la jubilación y lo que propone el plan, paso a paso.
 - **Termina en la reunión con el asesor**, que recibe lo que creían, lo que les preocupa y lo que quieren preguntar. Ninguna cifra se inventa: todas salen del plan de cada familia.
 
-**Demo:** https://hugoar61108-ai.github.io/AL-Goritmo-x-Sherpas/ (mejor en el móvil; se actualiza con cada cambio en `main`).
+**Demo:** https://hugoandreuu.github.io/AL-Goritmo-x-Sherpas/ (mejor en el móvil; se actualiza con cada cambio en `main`).
 
 ## Qué mirar en dos minutos
 
@@ -21,7 +21,7 @@ Equipo **AL-Goritmo** · reto «Bring the plan to life» de Sherpas · hackathon
 Requisito: [Node.js](https://nodejs.org) 20 o superior. No hace falta `npm install` ni `.env`: los estudios ya están generados en el repo.
 
 ```bash
-git clone https://github.com/hugoar61108-ai/AL-Goritmo-x-Sherpas.git
+git clone https://github.com/hugoandreuu/AL-Goritmo-x-Sherpas.git
 cd AL-Goritmo-x-Sherpas
 npm start
 ```
