@@ -103,7 +103,7 @@ SEGMENTOS = [
 TITULO = dict(antes='AL-GORITMO  ×  SHERPAS', nombre=('Vuestro', 'plan de futuro'),
               sub='El plan de cada familia, contado para que se entienda.')
 CIERRE = dict(sub='Del plan en PDF a una conversación con el asesor.',
-              enlace='hugoar61108-ai.github.io/AL-Goritmo-x-Sherpas',
+              enlace='hugoandreuu.github.io/AL-Goritmo-x-Sherpas',
               firma='Equipo AL-Goritmo · Hackathon UPV × Sherpas')
 
 # Datos de la ficha del asesor: son los que la web genera para Weah con las respuestas de la grabación.
