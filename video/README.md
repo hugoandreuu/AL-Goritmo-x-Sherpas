@@ -53,6 +53,14 @@ La grabación arranca la web en local con `scripts/serve.mjs`, así que graba la
 - Logo de Sherpas arriba a la derecha todo el vídeo y una frase de conclusión en el cierre (`CIERRE['frase']`).
 - Grabación sin tirones: `grabar.js` mete un píxel que cambia en cada fotograma para que Chrome no deje de mandarlos, y en la ruleta el giro hasta la tarjeta que se abre se ve entero.
 
+## Animaciones (versión con barra y pantalla partida)
+
+- **Golpe de realidad:** en el gancho, una barra de 0 a 300 $ con las marcas de lo que creía cada uno y, tras una pausa, la cifra real contando y con un temblor (`barra=` en la parte de `guion.py`).
+- **Modo pareja en pantalla partida:** bloque `duo`: dos móviles separados por una línea; al destaparlo se juntan en uno.
+- **Dudas que vuelan:** `vuela=` lleva «Me preocupa» del móvil al cuaderno del asesor; en la ficha final cada fila llega volando.
+- **Cifras que cuentan:** escribe `{n:60}` o `{n:26-62}` dentro de un texto.
+- **Sonido:** `golpe=` en una parte pone un golpe grave (la música se aparta medio segundo antes); las marcas hacen clic y los cambios de móvil, *whoosh*. `motor.py` los apunta en `.trabajo/tiempos.json` y `musica.py` los mezcla.
+
 ## Si una escena falla al grabar
 
 Suele ser porque ha cambiado el texto de un botón. `tapText(/Texto del botón/)` busca el botón por su texto. Cámbialo en `escenas.js` y vuelve a grabar solo esa escena: `node video/grabar.js pareja`.
