@@ -84,7 +84,7 @@
     if (p) vistos()[p.key] = true;
     else if (q.tema === 'nota' && q.tono === 'malo') E.pasos.forEach(x => { vistos()[x.key] = true; });
   }
-  const FASE = { quiz: 'Descubrir', story: 'Repasar', plan: 'Decidir', tema: 'Repasar' };
+  const FASE = { quiz: 'Discover', story: 'Review', plan: 'Decide', tema: 'Review' };
   // La barra no sale en las preguntas ni en las revelaciones: aparece en el cierre, con la nota y los pasos ya vistos.
   // En pareja, el cierre es la pantalla 'map' (lo que propone vuestro plan).
   const pjCierre = () => S.stage === 'pareja' && !!S.pj && /^map/.test(pjSteps()[S.pj.step] || '');
@@ -272,7 +272,7 @@
         <div class="rx-row">${reactsDe(q).map(([v, l, i]) => `<button class="rx" data-act="nsugg" data-k="${q.id}" data-v="${v}" aria-pressed="${r === v}"><span class="sg-ic">${ic(i, 18)}</span><span>${l()}</span></button>`).join('')}</div>
         <p class="saved rx-ok" ${r ? '' : 'hidden'}>${ic('check', 15)}Saved for ${w('your', 'your')} advisor</p>
         ${(S.notes || {})[q.id] ? '' : `<button class="link addnote" data-act="addnote">${ic('pen', 16)}Add something in ${w('your', 'your')} own words</button>`}
-        <div class="note-w" ${(S.notes || {})[q.id] ? '' : 'hidden'}><label for="note" class="sr">Con ${w('your', 'your')} palabras</label>
+        <div class="note-w" ${(S.notes || {})[q.id] ? '' : 'hidden'}><label for="note" class="sr">In ${w('your own', 'your own')} words</label>
         <textarea id="note" class="free" rows="2" maxlength="200" data-k="${q.id}" placeholder="${w('Write it however it comes out', 'Write it however it comes out')}">${esc((S.notes || {})[q.id] || '')}</textarea>
         ${(S.notes || {})[q.id] ? `<p class="saved">${ic('check', 15)}Saved in ${w('your', 'your')} advisor’s notebook</p>` : `<button class="btn soft savebtn" data-act="note" data-k="${q.id}" disabled>Save for ${w('your', 'your')} advisor</button>`}</div></div>
       <div class="rv-foot" data-st="fade">${proBlock(q)}${origen(q)}</div>
@@ -738,10 +738,10 @@
     const i = rulMod(RUL.rot), id = SLIDES[i], n = rulN(), prev = SLIDES[(i + n - 1) % n], next = SLIDES[(i + 1) % n];
     const back = ic('arrow', 18).replace('<svg', '<svg style="transform:rotate(180deg)"');
     const open = S.rulOpen != null ? SLIDES.find(x => rulKey(x) === S.rulOpen) : null;
-    app.innerHTML = `<div class="rul-wrap"><div class="narrow">${routeBar()}<div class="segs" aria-label="Tarjeta ${i + 1} de ${n}">${SLIDES.map((x, k) => `<button data-act="goslide" data-v="${k}" class="${k === i ? 'cur' : ''}" aria-label="Ir a ${esc(rulName(x))}"></button>`).join('')}</div></div>
-      <div class="rul-stage" data-rul aria-roledescription="carrusel" aria-label="Resumen de ${w('your', 'your')} plan"><div class="rul-ring">${SLIDES.map((x, k) => `<section class="rul-card" data-i="${k}" aria-label="${esc(rulName(x))}" ${k === i ? '' : 'aria-hidden="true"'}><div class="rul-in slide">${slideHtml(x)}
+    app.innerHTML = `<div class="rul-wrap"><div class="narrow">${routeBar()}<div class="segs" aria-label="Card ${i + 1} of ${n}">${SLIDES.map((x, k) => `<button data-act="goslide" data-v="${k}" class="${k === i ? 'cur' : ''}" aria-label="Go to ${esc(rulName(x))}"></button>`).join('')}</div></div>
+      <div class="rul-stage" data-rul aria-roledescription="carousel" aria-label="Summary of ${w('your', 'your')} plan"><div class="rul-ring">${SLIDES.map((x, k) => `<section class="rul-card" data-i="${k}" aria-label="${esc(rulName(x))}" ${k === i ? '' : 'aria-hidden="true"'}><div class="rul-in slide">${slideHtml(x)}
         ${rulKey(x) ? `<button class="rul-abrir" data-act="rulopen" data-v="${esc(rulKey(x))}">${ic('plus', 16)}<span>Open in the plan</span></button>` : ''}</div></section>`).join('')}</div></div>
-      <div class="narrow rul-nav"><button class="rul-arr" data-act="rulgo" data-v="-1" aria-label="Anterior: ${esc(rulName(prev))}">${back}<span>${esc(rulName(prev))}</span></button><span class="rul-pos">${i + 1} / ${n}</span><button class="rul-arr nx" data-act="rulgo" data-v="1" aria-label="Siguiente: ${esc(rulName(next))}"><span>${esc(rulName(next))}</span>${ic('arrow', 18)}</button></div></div>
+      <div class="narrow rul-nav"><button class="rul-arr" data-act="rulgo" data-v="-1" aria-label="Previous: ${esc(rulName(prev))}">${back}<span>${esc(rulName(prev))}</span></button><span class="rul-pos">${i + 1} / ${n}</span><button class="rul-arr nx" data-act="rulgo" data-v="1" aria-label="Siguiente: ${esc(rulName(next))}"><span>${esc(rulName(next))}</span>${ic('arrow', 18)}</button></div></div>
       ${open ? `<div class="rul-full open" role="dialog" aria-modal="true" aria-label="${esc(rulName(open))}"><div class="rul-full-in"><div class="rul-full-bar"><button class="link tp-back" data-act="rulclose">${back} Back to the carousel</button></div><div class="narrow tpage">${temaBody(S.rulOpen)}<p class="foot">Figures from ${w('your', 'your')} report.</p></div></div></div>` : ''}
       <div class="cta-bar"><div class="cta-in">${open ? `<button class="btn ghost grow" data-act="rulclose">Back to the carousel</button>` : ''}<button class="btn grow" data-act="fullplan">See the full plan</button></div></div>`;
     rulLayout(false);
@@ -779,8 +779,8 @@
     app.querySelectorAll('.segs button').forEach((b, k) => b.classList.toggle('cur', k === i));
     const pos = app.querySelector('.rul-pos'); if (pos) pos.textContent = `${i + 1} / ${n}`;
     const [pa, na] = app.querySelectorAll('.rul-arr');
-    if (pa) { pa.querySelector('span').textContent = rulName(prev); pa.setAttribute('aria-label', `Anterior: ${rulName(prev)}`); }
-    if (na) { na.querySelector('span').textContent = rulName(next); na.setAttribute('aria-label', `Siguiente: ${rulName(next)}`); }
+    if (pa) { pa.querySelector('span').textContent = rulName(prev); pa.setAttribute('aria-label', `Previous: ${rulName(prev)}`); }
+    if (na) { na.querySelector('span').textContent = rulName(next); na.setAttribute('aria-label', `Next: ${rulName(next)}`); }
     app.querySelectorAll('.rul-card').forEach((c, k) => { if (k === i) c.removeAttribute('aria-hidden'); else c.setAttribute('aria-hidden', 'true'); });
   }
   function rulTo(target, dir) {
@@ -1276,7 +1276,7 @@
       <p class="muted" style="margin-top:-2px">${nds.length} points. Tap one to see the essentials, its charts and, if ${w('you', 'you')} ${w('want', 'want')}, all the detail. The five areas with a score are the ones that make up ${w('your', 'your')} score; that’s where ${w('you', 'you')} ${w('vote', 'vote')} on the plan’s steps.</p>
       <div class="nodos">${nds.map(nodoCard).join('')}${rutaCard()}</div></div>`;
 
-    main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Your', 'Your')} siguiente paso</div>
+    main += `<div class="section" id="s-cierre"><div class="kicker"><b>2</b>${w('Your', 'Your')} next step</div>
       <div class="card close">${dePareja && !c.yes ? '' : `<div class="meter">
         <div><b>${c.yes}/${c.n}</b><span class="tiny">steps accepted</span></div>
         <div><b>${c.resolved}</b><span class="tiny">questions answered</span></div>
@@ -1286,7 +1286,7 @@
         <ul class="ticks"><li>${ic('check', 16)}${w('You leave', 'You leave')} with the order of ${w('your', 'your')} steps and answers to ${w('your', 'your')} questions</li><li>${ic('check', 16)}${nx.mins} minutes by video call</li><li>${ic('check', 16)}Nothing to prepare</li></ul>
         <button class="btn block big-cta" data-act="book">${ic('cal')} ${c.yes ? `Pick a day with ${w('your', 'your')} advisor` : `Talk it over with ${w('your', 'your')} advisor`}</button>
         <p class="tiny" style="text-align:center;margin:.6em 0 0">No commitment. ${w('You decide', 'You decide')}.</p>`}
-        <button class="link" style="width:100%" data-act="whatif">Antes, ${w('we have', 'I have')} otra pregunta</button>
+        <button class="link" style="width:100%" data-act="whatif">First, ${w('we have', 'I have')} another question</button>
         ${S.booking ? '' : `<button class="link" style="width:100%" data-act="later">${window.__PREVIEW__ ? (S.later ? 'No rush: the plan is still here' : 'Not now') : S.later ? 'Reminders at 3 and 30 days, in your calendar' : `Not now. ${w('Remind us', 'Remind me')} in 3 and 30 days`}</button>`}</div>
       ${weekCard()}
       ${E.primer && S.steps[E.primer.key] === 'yes' && (S.payDate || S.booking) && !S.week ? `<button class="weeklink" data-act="week">${ic('clock', 18)}<span><b>One week later</b><small>How we check the first step is done</small></span>${ic('arrow', 18)}</button>` : ''}
@@ -1316,7 +1316,7 @@
       ${pjSheetBlock()}
       <h3>Nivel</h3><p>${PRO() ? 'Knows finance: technical language is fine.' : 'New to this: better without jargon.'}</p>
       ${S.payDate && E.primer ? `<h3>First step, with a date</h3><p>${esc(E.primer.titulo)}: ${esc(S.payDate.label)}.${S.week ? (S.week.done ? ` A week later it was done (balance ${M(S.week.balance)}).` : ` A week later it wasn’t done: “${esc(S.week.reason)}”.`) : ''}</p>` : ''}
-      <h3>Pasos aceptados (${acc.length}/${E.pasos.length})</h3><ul>${acc.map(t => `<li>${esc(t)}</li>`).join('') || '<li class="muted">None yet</li>'}</ul>
+      <h3>Accepted steps (${acc.length}/${E.pasos.length})</h3><ul>${acc.map(t => `<li>${esc(t)}</li>`).join('') || '<li class="muted">None yet</li>'}</ul>
       ${dud.length ? `<h3>Unsure about</h3><ul>${dud.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
       ${no.length ? `<h3>Not convinced</h3><ul>${no.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
       <h3>Questions for the meeting (${open.length})</h3><ul>${open.map(d => `<li>${catLabel(d.topic) ? `<span class="tag acc">${esc(catLabel(d.topic))}</span> ` : ''}${esc(d.q)}</li>`).join('') || '<li class="muted">None</li>'}</ul>
@@ -1385,7 +1385,7 @@
   const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   const fromIso = (day, time) => { const [y, m, d] = day.split('-').map(Number), [h, mi] = time.split(':').map(Number); return new Date(y, m - 1, d, h, mi); };
   const fmtLong = dt => { const t = dt.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' }); return t.charAt(0).toUpperCase() + t.slice(1) + ' · ' + dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }); };
-  const fmtSlot = s => s.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + s.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  const fmtSlot = s => s.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + s.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   function calDays(kind) {
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const start = new Date(today); start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
@@ -1413,7 +1413,7 @@
       ? `<div class="kicker">${w('Your', 'Your')} first step</div><h2>Which day? ${esc(E.primer.titulo)}</h2><p class="muted small">It takes ten minutes in your bank’s app. With a day and time, it’s much more likely to get done.</p>`
       : `<div class="kicker">Meeting with ${w('your', 'your')} advisor · ${ns.mins} min</div><h2>${c.yes ? `${w('Pick', 'Pick')} the day to get started` : `${w('Pick', 'Pick')} the day to talk it over`}</h2><p class="muted small">${ns.text}</p>`;
     sheet(`${head}
-      <div class="cal"><div class="cal-head"><b>${months.join(' and ').replace(/^./, x => x.toUpperCase())} de ${days[20].d.getFullYear()}</b>${kind === 'meet' ? '<span class="tiny">Days with openings, in blue</span>' : ''}</div>
+      <div class="cal"><div class="cal-head"><b>${months.join(' and ').replace(/^./, x => x.toUpperCase())} ${days[20].d.getFullYear()}</b>${kind === 'meet' ? '<span class="tiny">Days with openings, in blue</span>' : ''}</div>
         <div class="cal-grid">${['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(l => `<span class="dow">${l}</span>`).join('')}
         ${days.map(x => `<button class="day ${x.today ? 'today' : ''}" data-act="calday" data-v="${x.iso}" aria-pressed="${x.iso === CAL.day}" ${x.ok ? '' : 'disabled'} aria-label="${x.d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' })}">${x.d.getDate()}</button>`).join('')}</div></div>
       <div class="times">${CAL_TIMES[kind].map(t => `<button class="chip" data-act="caltime" data-v="${t}" aria-pressed="${t === CAL.time}">${t}</button>`).join('')}</div>
@@ -1424,7 +1424,7 @@
   }
 
   // Una semana después: se pide el saldo, no un "ya lo hice".
-  const WEEK_REASONS = () => [w('We have questions', 'I have questions'), w('We don’t know how to do it', 'I don’t know how to do it'), 'It’s not a priority right now', E.fam.pl ? 'We don’t see it the same way' : 'Prefiero hablarlo antes'];
+  const WEEK_REASONS = () => [w('We have questions', 'I have questions'), w('We don’t know how to do it', 'I don’t know how to do it'), 'It’s not a priority right now', E.fam.pl ? 'We don’t see it the same way' : 'I’d rather talk it over first'];
   // real: se abre desde el enlace de la cita del calendario (?semana=1). Si no, es la vista previa.
   function weekSheet(real) {
     const p = E.primer;
@@ -2141,7 +2141,7 @@
       case 'calok': {
         const dt = fromIso(CAL.day, CAL.time), kind = CAL.kind;
         if (kind === 'pay') { S.payDate = { iso: CAL.day, time: CAL.time, label: fmtLong(dt) }; S.steps[E.primer.key] = 'yes'; closeSheet(); keep(); if (S.stage === 'pareja') render(); toast(`Saved. With that step, the score goes to ${E.primer.nota}`); }
-        else { S.booking = { iso: CAL.day, time: CAL.time, label: fmtSlot(dt), short: fmtSlot(dt), mins: nextStep().mins }; syncOpenQ(); closeSheet(); if (S.stage === 'plan') { render(); const sc = document.getElementById('s-cierre'); if (sc) sc.scrollIntoView({ behavior: 'smooth' }); } else { if (S.stage === 'camino') save(); else keep(); if (S.stage === 'pareja') { render(); pjBooked(); } } if (S.stage !== 'pareja') toast('Meeting requested'); }
+        else { S.booking = { iso: CAL.day, time: CAL.time, label: fmtSlot(dt), short: fmtSlot(dt).replace(/^\w+, /, ''), mins: nextStep().mins }; syncOpenQ(); closeSheet(); if (S.stage === 'plan') { render(); const sc = document.getElementById('s-cierre'); if (sc) sc.scrollIntoView({ behavior: 'smooth' }); } else { if (S.stage === 'camino') save(); else keep(); if (S.stage === 'pareja') { render(); pjBooked(); } } if (S.stage !== 'pareja') toast('Meeting requested'); }
         break;
       }
       case 'gocierre': document.getElementById('s-cierre').scrollIntoView({ behavior: 'smooth' }); break;

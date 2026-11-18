@@ -771,8 +771,8 @@ function leerTemas(E, fh, ia) {
   const k = (lab, val, sub, tono) => (val == null || val === '' ? null : { lab, val: String(val), sub: sub || '', tono: tono || '' });
   const pct = x => P(x, 1).replace(',0 ', ' ');
   const ingresos = sl.grossIncome, sobraAnio = num(val(RT.netCashFlowThisYear));
-  const SAL2 = { Taxes: 'taxes', 'Debt Payments': 'debt', 'Housing Expenses': 'vivienda', Savings: 'savings', Expenses: 'living expenses' };
-  const de100 = sal.map(r => `${Math.round(r[2] * 100)} a ${SAL2[r[0]] || r[0]}`);
+  const SAL2 = { Taxes: 'taxes', 'Debt Payments': 'debt', 'Housing Expenses': 'housing', Savings: 'savings', Expenses: 'living expenses' };
+  const de100 = sal.map(r => `${Math.round(r[2] * 100)} to ${SAL2[r[0]] || r[0]}`);
   Object.assign(out['Savings'], {
     kpis: [k('Income per year', ingresos != null ? Mk(ingresos) : null), k('Savings per year', sl.savingAmount != null ? Mk(sl.savingAmount) : null, sl.ratio != null ? `${pct(sl.ratio)} of income` : '', sl.ratio == null ? '' : sl.ratio >= 0.2 ? 'bueno' : sl.ratio < 0.1 ? 'coste' : ''),
       k(ES('Left over per year'), sobraAnio != null ? Mk(Math.round(sobraAnio)) : null, est ? 'reported expenses may be low' : 'after expenses and savings', sobraAnio < 0 ? 'coste' : ''), match.length ? k('Employer match', Mk(cobra), sinCobrar > 0 ? `${Mk(sinCobrar)} not captured` : 'the maximum', sinCobrar > 0 ? 'coste' : 'bueno') : null].filter(Boolean),
