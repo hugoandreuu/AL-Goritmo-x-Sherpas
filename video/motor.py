@@ -294,7 +294,7 @@ class Movil(Bloque):
         pintar_movil(cv, ruta, x, y + 6 * flota, g + 0.4 * flota, s)
         self.x_movil = x
         for i, tb in enumerate(self.textos):
-            t0 = tb['t0'] + (0.15 if i else 0.25); t1 = tb['t1'] if i < len(self.textos) - 1 else self.dur
+            t0 = tb['t0'] + (0.15 if i else 0.1); t1 = tb['t1'] if i < len(self.textos) - 1 else self.dur
             dx = tb['destino'][0]
             if tb['texto2'] is not None or abs(dx - 960) < 120:     # móvil en el centro: texto a los dos lados
                 izq_x, izq_w = 110, 0
@@ -305,7 +305,7 @@ class Movil(Bloque):
             col = 150 if dx > 960 else 1020
             if self.cfg.get('escalonado'):
                 poner(cv, etiqueta(self.cfg['etiqueta']), col, 330, t, t0, t1)
-                yy, ti = 390, t0 + 0.4
+                yy, ti = 390, t0 + 0.2
                 previa = None
                 for j, l in enumerate(tb['texto']):
                     f = filas([l], True)

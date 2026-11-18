@@ -24,7 +24,7 @@
 # Formato de las líneas: '# Título'  ·  '## Título en degradado'  ·  '!! Título en naranja'  ·  sin prefijo: subtítulo.
 
 SEGMENTOS = [
-    dict(tipo='texto', id='gancho', dur=5.5, lineas=[
+    dict(tipo='texto', id='gancho', dur=5.2, lineas=[
         '# Pagan 300 $ al mes a la tarjeta.',
         '## ¿Cuánto se va en intereses?',
     ]),
@@ -33,7 +33,7 @@ SEGMENTOS = [
             '# Timothy creía 100 $.', '# Melanie, 190 $.', '!! Su plan dice: 270 $.',
             'De cada 300 $, casi todo se va en intereses.']),
     ]),
-    dict(tipo='titulo', id='titulo', dur=2.4),
+    dict(tipo='titulo', id='titulo', dur=2.0),
     dict(tipo='movil', id='reto', etiqueta='EL RETO', partes=[
         dict(clip=('pareja', 'landing', 0.4, 3.4, 1.0), pos='izq', texto=[
             '# Un plan lleno de cifras', '# se lee una vez…', '## y se olvida.']),
@@ -43,7 +43,7 @@ SEGMENTOS = [
     dict(tipo='movil', id='pareja', etiqueta='MODO PAREJA', partes=[
         dict(clip=('pareja', 't_q1', 1.7, 3.4, 1.0), pos='izq', texto=[
             '# Cada uno contesta', '## en privado.', 'Sin que la opinión de uno influya en la del otro.']),
-        dict(clip=('pareja', 't_q1', 3.4, 5.9, 1.2), pos='izq', texto=[
+        dict(clip=('pareja', 't_q1', 3.4, 5.9, 1.0), pos='izq', texto=[
             '# Timothy contesta…', '## y lo guarda en secreto.']),
         dict(clip=('pareja', 'handoff', 1.5, 3.5, 0.75), pos='der', paso=1.0, pase=True, texto=[
             '# Se pasan el móvil…']),
@@ -61,7 +61,7 @@ SEGMENTOS = [
             '# Al final, lo que', '## propone su plan…', 'De 60 a 78 puntos, paso a paso.']),
         dict(clip=('pareja', 'reunion', 2.9, 4.7, 1.1), pos='der', texto=[
             '# …y piden la reunión', '## con su asesor.', 'Eligen el día y lo confirman los dos.']),
-        dict(clip=('pareja', 'pedida', 0.0, 1.4, 1.0), pos='der'),
+        dict(clip=('pareja', 'pedida', 0.0, 0.9, 1.0), pos='der'),
     ]),
     dict(tipo='asesor', id='asesor', dur=7.4, etiqueta='Y AL OTRO LADO…', lineas=[
         '# Esto es lo que', '## recibe el asesor.',
@@ -76,8 +76,8 @@ VOZ = [
     ('gancho', 0.15, '01.mp3', 'Los Weah pagan 300 $ al mes de tarjeta. Les preguntamos cuánto se va en intereses.'),
     ('gancho2', 2.3, '02.mp3', 'Son 270 $. Ninguno de los dos lo sabía.'),
     ('reto', 0.3, '08.mp3', 'Un plan lleno de cifras se lee una vez… y se olvida.'),
-    ('pareja', 0.2, '03.mp3', 'Cada uno contesta en secreto, en el mismo móvil. Luego lo descubren juntos.'),
-    ('pareja', 13.0, '04.mp3', 'Creían que su seguro cubría a Liam hasta los 19. Le cubre hasta los 8.'),
+    ('pareja', -0.3, '03.mp3', 'Cada uno contesta en secreto, en el mismo móvil. Luego lo descubren juntos.'),
+    ('pareja', 13.42, '04.mp3', 'Creían que su seguro cubría a Liam hasta los 19. Le cubre hasta los 8.'),
     ('reunion', 0.15, '05.mp3', 'Su plan de Sherpas, paso a paso: de 60 a 78.'),
     ('reunion', 4.2, '06.mp3', 'Y piden la reunión.'),
     ('asesor', 1.2, '09.mp3', 'Y el asesor llega sabiendo qué creían y qué les preocupa.'),
@@ -86,12 +86,12 @@ VOZ = [
 ]
 
 # Golpes de cámara (acercamiento rápido + destello suave) en los momentos clave: (bloque, segundos desde su inicio).
-GOLPES = [('gancho2', 2.3), ('pareja', 13.0), ('reunion', 0.3)]
+GOLPES = [('gancho2', 2.3), ('pareja', 13.42), ('reunion', 0.3)]
 
 TITULO = dict(antes='AL-GORITMO  ×  SHERPAS', nombre=('Vuestro', 'plan de futuro'),
               sub='El plan de cada familia, contado para que se entienda.')
 CIERRE = dict(sub=None,
-              frase=('Os ayudamos a entender vuestro plan…', 'y a dar el primer paso para cumplirlo.'),
+              frase=('Del PDF…', '…a la conversación con el asesor.'),
               enlace='hugoandreuu.github.io/AL-Goritmo-x-Sherpas',
               firma='Equipo AL-Goritmo · Hackathon UPV × Sherpas')
 

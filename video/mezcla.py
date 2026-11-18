@@ -32,6 +32,10 @@ for t0, archivo in V['voz']:
 act = (np.abs(voz[:, 0]) > 0.01).astype(np.float32)
 k = int(0.35 * SR); env = np.clip(np.convolve(act, np.ones(k) / k * 6, 'same'), 0, 1)
 k2 = int(0.25 * SR); env = np.convolve(env, np.ones(k2) / k2, 'same')
+# el golpe del título sobresalía unos 5 dB: se baja la música 3 dB en ese bloque
+tit = np.ones(N, np.float32); i0, i1 = int((V['bloques'][2] - 0.1) * SR), int((V['bloques'][3] + 0.3) * SR); r = int(0.15 * SR)
+tit[i0:i1] = 0.7; tit[i0 - r:i0] = np.linspace(1, 0.7, r); tit[i1:i1 + r] = np.linspace(0.7, 1, r)
+musica = musica * tit[:, None]
 mezcla = 0.7 * musica * (1 - 0.7 * env)[:, None] + voz  # música sin voz unos 3 dB más baja que antes
 
 rng = np.random.default_rng(3)
