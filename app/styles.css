@@ -716,15 +716,17 @@ body[data-pj] .dock { background: none; }
 .pj-seal b { font-family: var(--head); font-size: 18px; }
 
 /* Destapar a la vez: las dos respuestas aparecen boca abajo y se giran juntas; luego el plan */
-.pj-rev .pj-says > div, .pj-rev .pj-col { position: relative; animation: pjFlip .7s var(--ease) .35s both; }
+/* Giro de carta de verdad: la cara de atrás es una capa girada 180° con backface-visibility oculta.
+   Se ve solo mientras la carta está de espaldas (de -180° a -90°) y la respuesta aparece justo al pasar de 90°,
+   sea cual sea la curva de la animación. */
+.pj-rev .pj-says > div, .pj-rev .pj-col { position: relative; transform-style: preserve-3d; animation: pjFlip .8s var(--ease) .35s both; }
 .pj-rev .pj-says > div::after, .pj-rev .pj-col::after { content: ''; position: absolute; inset: 0; border-radius: inherit; display: grid; place-items: center; color: #fff;
-  animation: pjBack .7s linear .35s both; pointer-events: none;
+  transform: rotateY(180deg) translateZ(1px); backface-visibility: hidden; -webkit-backface-visibility: hidden; pointer-events: none;
   background: repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 10px, transparent 10px 20px), var(--c); }
 /* Lo que contestáis juntos: la cara de atrás con el morado de Sherpas, no en oscuro (se veía una tarjeta negra al girar). */
 .pj-rev .pj-says.one > div { --c: linear-gradient(127deg, var(--sh-lav, #948df7) 0%, var(--sh-violet, #774be5) 100%); }
 .pj-rev .pj-says > .a, .pj-rev .pj-col.a { --c: var(--pa); } .pj-rev .pj-says > .b, .pj-rev .pj-col.b { --c: var(--pb); }
 @keyframes pjFlip { from { transform: perspective(900px) rotateY(-180deg); } to { transform: perspective(900px) rotateY(0); } }
-@keyframes pjBack { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 .pj-rev .pj-plan { animation-delay: 1.15s; }
 .pj-rev .pj-mk.a { animation-delay: 1.35s; } .pj-rev .pj-mk.b { animation-delay: 1.5s; } .pj-rev .pj-mk.plan { animation-delay: 1.85s; }
 .pj-gap { position: absolute; height: 3px; border-radius: 2px; transform-origin: left; animation: pjGrow .6s var(--ease) 2.15s both; }
