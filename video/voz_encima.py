@@ -17,8 +17,8 @@ import motor
 SR = 48000
 # (bloque, segundos desde que empieza el bloque, archivo en video/voz/, texto)
 VOZ = [
-    ('gancho', 0.0, '21.mp3', 'Los Weah pagan 300 dólares al mes de tarjeta. De intereses, Timothy creía 100 y Melanie, 190.'),
-    ('gancho2', 4.2, '22.mp3', 'Son 270 dólares.'),
+    ('gancho', 0.2, '37.mp3', 'Los Weah pagan 300 dólares al mes de tarjeta. De intereses, creían 100 y 190.'),
+    ('gancho2', 3.4, '22.mp3', 'Son 270 dólares.'),
     ('problema', 0.28, '23.mp3', 'Ninguno de los dos lo sabía. Como muchas familias.'),
     ('titulo', 0.88, '24.mp3', 'Vuestro plan de futuro.'),
     ('reto', 0.2, '08.mp3', 'Un plan lleno de cifras se lee una vez… y se olvida.'),
