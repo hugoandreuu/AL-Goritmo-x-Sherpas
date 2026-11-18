@@ -46,12 +46,12 @@ SEGMENTOS = [
         '# Ninguno de los dos lo sabía.',
         '## Como muchas familias.',
     ]),
-    dict(tipo='titulo', id='titulo', dur=2.0),
+    dict(tipo='titulo', id='titulo', dur=3.2),
     dict(tipo='movil', id='reto', etiqueta='EL RETO', partes=[
-        dict(clip=('pareja', 'landing', 0.4, 3.4, 1.0), pos='izq', texto=[
+        dict(clip=('pareja', 'landing', 0.4, 3.2, 1.0), pos='izq', texto=[
             '# Un plan lleno de cifras', '# se lee una vez…', '## y se olvida.']),
-        dict(clip=('pareja', 'intro', 0.0, 2.2, 0.85), pos='izq', texto=[
-            '# 4 minutos con su plan,', '## antes de la reunión.']),
+        dict(clip=('pareja', 'intro', 0.0, 2.8, 0.85), pos='izq', texto=[
+            '# Un quiz de 5 minutos', '# con su propio plan,', '## que se adapta a cada uno.']),
     ]),
     dict(tipo='movil', id='quiz', etiqueta='01 · EL QUIZ', partes=[
         dict(clip=('michael', 'q0', 0.2, 3.6, 1.0), pos='der', texto=[
@@ -103,7 +103,7 @@ SEGMENTOS = [
             '# Al final, lo que', '## propone su plan…', 'De 60 a {n:60-78} puntos, paso a paso.']),
         dict(clip=('pareja', 'reunion', 0.0, 4.8, 1.3), pos='der', texto=[
             '# …y piden la reunión', '## con su asesor.', 'Eligen el día y lo confirman los dos.']),
-        dict(clip=('pareja', 'pedida', 0.0, 0.9, 1.0), pos='der'),
+        dict(clip=('pareja', 'pedida', 0.0, 1.4, 1.0), pos='der'),  # se corta antes de la lista «lo que vuestro asesor ya sabe»
     ]),
     # Las respuestas salen del móvil de la familia y rellenan la ficha del asesor.
     dict(tipo='asesor', id='asesor', dur=9.0, etiqueta='Y AL OTRO LADO…', lineas=[
@@ -111,23 +111,6 @@ SEGMENTOS = [
         'La familia no ve esta ficha. El asesor llega sabiendo', 'lo que creían, lo que les preocupa y qué quieren preguntar.']),
     dict(tipo='cierre', id='cierre', dur=6.0),
 ]
-
-# Voz en off: (bloque, segundos desde que empieza el bloque, archivo en video/voz/, subtítulo).
-VOZ = [
-    ('gancho', 0.15, '01.mp3', 'Los Weah pagan 300 $ al mes de tarjeta. Les preguntamos cuánto se va en intereses.'),
-    ('gancho2', 2.3, '02.mp3', 'Son 270 $. Ninguno de los dos lo sabía.'),
-    ('reto', 0.3, '08.mp3', 'Un plan lleno de cifras se lee una vez… y se olvida.'),
-    ('pareja', -0.3, '03.mp3', 'Cada uno contesta en secreto, en el mismo móvil. Luego lo descubren juntos.'),
-    ('pareja', 13.42, '04.mp3', 'Creían que su seguro cubría a Liam hasta los 19. Le cubre hasta los 8.'),
-    ('reunion', 0.15, '05.mp3', 'Su plan de Sherpas, paso a paso: de 60 a 78.'),
-    ('reunion', 4.2, '06.mp3', 'Y piden la reunión.'),
-    ('asesor', 1.2, '09.mp3', 'Y el asesor llega sabiendo qué creían y qué les preocupa.'),
-    ('familias', 0.4, '10.mp3', 'Y funciona con cualquier plan de Sherpas.'),
-    ('cierre', 0.6, '07.mp3', 'Vuestro plan de futuro. Del PDF a la conversación.'),
-]
-
-# Golpes de cámara (acercamiento rápido + destello suave) en los momentos clave: (bloque, segundos desde su inicio).
-GOLPES = [('gancho2', 2.3), ('pareja', 13.42), ('reunion', 0.3)]
 
 TITULO = dict(antes='AL-GORITMO  ×  SHERPAS', nombre=('Vuestro', 'plan de futuro'),
               sub='La familia entiende su plan. Su asesor llega sabiendo qué les preocupa.')

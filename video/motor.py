@@ -327,8 +327,8 @@ class Texto(Bloque):
 class Titulo(Bloque):
     def pintar(self, cv, t, e):
         T = G.TITULO
-        poner(cv, etiqueta(T['antes']), W // 2, 380, t, 0.0, self.dur, centrado=True)
-        poner(cv, [(T['nombre'][0], ('Poppins', 800, 110), BLANCO), (T['nombre'][1], ('Poppins', 800, 110), 'grad')], W // 2, 430, t, 0.1, self.dur, centrado=True)
+        poner(cv, etiqueta(T['antes']), W // 2, 380, t, 0.1, self.dur, centrado=True)
+        poner(cv, [(T['nombre'][0], ('Poppins', 800, 110), BLANCO), (T['nombre'][1], ('Poppins', 800, 110), 'grad')], W // 2, 430, t, 0.3, self.dur, centrado=True)
         poner(cv, [(T['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 720, t, 1.0, self.dur, centrado=True)
 
 @functools.lru_cache(maxsize=1)
@@ -586,7 +586,7 @@ class Movil(Bloque):
             cuaderno(cv, col, v['y'], 1 if tl >= v['t'] + 0.7 else 0, v['t'] + 0.7, tl, rampa(tl, 0.5, 0.9) * (1 - rampa(t, q['t1'] - 0.5, q['t1'])))
             chip_volando(cv, v['txt'], (q['destino'][0] + v.get('dx', 0), q['destino'][1] + v.get('dy', 220)), (col + 170, v['y']), (tl - v['t']) / 0.7)
         for i, tb in enumerate(self.textos):
-            t0 = tb['t0'] + (0.15 if i else 0.1); t1 = tb['t1'] if i < len(self.textos) - 1 else self.dur
+            t0 = tb['t0'] + (0.15 if i else 0.25); t1 = tb['t1'] if i < len(self.textos) - 1 else self.dur
             dx = tb['destino'][0]
             tb = dict(tb, texto=contar(tb['texto'], t, t0), texto2=contar(tb['texto2'], t, t0 + 0.4) if tb['texto2'] else None)
             if tb['texto2'] is not None or abs(dx - 960) < 120:     # móvil en el centro: texto a los dos lados
@@ -609,7 +609,7 @@ class Movil(Bloque):
                 continue
             if self.cfg.get('escalonado'):
                 poner(cv, etiqueta(self.cfg['etiqueta']), col, 330, t, t0, t1)
-                yy, ti = 390, t0 + 0.2
+                yy, ti = 390, t0 + 0.4
                 previa = None
                 for j, l in enumerate(tb['texto']):
                     f = filas([l], True)
@@ -662,14 +662,6 @@ def main():
             for t in ts:
                 cv = fondo(a + t); b.pintar(cv, t, None); poner_logo(cv, a + t); cv.convert('RGB').save(os.path.join(d, f'{n:02d}_{b.cfg.get("id")}.jpg'), quality=85); n += 1
         print('Muestras en', d); return
-    inicio = {b.cfg.get('id'): a for a, _, b in tl}
-    subs, voz = [], []
-    for bid, off, archivo, texto in getattr(G, 'VOZ', []):
-        t0 = inicio[bid] + off
-        d = float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', os.path.join(AQUI, 'voz', archivo)]))
-        subs.append((t0, t0 + d + 0.1, texto)); voz.append((round(t0, 3), archivo))
-    golpes = [inicio[bid] + off for bid, off in getattr(G, 'GOLPES', [])]
-    json.dump(dict(voz=voz, golpes=golpes, bloques=[round(a, 3) for a, _, _ in tl]), open(os.path.join(AQUI, '.trabajo', 'voz.json'), 'w'), indent=1)
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
                            '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', salida], stdin=subprocess.PIPE)
     n = int(total * FPS); j = 0
@@ -678,7 +670,6 @@ def main():
         while j < len(tl) - 1 and T >= tl[j][1]: j += 1
         a, e, b = tl[j]
         cv = fondo(T); b.pintar(cv, T - a, None); poner_logo(cv, T)
-        poner_subtitulo(cv, T, b, subs); cv = golpe(cv, T, golpes); barra(cv, T, total)
         ff.stdin.write(cv.convert('RGB').tobytes())
         if i % 300 == 0: print(f'  fotograma {i}/{n}', flush=True)
     ff.stdin.close(); ff.wait()
