@@ -117,8 +117,36 @@ L *= duck; Rr *= duck
 fade = np.ones(N); fi = int(0.5 * SR); fade[:fi] = np.linspace(0, 1, fi)
 fo = int(4 * SR); fade[-fo:] = np.linspace(1, 0, fo) ** 1.5
 L *= fade; Rr *= fade
+# pausa antes de cada golpe: la música se aparta medio segundo y vuelve
+EF = TL.get('efectos', [])
+g = np.ones(N)
+for te, k in EF:
+    if k != 'golpe': continue
+    a, b, c = int((te - 0.5) * SR), int(te * SR), int((te + 0.35) * SR)
+    a = max(0, a); c = min(N, c)
+    if b <= a or b >= N: continue
+    g[a:b] = np.minimum(g[a:b], np.linspace(1, 0.4, b - a)); g[b:c] = np.minimum(g[b:c], np.linspace(0.4, 1, c - b))
+L *= g; Rr *= g
 pk = max(np.abs(L).max(), np.abs(Rr).max())
 L, Rr = L / pk * 0.85, Rr / pk * 0.85
+# efectos de sonido
+EL = np.zeros(N); ER = np.zeros(N)
+def efecto(te, k):
+    if k == 'golpe':
+        t = np.arange(int(0.7 * SR)) / SR
+        x = np.sin(2 * np.pi * (52 + 70 * np.exp(-t * 30)) * t) * np.exp(-t * 6) * 0.55
+        n = rng.standard_normal(len(t)); n = lp(n, 0.2) * np.exp(-t * 40) * 0.15
+        add(EL, te, x + n); add(ER, te, x + n)
+    elif k == 'tick':
+        t = np.arange(int(0.08 * SR)) / SR
+        x = (np.sin(2 * np.pi * 1650 * t) + 0.4 * np.sin(2 * np.pi * 2480 * t)) * np.exp(-t * 70) * 0.11
+        add(EL, te, x); add(ER, te, x)
+    elif k == 'whoosh':
+        n = int(0.5 * SR); t = np.arange(n) / SR; x = rng.standard_normal(n)
+        x = lp(x, 0.16) - lp(x, 0.02); x *= np.sin(np.pi * t / t[-1]) ** 2 * 0.22
+        add(EL, te - 0.15, x * np.linspace(1.2, 0.6, n)); add(ER, te - 0.15, x * np.linspace(0.6, 1.2, n))
+for te, k in EF: efecto(te, k)
+L += EL; Rr += ER
 out = np.stack([L, Rr], 1)
 out = np.tanh(out * 1.2) / np.tanh(1.2)
 with wave.open(os.path.join(AQUI, '.trabajo', 'musica.wav'), 'wb') as w:
