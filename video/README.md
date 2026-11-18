@@ -1,6 +1,6 @@
 # Vídeo de presentación
 
-Vídeo de 2:15 para presentar la web a los asesores de Sherpas. Todo lo que sale en el móvil son grabaciones reales de la web, hechas por un navegador automático. El montaje (textos, posición del móvil, ficha del asesor y música) se genera con código, así que se puede rehacer cuando cambie algo.
+Vídeo de 2:00 para presentar la web a los asesores de Sherpas. Todo lo que sale en el móvil son grabaciones reales de la web, hechas por un navegador automático. El montaje (textos, posición del móvil, ficha del asesor y música) se genera con código, así que se puede rehacer cuando cambie algo.
 
 ## Qué se toca para cambiar algo
 
@@ -50,6 +50,15 @@ La grabación arranca la web en local con `scripts/serve.mjs`, así que graba la
 - El texto secundario va en Poppins fina y más apagada (`estilo()` en `motor.py`), en segundo plano frente a los titulares.
 - Logo de Sherpas arriba a la derecha todo el vídeo y una frase de conclusión en el cierre (`CIERRE['frase']`).
 - Grabación sin tirones: `grabar.js` mete un píxel que cambia en cada fotograma para que Chrome no deje de mandarlos, y en la ruleta el giro hasta la tarjeta que se abre se ve entero.
+
+## Cambios de la versión 2:00 (v4)
+
+- Recortado a 2:00 y abre directamente con el móvil de la familia Weah (gancho: 300 $ al mes, ¿cuánto son intereses?).
+- **Línea de vida** abajo: los capítulos de `CAPITULOS` en `guion.py` se encienden como paradas a medida que avanza el vídeo.
+- **El dato sale del móvil**: con `cifra=dict(txt, t, y, antes, sub, color)` en una parte, la cifra real sale de la pantalla y se queda grande junto al texto (270 $, 8 años, 60/100).
+- **Colores de la pareja**: `tinte='azul'` (Timothy), `'coral'` (Melanie) o `'morado'` (juntos) tiñe el fondo; con `pase=True` y tinte, el color de Melanie se abre desde el móvil al pasarlo.
+- **Ficha del asesor**: las respuestas salen como fichas del móvil de la familia (`FICHA_ASESOR['movil']`) y rellenan la ficha una a una.
+- Subtítulos más legibles (Poppins 500, 32 px, más claros).
 
 ## Si una escena falla al grabar
 
