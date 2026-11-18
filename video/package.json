@@ -1,0 +1,13 @@
+{
+  "name": "video-presentacion",
+  "private": true,
+  "description": "Graba la web y monta el vídeo de presentación. Ver video/README.md.",
+  "type": "commonjs",
+  "scripts": {
+    "grabar": "node grabar.js",
+    "video": "python3 construir.py"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}
