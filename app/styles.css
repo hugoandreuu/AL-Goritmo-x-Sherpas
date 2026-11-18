@@ -1161,9 +1161,10 @@ body.fondo-on .rv2 .rv-dock .dock { padding-top: 16px; }
 .pj-intro > :nth-child(1) { animation-delay: .05s; } .pj-intro > :nth-child(2) { animation-delay: .2s; } .pj-intro > :nth-child(3) { animation-delay: .35s; }
 .pj-intro > :nth-child(4) { animation-delay: .5s; } .pj-intro > :nth-child(5) { animation-delay: .7s; } .pj-intro > :nth-child(6) { animation-delay: .85s; }
 /* Transiciones suaves: la frase previa y la tarjeta guardada se funden hacia arriba; lo siguiente entra con un fundido */
-.fade-out { animation: fdOut .45s var(--soft-in) both; pointer-events: none; }
-@keyframes fdOut { to { opacity: 0; transform: translateY(-14px); filter: blur(4px); } }
-.fd-in { animation: pjFade .45s var(--soft) both; }
+/* Salida suave desde el primer fotograma (con ease-in se quedaba quieta y desaparecía de golpe al final). */
+.fade-out { animation: fdOut .36s cubic-bezier(.4,0,.6,1) both; pointer-events: none; }
+@keyframes fdOut { from { opacity: 1; transform: none; filter: none; } to { opacity: 0; transform: translateY(-14px); filter: blur(4px); } }  /* «from» explícito: .qstage.fade-out ya pone opacity 0 y sin él la pantalla desaparecía de golpe */
+.fd-in { animation: pjFade .32s var(--soft) both; }
 .sealing .dock { opacity: 0; transition: opacity .2s; pointer-events: none; }
 
 /* ===== Resumen: ruleta 3D de tarjetas ===== */

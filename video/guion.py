@@ -37,7 +37,7 @@ SEGMENTOS = [
             '# Pagan 300 $ al mes', '# a la tarjeta.', '## ¿Cuánto se va en intereses?']),
     ]),
     dict(tipo='movil', id='gancho2', etiqueta='FAMILIA WEAH · MODO PAREJA', escalonado=True, partes=[
-        dict(clip=('pareja', 'rev_dinero', 0.8, 6.8, 0.8), pos='der',
+        dict(clip=('pareja', 'rev_dinero', 1.1, 6.8, 0.8), pos='der',
              barra=dict(max=300, real=270, t_real=2.7, titulo=('# Lo que creían…', '!! …y lo que dice su plan.'),
                         marcas=[('T', 'Timothy', 100, (79, 107, 255), 0.8), ('M', 'Melanie', 190, (201, 112, 62), 1.5)]),
              texto=['Estiman, y su propio dato les da el golpe de realidad:', 'de cada 300 $, casi todo se va en intereses.']),
@@ -81,7 +81,7 @@ SEGMENTOS = [
             cifra=dict(txt='{n:60}/100', t=0.6, y=540, color='lila', sub='Lo que más la baja: los seguros.')),
     ]),
     dict(tipo='movil', id='camino', etiqueta='03 · SU CAMINO', partes=[
-        dict(clip=('michael', 'camino', 0.4, 9.8, 1.3), pos='der', texto=[
+        dict(clip=('michael', 'camino', 2.9, 9.8, 1.3), pos='der', texto=[
             '# De hoy a la jubilación,', '## paso a paso.', 'Cada paso del plan sube su nota:', 'de 26 hoy a {n:26-62} con el plan completo.']),
         dict(clip=('michael', 'informe', 0.0, 2.6, 1.0), pos=(1360, 540, -2, 0.94), texto=[
             '# Y todo se pliega', '## en su informe.']),
@@ -113,7 +113,7 @@ SEGMENTOS = [
 ]
 
 TITULO = dict(antes='AL-GORITMO  ×  SHERPAS', nombre=('Vuestro', 'plan de futuro'),
-              sub='El plan de cada familia, contado para que se entienda.')
+              sub='La familia entiende su plan. Su asesor llega sabiendo qué les preocupa.')
 CIERRE = dict(sub='Del plan en PDF a una conversación con el asesor.',
               frase=('Os ayudamos a entender vuestro plan…', 'y a dar el primer paso para cumplirlo.'),
               qr='https://hugoandreuu.github.io/AL-Goritmo-x-Sherpas/', qr_texto='Escanéalo y pruébalo',
