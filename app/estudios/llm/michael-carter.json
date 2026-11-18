@@ -3,63 +3,63 @@
  "fecha": "2026-11-14",
  "datos": "mcp",
  "respuesta": {
-  "lectura": "Le importa poder comprar la casa sin quedarse sin colchón y, al mismo tiempo, no recortar su jubilación. Lo que más le moverá es ver cuántos meses de gastos cubre su efectivo. También reaccionará fuerte al dato sobre hasta cuándo duran sus ahorros.",
+  "lectura": "He cares about being able to buy the house without draining his emergency fund, while not cutting back on his retirement. What will move him most is seeing how many months of expenses his cash covers. He will also react strongly to how long his savings last.",
   "orden": [
    "colchon",
    "jubilacion",
    "nota",
    "tarjeta_interes"
   ],
-  "porque_orden": "Primero la liquidez y la casa, luego la jubilación; cerramos con la nota y una buena noticia de la tarjeta",
+  "porque_orden": "Liquidity and the house first, then retirement; we close with the score and good news on the credit card",
   "frases": [
-   "Tener el dinero para la casa",
-   "No quedarme corto para jubilarme",
-   "Saber si voy por buen camino",
-   "Pagar menos en la tarjeta"
+   "Having the money for the house",
+   "Not falling short for retirement",
+   "Knowing if I'm on the right track",
+   "Paying less on the credit card"
   ],
   "ganancias": [
-   "Dormiría más tranquilo por las mañanas",
-   "Podría planear mi retiro con calma",
-   "Vería sentido a lo que ahorro",
-   "Tendría más margen mensual"
+   "I'd sleep better at night",
+   "I could plan my retirement calmly",
+   "I'd see the point of what I save",
+   "I'd have more room each month"
   ],
   "abiertas": [
-   "¿Podemos comprar la casa y mantener el colchón?",
-   "¿Qué tendría que cambiar para que me lleguen los ahorros?",
-   "¿Cuánto costaría subir el seguro o añadir un umbrella?"
+   "Can we buy the house and keep the emergency fund?",
+   "What would have to change for my savings to last?",
+   "How much would it cost to raise my insurance or add an umbrella policy?"
   ],
   "preguntas": {
    "colchon": {
-    "q": "Si mañana te quedaras sin ingresos, ¿cuántos meses de gastos crees que cubre tu efectivo?",
-    "cerca": "Tenías una idea parecida",
-    "mas": "Son {dif} meses más que dijiste ({tu})",
-    "menos": "Menos de lo que pensabas: {dif} meses menos ({tu})",
-    "siente": "Michael, tu efectivo cubre **3,2 meses** de gastos básicos. La reserva recomendada es entre 5 y 6 meses; si apartas los objetivos a corto plazo, los meses cubiertos pasan a **0**.",
-    "salida": "Ver con el asesor cómo encajar la casa y el colchón"
+    "q": "If your income stopped tomorrow, how many months of expenses do you think your cash covers?",
+    "cerca": "You had a similar idea",
+    "mas": "That's more months than you said ({tu})",
+    "menos": "Less than you thought ({tu})",
+    "siente": "Michael, your cash covers **3.2 months** of essential expenses. The recommended reserve is 5 to 6 months; if you set aside your short-term goals, the months covered drop to **0**.",
+    "salida": "Work out with your advisor how the house and the emergency fund fit together"
    },
    "jubilacion": {
-    "q": "¿Te llega para jubilarte a los 58 y vivir de ello?",
-    "cerca": "Tu intuición estaba cerca",
-    "mas": "Es {dif} mejor de lo que pensabas ({tu})",
-    "menos": "Es peor de lo que pensabas: {dif} ({tu})",
-    "siente": "Michael, según el plan tus ahorros se acaban a los **85 años** cuando tu objetivo es jubilarte a los 58. Los ingresos garantizados cubren el 34% del gasto previsto.",
-    "salida": "Sacar menos de tus ahorros al jubilarte"
+    "q": "Do you have enough to retire at 58 and live on it?",
+    "cerca": "Your instinct was close",
+    "mas": "It's better than you thought ({tu})",
+    "menos": "It's worse than you thought ({tu})",
+    "siente": "Michael, according to the plan your savings run out at **age 85**, while your goal is to retire at 58. Guaranteed income covers 34% of projected spending.",
+    "salida": "Draw less from your savings in retirement"
    },
    "nota": {
-    "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?",
-    "cerca": "No estabas lejos",
-    "mas": "Son {dif} puntos más de lo que dijiste ({tu})",
-    "menos": "Son {dif} puntos menos de lo que dijiste ({tu})",
-    "siente": "Tu nota hoy es **26 de 100**, Michael. Eso resume que la secuencia del dinero —casa, colchón, ahorro— necesita ordenarse.",
-    "salida": "Subir la parte de tus inversiones que busca crecer"
+    "q": "From 0 to 100, what Financial Health score do you think your plan gives you?",
+    "cerca": "You weren't far off",
+    "mas": "That's more points than you said ({tu})",
+    "menos": "That's fewer points than you said ({tu})",
+    "siente": "Your score today is **26 out of 100**, Michael. It sums up that the order of your money (house, emergency fund, savings) needs sorting out.",
+    "salida": "Increase the growth-oriented part of your investments"
    },
    "tarjeta_interes": {
-    "q": "Pagas 200 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?",
-    "cerca": "Lo tenías claro",
-    "mas": "Se van {dif} $ más en intereses de lo que dijiste ({tu})",
-    "menos": "Menos intereses de lo que pensabas: {dif} $ ({tu})",
-    "siente": "De tus 200 $ al mes, **58 $** se van en intereses. Esa porción frena la reducción del saldo y el alivio mensual.",
-    "salida": "Hablar con el asesor para priorizar pagos y ver opciones"
+    "q": "You pay $200 a month on your credit card. How much of that goes to interest?",
+    "cerca": "You knew it well",
+    "mas": "More goes to interest than you said ({tu})",
+    "menos": "Less interest than you thought ({tu})",
+    "siente": "Of your $200 a month, **$58** goes to interest. That portion slows down paying off the balance and the monthly relief.",
+    "salida": "Talk to your advisor to prioritize payments and look at options"
    }
   }
  }

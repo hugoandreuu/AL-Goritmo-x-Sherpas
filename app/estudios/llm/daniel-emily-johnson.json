@@ -3,62 +3,62 @@
  "fecha": "2026-11-14",
  "datos": "mcp",
  "respuesta": {
-  "lectura": "A Daniel y Emily les mueve ante todo proteger a los niños y tener colchón líquido. Les preocupa cuánto cubren los seguros y cuánto aguanta su efectivo antes de tocarlo.",
+  "lectura": "Daniel and Emily are driven above all by protecting the kids and having a liquid emergency fund. They worry about how much their insurance covers and how long their cash lasts before they have to touch it.",
   "orden": [
    "vida",
    "colchon",
    "tarjeta_interes",
    "jubilacion"
   ],
-  "porque_orden": "Empezamos por la protección, luego la liquidez, el coste de la deuda y cerramos con la noticia sobre la jubilación.",
+  "porque_orden": "We start with protection, then liquidity, the cost of the debt, and we close with the news about retirement.",
   "frases": [
-   "Nos importa proteger a Oliver y a Sophia",
-   "Queremos tener efectivo para imprevistos",
-   "Nos molesta pagar tanto en intereses",
-   "Que lleguemos tranquilos a la jubilación"
+   "We care about protecting Oliver and Sophia",
+   "We want cash for the unexpected",
+   "It bothers us to pay so much in interest",
+   "Reaching retirement with peace of mind"
   ],
   "ganancias": [
-   "Dormiríamos más tranquilos por la noche",
-   "Tendríamos margen para un imprevisto",
-   "Pagaríamos menos en intereses",
-   "Podríamos disfrutar la jubilación"
+   "We'd sleep more easily at night",
+   "We'd have room for the unexpected",
+   "We'd pay less in interest",
+   "We could enjoy retirement"
   ],
   "abiertas": [
-   "¿Y si uno de los dos cambia de trabajo, qué pasa con los seguros?",
-   "¿Y si priorizamos seguro de vida frente a ahorrar más?"
+   "What if one of us changes jobs, what happens to our insurance?",
+   "What if we prioritize life insurance over saving more?"
   ],
   "preguntas": {
    "vida": {
-    "q": "Si a uno de los dos le pasara algo, ¿cuántos años de gastos de casa tendrían cubiertos Oliver (11) y Sophia (9)?",
-    "cerca": "Lo habíais calculado bien",
-    "mas": "Son {dif} años más de lo que dijisteis",
-    "menos": "Menos años de los que pensabais",
-    "siente": "Hoy tenéis cubiertos unos **3 años** de gastos de casa. Con eso, Oliver, con 11 años, estaría protegido hasta los 14; a Sophia le quedaría parte de su infancia cubierta.",
-    "salida": "Subir el seguro de vida"
+    "q": "If something happened to one of you, how many years of household expenses would Oliver (11) and Sophia (9) have covered?",
+    "cerca": "You had it worked out",
+    "mas": "That's more years than you said",
+    "menos": "Fewer years than you thought",
+    "siente": "Today you have about **3 years** of household expenses covered. With that, Oliver, at 11, would be protected until 14; Sophia would have part of her childhood covered.",
+    "salida": "Increase your life insurance"
    },
    "colchon": {
-    "q": "Si mañana os quedarais sin ingresos, ¿cuántos meses de gastos básicos cubre vuestro efectivo?",
-    "cerca": "Lo sospechabais",
-    "mas": "Son {dif} meses más que dijisteis",
-    "menos": "Menos meses de lo que pensabais",
-    "siente": "El efectivo accesible solo cubre **1,4 meses** de gastos básicos. Con esa cifra, una parada de ingresos os dejaría expuestos y complicaría la vacación prevista.",
-    "salida": "Seguro extra de responsabilidad civil"
+    "q": "If your income stopped tomorrow, how many months of essential expenses does your cash cover?",
+    "cerca": "You suspected it",
+    "mas": "That's more months than you said",
+    "menos": "Fewer months than you thought",
+    "siente": "Your accessible cash covers only **1.4 months** of essential expenses. At that level, a pause in income would leave you exposed and complicate the planned vacation.",
+    "salida": "Extra liability insurance"
    },
    "tarjeta_interes": {
-    "q": "Pagáis 450 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?",
-    "cerca": "Lo notabais en los pagos",
-    "mas": "Son {dif} $ más al mes de lo que dijisteis",
-    "menos": "Menos de lo que imaginabais",
-    "siente": "De los 450 $ que pagáis cada mes, **374 $** van a intereses. Así la deuda apenas baja y el coste del crédito pesa mucho en vuestra liquidez.",
-    "salida": "Seguro extra de responsabilidad civil"
+    "q": "You pay $450 a month on your credit card. How much of that goes to interest?",
+    "cerca": "You could feel it in the payments",
+    "mas": "More a month than you said",
+    "menos": "Less than you imagined",
+    "siente": "Of the $450 you pay each month, **$374** goes to interest. That way the debt barely goes down and the cost of credit weighs heavily on the cash you have available.",
+    "salida": "Extra liability insurance"
    },
    "jubilacion": {
-    "q": "¿Os llega para jubilaros a los 62 y 60 y vivir de ello?",
-    "cerca": "Lo teníais claro",
-    "mas": "Mejor de lo que pensabais: {dif}",
-    "menos": "Peor de lo que pensabais: {dif}",
-    "siente": "Sí: la proyección llega y al final quedan **260.272 $**. Eso os da un pequeño colchón para imprevistos y algo de tranquilidad en la jubilación.",
-    "salida": "Subir el seguro de vida"
+    "q": "Do you have enough to retire at 62 and 60 and live on it?",
+    "cerca": "You had it clear",
+    "mas": "Better than you thought",
+    "menos": "Worse than you thought",
+    "siente": "Yes: the projection holds and **$260,272** is left at the end. That gives you a small cushion for the unexpected and some peace of mind in retirement.",
+    "salida": "Increase your life insurance"
    }
   }
  }

@@ -1,162 +1,162 @@
-# Estudio: Samantha Lewis
+# Study: Samantha Lewis
 
-- Caso: `samantha-lewis`
-- Datos: archivos de `cases/` (los mismos JSON que sirve el MCP)
-- Frases: escritas por el LLM de Sherpas (`gpt-5-mini`, el 2026-11-14), con control de cifras
-- Generado: 2026-11-17
+- Case: `samantha-lewis`
+- Data: `cases/` files (the same JSON the MCP serves)
+- Phrases: written by the Sherpas LLM (`gpt-5-mini`, on 2026-11-14), with figure checks
+- Generated: 2026-11-18
 
-## Lo que lee el LLM de esta familia
+## What the LLM reads about this family
 
-Samantha prioriza proteger a Ethan y Ava y asegurarse de tener tranquilidad a largo plazo. Lo que más le moverá es saber hasta cuándo le duran los ahorros. También le interesará la concentración de sus inversiones y confirmar que su colchón es suficiente.
+Samantha's priority is protecting Ethan and Ava and making sure she has long-term peace of mind. What will move her most is knowing how long her savings last. She will also care about the concentration of her investments and confirming that her emergency fund is enough.
 
-Por qué este orden: Primero toca lo más crítico (la jubilación), luego la inversión concreta que le preocupa, después una buena noticia sobre su colchón y al final el resultado global.
+Why this order: First the most critical point (retirement), then the specific investment that worries her, then good news about her emergency fund, and finally the overall result.
 
-## Nota
+## Score
 
-Hoy 82 de 100. Con los pasos del plan, 84.
+Today 82 out of 100. With the plan’s steps, 84.
 
-| Área | Nota |
+| Area | Score |
 |---|---|
-| Ahorro | 75 |
-| Deudas | 100 |
-| Inversiones | 66 |
-| Colchón | 100 |
-| Seguros | 71 |
+| Savings | 75 |
+| Debt | 100 |
+| Investments | 66 |
+| Emergency fund | 100 |
+| Insurance | 71 |
 
-## Preguntas, en orden
+## Questions, in order
 
-### 1. ¿Te llega para jubilarte a los 65 y vivir de ello?
+### 1. Do you have enough to retire at 65 and live on it?
 
-- Dato del plan: **hasta los 73** te duran los ahorros (mala noticia)
-- Origen: `key_metrics.facts.retirement`
-- Si acierta: «Lo veías venir. Mira hasta dónde llega.»
-- Si el dato es mayor de lo que dijo: «El estudio dice que no llega.»
-- Si es menor: «El estudio dice otra cosa.»
-- Para que lo sienta: Con este plan, tus ahorros acaban a **73 años**. Eso deja parte de tus gastos de jubilación sin cubrir más adelante.
-- Salida: Es de lo primero que se ve con tu asesor: cuánto ahorrar y cuándo jubilarte.
-- Escrito por el LLM: q, siente
+- Plan figure: **until age 73** your savings last (bad news)
+- Source: `key_metrics.facts.retirement`
+- If they get it right: “You saw it coming. Look how far it goes.”
+- If the figure is higher than they said: “The report says it falls short.”
+- If it’s lower: “The report says otherwise.”
+- To make them feel it: With this plan, your savings run out at **age 73**. That leaves part of your retirement expenses uncovered later on.
+- Way out: It’s one of the first things to go over with your advisor: how much to save and when to retire.
+- Written by the LLM: q, siente
 
-### 2. De todo lo que tienes invertido, ¿qué parte está en un solo fondo?
+### 2. Of everything you have invested, what share is in a single fund?
 
-- Dato del plan: **39 %** en un solo fondo (VTI) (mala noticia)
-- Origen: `score.top_moves`
-- Si acierta: «Lo tenías claro.»
-- Si el dato es mayor de lo que dijo: «Más de lo que pensabas.»
-- Si es menor: «Menos de lo que pensabas. Aun así, el estudio lo ve alto.»
-- Para que lo sienta: Hoy tienes **39 %** de lo invertido en un solo fondo, VTI. El plan propone dejarlo en **25 %**, para no depender tanto de una sola posición y dar más equilibrio a tu cartera.
-- Salida: Qué vender y cuándo se ve con tu asesor.
-- Escrito por el LLM: q, siente
+- Plan figure: **39%** in a single fund (VTI) (bad news)
+- Source: `score.top_moves`
+- If they get it right: “You knew it.”
+- If the figure is higher than they said: “More than you thought.”
+- If it’s lower: “Less than you thought. Even so, the report sees it as high.”
+- To make them feel it: Today **39%** of what you've invested is in a single fund, VTI. The plan proposes bringing it to **25%**, so you don't depend so much on one position and your portfolio is better balanced.
+- Way out: What to sell and when is something to go over with your advisor.
+- Written by the LLM: q, siente
 
-### 3. Si mañana te quedaras sin ingresos, ¿cuántos meses de gastos básicos cubre tu efectivo?
+### 3. If your income stopped tomorrow, how many months of essential expenses does your cash cover?
 
-- Dato del plan: **7,9 meses** de gastos básicos (buena noticia)
-- Origen: `key_metrics.facts.cash`
-- Si acierta: «Eso es. Aquí vas bien.»
-- Si el dato es mayor de lo que dijo: «Más de lo que pensabas.»
-- Si es menor: «Algo menos de lo que pensabas, pero por encima del mínimo recomendado.»
-- Para que lo sienta: Tu efectivo cubre **7,9 meses** de gastos básicos, por encima de la reserva recomendada. Eso te da margen para afrontar los pagos de Ethan y los imprevistos sin agobios inmediatos.
-- Salida: Este punto ya está. No hay que tocarlo.
-- Escrito por el LLM: q, siente
+- Plan figure: **7.9 months** of essential expenses (good news)
+- Source: `key_metrics.facts.cash`
+- If they get it right: “That’s right. You’re doing well here.”
+- If the figure is higher than they said: “More than you thought.”
+- If it’s lower: “A bit less than you thought, but above the recommended minimum.”
+- To make them feel it: Your cash covers **7.9 months** of essential expenses, above the recommended reserve. That gives you room to handle Ethan's payments and the unexpected without immediate stress.
+- Way out: This one is done. No need to touch it.
+- Written by the LLM: q, siente
 
-### 4. Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu estudio?
+### 4. From 0 to 100, what Financial Health score do you think your report gives you?
 
-- Dato del plan: **82** de 100, hoy (buena noticia)
-- Origen: `score.published_score · score.pillars`
-- Si acierta: «Lo tenías claro.»
-- Si el dato es mayor de lo que dijo: «Mejor de lo que pensabas.»
-- Si es menor: «Más baja de lo que pensabas.»
-- Para que lo sienta: Tu plan tiene una salud de **82 de 100** hoy. Con los pasos del plan la nota puede subir y dar más certidumbre sobre cómo afrontar retiro y estudios de los niños.
-- Salida: Con los pasos de tu plan llega a 84.
-- Escrito por el LLM: q, siente
+- Plan figure: **82** out of 100, today (good news)
+- Source: `score.published_score · score.pillars`
+- If they get it right: “You knew it.”
+- If the figure is higher than they said: “Better than you thought.”
+- If it’s lower: “Lower than you thought.”
+- To make them feel it: Your plan's health today is **82 out of 100**. With the plan's steps the score can go up and give more certainty about handling retirement and the kids' education.
+- Way out: With the steps in your plan, it reaches 84.
+- Written by the LLM: q, siente
 
-## Pasos del plan
+## Plan steps
 
-| Paso | Quién | Nota tras el paso (solo) |
+| Step | Who | Score after the step (alone) |
 |---|---|---|
-| Asegurar tu casa | Con el asesor | 84 |
-| Repartir mejor tus inversiones | Con el asesor | 83 |
-| Bajar un poco el riesgo de tus inversiones | Con el asesor | 83 |
+| Insure your home | With the advisor | 84 |
+| Spread your investments better | With the advisor | 83 |
+| Take a little risk out of your investments | With the advisor | 83 |
 
-El plan no trae la nota de varios pasos juntos; la app no la inventa.
+The plan doesn’t give the score for several steps together; the app doesn’t invent it.
 
-## De hoy a la jubilación
+## From today to retirement
 
-- Hoy: Nota 82
-- Paso 1: Asegurar tu casa
-- Paso 2: Repartir mejor tus inversiones
-- Paso 3: Bajar un poco el riesgo de tus inversiones
-- 2028: Universidad de Ava
-- 2030: La casa (500.000 $)
-- 2044: Jubilación
-- 2053: Aquí se acaban los ahorros (A los 73 años, según tu estudio)
+- Today: Score 82
+- Step 1: Insure your home
+- Step 2: Spread your investments better
+- Step 3: Take a little risk out of your investments
+- 2028: Ava’s college
+- 2030: The home ($500,000)
+- 2044: Retirement
+- 2053: Savings run out here (At age 73, according to your report)
 
-## Para el asesor
+## For the advisor
 
-- ¿Cómo priorizamos retiro o universidad?
-- ¿Podemos reducir mi concentración sin perder rendimiento?
-- ¿Qué tendría que ver contigo en la reunión?
+- How do we prioritize retirement or college?
+- Can we reduce my concentration without losing returns?
+- What should I go over with you in the meeting?
 
-## Respuesta completa del LLM
+## Full LLM response
 
 ```json
 {
-  "lectura": "Samantha prioriza proteger a Ethan y Ava y asegurarse de tener tranquilidad a largo plazo. Lo que más le moverá es saber hasta cuándo le duran los ahorros. También le interesará la concentración de sus inversiones y confirmar que su colchón es suficiente.",
+  "lectura": "Samantha's priority is protecting Ethan and Ava and making sure she has long-term peace of mind. What will move her most is knowing how long her savings last. She will also care about the concentration of her investments and confirming that her emergency fund is enough.",
   "orden": [
     "jubilacion",
     "concentracion",
     "colchon",
     "nota"
   ],
-  "porque_orden": "Primero toca lo más crítico (la jubilación), luego la inversión concreta que le preocupa, después una buena noticia sobre su colchón y al final el resultado global.",
+  "porque_orden": "First the most critical point (retirement), then the specific investment that worries her, then good news about her emergency fund, and finally the overall result.",
   "frases": [
-    "Que Ethan y Ava estén cubiertos",
-    "Tener suficiente para jubilarme",
-    "No quedarme sin efectivo",
-    "Que no dependa de un solo fondo"
+    "That Ethan and Ava are covered",
+    "Having enough to retire",
+    "Not running out of cash",
+    "Not depending on a single fund"
   ],
   "ganancias": [
-    "Dormiría sin miedo al dinero futuro",
-    "Podría planear viajes sin agobios",
-    "Pagaría la universidad sin tensiones",
-    "Revisaría inversiones con calma"
+    "I'd sleep without fear about future money",
+    "I could plan trips without stress",
+    "I'd pay for college without strain",
+    "I'd review my investments calmly"
   ],
   "abiertas": [
-    "¿Cómo priorizamos retiro o universidad?",
-    "¿Podemos reducir mi concentración sin perder rendimiento?",
-    "¿Qué tendría que ver contigo en la reunión"
+    "How do we prioritize retirement or college?",
+    "Can we reduce my concentration without losing returns?",
+    "What should I go over with you in the meeting?"
   ],
   "preguntas": {
     "jubilacion": {
-      "q": "¿Te llega para jubilarte a los 65 y vivir de ello?",
-      "cerca": "Casi: no llega para toda la jubilación",
-      "mas": "Mejor de lo que pensabas {tu}",
-      "menos": "Peor de lo que pensabas {tu}",
-      "siente": "Con este plan, tus ahorros acaban a **73 años**. Eso deja parte de tus gastos de jubilación sin cubrir más adelante.",
-      "salida": "Repartir mejor tus inversiones"
+      "q": "Do you have enough to retire at 65 and live on it?",
+      "cerca": "Almost: it doesn't last the whole retirement",
+      "mas": "Better than you thought {tu}",
+      "menos": "Worse than you thought {tu}",
+      "siente": "With this plan, your savings run out at **age 73**. That leaves part of your retirement expenses uncovered later on.",
+      "salida": "Spread your investments better"
     },
     "concentracion": {
-      "q": "De todo lo que tienes invertido, ¿qué parte está en un solo fondo?",
-      "cerca": "Eso concentra mucho en un solo fondo",
-      "mas": "Hay más exposición de la que creías {tu}",
-      "menos": "Menos de lo que pensabas {tu}",
-      "siente": "Hoy tienes **39 %** de lo invertido en un solo fondo, VTI. El plan propone dejarlo en **25 %**, para no depender tanto de una sola posición y dar más equilibrio a tu cartera.",
-      "salida": "Bajar un poco el riesgo de tus inversiones"
+      "q": "Of everything you have invested, what share is in a single fund?",
+      "cerca": "That concentrates a lot in a single fund",
+      "mas": "There's more exposure than you thought {tu}",
+      "menos": "Less than you thought {tu}",
+      "siente": "Today **39%** of what you've invested is in a single fund, VTI. The plan proposes bringing it to **25%**, so you don't depend so much on one position and your portfolio is better balanced.",
+      "salida": "Lower the risk of your investments a little"
     },
     "colchon": {
-      "q": "Si mañana te quedaras sin ingresos, ¿cuántos meses de gastos básicos cubre tu efectivo?",
-      "cerca": "Tienes más colchón del esperado",
-      "mas": "Tienes más margen del que pensabas {tu}",
-      "menos": "Tienes menos margen del que pensabas {tu}",
-      "siente": "Tu efectivo cubre **7,9 meses** de gastos básicos, por encima de la reserva recomendada. Eso te da margen para afrontar los pagos de Ethan y los imprevistos sin agobios inmediatos.",
-      "salida": "Asegurar tu casa"
+      "q": "If your income stopped tomorrow, how many months of essential expenses does your cash cover?",
+      "cerca": "You have more of an emergency fund than expected",
+      "mas": "You have more room than you thought {tu}",
+      "menos": "You have less room than you thought {tu}",
+      "siente": "Your cash covers **7.9 months** of essential expenses, above the recommended reserve. That gives you room to handle Ethan's payments and the unexpected without immediate stress.",
+      "salida": "Insure your home"
     },
     "nota": {
-      "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?",
-      "cerca": "Vas muy cerca de la nota real",
-      "mas": "Tu percepción es mejor que la nota real {tu}",
-      "menos": "Tu percepción es peor que la nota real {tu}",
-      "siente": "Tu plan tiene una salud de **82 de 100** hoy. Con los pasos del plan la nota puede subir y dar más certidumbre sobre cómo afrontar retiro y estudios de los niños.",
-      "salida": "Asegurar tu casa"
+      "q": "From 0 to 100, what Financial Health score do you think your plan gives you?",
+      "cerca": "You're very close to the real score",
+      "mas": "Your perception is better than the real score {tu}",
+      "menos": "Your perception is worse than the real score {tu}",
+      "siente": "Your plan's health today is **82 out of 100**. With the plan's steps the score can go up and give more certainty about handling retirement and the kids' education.",
+      "salida": "Insure your home"
     }
   }
 }

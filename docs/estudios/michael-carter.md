@@ -1,165 +1,162 @@
-# Estudio: Michael Carter
+# Study: Michael Carter
 
-- Caso: `michael-carter`
-- Datos: archivos de `cases/` (los mismos JSON que sirve el MCP)
-- Frases: escritas por el LLM de Sherpas (`gpt-5-mini`, el 2026-11-14), con control de cifras
-- Generado: 2026-11-17
+- Case: `michael-carter`
+- Data: `cases/` files (the same JSON the MCP serves)
+- Phrases: written by the Sherpas LLM (`gpt-5-mini`, on 2026-11-14), with figure checks
+- Generated: 2026-11-18
 
-## Avisos
+## What the LLM reads about this family
 
-- nota.siente: descartado por jerga o rayas
+He cares about being able to buy the house without draining his emergency fund, while not cutting back on his retirement. What will move him most is seeing how many months of expenses his cash covers. He will also react strongly to how long his savings last.
 
-## Lo que lee el LLM de esta familia
+Why this order: Liquidity and the house first, then retirement; we close with the score and good news on the credit card
 
-Le importa poder comprar la casa sin quedarse sin colchón y, al mismo tiempo, no recortar su jubilación. Lo que más le moverá es ver cuántos meses de gastos cubre su efectivo. También reaccionará fuerte al dato sobre hasta cuándo duran sus ahorros.
+## Score
 
-Por qué este orden: Primero la liquidez y la casa, luego la jubilación; cerramos con la nota y una buena noticia de la tarjeta
+Today 26 out of 100. With the plan’s steps, 62.
 
-## Nota
-
-Hoy 26 de 100. Con los pasos del plan, 62.
-
-| Área | Nota |
+| Area | Score |
 |---|---|
-| Ahorro | 0 |
-| Deudas | 78 |
-| Inversiones | 42 |
-| Colchón | 22 |
-| Seguros | 18 |
+| Savings | 0 |
+| Debt | 78 |
+| Investments | 42 |
+| Emergency fund | 22 |
+| Insurance | 18 |
 
-## Preguntas, en orden
+## Questions, in order
 
-### 1. Si mañana te quedaras sin ingresos, ¿cuántos meses de gastos crees que cubre tu efectivo?
+### 1. If your income stopped tomorrow, how many months of expenses do you think your cash covers?
 
-- Dato del plan: **3,2 meses** de gastos básicos (mala noticia)
-- Origen: `key_metrics.facts.cash`
-- Si acierta: «Lo tenías claro. Mira lo que recomienda el plan.»
-- Si el dato es mayor de lo que dijo: «Algo más de lo que pensabas, pero no llega a lo recomendado.»
-- Si es menor: «Menos de lo que pensabas.»
-- Para que lo sienta: Michael, tu efectivo cubre **3,2 meses** de gastos básicos. La reserva recomendada es entre 5 y 6 meses; si apartas los objetivos a corto plazo, los meses cubiertos pasan a **0**.
-- Salida: Tu plan propone acercar ese colchón a lo recomendado. El cómo se ve con tu asesor.
-- Escrito por el LLM: q, siente
+- Plan figure: **3.2 months** of essential expenses (bad news)
+- Source: `key_metrics.facts.cash`
+- If they get it right: “You knew it. Look at what the plan recommends.”
+- If the figure is higher than they said: “A bit more than you thought, but short of what’s recommended.”
+- If it’s lower: “Less than you thought.”
+- To make them feel it: Michael, your cash covers **3.2 months** of essential expenses. The recommended reserve is 5 to 6 months; if you set aside your short-term goals, the months covered drop to **0**.
+- Way out: Your plan proposes bringing that emergency fund closer to what’s recommended. How is something to go over with your advisor.
+- Written by the LLM: q, siente
 
-### 2. ¿Te llega para jubilarte a los 58 y vivir de ello?
+### 2. Do you have enough to retire at 58 and live on it?
 
-- Dato del plan: **hasta los 85** te duran los ahorros (mala noticia)
-- Origen: `key_metrics.facts.retirement`
-- Si acierta: «Lo veías venir. Mira hasta dónde llega.»
-- Si el dato es mayor de lo que dijo: «El estudio dice que no llega.»
-- Si es menor: «El estudio dice otra cosa.»
-- Para que lo sienta: Michael, según el estudio tus ahorros se acaban a los **85 años** cuando tu objetivo es jubilarte a los 58. Los ingresos garantizados cubren el 34% del gasto previsto.
-- Salida: Tu plan trae un paso para esto, y solo con él la nota pasa de 26 a 62.
-- Escrito por el LLM: q, siente
+- Plan figure: **until age 85** your savings last (bad news)
+- Source: `key_metrics.facts.retirement`
+- If they get it right: “You saw it coming. Look how far it goes.”
+- If the figure is higher than they said: “The report says it falls short.”
+- If it’s lower: “The report says otherwise.”
+- To make them feel it: Michael, according to the report your savings run out at **age 85**, while your goal is to retire at 58. Guaranteed income covers 34% of projected spending.
+- Way out: Your plan has a step for this, and with it alone the score goes from 26 to 62.
+- Written by the LLM: q, siente
 
-### 3. Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu estudio?
+### 3. From 0 to 100, what Financial Health score do you think your report gives you?
 
-- Dato del plan: **26** de 100, hoy (mala noticia)
-- Origen: `score.published_score · score.pillars`
-- Si acierta: «Lo tenías claro.»
-- Si el dato es mayor de lo que dijo: «Mejor de lo que pensabas.»
-- Si es menor: «Más baja de lo que pensabas.»
-- Para que lo sienta: Lo que más tira hacia abajo: **Ahorro** (0 de 100). Lo que mejor tienes: **Deudas** (78 de 100).
-- Salida: Con los pasos de tu plan llega a 62.
-- Escrito por el LLM: q
+- Plan figure: **26** out of 100, today (bad news)
+- Source: `score.published_score · score.pillars`
+- If they get it right: “You knew it.”
+- If the figure is higher than they said: “Better than you thought.”
+- If it’s lower: “Lower than you thought.”
+- To make them feel it: Your score today is **26 out of 100**, Michael. It sums up that the order of your money (house, emergency fund, savings) needs sorting out.
+- Way out: With the steps in your plan, it reaches 62.
+- Written by the LLM: q, siente
 
-### 4. Pagas 200 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?
+### 4. You pay $200 a month on your credit card. How much of that goes to interest?
 
-- Dato del plan: **58 $** de cada 200 $, en intereses (buena noticia)
-- Origen: `profile.liabilities · key_metrics.debtManagement.creditCardDebt`. Cuenta nuestra: 58 $ de 200 $, redondeado a décimas
-- Si acierta: «Eso es. Aquí la deuda sí baja.»
-- Si el dato es mayor de lo que dijo: «Algo más de lo que pensabas, pero la deuda baja.»
-- Si es menor: «Menos de lo que temías.»
-- Para que lo sienta: De tus 200 $ al mes, **58 $** se van en intereses. Esa porción frena la reducción del saldo y el alivio mensual.
-- Salida: Tu plan dice que sigas pagándola: va por buen camino.
-- Escrito por el LLM: q, siente
+- Plan figure: **$58** of every $200 goes to interest (good news)
+- Source: `profile.liabilities · key_metrics.debtManagement.creditCardDebt`. Our calculation: $58 of $200, rounded to one decimal
+- If they get it right: “That’s right. Here the debt does go down.”
+- If the figure is higher than they said: “A bit more than you thought, but the debt is going down.”
+- If it’s lower: “Less than you feared.”
+- To make them feel it: Of your $200 a month, **$58** goes to interest. That portion slows down paying off the balance and the monthly relief.
+- Way out: Your plan says to keep paying it: it’s on track.
+- Written by the LLM: q, siente
 
-## Pasos del plan
+## Plan steps
 
-| Paso | Quién | Nota tras el paso (solo) |
+| Step | Who | Score after the step (alone) |
 |---|---|---|
-| Seguro extra de responsabilidad civil | Con el asesor | 31 |
-| Sacar menos de tus ahorros al jubilarte | Con el asesor | 62 |
-| Subir la parte de tus inversiones que busca crecer | Con el asesor | 31 |
+| Extra liability cover | With the advisor | 31 |
+| Withdraw less from your savings in retirement | With the advisor | 62 |
+| Raise the growth share of your investments | With the advisor | 31 |
 
-El plan no trae la nota de varios pasos juntos; la app no la inventa.
+The plan doesn’t give the score for several steps together; the app doesn’t invent it.
 
-## De hoy a la jubilación
+## From today to retirement
 
-- Hoy: Nota 26
-- Paso 1: Seguro extra de responsabilidad civil
-- Paso 2: Sacar menos de tus ahorros al jubilarte
-- Paso 3: Subir la parte de tus inversiones que busca crecer
-- 2027: La casa (550.000 $)
-- 2028: Se acaba la tarjeta
-- 2047: Jubilación
-- 2075: Aquí se acaban los ahorros (A los 85 años, según tu estudio)
+- Today: Score 26
+- Step 1: Extra liability cover
+- Step 2: Withdraw less from your savings in retirement
+- Step 3: Raise the growth share of your investments
+- 2027: The home ($550,000)
+- 2028: Card paid off
+- 2047: Retirement
+- 2075: Savings run out here (At age 85, according to your report)
 
-## Para el asesor
+## For the advisor
 
-- ¿Podemos comprar la casa y mantener el colchón?
-- ¿Qué tendría que cambiar para que me lleguen los ahorros?
+- Can we buy the house and keep the emergency fund?
+- What would have to change for my savings to last?
+- How much would it cost to raise my insurance or add an umbrella policy?
 
-## Respuesta completa del LLM
+## Full LLM response
 
 ```json
 {
-  "lectura": "Le importa poder comprar la casa sin quedarse sin colchón y, al mismo tiempo, no recortar su jubilación. Lo que más le moverá es ver cuántos meses de gastos cubre su efectivo. También reaccionará fuerte al dato sobre hasta cuándo duran sus ahorros.",
+  "lectura": "He cares about being able to buy the house without draining his emergency fund, while not cutting back on his retirement. What will move him most is seeing how many months of expenses his cash covers. He will also react strongly to how long his savings last.",
   "orden": [
     "colchon",
     "jubilacion",
     "nota",
     "tarjeta_interes"
   ],
-  "porque_orden": "Primero la liquidez y la casa, luego la jubilación; cerramos con la nota y una buena noticia de la tarjeta",
+  "porque_orden": "Liquidity and the house first, then retirement; we close with the score and good news on the credit card",
   "frases": [
-    "Tener el dinero para la casa",
-    "No quedarme corto para jubilarme",
-    "Saber si voy por buen camino",
-    "Pagar menos en la tarjeta"
+    "Having the money for the house",
+    "Not falling short for retirement",
+    "Knowing if I'm on the right track",
+    "Paying less on the credit card"
   ],
   "ganancias": [
-    "Dormiría más tranquilo por las mañanas",
-    "Podría planear mi retiro con calma",
-    "Vería sentido a lo que ahorro",
-    "Tendría más margen mensual"
+    "I'd sleep better at night",
+    "I could plan my retirement calmly",
+    "I'd see the point of what I save",
+    "I'd have more room each month"
   ],
   "abiertas": [
-    "¿Podemos comprar la casa y mantener el colchón?",
-    "¿Qué tendría que cambiar para que me lleguen los ahorros?",
-    "¿Cuánto costaría subir el seguro o añadir un umbrella?"
+    "Can we buy the house and keep the emergency fund?",
+    "What would have to change for my savings to last?",
+    "How much would it cost to raise my insurance or add an umbrella policy?"
   ],
   "preguntas": {
     "colchon": {
-      "q": "Si mañana te quedaras sin ingresos, ¿cuántos meses de gastos crees que cubre tu efectivo?",
-      "cerca": "Tenías una idea parecida",
-      "mas": "Son {dif} meses más que dijiste ({tu})",
-      "menos": "Menos de lo que pensabas: {dif} meses menos ({tu})",
-      "siente": "Michael, tu efectivo cubre **3,2 meses** de gastos básicos. La reserva recomendada es entre 5 y 6 meses; si apartas los objetivos a corto plazo, los meses cubiertos pasan a **0**.",
-      "salida": "Ver con el asesor cómo encajar la casa y el colchón"
+      "q": "If your income stopped tomorrow, how many months of expenses do you think your cash covers?",
+      "cerca": "You had a similar idea",
+      "mas": "That's more months than you said ({tu})",
+      "menos": "Less than you thought ({tu})",
+      "siente": "Michael, your cash covers **3.2 months** of essential expenses. The recommended reserve is 5 to 6 months; if you set aside your short-term goals, the months covered drop to **0**.",
+      "salida": "Work out with your advisor how the house and the emergency fund fit together"
     },
     "jubilacion": {
-      "q": "¿Te llega para jubilarte a los 58 y vivir de ello?",
-      "cerca": "Tu intuición estaba cerca",
-      "mas": "Es {dif} mejor de lo que pensabas ({tu})",
-      "menos": "Es peor de lo que pensabas: {dif} ({tu})",
-      "siente": "Michael, según el plan tus ahorros se acaban a los **85 años** cuando tu objetivo es jubilarte a los 58. Los ingresos garantizados cubren el 34% del gasto previsto.",
-      "salida": "Sacar menos de tus ahorros al jubilarte"
+      "q": "Do you have enough to retire at 58 and live on it?",
+      "cerca": "Your instinct was close",
+      "mas": "It's better than you thought ({tu})",
+      "menos": "It's worse than you thought ({tu})",
+      "siente": "Michael, according to the plan your savings run out at **age 85**, while your goal is to retire at 58. Guaranteed income covers 34% of projected spending.",
+      "salida": "Draw less from your savings in retirement"
     },
     "nota": {
-      "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?",
-      "cerca": "No estabas lejos",
-      "mas": "Son {dif} puntos más de lo que dijiste ({tu})",
-      "menos": "Son {dif} puntos menos de lo que dijiste ({tu})",
-      "siente": "Tu nota hoy es **26 de 100**, Michael. Eso resume que la secuencia del dinero —casa, colchón, ahorro— necesita ordenarse.",
-      "salida": "Subir la parte de tus inversiones que busca crecer"
+      "q": "From 0 to 100, what Financial Health score do you think your plan gives you?",
+      "cerca": "You weren't far off",
+      "mas": "That's more points than you said ({tu})",
+      "menos": "That's fewer points than you said ({tu})",
+      "siente": "Your score today is **26 out of 100**, Michael. It sums up that the order of your money (house, emergency fund, savings) needs sorting out.",
+      "salida": "Increase the growth-oriented part of your investments"
     },
     "tarjeta_interes": {
-      "q": "Pagas 200 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?",
-      "cerca": "Lo tenías claro",
-      "mas": "Se van {dif} $ más en intereses de lo que dijiste ({tu})",
-      "menos": "Menos intereses de lo que pensabas: {dif} $ ({tu})",
-      "siente": "De tus 200 $ al mes, **58 $** se van en intereses. Esa porción frena la reducción del saldo y el alivio mensual.",
-      "salida": "Hablar con el asesor para priorizar pagos y ver opciones"
+      "q": "You pay $200 a month on your credit card. How much of that goes to interest?",
+      "cerca": "You knew it well",
+      "mas": "More goes to interest than you said ({tu})",
+      "menos": "Less interest than you thought ({tu})",
+      "siente": "Of your $200 a month, **$58** goes to interest. That portion slows down paying off the balance and the monthly relief.",
+      "salida": "Talk to your advisor to prioritize payments and look at options"
     }
   }
 }

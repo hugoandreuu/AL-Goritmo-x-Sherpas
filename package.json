@@ -1,7 +1,7 @@
 {
   "name": "al-goritmo-x-sherpas",
   "private": true,
-  "description": "Vuestro plan de futuro: el plan de cada familia, contado a partir de sus datos en Sherpas y de lo que contesta.",
+  "description": "Your future plan: each family’s plan, told from their Sherpas data and their answers.",
   "type": "module",
   "engines": {
     "node": ">=20"

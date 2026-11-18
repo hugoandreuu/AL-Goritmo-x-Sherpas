@@ -3,63 +3,63 @@
  "fecha": "2026-11-14",
  "datos": "mcp",
  "respuesta": {
-  "lectura": "Samantha prioriza proteger a Ethan y Ava y asegurarse de tener tranquilidad a largo plazo. Lo que más le moverá es saber hasta cuándo le duran los ahorros. También le interesará la concentración de sus inversiones y confirmar que su colchón es suficiente.",
+  "lectura": "Samantha's priority is protecting Ethan and Ava and making sure she has long-term peace of mind. What will move her most is knowing how long her savings last. She will also care about the concentration of her investments and confirming that her emergency fund is enough.",
   "orden": [
    "jubilacion",
    "concentracion",
    "colchon",
    "nota"
   ],
-  "porque_orden": "Primero toca lo más crítico (la jubilación), luego la inversión concreta que le preocupa, después una buena noticia sobre su colchón y al final el resultado global.",
+  "porque_orden": "First the most critical point (retirement), then the specific investment that worries her, then good news about her emergency fund, and finally the overall result.",
   "frases": [
-   "Que Ethan y Ava estén cubiertos",
-   "Tener suficiente para jubilarme",
-   "No quedarme sin efectivo",
-   "Que no dependa de un solo fondo"
+   "That Ethan and Ava are covered",
+   "Having enough to retire",
+   "Not running out of cash",
+   "Not depending on a single fund"
   ],
   "ganancias": [
-   "Dormiría sin miedo al dinero futuro",
-   "Podría planear viajes sin agobios",
-   "Pagaría la universidad sin tensiones",
-   "Revisaría inversiones con calma"
+   "I'd sleep without fear about future money",
+   "I could plan trips without stress",
+   "I'd pay for college without strain",
+   "I'd review my investments calmly"
   ],
   "abiertas": [
-   "¿Cómo priorizamos retiro o universidad?",
-   "¿Podemos reducir mi concentración sin perder rendimiento?",
-   "¿Qué tendría que ver contigo en la reunión"
+   "How do we prioritize retirement or college?",
+   "Can we reduce my concentration without losing returns?",
+   "What should I go over with you in the meeting?"
   ],
   "preguntas": {
    "jubilacion": {
-    "q": "¿Te llega para jubilarte a los 65 y vivir de ello?",
-    "cerca": "Casi: no llega para toda la jubilación",
-    "mas": "Mejor de lo que pensabas {tu}",
-    "menos": "Peor de lo que pensabas {tu}",
-    "siente": "Con este plan, tus ahorros acaban a **73 años**. Eso deja parte de tus gastos de jubilación sin cubrir más adelante.",
-    "salida": "Repartir mejor tus inversiones"
+    "q": "Do you have enough to retire at 65 and live on it?",
+    "cerca": "Almost: it doesn't last the whole retirement",
+    "mas": "Better than you thought {tu}",
+    "menos": "Worse than you thought {tu}",
+    "siente": "With this plan, your savings run out at **age 73**. That leaves part of your retirement expenses uncovered later on.",
+    "salida": "Spread your investments better"
    },
    "concentracion": {
-    "q": "De todo lo que tienes invertido, ¿qué parte está en un solo fondo?",
-    "cerca": "Eso concentra mucho en un solo fondo",
-    "mas": "Hay más exposición de la que creías {tu}",
-    "menos": "Menos de lo que pensabas {tu}",
-    "siente": "Hoy tienes **39 %** de lo invertido en un solo fondo, VTI. El plan propone dejarlo en **25 %**, para no depender tanto de una sola posición y dar más equilibrio a tu cartera.",
-    "salida": "Bajar un poco el riesgo de tus inversiones"
+    "q": "Of everything you have invested, what share is in a single fund?",
+    "cerca": "That concentrates a lot in a single fund",
+    "mas": "There's more exposure than you thought {tu}",
+    "menos": "Less than you thought {tu}",
+    "siente": "Today **39%** of what you've invested is in a single fund, VTI. The plan proposes bringing it to **25%**, so you don't depend so much on one position and your portfolio is better balanced.",
+    "salida": "Lower the risk of your investments a little"
    },
    "colchon": {
-    "q": "Si mañana te quedaras sin ingresos, ¿cuántos meses de gastos básicos cubre tu efectivo?",
-    "cerca": "Tienes más colchón del esperado",
-    "mas": "Tienes más margen del que pensabas {tu}",
-    "menos": "Tienes menos margen del que pensabas {tu}",
-    "siente": "Tu efectivo cubre **7,9 meses** de gastos básicos, por encima de la reserva recomendada. Eso te da margen para afrontar los pagos de Ethan y los imprevistos sin agobios inmediatos.",
-    "salida": "Asegurar tu casa"
+    "q": "If your income stopped tomorrow, how many months of essential expenses does your cash cover?",
+    "cerca": "You have more of an emergency fund than expected",
+    "mas": "You have more room than you thought {tu}",
+    "menos": "You have less room than you thought {tu}",
+    "siente": "Your cash covers **7.9 months** of essential expenses, above the recommended reserve. That gives you room to handle Ethan's payments and the unexpected without immediate stress.",
+    "salida": "Insure your home"
    },
    "nota": {
-    "q": "Del 0 al 100, ¿qué nota de salud financiera crees que te pone tu plan?",
-    "cerca": "Vas muy cerca de la nota real",
-    "mas": "Tu percepción es mejor que la nota real {tu}",
-    "menos": "Tu percepción es peor que la nota real {tu}",
-    "siente": "Tu plan tiene una salud de **82 de 100** hoy. Con los pasos del plan la nota puede subir y dar más certidumbre sobre cómo afrontar retiro y estudios de los niños.",
-    "salida": "Asegurar tu casa"
+    "q": "From 0 to 100, what Financial Health score do you think your plan gives you?",
+    "cerca": "You're very close to the real score",
+    "mas": "Your perception is better than the real score {tu}",
+    "menos": "Your perception is worse than the real score {tu}",
+    "siente": "Your plan's health today is **82 out of 100**. With the plan's steps the score can go up and give more certainty about handling retirement and the kids' education.",
+    "salida": "Insure your home"
    }
   }
  }

@@ -1,166 +1,162 @@
-# Estudio: Daniel y Emily Johnson
+# Study: Daniel and Emily Johnson
 
-- Caso: `daniel-emily-johnson`
-- Datos: archivos de `cases/` (los mismos JSON que sirve el MCP)
-- Frases: escritas por el LLM de Sherpas (`gpt-5-mini`, el 2026-11-14), con control de cifras
-- Generado: 2026-11-17
+- Case: `daniel-emily-johnson`
+- Data: `cases/` files (the same JSON the MCP serves)
+- Phrases: written by the Sherpas LLM (`gpt-5-mini`, on 2026-11-14), with figure checks
+- Generated: 2026-11-18
 
-## Avisos
+## What the LLM reads about this family
 
-- tarjeta_interes.siente: descartado por jerga o rayas
+Daniel and Emily are driven above all by protecting the kids and having a liquid emergency fund. They worry about how much their insurance covers and how long their cash lasts before they have to touch it.
 
-## Lo que lee el LLM de esta familia
+Why this order: We start with protection, then liquidity, the cost of the debt, and we close with the news about retirement.
 
-A Daniel y Emily les mueve ante todo proteger a los niños y tener colchón líquido. Les preocupa cuánto cubren los seguros y cuánto aguanta su efectivo antes de tocarlo.
+## Score
 
-Por qué este orden: Empezamos por la protección, luego la liquidez, el coste de la deuda y cerramos con la noticia sobre la jubilación.
+Today 52 out of 100. With the plan’s steps, 60.
 
-## Nota
-
-Hoy 52 de 100. Con los pasos del plan, 60.
-
-| Área | Nota |
+| Area | Score |
 |---|---|
-| Ahorro | 54 |
-| Deudas | 76 |
-| Inversiones | 51 |
-| Colchón | 85 |
-| Seguros | 0 |
+| Savings | 54 |
+| Debt | 76 |
+| Investments | 51 |
+| Emergency fund | 85 |
+| Insurance | 0 |
 
-## Preguntas, en orden
+## Questions, in order
 
-### 1. Si a uno de los dos le pasara algo, ¿cuántos años de gastos de casa tendrían cubiertos Oliver (11) y Sophia (9)?
+### 1. If something happened to one of you, how many years of household expenses would Oliver (11) and Sophia (9) have covered?
 
-- Dato del plan: **unos 3 años** de gastos de casa (mala noticia)
-- Origen: `key_metrics.protection.lifeInsurance · ratios.investableAssetLevel.annualExpenses`. Cuenta nuestra: seguro de vida de hoy ÷ gastos de casa al año
-- Si acierta: «Habéis estado cerca. Mirad hasta dónde llega.»
-- Si el dato es mayor de lo que dijo: «Algo más, pero lejos de lo que hace falta.»
-- Si es menor: «Mucho menos de lo que pensabais.»
-- Para que lo sienta: Hoy tenéis cubiertos unos **3 años** de gastos de casa. Con eso, Oliver, con 11 años, estaría protegido hasta los 14; a Sophia le quedaría parte de su infancia cubierta.
-- Salida: Tiene arreglo y se ve con vuestro asesor: él trae los presupuestos.
-- Escrito por el LLM: q, siente
+- Plan figure: **about 3 years** of household expenses (bad news)
+- Source: `key_metrics.protection.lifeInsurance · ratios.investableAssetLevel.annualExpenses`. Our calculation: life cover today ÷ household expenses per year
+- If they get it right: “You were close. Look how far it goes.”
+- If the figure is higher than they said: “A bit more, but far from what’s needed.”
+- If it’s lower: “Much less than you thought.”
+- To make them feel it: Today you have about **3 years** of household expenses covered. With that, Oliver, at 11, would be protected until 14; Sophia would have part of her childhood covered.
+- Way out: It can be fixed, and that’s for your advisor: they bring the quotes.
+- Written by the LLM: q, siente
 
-### 2. Si mañana os quedarais sin ingresos, ¿cuántos meses de gastos básicos cubre vuestro efectivo?
+### 2. If your income stopped tomorrow, how many months of essential expenses does your cash cover?
 
-- Dato del plan: **1,4 meses** de gastos básicos (mala noticia)
-- Origen: `key_metrics.facts.cash`
-- Si acierta: «Lo teníais claro. Mirad lo que recomienda el plan.»
-- Si el dato es mayor de lo que dijo: «Algo más de lo que pensabais, pero no llega a lo recomendado.»
-- Si es menor: «Menos de lo que pensabais.»
-- Para que lo sienta: El efectivo accesible solo cubre **1,4 meses** de gastos básicos. Con esa cifra, una parada de ingresos os dejaría expuestos y complicaría la vacación prevista.
-- Salida: Vuestro plan propone acercar ese colchón a lo recomendado. El cómo se ve con vuestro asesor.
-- Escrito por el LLM: q, siente
+- Plan figure: **1.4 months** of essential expenses (bad news)
+- Source: `key_metrics.facts.cash`
+- If they get it right: “You knew it. Look at what the plan recommends.”
+- If the figure is higher than they said: “A bit more than you thought, but short of what’s recommended.”
+- If it’s lower: “Less than you thought.”
+- To make them feel it: Your accessible cash covers only **1.4 months** of essential expenses. At that level, a pause in income would leave you exposed and complicate the planned vacation.
+- Way out: Your plan proposes bringing that emergency fund closer to what’s recommended. How is something to go over with your advisor.
+- Written by the LLM: q, siente
 
-### 3. Pagáis 450 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?
+### 3. You pay $450 a month on your credit card. How much of that goes to interest?
 
-- Dato del plan: **374 $** de cada 450 $, en intereses (mala noticia)
-- Origen: `profile.liabilities · key_metrics.debtManagement.creditCardDebt`. Cuenta nuestra: 374 $ de 450 $, redondeado a décimas
-- Si acierta: «Lo teníais claro. Mirad a dónde se va.»
-- Si el dato es mayor de lo que dijo: «Son {dif} más al mes de lo que pensabais.»
-- Si es menor: «Menos de lo que temíais. Aun así, mirad a dónde se va.»
-- Para que lo sienta: De cada **450 $** que pagáis, **374 $** son intereses. La deuda casi no baja. Así dura hasta **enero de 2034**.
-- Salida: Vuestro estudio la señala como vuestra deuda más cara. Cómo subir el pago se ve con vuestro asesor.
-- Escrito por el LLM: q
+- Plan figure: **$374** of every $450 goes to interest (bad news)
+- Source: `profile.liabilities · key_metrics.debtManagement.creditCardDebt`. Our calculation: $374 of $450, rounded to one decimal
+- If they get it right: “You knew it. Look where it goes.”
+- If the figure is higher than they said: “That’s {dif} more a month than you thought.”
+- If it’s lower: “Less than you feared. Even so, look where it goes.”
+- To make them feel it: Of the $450 you pay each month, **$374** goes to interest. That way the debt barely goes down and the cost of credit weighs heavily on the cash you have available.
+- Way out: Your report flags it as your most expensive debt. How to raise the payment is something to go over with your advisor.
+- Written by the LLM: q, siente
 
-### 4. ¿Os llega para jubilaros a los 62 y 60 y vivir de ello?
+### 4. Do you have enough to retire at 62 and 60 and live on it?
 
-- Dato del plan: **Sí, llega** y al final del estudio quedan 260.272 $ (mala noticia)
-- Origen: `key_metrics.facts.retirement`
-- Si acierta: «Eso es. Llegáis.»
-- Si el dato es mayor de lo que dijo: «Mejor de lo que pensabais.»
-- Si es menor: «Llegáis, aunque con menos margen del que creíais.»
-- Para que lo sienta: Sí: la proyección llega y al final quedan **260.272 $**. Eso os da un pequeño colchón para imprevistos y algo de tranquilidad en la jubilación.
-- Salida: Llega, pero con poco margen: el plan calcula que a vuestras cuentas de jubilación les faltan 1,43 M$ (en dinero de hoy). Se ve con vuestro asesor.
-- Escrito por el LLM: q, siente
+- Plan figure: **Yes, it’s enough** and $260,272 is left at the end of the plan (bad news)
+- Source: `key_metrics.facts.retirement`
+- If they get it right: “That’s right. You’ll make it.”
+- If the figure is higher than they said: “Better than you thought.”
+- If it’s lower: “You’ll make it, but with less room than you thought.”
+- To make them feel it: Yes: the projection holds and **$260,272** is left at the end. That gives you a small cushion for the unexpected and some peace of mind in retirement.
+- Way out: It works, but with little room: the plan calculates that your retirement accounts are $1.43M short (in today’s dollars). That’s for your advisor.
+- Written by the LLM: q, siente
 
-Preguntas posibles que no se usan en este caso: Nota de salud financiera (52 de 100, hoy); Año en que se acaba la tarjeta (enero de 2034 pagando 450 $ al mes).
+Possible questions not used in this case: Financial Health score (52 out of 100, today); Year the card is paid off (January 2034 paying $450 a month).
 
-## Pasos del plan
+## Plan steps
 
-| Paso | Quién | Nota tras el paso (solo) |
+| Step | Who | Score after the step (alone) |
 |---|---|---|
-| Subir el seguro de vida | Con el asesor | 57 |
-| Seguro extra de responsabilidad civil | Con el asesor | 56 |
-| Ahorrar 15.032 $ más al año | La familia | 55 |
+| Add life cover | With the advisor | 57 |
+| Extra liability cover | With the advisor | 56 |
+| Save $15,032 more a year | The family | 55 |
 
-Combinaciones que trae el plan: Subir el seguro de vida + Seguro extra de responsabilidad civil = 60; Subir el seguro de vida + Ahorrar 15.032 $ más al año = 60; Subir el seguro de vida + Ahorrar 15.032 $ más al año + Seguro extra de responsabilidad civil = 60; Ahorrar 15.032 $ más al año + Seguro extra de responsabilidad civil = 59.
+Combinations the plan includes: Add life cover + Extra liability cover = 60; Add life cover + Save $15,032 more a year = 60; Add life cover + Save $15,032 more a year + Extra liability cover = 60; Save $15,032 more a year + Extra liability cover = 59.
 
-## De hoy a la jubilación
+## From today to retirement
 
-- Hoy: Nota 52
-- Paso 1: Subir el seguro de vida
-- Paso 2: Seguro extra de responsabilidad civil
-- Paso 3: Ahorrar 15.032 $ más al año
-- 2033: Universidad de Oliver
-- 2034: Sin cambios, la tarjeta dura hasta aquí (Oliver, 19 · Sophia, 17)
-- 2035: Universidad de Sophia
-- 2044: Jubilación (Los ahorros llegan hasta el final)
+- Today: Score 52
+- Step 1: Add life cover
+- Step 2: Extra liability cover
+- Step 3: Save $15,032 more a year
+- 2033: Oliver’s college
+- 2034: With no changes, the card lasts until here (Oliver, 19 · Sophia, 17)
+- 2035: Sophia’s college
+- 2044: Retirement (Savings last to the end)
 
-## Para el asesor
+## For the advisor
 
-- ¿Y si uno de los dos cambia de trabajo, qué pasa con los seguros?
-- ¿Y si priorizamos seguro de vida frente a ahorrar más?
+- What if one of us changes jobs, what happens to our insurance?
+- What if we prioritize life insurance over saving more?
 
-## Respuesta completa del LLM
+## Full LLM response
 
 ```json
 {
-  "lectura": "A Daniel y Emily les mueve ante todo proteger a los niños y tener colchón líquido. Les preocupa cuánto cubren los seguros y cuánto aguanta su efectivo antes de tocarlo.",
+  "lectura": "Daniel and Emily are driven above all by protecting the kids and having a liquid emergency fund. They worry about how much their insurance covers and how long their cash lasts before they have to touch it.",
   "orden": [
     "vida",
     "colchon",
     "tarjeta_interes",
     "jubilacion"
   ],
-  "porque_orden": "Empezamos por la protección, luego la liquidez, el coste de la deuda y cerramos con la noticia sobre la jubilación.",
+  "porque_orden": "We start with protection, then liquidity, the cost of the debt, and we close with the news about retirement.",
   "frases": [
-    "Nos importa proteger a Oliver y a Sophia",
-    "Queremos tener efectivo para imprevistos",
-    "Nos molesta pagar tanto en intereses",
-    "Que lleguemos tranquilos a la jubilación"
+    "We care about protecting Oliver and Sophia",
+    "We want cash for the unexpected",
+    "It bothers us to pay so much in interest",
+    "Reaching retirement with peace of mind"
   ],
   "ganancias": [
-    "Dormiríamos más tranquilos por la noche",
-    "Tendríamos margen para un imprevisto",
-    "Pagaríamos menos en intereses",
-    "Podríamos disfrutar la jubilación"
+    "We'd sleep more easily at night",
+    "We'd have room for the unexpected",
+    "We'd pay less in interest",
+    "We could enjoy retirement"
   ],
   "abiertas": [
-    "¿Y si uno de los dos cambia de trabajo, qué pasa con los seguros?",
-    "¿Y si priorizamos seguro de vida frente a ahorrar más?"
+    "What if one of us changes jobs, what happens to our insurance?",
+    "What if we prioritize life insurance over saving more?"
   ],
   "preguntas": {
     "vida": {
-      "q": "Si a uno de los dos le pasara algo, ¿cuántos años de gastos de casa tendrían cubiertos Oliver (11) y Sophia (9)?",
-      "cerca": "Lo habíais calculado bien",
-      "mas": "Son {dif} años más de lo que dijisteis",
-      "menos": "Menos años de los que pensabais",
-      "siente": "Hoy tenéis cubiertos unos **3 años** de gastos de casa. Con eso, Oliver, con 11 años, estaría protegido hasta los 14; a Sophia le quedaría parte de su infancia cubierta.",
-      "salida": "Subir el seguro de vida"
+      "q": "If something happened to one of you, how many years of household expenses would Oliver (11) and Sophia (9) have covered?",
+      "cerca": "You had it worked out",
+      "mas": "That's more years than you said",
+      "menos": "Fewer years than you thought",
+      "siente": "Today you have about **3 years** of household expenses covered. With that, Oliver, at 11, would be protected until 14; Sophia would have part of her childhood covered.",
+      "salida": "Increase your life insurance"
     },
     "colchon": {
-      "q": "Si mañana os quedarais sin ingresos, ¿cuántos meses de gastos básicos cubre vuestro efectivo?",
-      "cerca": "Lo sospechabais",
-      "mas": "Son {dif} meses más que dijisteis",
-      "menos": "Menos meses de lo que pensabais",
-      "siente": "El efectivo accesible solo cubre **1,4 meses** de gastos básicos. Con esa cifra, una parada de ingresos os dejaría expuestos y complicaría la vacación prevista.",
-      "salida": "Seguro extra de responsabilidad civil"
+      "q": "If your income stopped tomorrow, how many months of essential expenses does your cash cover?",
+      "cerca": "You suspected it",
+      "mas": "That's more months than you said",
+      "menos": "Fewer months than you thought",
+      "siente": "Your accessible cash covers only **1.4 months** of essential expenses. At that level, a pause in income would leave you exposed and complicate the planned vacation.",
+      "salida": "Extra liability insurance"
     },
     "tarjeta_interes": {
-      "q": "Pagáis 450 $ al mes a la tarjeta. ¿Cuánto de eso se va en intereses?",
-      "cerca": "Lo notabais en los pagos",
-      "mas": "Son {dif} $ más al mes de lo que dijisteis",
-      "menos": "Menos de lo que imaginabais",
-      "siente": "De los 450 $ que pagáis cada mes, **374 $** van a intereses. Así la deuda apenas baja y el coste del crédito pesa mucho en vuestra liquidez.",
-      "salida": "Seguro extra de responsabilidad civil"
+      "q": "You pay $450 a month on your credit card. How much of that goes to interest?",
+      "cerca": "You could feel it in the payments",
+      "mas": "More a month than you said",
+      "menos": "Less than you imagined",
+      "siente": "Of the $450 you pay each month, **$374** goes to interest. That way the debt barely goes down and the cost of credit weighs heavily on the cash you have available.",
+      "salida": "Extra liability insurance"
     },
     "jubilacion": {
-      "q": "¿Os llega para jubilaros a los 62 y 60 y vivir de ello?",
-      "cerca": "Lo teníais claro",
-      "mas": "Mejor de lo que pensabais: {dif}",
-      "menos": "Peor de lo que pensabais: {dif}",
-      "siente": "Sí: la proyección llega y al final quedan **260.272 $**. Eso os da un pequeño colchón para imprevistos y algo de tranquilidad en la jubilación.",
-      "salida": "Subir el seguro de vida"
+      "q": "Do you have enough to retire at 62 and 60 and live on it?",
+      "cerca": "You had it clear",
+      "mas": "Better than you thought",
+      "menos": "Worse than you thought",
+      "siente": "Yes: the projection holds and **$260,272** is left at the end. That gives you a small cushion for the unexpected and some peace of mind in retirement.",
+      "salida": "Increase your life insurance"
     }
   }
 }

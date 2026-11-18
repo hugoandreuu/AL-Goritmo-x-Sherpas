@@ -1,144 +1,144 @@
 {
   "fh.summary_main": [
-    { "c": "280.000 $", "t": "al año entre los dos sueldos; 511.000 $ de patrimonio neto.", "k": "bien" },
-    { "c": "15.032 $", "t": "os sobran al año, y de ahí tiran jubilación, colchón, seguros y universidad.", "k": "ojo" },
-    { "c": "34.165 $", "t": "más al año harían falta para la jubilación: más del doble de lo que sobra.", "k": "mal" },
-    { "c": "92.360 $", "t": "os faltan de efectivo. Seguros de vida bajos y sin umbrella.", "k": "mal" },
-    { "c": "27 %", "t": "de los ingresos van a vivienda y deudas: manejable.", "k": "bien" }
+    {"c": "$280,000", "t": "a year between both salaries; $511,000 of net worth.", "k": "bien"},
+    {"c": "$15,032", "t": "left over each year, and retirement, the emergency fund, insurance and college all draw on it.", "k": "ojo"},
+    {"c": "$34,165", "t": "more a year would be needed for retirement: more than double what's left over.", "k": "mal"},
+    {"c": "$92,360", "t": "short in cash. Low life insurance and no umbrella.", "k": "mal"},
+    {"c": "27%", "t": "of income goes to housing and debt: manageable.", "k": "bien"}
   ],
   "fh.summary_recommendations": [
-    { "t": "Primero, la protección: seguro de vida de los dos y responsabilidad civil.", "k": "rev" },
-    { "t": "Ir llenando el colchón hasta 8 a 9 meses de gastos básicos.", "k": "rev" },
-    { "t": "Empezar a ahorrar para la jubilación (hoy, 0 $) y preguntar por la aportación de la empresa.", "k": "rev" },
-    { "t": "La tarjeta al 24,9 % es la deuda más cara.", "k": "rev" },
-    { "t": "Decidir juntos cómo repartir el margen de cada año.", "k": "rev" }
+    {"t": "Protection first: life insurance for both of you and liability coverage.", "k": "rev"},
+    {"t": "Build the emergency fund up to 8 to 9 months of essential expenses.", "k": "rev"},
+    {"t": "Start saving for retirement (today, $0) and ask about the employer match.", "k": "rev"},
+    {"t": "The credit card at 24.9% is the most expensive debt.", "k": "rev"},
+    {"t": "Decide together how to split each year's margin.", "k": "rev"}
   ],
   "ia.summary_main": [
-    { "c": "1.427.456 $", "t": "le faltan a la jubilación; cerrarlo pide 34.165 $ más al año.", "k": "mal" },
-    { "c": "124.071 $", "t": "al año de gasto en la jubilación; 62.932 $ saldrían del ahorro.", "k": "info" },
-    { "c": "92.360 $", "t": "os faltan para el efectivo recomendado.", "k": "ojo" },
-    { "c": "54,79 %", "t": "de vuestro patrimonio equivale a los sueldos: dependéis mucho de ellos.", "k": "ojo" }
+    {"c": "$1,427,456", "t": "retirement shortfall; closing it takes $34,165 more a year.", "k": "mal"},
+    {"c": "$124,071", "t": "a year of spending in retirement; $62,932 would come from savings.", "k": "info"},
+    {"c": "$92,360", "t": "short of the recommended cash.", "k": "ojo"},
+    {"c": "54.79%", "t": "of your net worth equals your salaries: you depend heavily on them.", "k": "ojo"}
   ],
   "fh.retirement_short_observations": [
-    { "c": "91 años", "t": "llega el dinero, con 260.272 $ al final. Es una proyección.", "k": "bien" },
-    { "c": "49 %", "t": "del gasto (124.071 $ al año) lo cubren los ingresos; el resto, 62.932 $, el ahorro.", "k": "ojo" },
-    { "c": "0 $", "t": "aportáis hoy a la jubilación. Cada uno podría poner hasta 24.500 $ al año.", "k": "mal" },
-    { "t": "Emily se jubila a los 60 y Daniel a los 62, con perfiles de riesgo distintos.", "k": "info" }
+    {"c": "Age 91", "t": "the money lasts, with $260,272 at the end. It's a projection.", "k": "bien"},
+    {"c": "49%", "t": "of spending ($124,071 a year) is covered by income; the rest, $62,932, by savings.", "k": "ojo"},
+    {"c": "$0", "t": "contributed to retirement today. Each of you could put in up to $24,500 a year.", "k": "mal"},
+    {"t": "Emily retires at 60 and Daniel at 62, with different risk profiles.", "k": "info"}
   ],
   "fh.retirement_what_to_look_into": [
-    { "t": "Cómo repartir el poco margen entre jubilación y colchón.", "k": "rev" },
-    { "t": "Confirmar si la empresa hace aportación.", "k": "rev" }
+    {"t": "How to split the small margin between retirement and the emergency fund.", "k": "rev"},
+    {"t": "Confirm whether the employer makes a match.", "k": "rev"}
   ],
   "fh.assets_short_observations": [
-    { "c": "750.000 $", "t": "en casa, el 66,4 % de lo que tenéis; vuestra, solo 190.000 $.", "k": "info" },
-    { "c": "14.000 $", "t": "en efectivo, apenas el 1,2 %: lo más flojo.", "k": "mal" },
-    { "c": "250.000 $", "t": "en los dos 401(k), pero no entra nada cada año.", "k": "ojo" },
-    { "c": "60,2 %", "t": "en bolsa frente al 80,0 % objetivo.", "k": "ojo" }
+    {"c": "$750,000", "t": "in the home, 66.4% of what you have; your equity, only $190,000.", "k": "info"},
+    {"c": "$14,000", "t": "in cash, just 1.2%: the weakest point.", "k": "mal"},
+    {"c": "$250,000", "t": "in the two 401(k)s, but nothing goes in each year.", "k": "ojo"},
+    {"c": "60.2%", "t": "in stocks versus the 80.0% target.", "k": "ojo"}
   ],
   "fh.assets_what_to_look_into": [
-    { "t": "Empezar a aportar a los dos 401(k).", "k": "rev" },
-    { "t": "Si el 529 recibe lo que necesita cada año.", "k": "rev" },
-    { "t": "Una HSA, y si la empresa aporta.", "k": "rev" }
+    {"t": "Start contributing to both 401(k)s.", "k": "rev"},
+    {"t": "Whether the 529 gets what it needs each year.", "k": "rev"},
+    {"t": "An HSA, and whether the employer contributes.", "k": "rev"}
   ],
   "fh.debt_short_observations": [
-    { "c": "618.000 $", "t": "de deuda, casi todo hipoteca (560.000 $ al 6,5 %). Pesada, no crítica.", "k": "ojo" },
-    { "c": "27,2 %", "t": "de los ingresos va a vivienda y deudas, por debajo del 36 %.", "k": "bien" },
-    { "c": "24,9 %", "t": "de interés en la tarjeta de 18.000 $. A 450 $ al mes, se acaba en enero de 2034.", "k": "mal" },
-    { "c": "87.860 $", "t": "os faltan para la reserva mínima.", "k": "mal" }
+    {"c": "$618,000", "t": "of debt, almost all mortgage ($560,000 at 6.5%). Heavy, not critical.", "k": "ojo"},
+    {"c": "27.2%", "t": "of income goes to housing and debt, below 36%.", "k": "bien"},
+    {"c": "24.9%", "t": "interest on the $18,000 credit card. At $450 a month, it's paid off in January 2034.", "k": "mal"},
+    {"c": "$87,860", "t": "short of the minimum reserve.", "k": "mal"}
   ],
   "fh.debt_what_to_look_into": [
-    { "t": "Cómo encaja la hipoteca con el colchón y la jubilación.", "k": "rev" },
-    { "t": "Cuándo acabar la tarjeta al 24,9 % (hoy, enero de 2034).", "k": "rev" }
+    {"t": "How the mortgage fits with the emergency fund and retirement.", "k": "rev"},
+    {"t": "When to finish the credit card at 24.9% (today, January 2034).", "k": "rev"}
   ],
   "fh.savings_short_observations": [
-    { "c": "15.032 $", "t": "os sobran al año, un 5,4 % de los ingresos. Margen fino.", "k": "ojo" },
-    { "c": "1,4 meses", "t": "de gastos cubre el efectivo; se recomiendan 8 a 9.", "k": "mal" },
-    { "c": "34.165 $", "t": "más al año pide la jubilación: no sale solo del margen actual.", "k": "mal" },
-    { "c": "8.000 $", "t": "al año al 529 y 12.000 $ a la cuenta de bolsa.", "k": "info" }
+    {"c": "$15,032", "t": "left over each year, 5.4% of income. A thin margin.", "k": "ojo"},
+    {"c": "1.4 months", "t": "of expenses covered by cash; 8 to 9 are recommended.", "k": "mal"},
+    {"c": "$34,165", "t": "more a year for retirement: it can't come from today's margin alone.", "k": "mal"},
+    {"c": "$8,000", "t": "a year to the 529 and $12,000 to the brokerage account.", "k": "info"}
   ],
   "fh.savings_what_to_look_into": [
-    { "t": "Ir llenando el colchón.", "k": "rev" },
-    { "t": "Ahorrar más para la jubilación.", "k": "rev" },
-    { "t": "Confirmar si la empresa aporta.", "k": "rev" }
+    {"t": "Build up the emergency fund.", "k": "rev"},
+    {"t": "Save more for retirement.", "k": "rev"},
+    {"t": "Confirm whether the employer contributes.", "k": "rev"}
   ],
   "fh.protection_emergency_fund_short_observations": [
-    { "c": "19.000 $", "t": "cubren 1,4 meses; se recomiendan 106.860 $ a 120.218 $.", "k": "mal" },
-    { "c": "92.360 $", "t": "faltan contando las vacaciones de 4.500 $.", "k": "mal" },
-    { "c": "5.000 $", "t": "en un fondo monetario y nada de efectivo parado.", "k": "bien" }
+    {"c": "$19,000", "t": "covers 1.4 months; $106,860 to $120,218 is recommended.", "k": "mal"},
+    {"c": "$92,360", "t": "short, counting the $4,500 vacation.", "k": "mal"},
+    {"c": "$5,000", "t": "in a money market fund and no idle cash.", "k": "bien"}
   ],
   "fh.protection_intro": [
-    { "t": "Colchón, seguro de vida y responsabilidad civil: los tres tienen un hueco que se puede cerrar por pasos.", "k": "ojo" }
+    {"t": "Emergency fund, life insurance and liability coverage: all three have a gap that can be closed step by step.", "k": "ojo"}
   ],
   "fh.protection_life_insurance_short_observations": [
-    { "c": "1.350.000 $", "t": "le faltan a Daniel (tiene 250.000 $).", "k": "mal" },
-    { "c": "1.000.000 $", "t": "le faltan a Emily (tiene 200.000 $).", "k": "mal" },
-    { "t": "Dependéis de los dos sueldos: 160.000 $ y 120.000 $.", "k": "info" },
-    { "c": "120.000 $", "t": "de universidad para Oliver y Sophia, además de la hipoteca.", "k": "info" }
+    {"c": "$1,350,000", "t": "short for Daniel (he has $250,000).", "k": "mal"},
+    {"c": "$1,000,000", "t": "short for Emily (she has $200,000).", "k": "mal"},
+    {"t": "You depend on both salaries: $160,000 and $120,000.", "k": "info"},
+    {"c": "$120,000", "t": "of college for Oliver and Sophia, on top of the mortgage.", "k": "info"}
   ],
   "fh.protection_umbrella_short_observations": [
-    { "c": "0 $", "t": "de responsabilidad civil frente a 1.000.000 $ recomendado.", "k": "mal" },
-    { "t": "Una demanda podría llegar a casa, coche y 344.000 $ líquidos.", "k": "ojo" },
-    { "t": "Casa y Toyota aparecen sin seguro en los datos: confirmarlo.", "k": "rev" }
+    {"c": "$0", "t": "of liability coverage versus $1,000,000 recommended.", "k": "mal"},
+    {"t": "A lawsuit could reach the home, the car and $344,000 in liquid assets.", "k": "ojo"},
+    {"t": "The home and the Toyota show no insurance in the data: confirm it.", "k": "rev"}
   ],
   "ia.snapshot_main": [
-    { "c": "511.000 $", "t": "de patrimonio neto, con casa, efectivo e inversiones.", "k": "info" },
-    { "t": "Los sueldos pesan mucho y el efectivo es poco para una reserva.", "k": "ojo" }
+    {"c": "$511,000", "t": "of net worth, with the home, cash and investments.", "k": "info"},
+    {"t": "Salaries weigh a lot and there's little cash for a reserve.", "k": "ojo"}
   ],
   "ia.portfolio_today_intro": [
-    { "t": "Todo depende de dos sueldos y los colchones que los protegen aún son finos.", "k": "ojo" },
-    { "t": "Ahorro, reserva y seguros tiran del mismo margen.", "k": "info" }
+    {"t": "Everything depends on two salaries, and the cushions protecting them are still thin.", "k": "ojo"},
+    {"t": "Savings, reserve and insurance all pull on the same margin.", "k": "info"}
   ],
   "ia.portfolio_today_what_it_needs_to_do": [
-    { "c": "1.427.456 $", "t": "de hueco de jubilación; los 401(k) tienen 250.000 $ y no reciben nada.", "k": "mal" },
-    { "c": "92.360 $", "t": "de efectivo para no vender inversiones en mal momento.", "k": "ojo" },
-    { "c": "106.552 $", "t": "le faltan a la universidad; el 529 tiene 30.000 $.", "k": "ojo" },
-    { "c": "50.000 $", "t": "en la cuenta de bolsa, sin un fin decidido.", "k": "info" }
+    {"c": "$1,427,456", "t": "retirement gap; the 401(k)s hold $250,000 and receive nothing.", "k": "mal"},
+    {"c": "$92,360", "t": "of cash so you don't sell investments at a bad time.", "k": "ojo"},
+    {"c": "$106,552", "t": "short for college; the 529 holds $30,000.", "k": "ojo"},
+    {"c": "$50,000", "t": "in the brokerage account, with no set purpose.", "k": "info"}
   ],
   "ia.portfolio_today_what_its_actually_doing": [
-    { "c": "54,79 %", "t": "del patrimonio equivale a los sueldos: una pausa se nota rápido.", "k": "ojo" },
-    { "c": "92.360 $", "t": "de hueco de efectivo: un imprevisto obligaría a vender.", "k": "mal" },
-    { "c": "13,7 %", "t": "al año en 3 años; tecnología es el 35,6 % de la bolsa.", "k": "info" },
-    { "c": "24,9 %", "t": "de la tarjeta compite con la jubilación por el mismo dinero.", "k": "mal" }
+    {"c": "54.79%", "t": "of net worth equals your salaries: a pause is felt quickly.", "k": "ojo"},
+    {"c": "$92,360", "t": "cash gap: an unexpected expense would force selling.", "k": "mal"},
+    {"c": "13.7%", "t": "a year over 3 years; technology is 35.6% of stocks.", "k": "info"},
+    {"c": "24.9%", "t": "on the credit card competes with retirement for the same money.", "k": "mal"}
   ],
   "ia.portfolio_today_performance_timeline": [
-    { "c": "13,7 %", "t": "al año en 3 años, frente al 14,6 % de una cartera parecida.", "k": "info" },
-    { "c": "10,0 %", "t": "de peor caída, recuperada en 61 días.", "k": "bien" },
-    { "c": "87 %", "t": "de las subidas y 97 % de las bajadas del mercado.", "k": "ojo" },
-    { "t": "Es una sola ventana de tres años: no es una previsión.", "k": "info" }
+    {"c": "13.7%", "t": "a year over 3 years, versus 14.6% for a similar portfolio.", "k": "info"},
+    {"c": "10.0%", "t": "worst drop, recovered in 61 days.", "k": "bien"},
+    {"c": "87%", "t": "of market gains and 97% of market losses.", "k": "ojo"},
+    {"t": "It's a single three-year window: not a forecast.", "k": "info"}
   ],
   "ia.portfolio_today_whats_working": [
-    { "c": "15.032 $", "t": "de margen al año: los ingresos cubren lo que debéis.", "k": "bien" },
-    { "c": "23,2 %", "t": "de los ingresos va a deudas, dentro de lo normal.", "k": "bien" },
-    { "t": "Sin acciones sueltas: ninguna empresa decide vuestros resultados.", "k": "bien" }
+    {"c": "$15,032", "t": "margin a year: income covers what you owe.", "k": "bien"},
+    {"c": "23.2%", "t": "of income goes to debt, within normal range.", "k": "bien"},
+    {"t": "No individual stocks: no single company decides your results.", "k": "bien"}
   ],
   "ia.portfolio_today_priorities": [
-    { "c": "92.360 $", "t": "para la reserva mínima de 111.360 $.", "k": "mal" },
-    { "c": "34.165 $", "t": "más al año para la jubilación; cada uno puede aportar hasta 24.500 $.", "k": "mal" },
-    { "c": "54,79 %", "t": "del patrimonio son los sueldos: reforzar reservas y seguros.", "k": "ojo" }
+    {"c": "$92,360", "t": "for the minimum reserve of $111,360.", "k": "mal"},
+    {"c": "$34,165", "t": "more a year for retirement; each of you can contribute up to $24,500.", "k": "mal"},
+    {"c": "54.79%", "t": "of net worth is your salaries: strengthen reserves and insurance.", "k": "ojo"}
   ],
   "ia.recommendations_main": [
-    { "c": "1.616.000 $", "t": "más de seguro de vida: +5 puntos sobre vuestra nota de 52.", "k": "rev" },
-    { "c": "1.000.000 $", "t": "de umbrella: +4 puntos. Con el seguro de vida, 8.", "k": "rev" },
-    { "c": "92.360 $", "t": "para la reserva, poco a poco.", "k": "rev" },
-    { "c": "34.165 $", "t": "más al año para la jubilación, y preguntar por la aportación de la empresa.", "k": "rev" },
-    { "c": "55", "t": "sería la nota solo subiendo el ahorro anual.", "k": "info" }
+    {"c": "$1,616,000", "t": "more life insurance: +5 points on your score of 52.", "k": "rev"},
+    {"c": "$1,000,000", "t": "umbrella: +4 points. With the life insurance, 8.", "k": "rev"},
+    {"c": "$92,360", "t": "for the reserve, little by little.", "k": "rev"},
+    {"c": "$34,165", "t": "more a year for retirement, and ask about the employer match.", "k": "rev"},
+    {"c": "55", "t": "would be the score just by raising annual savings.", "k": "info"}
   ],
   "ia.recommendations_scenarios": [
-    { "c": "10,0 %", "t": "de peor caída en 3 años, recuperada en 61 días.", "k": "bien" },
-    { "c": "2,3 %", "t": "cayó en la pausa de aranceles de abril de 2025 (la referencia, 3,1 %).", "k": "bien" },
-    { "c": "8,1 %", "t": "cayó al anunciarse los aranceles, casi igual que la referencia.", "k": "info" }
+    {"c": "10.0%", "t": "worst drop over 3 years, recovered in 61 days.", "k": "bien"},
+    {"c": "2.3%", "t": "drop in the April 2025 tariff pause (benchmark, 3.1%).", "k": "bien"},
+    {"c": "8.1%", "t": "drop when the tariffs were announced, almost the same as the benchmark.", "k": "info"}
   ],
   "ia.portfolio_today_verdict": [
-    { "c": "15,8 %", "t": "al año el 401(k) de Daniel y 13,5 % el de Emily.", "k": "bien" },
-    { "c": "0 $", "t": "aportados; cada uno podría poner hasta 24.500 $ al año.", "k": "mal" },
-    { "c": "11.760 $", "t": "menos de impuestos al año si aportáis.", "k": "info" },
-    { "c": "6.400 $", "t": "y 4.800 $ de la empresa que quizá no estáis cobrando (por confirmar).", "k": "rev" }
+    {"c": "15.8%", "t": "a year for Daniel's 401(k) and 13.5% for Emily's.", "k": "bien"},
+    {"c": "$0", "t": "contributed; each of you could put in up to $24,500 a year.", "k": "mal"},
+    {"c": "$11,760", "t": "less in taxes a year if you contribute.", "k": "info"},
+    {"c": "$6,400", "t": "and $4,800 from employers that you may not be collecting (to be confirmed).", "k": "rev"}
   ],
   "ia.portfolio_today_also_meaningful": [
-    { "t": "La HSA va después de la jubilación y del colchón.", "k": "info" },
-    { "c": "8.750 $", "t": "podríais aportar si el seguro médico lo permite: unos 2.100 $ menos de impuestos.", "k": "rev" }
+    {"t": "The HSA comes after retirement and the emergency fund.", "k": "info"},
+    {"c": "$8,750", "t": "you could contribute if your health plan allows it: about $2,100 less in taxes.", "k": "rev"}
   ],
   "score.message": [
-    { "c": "52", "t": "de nota: por debajo de la media. Toca ordenar las cosas paso a paso.", "k": "ojo" }
+    {"c": "52", "t": "score: below average. Time to sort things out step by step.", "k": "ojo"}
   ]
 }

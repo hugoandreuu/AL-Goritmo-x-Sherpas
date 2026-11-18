@@ -1,156 +1,156 @@
 {
   "fh.summary_main": [
-    { "c": "247.000 $", "t": "de patrimonio, 145.000 $ invertibles. Buena base.", "k": "bien" },
-    { "c": "-8.336 $", "t": "al año: jubilación, metas y colchón tiran del mismo sueldo.", "k": "mal" },
-    { "c": "113.300 $", "t": "para la casa en enero de 2027; el efectivo cubre unos 3 meses.", "k": "ojo" },
-    { "c": "1.177.586 $", "t": "le falta a la jubilación a los 58; el ahorro llega a los 85.", "k": "mal" },
-    { "c": "180.000 $", "t": "de seguro de vida frente a 900.000 $ recomendados, y sin umbrella.", "k": "mal" }
+    {"c": "$247,000", "t": "of net worth, $145,000 investable. A good base.", "k": "bien"},
+    {"c": "-$8,336", "t": "a year: retirement, goals and the emergency fund all pull on the same salary.", "k": "mal"},
+    {"c": "$113,300", "t": "for the house in January 2027; cash covers about 3 months.", "k": "ojo"},
+    {"c": "$1,177,586", "t": "retirement shortfall at 58; savings last until 85.", "k": "mal"},
+    {"c": "$180,000", "t": "of life insurance against $900,000 recommended, and no umbrella.", "k": "mal"}
   ],
   "fh.summary_recommendations": [
-    { "t": "Encajar la casa de enero de 2027 con el colchón, aparte de lo invertido.", "k": "rev" },
-    { "t": "Decidir cuánto más va a la jubilación sin ahogar el mes.", "k": "rev" },
-    { "t": "Revisar el seguro de vida y la responsabilidad civil.", "k": "rev" },
-    { "t": "Seguir pagando la tarjeta hasta liquidarla.", "k": "rev" },
-    { "t": "Acercar la bolsa al perfil de crecimiento elegido.", "k": "rev" }
+    {"t": "Fit the January 2027 house purchase with the emergency fund, separate from what's invested.", "k": "rev"},
+    {"t": "Decide how much more goes to retirement without squeezing the month.", "k": "rev"},
+    {"t": "Review life insurance and liability coverage.", "k": "rev"},
+    {"t": "Keep paying down the credit card until it's paid off.", "k": "rev"},
+    {"t": "Bring stocks closer to the chosen Growth profile.", "k": "rev"}
   ],
   "ia.summary_main": [
-    { "c": "85 años", "t": "hasta donde llega el ahorro; quedan 32.439 $ de gasto sin cubrir.", "k": "mal" },
-    { "c": "34 %", "t": "del gasto de jubilación (89.649 $ al año) lo cubren los ingresos.", "k": "ojo" },
-    { "c": "46.530 $", "t": "de reserva como mínimo, y quitar la tarjeta de 3.500 $ al 20 %.", "k": "rev" },
-    { "c": "7.500 $", "t": "más puedes poner en el 401(k), y hasta 4.500 $ en un Roth IRA.", "k": "info" }
+    {"c": "Age 85", "t": "is how far savings last; $32,439 of spending is left uncovered.", "k": "mal"},
+    {"c": "34%", "t": "of retirement spending ($89,649 a year) is covered by income.", "k": "ojo"},
+    {"c": "$46,530", "t": "minimum reserve, and clear the $3,500 credit card at 20%.", "k": "rev"},
+    {"c": "$7,500", "t": "more can go into the 401(k), and up to $4,500 into a Roth IRA.", "k": "info"}
   ],
   "fh.retirement_short_observations": [
-    { "c": "85 años", "t": "se acaba el ahorro, seis años antes del final del plan (91).", "k": "mal" },
-    { "c": "34 %", "t": "del gasto lo cubre la Seguridad Social; el resto, 59.613 $ al año, sale de tus ahorros.", "k": "ojo" },
-    { "c": "1.071.095 $", "t": "líquidos al jubilarte, de 1.535.457 $ de patrimonio. La casa no se gasta.", "k": "info" },
-    { "c": "443.522 $", "t": "de otras metas tras jubilarte. Sin coste de cuidados a largo plazo.", "k": "ojo" }
+    {"c": "Age 85", "t": "savings run out, six years before the end of the plan (91).", "k": "mal"},
+    {"c": "34%", "t": "of spending is covered by Social Security; the rest, $59,613 a year, comes from your savings.", "k": "ojo"},
+    {"c": "$1,071,095", "t": "liquid at retirement, out of $1,535,457 of net worth. The home isn't spent.", "k": "info"},
+    {"c": "$443,522", "t": "of other goals after retiring. No long-term care cost.", "k": "ojo"}
   ],
   "fh.retirement_what_to_look_into": [
-    { "t": "Qué parte del gasto cubren tus ingresos de jubilación.", "k": "rev" },
-    { "t": "A qué edad se acaba el ahorro frente al plan hasta los 91.", "k": "rev" },
-    { "t": "Cómo se pagan las metas de después de jubilarte.", "k": "rev" }
+    {"t": "What share of spending your retirement income covers.", "k": "rev"},
+    {"t": "At what age savings run out versus a plan to 91.", "k": "rev"},
+    {"t": "How the post-retirement goals are paid for.", "k": "rev"}
   ],
   "fh.assets_short_observations": [
-    { "c": "145.000 $", "t": "invertidos: el 58,7 % de tus 247.000 $. Sin vivienda propia.", "k": "info" },
-    { "c": "73,5 %", "t": "en bolsa frente al 98 % objetivo de tu perfil de crecimiento.", "k": "ojo" },
-    { "c": "27.000 $", "t": "en efectivo (10,93 %). Sumas unos 3.000 $ al año.", "k": "info" },
-    { "c": "24.000 $", "t": "al año al 401(k), con los 7.000 $ de la empresa.", "k": "bien" }
+    {"c": "$145,000", "t": "invested: 58.7% of your $247,000. No home owned.", "k": "info"},
+    {"c": "73.5%", "t": "in stocks versus the 98% target of your Growth profile.", "k": "ojo"},
+    {"c": "$27,000", "t": "in cash (10.93%). You add about $3,000 a year.", "k": "info"},
+    {"c": "$24,000", "t": "a year to the 401(k), including $7,000 from your employer.", "k": "bien"}
   ],
   "fh.assets_what_to_look_into": [
-    { "t": "Cómo encajan tu coche y tus otros bienes con las cuentas.", "k": "rev" },
-    { "t": "Si te conviene un IRA y aportar más a la HSA.", "k": "rev" },
-    { "t": "Cómo tributa la cuenta de bolsa (no está en los datos).", "k": "rev" }
+    {"t": "How your car and other assets fit with your accounts.", "k": "rev"},
+    {"t": "Whether an IRA and more HSA contributions make sense for you.", "k": "rev"},
+    {"t": "How the brokerage account is taxed (not in the data).", "k": "rev"}
   ],
   "fh.debt_short_observations": [
-    { "c": "28.500 $", "t": "de deuda: el 15,83 % de tus ingresos. Manejable.", "k": "bien" },
-    { "c": "20 %", "t": "de interés en la tarjeta de 3.500 $. A 200 $ al mes, se acaba en julio de 2028.", "k": "ojo" },
-    { "c": "25,37 %", "t": "de tus ingresos van a vivienda y deudas, por debajo del 36 %.", "k": "bien" },
-    { "c": "16.530 $", "t": "te faltan para la reserva mínima. Hoy pesa más que la deuda.", "k": "mal" }
+    {"c": "$28,500", "t": "of debt: 15.83% of your income. Manageable.", "k": "bien"},
+    {"c": "20%", "t": "interest on the $3,500 credit card. At $200 a month, it's paid off in July 2028.", "k": "ojo"},
+    {"c": "25.37%", "t": "of your income goes to housing and debt, below 36%.", "k": "bien"},
+    {"c": "$16,530", "t": "short of the minimum reserve. Today it matters more than the debt.", "k": "mal"}
   ],
   "fh.debt_what_to_look_into": [
-    { "t": "Lo caro que sale la tarjeta.", "k": "rev" },
-    { "t": "Cómo encajan las deudas con el mes y la compra de la casa.", "k": "rev" },
-    { "t": "El préstamo de estudios frente a tus otras metas.", "k": "rev" }
+    {"t": "How expensive the credit card is.", "k": "rev"},
+    {"t": "How the debts fit with the monthly budget and the house purchase.", "k": "rev"},
+    {"t": "The student loan versus your other goals.", "k": "rev"}
   ],
   "fh.savings_short_observations": [
-    { "c": "43.000 $", "t": "ahorras al año, con 7.000 $ de la empresa. Esfuerzo hay.", "k": "bien" },
-    { "c": "-8.336 $", "t": "al año: tus ingresos cubren demasiadas cosas a la vez.", "k": "mal" },
-    { "c": "20.231 $", "t": "más al año harían falta para cerrar el hueco de la jubilación.", "k": "ojo" },
-    { "c": "16.530 $", "t": "te faltan para la reserva mínima. Hoy es lo primero.", "k": "mal" },
-    { "c": "116.800 $", "t": "de casa y vacaciones en enero de 2027: después, 0 meses de colchón.", "k": "mal" }
+    {"c": "$43,000", "t": "saved a year, with $7,000 from your employer. The effort is there.", "k": "bien"},
+    {"c": "-$8,336", "t": "a year: your income covers too many things at once.", "k": "mal"},
+    {"c": "$20,231", "t": "more a year would be needed to close the retirement gap.", "k": "ojo"},
+    {"c": "$16,530", "t": "short of the minimum reserve. Today it comes first.", "k": "mal"},
+    {"c": "$116,800", "t": "for the house and vacation in January 2027: afterwards, 0 months of emergency fund.", "k": "mal"}
   ],
   "fh.savings_what_to_look_into": [
-    { "t": "Abrir un Roth IRA.", "k": "rev" },
-    { "t": "Lo que aún cabe en el 401(k).", "k": "rev" },
-    { "t": "La HSA, si tu seguro médico lo permite.", "k": "rev" },
-    { "t": "Datos que faltan del plan de la empresa, siempre sin dejarte sin efectivo.", "k": "rev" }
+    {"t": "Opening a Roth IRA.", "k": "rev"},
+    {"t": "What still fits in the 401(k).", "k": "rev"},
+    {"t": "The HSA, if your health plan allows it.", "k": "rev"},
+    {"t": "Missing data on the employer plan, always without leaving you short of cash.", "k": "rev"}
   ],
   "fh.protection_emergency_fund_short_observations": [
-    { "c": "30.000 $", "t": "cubren unos 3,2 meses de tus 9.306 $ de gastos al mes.", "k": "ojo" },
-    { "c": "16.530 $", "t": "te faltan para llegar a 46.530 $, 5 meses.", "k": "mal" },
-    { "c": "0 meses", "t": "de colchón tras pagar la casa (113.300 $) y las vacaciones de enero de 2027.", "k": "mal" }
+    {"c": "$30,000", "t": "covers about 3.2 months of your $9,306 monthly expenses.", "k": "ojo"},
+    {"c": "$16,530", "t": "short of reaching $46,530, 5 months.", "k": "mal"},
+    {"c": "0 months", "t": "of emergency fund after paying for the house ($113,300) and the January 2027 vacation.", "k": "mal"}
   ],
   "fh.protection_intro": [
-    { "t": "Colchón, seguro de vida y responsabilidad civil: los tres están por debajo de lo recomendado.", "k": "ojo" },
-    { "t": "El colchón además depende de la casa y las vacaciones de enero de 2027.", "k": "info" }
+    {"t": "Emergency fund, life insurance and liability coverage: all three are below what's recommended.", "k": "ojo"},
+    {"t": "The emergency fund also depends on the house and the January 2027 vacation.", "k": "info"}
   ],
   "fh.protection_life_insurance_short_observations": [
-    { "c": "180.000 $", "t": "de seguro frente a 900.000 $–1.800.000 $ recomendados.", "k": "mal" },
-    { "c": "720.000 $", "t": "te faltan como mínimo. Tu sueldo es el único del hogar.", "k": "mal" },
-    { "c": "28.500 $", "t": "de deudas quedarían: coche, estudios y tarjeta.", "k": "info" }
+    {"c": "$180,000", "t": "of insurance versus $900,000–$1,800,000 recommended.", "k": "mal"},
+    {"c": "$720,000", "t": "short at a minimum. Your salary is the only one in the household.", "k": "mal"},
+    {"c": "$28,500", "t": "of debt would remain: car, student loan and credit card.", "k": "info"}
   ],
   "fh.protection_umbrella_short_observations": [
-    { "c": "0 $", "t": "de responsabilidad civil frente a 1.000.000 $ recomendado.", "k": "mal" },
-    { "t": "Una demanda podría llegar a tus 172.000 $ líquidos.", "k": "ojo" },
-    { "t": "El BMW aparece sin seguro en los datos: conviene confirmarlo.", "k": "rev" }
+    {"c": "$0", "t": "of liability coverage versus $1,000,000 recommended.", "k": "mal"},
+    {"t": "A lawsuit could reach your $172,000 in liquid assets.", "k": "ojo"},
+    {"t": "The BMW shows no insurance in the data: worth confirming.", "k": "rev"}
   ],
   "ia.snapshot_main": [
-    { "t": "401(k), HSA, cuenta de bolsa, corriente y ahorro.", "k": "info" },
-    { "t": "Mucho en la cuenta de bolsa y poco efectivo para lo invertido.", "k": "ojo" }
+    {"t": "401(k), HSA, brokerage, checking and savings accounts.", "k": "info"},
+    {"t": "A lot in the brokerage account and little cash for what's invested.", "k": "ojo"}
   ],
   "ia.portfolio_today_intro": [
-    { "t": "El mismo dinero tiene que crecer, pagar una jubilación que no llega y hacer de colchón.", "k": "ojo" },
-    { "t": "La clave es el orden y tener liquidez, más que un fondo concreto.", "k": "info" }
+    {"t": "The same money has to grow, fund a retirement that falls short and act as an emergency fund.", "k": "ojo"},
+    {"t": "The key is order and liquidity, more than any specific fund.", "k": "info"}
   ],
   "ia.portfolio_today_what_it_needs_to_do": [
-    { "c": "46.530 $", "t": "de colchón para no vender inversiones; faltan 16.530 $.", "k": "ojo" },
-    { "c": "85 años", "t": "dura hoy el dinero: faltarían 32.439 $.", "k": "mal" },
-    { "c": "145.000 $", "t": "invertidos para crecer. Caben 7.500 $ más en el 401(k) y 4.500 $ en un Roth IRA.", "k": "info" }
+    {"c": "$46,530", "t": "emergency fund to avoid selling investments; $16,530 is missing.", "k": "ojo"},
+    {"c": "Age 85", "t": "is how long the money lasts today: $32,439 would be missing.", "k": "mal"},
+    {"c": "$145,000", "t": "invested to grow. Another $7,500 fits in the 401(k) and $4,500 in a Roth IRA.", "k": "info"}
   ],
   "ia.portfolio_today_what_its_actually_doing": [
-    { "c": "2,9 meses", "t": "de colchón: un imprevisto obligaría a vender o pedir prestado.", "k": "mal" },
-    { "c": "-8.336 $", "t": "al año; mejor que los -14.936 $ de antes, pero aún tira del ahorro.", "k": "ojo" },
-    { "c": "82,38 %", "t": "de tu patrimonio equivale a tu sueldo: todo depende de una empresa.", "k": "ojo" },
-    { "c": "20 %", "t": "de interés en la Amex (3.500 $), muy por encima de lo que rinde el ahorro.", "k": "mal" }
+    {"c": "2.9 months", "t": "of emergency fund: an unexpected expense would force selling or borrowing.", "k": "mal"},
+    {"c": "-$8,336", "t": "a year; better than the earlier -$14,936, but still drawing on savings.", "k": "ojo"},
+    {"c": "82.38%", "t": "of your net worth equals your salary: everything depends on one employer.", "k": "ojo"},
+    {"c": "20%", "t": "interest on the Amex ($3,500), far above what savings earn.", "k": "mal"}
   ],
   "ia.portfolio_today_performance_timeline": [
-    { "c": "13,6 %", "t": "al año en 3 años, frente al 15,3 % de una cartera parecida.", "k": "info" },
-    { "c": "10,2 %", "t": "fue la peor caída, recuperada en 62 días (la referencia, 11,4 %).", "k": "bien" },
-    { "c": "72 %", "t": "de las subidas y 91 % de las bajadas del mercado.", "k": "ojo" },
-    { "t": "El 401(k) dio un 17,9 % al año; la HSA, un 3,0 %. No es una previsión.", "k": "info" }
+    {"c": "13.6%", "t": "a year over 3 years, versus 15.3% for a similar portfolio.", "k": "info"},
+    {"c": "10.2%", "t": "was the worst drop, recovered in 62 days (benchmark, 11.4%).", "k": "bien"},
+    {"c": "72%", "t": "of market gains and 91% of market losses.", "k": "ojo"},
+    {"t": "The 401(k) returned 17.9% a year; the HSA, 3.0%. Not a forecast.", "k": "info"}
   ],
   "ia.portfolio_today_whats_working": [
-    { "c": "7.000 $", "t": "al año de la empresa: cobras toda la aportación.", "k": "bien" },
-    { "c": "17.000 $", "t": "al año al 401(k), que ya tiene 80.000 $.", "k": "bien" },
-    { "c": "6,33 %", "t": "de tus ingresos va a deudas: es manejable.", "k": "bien" }
+    {"c": "$7,000", "t": "a year from your employer: you get the full match.", "k": "bien"},
+    {"c": "$17,000", "t": "a year to the 401(k), which already holds $80,000.", "k": "bien"},
+    {"c": "6.33%", "t": "of your income goes to debt: it's manageable.", "k": "bien"}
   ],
   "ia.portfolio_today_priorities": [
-    { "c": "20.231 $", "t": "más al año para que el dinero no se acabe a los 85.", "k": "mal" },
-    { "c": "16.530 $", "t": "para la reserva mínima y no tener que vender.", "k": "mal" },
-    { "c": "-8.336 $", "t": "al año: frena la reserva y la jubilación a la vez.", "k": "ojo" }
+    {"c": "$20,231", "t": "more a year so the money doesn't run out at 85.", "k": "mal"},
+    {"c": "$16,530", "t": "for the minimum reserve so you don't have to sell.", "k": "mal"},
+    {"c": "-$8,336", "t": "a year: it holds back both the reserve and retirement.", "k": "ojo"}
   ],
   "ia.recommendations_main": [
-    { "c": "16.530 $", "t": "para llegar al colchón mínimo y no tirar de la tarjeta al 20 %.", "k": "rev" },
-    { "c": "133.330 $", "t": "faltan para la casa y las vacaciones de enero de 2027: confirmar cifras y fechas.", "k": "rev" },
-    { "c": "43.000 $", "t": "ahorras al año, pero hay un déficit de 15.336 $: revisar gasto y reparto.", "k": "rev" },
-    { "c": "7.500 $", "t": "más al 401(k), unos 1.800 $ menos de impuestos.", "k": "rev" },
-    { "c": "527 $", "t": "de impuestos al año por inversiones; 247 $ salen de un fondo de bonos.", "k": "info" },
-    { "c": "33 %", "t": "de la bolsa en tecnología y 85 % en EE. UU.: repartir más.", "k": "rev" }
+    {"c": "$16,530", "t": "to reach the minimum emergency fund and avoid leaning on the card at 20%.", "k": "rev"},
+    {"c": "$133,330", "t": "needed for the house and the January 2027 vacation: confirm figures and dates.", "k": "rev"},
+    {"c": "$43,000", "t": "saved a year, but with a $15,336 deficit: review spending and allocation.", "k": "rev"},
+    {"c": "$7,500", "t": "more to the 401(k), about $1,800 less in taxes.", "k": "rev"},
+    {"c": "$527", "t": "a year in taxes on investments; $247 comes from a bond fund.", "k": "info"},
+    {"c": "33%", "t": "of stocks in technology and 85% in the US: diversify more.", "k": "rev"}
   ],
   "ia.recommendations_scenarios": [
-    { "c": "10,21 %", "t": "de caída máxima en 3 años, frente al 11,44 % de la referencia.", "k": "bien" },
-    { "c": "1,98 %", "t": "cayó en la pausa de aranceles de abril de 2025 (la referencia, 3,27 %).", "k": "bien" },
-    { "c": "72 %", "t": "de las subidas recogidas, con el 91 % de las bajadas.", "k": "ojo" }
+    {"c": "10.21%", "t": "maximum drop over 3 years, versus 11.44% for the benchmark.", "k": "bien"},
+    {"c": "1.98%", "t": "drop in the April 2025 tariff pause (benchmark, 3.27%).", "k": "bien"},
+    {"c": "72%", "t": "of gains captured, with 91% of losses.", "k": "ojo"}
   ],
   "ia.portfolio_today_verdict": [
-    { "c": "17.000 $", "t": "pones al año y la empresa 7.000 $. El 401(k) dio un 17,9 % al año.", "k": "bien" },
-    { "c": "1.177.586 $", "t": "de hueco; el ahorro se acaba a los 85.", "k": "mal" },
-    { "c": "20.231 $", "t": "más al año, compitiendo con la tarjeta, el colchón y la casa.", "k": "ojo" },
-    { "t": "Hace falta un orden claro: tarjeta, efectivo y luego jubilación.", "k": "rev" }
+    {"c": "$17,000", "t": "a year from you and $7,000 from your employer. The 401(k) returned 17.9% a year.", "k": "bien"},
+    {"c": "$1,177,586", "t": "gap; savings run out at 85.", "k": "mal"},
+    {"c": "$20,231", "t": "more a year, competing with the credit card, the emergency fund and the house.", "k": "ojo"},
+    {"t": "A clear order is needed: credit card, cash, then retirement.", "k": "rev"}
   ],
   "ia.portfolio_today_also_meaningful": [
-    { "c": "400 $", "t": "más en la HSA ahorran unos 96 $ de impuestos al año.", "k": "info" },
-    { "c": "1.400 $", "t": "parados al 0,00 % en la HSA: invertirlos daría unos 104 $ al año.", "k": "rev" },
-    { "t": "Va después de la tarjeta y del efectivo para enero de 2027.", "k": "info" }
+    {"c": "$400", "t": "more in the HSA saves about $96 in taxes a year.", "k": "info"},
+    {"c": "$1,400", "t": "sitting at 0.00% in the HSA: investing it would earn about $104 a year.", "k": "rev"},
+    {"t": "It comes after the credit card and the cash for January 2027.", "k": "info"}
   ],
   "score.explainer": [
-    { "c": "26", "t": "de nota, banda crítica. Lo que más pesa: el flujo de caja.", "k": "mal" },
-    { "c": "84 %", "t": "de lo invertible sale cada año, frente a un 4 % sostenible.", "k": "mal" },
-    { "c": "62", "t": "sería la nota bajando esas salidas a 10.300 $ al año.", "k": "bien" },
-    { "c": "30 %", "t": "de cobertura de vida, y sin umbrella. La deuda es lo más sólido.", "k": "ojo" },
-    { "c": "31", "t": "con 1.000.000 $ de umbrella, o acercando la bolsa al 88 %.", "k": "info" }
+    {"c": "26", "t": "score, critical band. What weighs most: cash flow.", "k": "mal"},
+    {"c": "84%", "t": "of investable assets goes out each year, versus a sustainable 4%.", "k": "mal"},
+    {"c": "62", "t": "would be the score bringing those outflows down to $10,300 a year.", "k": "bien"},
+    {"c": "30%", "t": "life insurance coverage, and no umbrella. Debt is the strongest area.", "k": "ojo"},
+    {"c": "31", "t": "with a $1,000,000 umbrella, or bringing stocks closer to 88%.", "k": "info"}
   ],
   "score.message": [
-    { "c": "26", "t": "de nota: el dinero te está pesando. Conviene pedir ayuda ahora.", "k": "mal" }
+    {"c": "26", "t": "score: money is weighing on you. It's worth asking for help now.", "k": "mal"}
   ]
 }
