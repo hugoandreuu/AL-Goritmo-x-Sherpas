@@ -93,17 +93,24 @@ module.exports = {
   async story({ start, tap, tapText, slide, scroll, sleep, mark, vis, p }) {
     await start('?caso=timothy-melanie-weah&demo=story');
     mark('top'); await sleep(2500);
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 2; i++) {
       await p.mouse.move(320, 450); await p.mouse.down();
       for (let k = 1; k <= 20; k++) { await p.mouse.move(320 - k * 11, 450); await sleep(16); }
       await p.mouse.up(); await sleep(1500);
     }
-    for (let i = 0; i < 3; i++) { await p.keyboard.press('ArrowLeft'); await sleep(250); }
-    await sleep(1200);
+    // Vuelve a Seguros girando la ruleta, a la vista (en el vídeo este giro no se corta: así no salta de tarjeta).
+    await p.keyboard.press('ArrowLeft'); await sleep(700);
+    await sleep(1000);
     mark('open'); await p.mouse.move(195, 560, { steps: 8 }); await p.mouse.down(); await sleep(90); await p.evaluate(() => document.querySelector('.rul-card.front .rul-abrir').click()); await p.mouse.up();
     await sleep(2500);
-    await scroll(600, 2200); await sleep(1500);
-    await scroll(600, 2200); await sleep(1500);
+    // Scroll suave por código dentro de la tarjeta abierta: con la rueda del ratón el primer tramo daba un tirón.
+    const suave = (px, ms) => p.evaluate(([px, ms]) => new Promise(ok => {
+      const el = document.querySelector('.rul-full') || document.scrollingElement, y0 = el.scrollTop, t0 = performance.now();
+      (function f(now) { const k = Math.min(1, (now - t0) / ms), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        el.scrollTop = y0 + px * e; if (k < 1) requestAnimationFrame(f); else ok(); })(t0);
+    }), [px, ms]);
+    await suave(600, 2200); await sleep(1500);
+    await suave(600, 2200); await sleep(1500);
     mark('end');
   },
   async familias({ start, sleep, mark, p }) {

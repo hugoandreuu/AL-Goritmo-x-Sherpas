@@ -18,10 +18,11 @@ FUENTES = os.path.join(AQUI, '.fuentes')
 # ---------------------------------------------------------------- fuentes (Google Fonts, se bajan una vez)
 def bajar_fuentes():
     os.makedirs(FUENTES, exist_ok=True)
-    for fam, pesos in (('Poppins', (600, 700, 800)), ('Inter', (500, 600))):
+    for fam, pesos in (('Poppins', (400, 600, 700, 800)), ('Inter', (500, 600))):
         falta = [p for p in pesos if not os.path.exists(os.path.join(FUENTES, f'{fam}-{p}.ttf'))]
         if not falta: continue
-        css = urllib.request.urlopen(f'https://fonts.googleapis.com/css2?family={fam}:wght@{";".join(map(str, pesos))}').read().decode()
+        try: css = urllib.request.urlopen(f'https://fonts.googleapis.com/css2?family={fam}:wght@{";".join(map(str, pesos))}').read().decode()
+        except Exception as e: sys.exit(f'No se han podido bajar las fuentes ({e}). Copia los .ttf de {fam} a {FUENTES} como {fam}-<peso>.ttf.')
         for peso, url in re.findall(r'font-weight: (\d+);\s*src: url\((\S+?\.ttf)\)', css):
             urllib.request.urlretrieve(url, os.path.join(FUENTES, f'{fam}-{peso}.ttf'))
 bajar_fuentes()
@@ -30,7 +31,7 @@ bajar_fuentes()
 def fuente(fam, peso, tam):
     return ImageFont.truetype(os.path.join(FUENTES, f'{fam}-{peso}.ttf'), tam)
 
-BLANCO = (255, 255, 255); SUAVE = (196, 190, 235); LILA = (150, 140, 255); NARANJA = (255, 122, 61)
+BLANCO = (255, 255, 255); SUAVE = (196, 190, 235); SEGUNDO = (178, 172, 224); LILA = (150, 140, 255); NARANJA = (255, 122, 61)
 G1, G2 = (99, 125, 255), (176, 120, 255)
 
 def suave(k):
@@ -98,6 +99,16 @@ def pintar_movil(cv, ruta, x, y, giro=0.0, escala=1.0, alfa=1.0):
     cv.alpha_composite(sombra, (int(x - sombra.width / 2), int(y - ph.height / 2 - 80)))
     cv.alpha_composite(ph, (int(x - ph.width / 2), int(y - ph.height / 2)))
 
+# ---------------------------------------------------------------- logo de Sherpas (arriba a la derecha, todo el vídeo)
+# sherpas-logo.png es assets/brand/sherpas-logo.svg pasado a PNG blanco con fondo transparente.
+_LOGO = Image.open(os.path.join(AQUI, 'sherpas-logo.png')).convert('RGBA')
+LOGO = _LOGO.resize((round(_LOGO.width * 36 / _LOGO.height), 36), Image.LANCZOS)
+def poner_logo(cv, T):
+    a = 0.9 * rampa(T, 0.2, 0.9)
+    if a <= 0.01: return
+    im = LOGO.copy(); im.putalpha(im.getchannel('A').point(lambda v: int(v * a)))
+    cv.alpha_composite(im, (W - 72 - im.width, 52))
+
 POS = {'izq': (560, 540, -3.0, 0.94), 'der': (1360, 540, 3.0, 0.94), 'centro': (960, 560, 0.0, 0.84)}
 def pos(p): return POS[p] if isinstance(p, str) else tuple(float(v) for v in p)
 
@@ -107,7 +118,7 @@ def estilo(linea, grande=False):
     if linea.startswith('## '): return linea[3:], ('Poppins', 700, h), 'grad'
     if linea.startswith('!! '): return linea[3:], ('Poppins', 700, h), NARANJA
     if linea.startswith('# '): return linea[2:], ('Poppins', 700, h), BLANCO
-    return linea, ('Inter', 500, 30), SUAVE
+    return linea, ('Poppins', 400, 31 if grande else 29), SEGUNDO  # texto secundario: misma familia que los títulos, más fino y apagado
 
 @functools.lru_cache(maxsize=512)
 def imagen_texto(filas, centrado=False):
@@ -118,7 +129,7 @@ def imagen_texto(filas, centrado=False):
     im = Image.new('RGBA', (ancho, alto), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     y, previa = 0, None
     for t, f, fk, c, tw in medidas:
-        if previa and previa[0] == 'Poppins' and fk[0] == 'Inter' and fk[2] >= 28 and previa[2] >= 50: y += 18
+        if previa and previa[1] >= 700 and fk[1] < 600 and previa[2] >= 50: y += 18
         previa = fk
         x = (ancho - tw) // 2 if centrado else 0
         if c == 'grad':
@@ -153,29 +164,32 @@ class Bloque:
 
 class Texto(Bloque):
     def pintar(self, cv, t, e):
-        for i, l in enumerate(self.cfg['lineas']):
-            poner(cv, filas([l], True), W // 2, 440 + i * 100, t, 0.2 + i * 0.9, self.dur, centrado=True)
+        ls = self.cfg['lineas']; y0 = 490 - (len(ls) - 1) * 50; paso = self.cfg.get('paso', 0.9)
+        for i, l in enumerate(ls):
+            poner(cv, filas([l], True), W // 2, y0 + i * 100, t, 0.2 + i * paso, self.dur, centrado=True)
 
 class Titulo(Bloque):
     def pintar(self, cv, t, e):
         T = G.TITULO
         poner(cv, etiqueta(T['antes']), W // 2, 380, t, 0.1, self.dur, centrado=True)
         poner(cv, [(T['nombre'][0], ('Poppins', 800, 110), BLANCO), (T['nombre'][1], ('Poppins', 800, 110), 'grad')], W // 2, 430, t, 0.3, self.dur, centrado=True)
-        poner(cv, [(T['sub'], ('Inter', 500, 34), SUAVE)], W // 2, 720, t, 1.0, self.dur, centrado=True)
+        poner(cv, [(T['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 720, t, 1.0, self.dur, centrado=True)
 
 class Cierre(Bloque):
     def pintar(self, cv, t, e):
         C, T = G.CIERRE, G.TITULO; fin = self.dur + 1
-        poner(cv, [(T['nombre'][0], ('Poppins', 800, 100), BLANCO), (T['nombre'][1], ('Poppins', 800, 100), 'grad')], W // 2, 300, t, 0.2, fin, centrado=True)
-        poner(cv, [(C['sub'], ('Inter', 500, 34), SUAVE)], W // 2, 590, t, 0.9, fin, centrado=True)
-        poner(cv, [(C['enlace'], ('Poppins', 600, 30), BLANCO)], W // 2, 690, t, 1.6, fin, centrado=True)
-        poner(cv, [(C['firma'], ('Inter', 500, 24), LILA)], W // 2, 770, t, 2.0, fin, centrado=True)
+        poner(cv, [(T['nombre'][0], ('Poppins', 800, 100), BLANCO), (T['nombre'][1], ('Poppins', 800, 100), 'grad')], W // 2, 230, t, 0.2, fin, centrado=True)
+        poner(cv, [(C['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 520, t, 0.9, fin, centrado=True)
+        if C.get('frase'):
+            poner(cv, [(l, ('Poppins', 700, 46), BLANCO if i == 0 else 'grad') for i, l in enumerate(C['frase'])], W // 2, 600, t, 1.6, fin, centrado=True)
+        poner(cv, [(C['enlace'], ('Poppins', 600, 30), BLANCO)], W // 2, 800, t, 2.6, fin, centrado=True)
+        poner(cv, [(C['firma'], ('Poppins', 400, 24), LILA)], W // 2, 870, t, 2.9, fin, centrado=True)
 
 class Familias(Bloque):
     def pintar(self, cv, t, e):
         esc, marcas, seg = G.FAMILIAS
         poner(cv, [(self.cfg['titulo'], ('Poppins', 700, 52), BLANCO)], W // 2, 85, t, 0.1, self.dur, centrado=True)
-        poner(cv, [(self.cfg['sub'], ('Inter', 500, 28), SUAVE)], W // 2, 170, t, 0.5, self.dur, centrado=True)
+        poner(cv, [(self.cfg['sub'], ('Poppins', 400, 28), SEGUNDO)], W // 2, 170, t, 0.5, self.dur, centrado=True)
         fuera = 1 - rampa(t, self.dur - 0.4, self.dur)
         for i, m in enumerate(marcas):
             k = rampa(t, 0.2 + i * 0.15, 1.0 + i * 0.15)
@@ -287,10 +301,14 @@ class Movil(Bloque):
             col = 150 if dx > 960 else 1020
             if self.cfg.get('escalonado'):
                 poner(cv, etiqueta(self.cfg['etiqueta']), col, 330, t, t0, t1)
-                yy = 390
+                yy, ti = 390, t0 + 0.4
+                previa = None
                 for j, l in enumerate(tb['texto']):
                     f = filas([l], True)
-                    poner(cv, f, col, yy, t, t0 + 0.4 + j * 0.9, t1)
+                    if previa and previa.startswith(('#', '!!')) and not l.startswith(('#', '!!')): yy += 34  # aire bajo el titular
+                    previa = l
+                    poner(cv, f, col, yy, t, ti, t1)
+                    ti += 0.9 if l.startswith(('#', '!!')) else 0.45  # el subtítulo entra seguido
                     yy += 80 if l.startswith('#') else 60
                     if j == 2: yy += 10
                 continue
@@ -330,7 +348,7 @@ def main():
         for a, e, b in tl:
             ts = [p['t0'] + p['dur'] * 0.6 for p in b.partes] if isinstance(b, Movil) else [b.dur * 0.6]
             for t in ts:
-                cv = fondo(a + t); b.pintar(cv, t, None); cv.convert('RGB').save(os.path.join(d, f'{n:02d}_{b.cfg.get("id")}.jpg'), quality=85); n += 1
+                cv = fondo(a + t); b.pintar(cv, t, None); poner_logo(cv, a + t); cv.convert('RGB').save(os.path.join(d, f'{n:02d}_{b.cfg.get("id")}.jpg'), quality=85); n += 1
         print('Muestras en', d); return
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
                            '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', salida], stdin=subprocess.PIPE)
@@ -339,7 +357,7 @@ def main():
         T = i / FPS
         while j < len(tl) - 1 and T >= tl[j][1]: j += 1
         a, e, b = tl[j]
-        cv = fondo(T); b.pintar(cv, T - a, None)
+        cv = fondo(T); b.pintar(cv, T - a, None); poner_logo(cv, T)
         ff.stdin.write(cv.convert('RGB').tobytes())
         if i % 300 == 0: print(f'  fotograma {i}/{n}', flush=True)
     ff.stdin.close(); ff.wait()

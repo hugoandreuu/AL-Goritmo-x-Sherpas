@@ -22,6 +22,14 @@ addEventListener('pointerdown', e => {
   requestAnimationFrame(()=>requestAnimationFrame(()=>{d.style.transform='scale(1.5)';d.style.opacity='0';}));
   setTimeout(()=>d.remove(),600);
 }, true);
+// Un píxel casi invisible que cambia en cada fotograma: así Chrome no deja de mandar fotogramas
+// (si no, al hacer scroll a veces se salta un segundo y en el vídeo se ve un tirón).
+addEventListener('DOMContentLoaded', () => {
+  const px = document.createElement('div');
+  px.style.cssText = 'position:fixed;right:0;bottom:0;width:2px;height:2px;z-index:2147483647;pointer-events:none';
+  document.documentElement.appendChild(px);
+  let k = 0; (function tick() { px.style.background = k++ % 2 ? '#000' : '#fff'; requestAnimationFrame(tick); })();
+});
 new MutationObserver(() => {
   document.querySelectorAll('body *').forEach(el => {
     if (el.children.length === 0 && /·\\s*30\\s*min/i.test(el.textContent)) el.textContent = el.textContent.replace(/\\s*·\\s*30\\s*min/i, '');
@@ -96,7 +104,7 @@ async function grabar(browser, nombre) {
   const web = spawn(process.execPath, [path.join(RAIZ, 'scripts', 'serve.mjs')], { env: { ...process.env, PORT: PUERTO }, stdio: 'ignore' });
   try {
     await esperarWeb(`http://localhost:${PUERTO}/app/`);
-    const browser = await chromium.launch();
+    const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH, args: ['--no-sandbox'] } : {});
     for (const n of nombres) { console.log('Grabando', n); await grabar(browser, n); }
     await browser.close();
   } finally { web.kill(); }
