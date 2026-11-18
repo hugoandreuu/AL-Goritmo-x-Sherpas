@@ -1,6 +1,6 @@
 # Vídeo de presentación
 
-Vídeo de unos 2 minutos y medio para presentar la web a los asesores de Sherpas. Todo lo que sale en el móvil son grabaciones reales de la web, hechas por un navegador automático. El montaje (textos, posición del móvil, ficha del asesor y música) se genera con código, así que se puede rehacer cuando cambie algo.
+Vídeo de 2:15 para presentar la web a los asesores de Sherpas. Todo lo que sale en el móvil son grabaciones reales de la web, hechas por un navegador automático. El montaje (textos, posición del móvil, ficha del asesor y música) se genera con código, así que se puede rehacer cuando cambie algo.
 
 ## Qué se toca para cambiar algo
 
@@ -10,6 +10,7 @@ Vídeo de unos 2 minutos y medio para presentar la web a los asesores de Sherpas
 | Los datos de la ficha del asesor, el título o el cierre | `guion.py` (`FICHA_ASESOR`, `TITULO`, `CIERRE`) | No |
 | Qué se pulsa en la web, qué respuestas se dan, o la web ha cambiado | `escenas.js` | Sí |
 | La música | `musica.py` | No |
+| El logo de Sherpas de la esquina | `sherpas-logo.png` (es `assets/brand/sherpas-logo.svg` en blanco) | No |
 
 `motor.py` (el montaje) y `grabar.js` (la grabadora) no hace falta tocarlos.
 
@@ -26,7 +27,12 @@ python3 video/construir.py --sin-grabar  # solo vuelve a montar, con las grabaci
 python3 video/construir.py --muestras    # un fotograma de cada parte en video/.muestras/, para revisar en segundos
 ```
 
-El vídeo queda en `video/salida/presentacion.mp4`. Las grabaciones (`.grabaciones/`, unos 800 MB de fotogramas) no se suben al repo.
+El vídeo queda en `video/salida/presentacion.mp4`.
+
+**Si ya tienes Chrome instalado** y no quieres bajar el Chromium de Playwright, graba con ese:
+`CHROME_PATH="/ruta/a/chrome" python3 video/construir.py` (en Windows, por ejemplo `C:\Program Files\Google\Chrome\Application\chrome.exe`).
+
+**Fuentes:** la primera vez se bajan Poppins e Inter de Google Fonts a `video/.fuentes/`. Si tu red no deja, copia ahí los `.ttf` con el nombre `Poppins-400.ttf`, `Poppins-700.ttf`, `Inter-500.ttf`, etc. Las grabaciones (`.grabaciones/`, unos 800 MB de fotogramas) no se suben al repo.
 
 La grabación arranca la web en local con `scripts/serve.mjs`, así que graba la versión que tengas en tu copia del repo.
 
@@ -36,6 +42,14 @@ La grabación arranca la web en local con `scripts/serve.mjs`, así que graba la
 2. `motor.py` lee `guion.py`. Cada parte de un bloque es un clip, `('escena', 'marca', desde, hasta, velocidad)`, más la posición del móvil (`izq`, `der`, `centro` o coordenadas) y su texto. El texto se coloca solo en el lado libre. El móvil se desliza de una posición a la siguiente. Con `pase=True` hace el gesto de pasar el móvil a la otra persona.
 3. `musica.py` sintetiza la música al ritmo de los bloques: un golpe en el título, más ritmo desde el modo pareja y una bajada en la ficha del asesor.
 4. `construir.py` lo junta todo con `ffmpeg`.
+
+## Cambios de la versión 2:15 (v3)
+
+- Empieza con el problema (las familias no saben si lo hacen bien ni qué problemas tienen) y el quiz se cuenta como «estimar y ver el dato real», nunca como juego ni «adivinar».
+- El modo pareja cuenta sus ventajas: contestan por separado sin influirse y luego ponen en común sus conclusiones.
+- El texto secundario va en Poppins fina y más apagada (`estilo()` en `motor.py`), en segundo plano frente a los titulares.
+- Logo de Sherpas arriba a la derecha todo el vídeo y una frase de conclusión en el cierre (`CIERRE['frase']`).
+- Grabación sin tirones: `grabar.js` mete un píxel que cambia en cada fotograma para que Chrome no deje de mandarlos, y en la ruleta el giro hasta la tarjeta que se abre se ve entero.
 
 ## Si una escena falla al grabar
 

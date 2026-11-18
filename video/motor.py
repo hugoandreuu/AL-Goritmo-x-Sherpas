@@ -100,13 +100,13 @@ def pintar_movil(cv, ruta, x, y, giro=0.0, escala=1.0, alfa=1.0):
     cv.alpha_composite(ph, (int(x - ph.width / 2), int(y - ph.height / 2)))
 
 # ---------------------------------------------------------------- logo de Sherpas (arriba a la derecha, todo el vídeo)
+# sherpas-logo.png es assets/brand/sherpas-logo.svg pasado a PNG blanco con fondo transparente.
 _LOGO = Image.open(os.path.join(AQUI, 'sherpas-logo.png')).convert('RGBA')
 LOGO = _LOGO.resize((round(_LOGO.width * 36 / _LOGO.height), 36), Image.LANCZOS)
 def poner_logo(cv, T):
     a = 0.9 * rampa(T, 0.2, 0.9)
     if a <= 0.01: return
-    im = LOGO if a >= 0.9 else LOGO
-    im = im.copy(); im.putalpha(im.getchannel('A').point(lambda v: int(v * a)))
+    im = LOGO.copy(); im.putalpha(im.getchannel('A').point(lambda v: int(v * a)))
     cv.alpha_composite(im, (W - 72 - im.width, 52))
 
 POS = {'izq': (560, 540, -3.0, 0.94), 'der': (1360, 540, 3.0, 0.94), 'centro': (960, 560, 0.0, 0.84)}
