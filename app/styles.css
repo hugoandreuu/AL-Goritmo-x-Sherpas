@@ -1664,3 +1664,18 @@ body.fondo-on .cta-bar::before {
 .dock:not(:has(.btn:enabled)) { background: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 /* Mientras el botón está escondido (aún sin contestar), el dock no pinta su velo: no queda una caja vacía. */
 .dock:not(:has(.btn:enabled))::before { display: none; }
+
+/* ===== Marca Sherpas: el logo de sherpaswealth.com arriba a la izquierda en todas las pantallas,
+   en la hoja del asesor y en el aviso de la reunión. Siempre en azul marino, sin efectos. ===== */
+.sh-logo { display: block; width: auto; color: var(--navy); }
+.top { display: block; }
+.top:has(#top-actions:empty) { display: block; }
+.top .brand { display: flex; align-items: center; margin-right: auto; overflow: visible; flex: none; }
+.top .brand .sh-logo { height: 22px; }
+.top-in { justify-content: space-between; min-height: 52px; padding: 12px 16px 0; }
+@media (max-width: 400px) { .top .brand .sh-logo { height: 19px; } .top-in { gap: 6px; } }
+.sh-firma { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; color: var(--ink-3); font-size: 12.5px; }
+.sh-firma .sh-logo { height: 16px; }
+.sh-firma span { padding-left: 8px; border-left: 1px solid var(--line); }
+#hoja .sh-firma { margin-bottom: 10px; }
+@media print { .top { display: block !important; } .top #top-actions { display: none; } }

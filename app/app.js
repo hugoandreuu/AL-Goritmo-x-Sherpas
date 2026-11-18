@@ -12,6 +12,9 @@
   const Mk = v => (v == null || isNaN(v)) ? 'sin dato' : Math.abs(v) >= 1e6 ? dec(v / 1e6, 2) + ' M$' : Math.abs(v) >= 1e4 ? Math.round(v / 1e3) + ' K$' : M(v);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const low1 = s => s.charAt(0).toLowerCase() + s.slice(1);
+  // Logo de Sherpas (el de sherpaswealth.com), el mismo que va en la cabecera de index.html.
+  const LOGO = (document.querySelector('.top .brand .sh-logo') || {}).outerHTML || '';
+  const firma = t => `<div class="sh-firma">${LOGO}${t ? `<span>${t}</span>` : ''}</div>`;
 
   // ------------------------------------------------------------------ estudio y estado
   let IDX = [], CASOS = {}, E = null, QMAP = {}, QUIZ = [], SLIDES = [];
@@ -50,8 +53,7 @@
     buildQuiz(S.match || []);
     try { localStorage.setItem('plan-v2-caso', slug); } catch (e) { /* nada */ }
     LAST_SCORE = null;
-    document.querySelector('.brand').innerHTML = `<span class="logo" aria-hidden="true"></span>Plan ${esc(E.fam.apellido)} <small>· prototipo</small>`;
-    document.title = `${w('Vuestro', 'Tu')} plan de futuro`;
+    document.title = `${w('Vuestro', 'Tu')} plan de futuro · Sherpas`;
   }
 
   // Nota según los pasos marcados. Solo notas que trae el plan: la de cada paso y las combinaciones que da.
@@ -621,7 +623,7 @@
     const tit = p ? (oculto ? `Parada ${i + 1} de ${w('vuestra', 'tu')} ruta` : pTitulo(p)) : `${w('Vuestro', 'Tu')} camino, de ${E.nota.hoy} a ${E.nota.max}`;
     const txt = p ? `${w('Vuestro', 'Tu')} asesor ${w('os', 'te')} explica esta parada con ${w('vuestras', 'tus')} cifras: qué hacer, cuándo y cuánto sube ${w('vuestra', 'tu')} nota.`
       : `${w('Vuestro', 'Tu')} asesor recorre el camino ${w('con vosotros', 'contigo')}, parada a parada, y ${w('os', 'te')} ayuda a dar cada paso.`;
-    sheet(`<div class="kicker">${w('Os', 'Te')} acompañamos</div><h2>${esc(tit)}</h2><p class="muted">${txt}</p>
+    sheet(`${firma('Asesoramiento')}<div class="kicker">${w('Os', 'Te')} acompañamos</div><h2>${esc(tit)}</h2><p class="muted">${txt}</p>
       ${S.booking ? `<p class="saved">${ic('check', 15)}Reunión pedida: ${esc(S.booking.short)}. Lo ${w('veréis', 'verás')} ahí.</p><button class="btn block" data-act="close">Seguir</button>`
         : `<button class="btn block" data-act="book">${ic('cal', 18)} Reservar reunión</button><p class="tiny" style="text-align:center;margin:.5em 0 0">30 minutos por videollamada · sin compromiso</p>`}
       ${p && !oculto && S.stage !== 'pareja' ? `<button class="link" style="width:100%" data-act="verparada" data-s="${p.key}">Ver esta parte del plan</button>` : ''}
@@ -1300,7 +1302,7 @@
     const acc = by('yes'), dud = by('doubt'), no = by('no'), open = S.doubts.filter(d => d.status === 'open'), res = S.doubts.filter(d => d.status === 'resolved');
     const ad = E.fam.adultos, quien = !E.fam.pl ? ad[0].nombre : S.who === 'juntos' ? `${ad[0].nombre} y ${ad[1].nombre}` : S.who === 'b' ? ad[1].nombre : ad[0].nombre;
     const catLabel = id => (E.dudas.find(c => c.id === id) || {}).label;
-    return `<div class="card" id="hoja"><div class="spread"><h3>Hoja para el asesor</h3>${b ? '<span class="tag good">Reunión pedida</span>' : '<span class="tag acc">Sin reunión todavía</span>'}</div>
+    return `<div class="card" id="hoja">${firma('')}<div class="spread"><h3>Hoja para el asesor</h3>${b ? '<span class="tag good">Reunión pedida</span>' : '<span class="tag acc">Sin reunión todavía</span>'}</div>
       <p class="small">${b ? `<b>${esc(b.label)}</b> · ${b.mins} min · ` : ''}${esc(E.fam.titulo)} (${esc(quien)})</p>
       <p class="tiny">Prototipo: no se envía nada. En producción, esta hoja le llega al asesor al pedir la reunión.</p>
       ${E.lectura ? `<h3 style="margin-top:14px">Lectura del caso</h3><p>${esc(E.lectura)}</p>` : ''}
@@ -1361,7 +1363,7 @@
       ${NO_REASONS().map(r => `<button class="opt" data-act="noreason" data-s="${key}" data-v="${esc(r)}">${esc(r)}</button>`).join('')}`);
   }
   function talkSheet() {
-    sheet(`<h2>Hablarlo con una persona</h2><p>${w('Os ayudamos', 'Te ayudamos')} a pedir cita con ${w('vuestro', 'tu')} asesor. Le llega lo que ${w('habéis', 'has')} contestado, para no repetirlo.</p>
+    sheet(`${firma('Asesoramiento')}<h2>Hablarlo con una persona</h2><p>${w('Os ayudamos', 'Te ayudamos')} a pedir cita con ${w('vuestro', 'tu')} asesor. Le llega lo que ${w('habéis', 'has')} contestado, para no repetirlo.</p>
       <button class="btn block" data-act="book">Pedir cita</button><button class="link" style="width:100%" data-act="close">Seguir aquí</button>`);
   }
   function settingsSheet() {
