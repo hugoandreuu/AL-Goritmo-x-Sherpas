@@ -1,6 +1,7 @@
 """Pone la voz en off encima del vídeo ya montado, sin volver a renderizar la imagen.
 Uso: python3 video/voz_encima.py [entrada.mp4] [salida.mp4]
-     (por defecto video/presentacion.mp4 -> video/salida/presentacion_voz.mp4)
+     (por defecto video/salida/presentacion.mp4, el que deja construir.py sin voz -> video/salida/presentacion_voz.mp4;
+      cópialo a video/presentacion.mp4 para subirlo. No lo pases dos veces por el mismo vídeo: se duplicaría la voz.)
 
 - Los tiempos van por bloque del guion (motor.tiempos), así que si cambia la duración de un bloque, la voz le sigue.
 - Cada frase (video/voz/*.mp3) se iguala en volumen; la música y los efectos bajan solos mientras habla la voz.
@@ -24,7 +25,7 @@ VOZ = [
     ('reto', 3.63, '25.mp3', 'Por eso lo convertimos en un quiz de cinco minutos.'),
     ('quiz', 1.18, '12.mp3', 'Primero cuentan qué les quita el sueño.'),
     ('quiz', 3.83, '26.mp3', 'Michael cree que su efectivo cubre seis meses de gastos…'),
-    ('quiz', 7.38, '27.mp3', '…y su plan dice 3,2. Ninguna cifra se inventa: todas salen del plan.'),
+    ('quiz', 8.68, '27.mp3', '…y su plan dice 3,2. Ninguna cifra se inventa: todas salen del plan.'),
     ('quiz', 14.8, '15.mp3', 'Lo que les preocupa va directo al cuaderno del asesor.'),
     ('duo', 0.5, '28.mp3', 'Cada uno contesta en privado, en el mismo móvil.'),
     ('duo', 5.1, '29.mp3', 'Melanie no ve lo de Timothy.'),
@@ -49,7 +50,7 @@ def leer(ruta):
 
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
-    entrada = args[0] if args else os.path.join(AQUI, 'presentacion.mp4')
+    entrada = args[0] if args else os.path.join(AQUI, 'salida', 'presentacion.mp4')
     salida = args[1] if len(args) > 1 else os.path.join(AQUI, 'salida', 'presentacion_voz.mp4')
     os.makedirs(os.path.dirname(salida), exist_ok=True)
     inicio = {b.cfg.get('id'): a for a, _, b in motor.tiempos(motor.bloques())}
