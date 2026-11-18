@@ -64,7 +64,7 @@ SEGMENTOS = [
             '# Reaccionan, y sus dudas', '## van al cuaderno del asesor.', '«Me preocupa» también es información:', 'llegan a la reunión sabiendo de qué hablar.']),
     ]),
     dict(tipo='duo', id='duo', etiqueta='02 · MODO PAREJA', juntos=('pareja', 'rev_riesgo'), junta=1.1, fases=[
-        dict(lado='izq', clip=('pareja', 't_q1', 1.8, 6.4, 1.0), quieto=('pareja', 'handoff', 2.2), texto=[
+        dict(lado='izq', clip=('pareja', 't_q1', 1.8, 6.4, 1.0), quieto=('pareja', 'm_q2', 0.3), texto=[
             '# Cada uno contesta en privado,', 'sin que la opinión de uno influya en la del otro. Timothy, primero.']),
         dict(lado='der', clip=('pareja', 'm_q2', 0.0, 3.6, 1.0), quieto=('pareja', 't_q1', 6.4), texto=[
             '# …y Melanie, sin ver lo de Timothy.', 'Las dos visiones pesan lo mismo. Lo que les preocupa, solo lo verá el asesor.']),
