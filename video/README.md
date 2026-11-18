@@ -1,5 +1,7 @@
 # Vídeo de presentación
 
+**El vídeo listo para ver está en [`video/presentacion.mp4`](presentacion.mp4)** (2:00, 1920×1080). Si lo rehaces, sale en `video/salida/presentacion.mp4`; cópialo aquí para subir la versión nueva.
+
 Vídeo de 2:00 para presentar la web a los asesores de Sherpas. Todo lo que sale en el móvil son grabaciones reales de la web, hechas por un navegador automático. El montaje (textos, posición del móvil, ficha del asesor y música) se genera con código, así que se puede rehacer cuando cambie algo.
 
 ## Qué se toca para cambiar algo
