@@ -8,7 +8,7 @@ Equipo **AL-Goritmo** · reto «Bring the plan to life» de Sherpas · hackathon
 
 **Demo:** https://hugoandreuu.github.io/AL-Goritmo-x-Sherpas/ (mejor en el móvil; se actualiza con cada cambio en `main`).
 
-**Vídeo (2 min):** [video/presentacion.mp4](video/presentacion.mp4) · **Qué hemos hecho y por qué, en media página:** [docs/MEDIA-PAGINA.md](docs/MEDIA-PAGINA.md)
+**Vídeo (2 min):** [verlo en Google Drive](https://drive.google.com/file/d/1JtANRoczL8k64QQrzJE9cUYiBZc87e_U/view?usp=sharing) (también en el repo: [video/presentacion.mp4](video/presentacion.mp4)) · **Qué hemos hecho y por qué, en media página:** [docs/MEDIA-PAGINA.md](docs/MEDIA-PAGINA.md)
 
 **Equipo:** Hugo Andreu, Álex Cabanes y Daniel Torres Bursik.
 
