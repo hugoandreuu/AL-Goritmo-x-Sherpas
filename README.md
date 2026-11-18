@@ -8,6 +8,10 @@ Equipo **AL-Goritmo** · reto «Bring the plan to life» de Sherpas · hackathon
 
 **Demo:** https://hugoandreuu.github.io/AL-Goritmo-x-Sherpas/ (mejor en el móvil; se actualiza con cada cambio en `main`).
 
+**Vídeo (2 min):** [video/presentacion.mp4](video/presentacion.mp4) · **Qué hemos hecho y por qué, en media página:** [docs/MEDIA-PAGINA.md](docs/MEDIA-PAGINA.md)
+
+**Equipo:** Hugo Andreu, Álex Cabanes y Daniel Torres Bursik.
+
 ## Qué mirar en dos minutos
 
 1. Abre la demo. Sale la familia Weah (Timothy y Melanie).
@@ -52,7 +56,7 @@ app/            la web (HTML, CSS y JS sin frameworks). Detalle de cada pantalla
 cases/          datos y PDF de las 4 familias del reto (no se tocan)
 scripts/        estudio.mjs (genera los estudios), corto.mjs (resúmenes en español),
                 build.mjs (archivo único y web de Pages), serve.mjs (servidor local)
-docs/           RETO.md (enunciado), estudios/ (lo que lee el LLM de cada familia),
+docs/           RETO.md (enunciado), MEDIA-PAGINA.md (qué hemos hecho y por qué), estudios/ (lo que lee el LLM de cada familia),
                 brainstorming/ (decisiones y por qué), visualizacion.md (reglas de las gráficas),
                 archivo/ (planes e ideas antiguas, solo como historia)
 examples/voice/ ejemplo de voz que venía con la plantilla (no se usa)
