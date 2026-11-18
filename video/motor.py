@@ -171,19 +171,21 @@ class Texto(Bloque):
 class Titulo(Bloque):
     def pintar(self, cv, t, e):
         T = G.TITULO
-        poner(cv, etiqueta(T['antes']), W // 2, 380, t, 0.1, self.dur, centrado=True)
-        poner(cv, [(T['nombre'][0], ('Poppins', 800, 110), BLANCO), (T['nombre'][1], ('Poppins', 800, 110), 'grad')], W // 2, 430, t, 0.3, self.dur, centrado=True)
+        poner(cv, etiqueta(T['antes']), W // 2, 380, t, 0.0, self.dur, centrado=True)
+        poner(cv, [(T['nombre'][0], ('Poppins', 800, 110), BLANCO), (T['nombre'][1], ('Poppins', 800, 110), 'grad')], W // 2, 430, t, 0.1, self.dur, centrado=True)
         poner(cv, [(T['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 720, t, 1.0, self.dur, centrado=True)
 
 class Cierre(Bloque):
     def pintar(self, cv, t, e):
         C, T = G.CIERRE, G.TITULO; fin = self.dur + 1
         poner(cv, [(T['nombre'][0], ('Poppins', 800, 100), BLANCO), (T['nombre'][1], ('Poppins', 800, 100), 'grad')], W // 2, 230, t, 0.2, fin, centrado=True)
-        poner(cv, [(C['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 520, t, 0.9, fin, centrado=True)
+        if C.get('sub'): poner(cv, [(C['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 520, t, 0.9, fin, centrado=True)
         if C.get('frase'):
-            poner(cv, [(l, ('Poppins', 700, 46), BLANCO if i == 0 else 'grad') for i, l in enumerate(C['frase'])], W // 2, 600, t, 1.6, fin, centrado=True)
-        poner(cv, [(C['enlace'], ('Poppins', 600, 30), BLANCO)], W // 2, 800, t, 2.6, fin, centrado=True)
-        poner(cv, [(C['firma'], ('Poppins', 400, 24), LILA)], W // 2, 870, t, 2.9, fin, centrado=True)
+            poner(cv, [(l, ('Poppins', 700, 46), BLANCO if i == 0 else 'grad') for i, l in enumerate(C['frase'])], W // 2, 540, t, 1.2, fin, centrado=True)
+        poner(cv, [(C['enlace'], ('Poppins', 600, 30), BLANCO)], W // 2, 700, t, 2.4, fin, centrado=True)
+        equipo, _, resto = C['firma'].partition(' · ')
+        poner(cv, [(equipo, ('Poppins', 700, 48), 'grad')], W // 2, 765, t, 2.7, fin, centrado=True)
+        if resto: poner(cv, [(resto, ('Poppins', 400, 24), LILA)], W // 2, 835, t, 2.9, fin, centrado=True)
 
 class Familias(Bloque):
     def pintar(self, cv, t, e):
@@ -288,7 +290,9 @@ class Movil(Bloque):
         p, (x, y, g, s) = self.estado_movil(min(t, self.dur - 1e-3))
         esc, marca, a, b, vel = p['clip']
         ruta = grabacion(esc).en(marca, a + max(0, t - p['t0']) * vel)
-        pintar_movil(cv, ruta, x, y, g, s)
+        flota = math.sin((t + self.dur) * 1.3)
+        pintar_movil(cv, ruta, x, y + 6 * flota, g + 0.4 * flota, s)
+        self.x_movil = x
         for i, tb in enumerate(self.textos):
             t0 = tb['t0'] + (0.15 if i else 0.25); t1 = tb['t1'] if i < len(self.textos) - 1 else self.dur
             dx = tb['destino'][0]
@@ -314,6 +318,50 @@ class Movil(Bloque):
                 continue
             poner(cv, etiqueta(self.cfg['etiqueta']), col, 300, t, t0 - 0.1, t1)
             poner(cv, filas(tb['texto']), col, 360, t, t0, t1)
+
+# ---------------------------------------------------------------- voz: subtítulos, golpes de cámara, barra de progreso
+@functools.lru_cache(maxsize=64)
+def pastilla(texto, ancho_max=700):
+    f = fuente('Poppins', 600, 34); lineas, cur = [], ''
+    for w in texto.split():
+        c = (cur + ' ' + w).strip()
+        if f.getlength(c) > ancho_max and cur: lineas.append(cur); cur = w
+        else: cur = c
+    lineas.append(cur); lh = 48
+    tw = int(max(f.getlength(l) for l in lineas)); w, h = tw + 56, lh * len(lineas) + 26
+    im = Image.new('RGBA', (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    d.rounded_rectangle((0, 0, w - 1, h - 1), 24, fill=(12, 10, 34, 205))
+    for i, l in enumerate(lineas): d.text((w / 2, 13 + lh * i + lh / 2), l, font=f, fill=BLANCO, anchor='mm')
+    return im
+
+def poner_subtitulo(cv, T, b, subs):
+    for t0, t1, texto in subs:
+        if t0 <= T < t1:
+            a = min(1, (T - t0) / 0.15, (t1 - T) / 0.15)
+            lado = None
+            if isinstance(b, Movil):
+                xm = getattr(b, 'x_movil', 960)
+                lado = 480 if xm > 1100 else (1440 if xm < 820 else 480)
+            im = pastilla(texto, 700 if lado else 1100)
+            if a < 1: im = im.copy(); im.putalpha(im.getchannel('A').point(lambda v: int(v * a)))
+            cx, cy = (lado, 900) if lado else (W // 2, 975)
+            cv.alpha_composite(im, (int(cx - im.width / 2), int(cy - im.height / 2)))
+
+def golpe(cv, T, golpes):
+    """Acercamiento rápido de cámara (1,05 → 1) y destello suave en cada golpe."""
+    for tg in golpes:
+        k = T - tg
+        if 0 <= k < 0.6:
+            z = 1 + 0.05 * (1 - suave(k / 0.45))
+            if z > 1.001:
+                cw, ch = W / z, H / z
+                cv = cv.crop((int((W - cw) / 2), int((H - ch) / 2), int((W + cw) / 2), int((H + ch) / 2))).resize((W, H), Image.BICUBIC)
+            fl = 0.22 * (1 - k / 0.25) if k < 0.25 else 0
+            if fl > 0: cv = Image.blend(cv, Image.new('RGBA', (W, H), (255, 255, 255, 255)), fl)
+    return cv
+
+def barra(cv, T, total):
+    d = ImageDraw.Draw(cv); d.rectangle((0, H - 5, int(W * T / total), H), fill=(148, 141, 247, 230))
 
 # ---------------------------------------------------------------- línea de tiempo
 def bloques():
@@ -350,6 +398,14 @@ def main():
             for t in ts:
                 cv = fondo(a + t); b.pintar(cv, t, None); poner_logo(cv, a + t); cv.convert('RGB').save(os.path.join(d, f'{n:02d}_{b.cfg.get("id")}.jpg'), quality=85); n += 1
         print('Muestras en', d); return
+    inicio = {b.cfg.get('id'): a for a, _, b in tl}
+    subs, voz = [], []
+    for bid, off, archivo, texto in getattr(G, 'VOZ', []):
+        t0 = inicio[bid] + off
+        d = float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', os.path.join(AQUI, 'voz', archivo)]))
+        subs.append((t0, t0 + d + 0.1, texto)); voz.append((round(t0, 3), archivo))
+    golpes = [inicio[bid] + off for bid, off in getattr(G, 'GOLPES', [])]
+    json.dump(dict(voz=voz, golpes=golpes, bloques=[round(a, 3) for a, _, _ in tl]), open(os.path.join(AQUI, '.trabajo', 'voz.json'), 'w'), indent=1)
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
                            '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', salida], stdin=subprocess.PIPE)
     n = int(total * FPS); j = 0
@@ -358,6 +414,7 @@ def main():
         while j < len(tl) - 1 and T >= tl[j][1]: j += 1
         a, e, b = tl[j]
         cv = fondo(T); b.pintar(cv, T - a, None); poner_logo(cv, T)
+        poner_subtitulo(cv, T, b, subs); cv = golpe(cv, T, golpes); barra(cv, T, total)
         ff.stdin.write(cv.convert('RGB').tobytes())
         if i % 300 == 0: print(f'  fotograma {i}/{n}', flush=True)
     ff.stdin.close(); ff.wait()

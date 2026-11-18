@@ -19,7 +19,8 @@ if '--muestras' in sys.argv:
 sin_audio = os.path.join(AQUI, '.trabajo', 'video_sin_audio.mp4')
 run(sys.executable, os.path.join(AQUI, 'motor.py'), sin_audio)
 run(sys.executable, os.path.join(AQUI, 'musica.py'))
+run(sys.executable, os.path.join(AQUI, 'mezcla.py'))
 salida = os.path.join(AQUI, 'salida', 'presentacion.mp4')
-run('ffmpeg', '-y', '-loglevel', 'error', '-i', sin_audio, '-i', os.path.join(AQUI, '.trabajo', 'musica.wav'),
-    '-filter:a', 'volume=-3dB', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', salida)
+run('ffmpeg', '-y', '-loglevel', 'error', '-i', sin_audio, '-i', os.path.join(AQUI, '.trabajo', 'mezcla.wav'),
+    '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', salida)
 print('Listo:', salida)
