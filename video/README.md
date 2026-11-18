@@ -1,8 +1,8 @@
 # Vídeo de presentación
 
-**El vídeo listo para ver está en [`video/presentacion.mp4`](presentacion.mp4)** (2:00, 1920×1080). Si lo rehaces, sale en `video/salida/presentacion.mp4`; cópialo aquí para subir la versión nueva.
+**El vídeo listo para ver está en [`video/presentacion.mp4`](presentacion.mp4)** (2:01, 1920×1080). Si lo rehaces, sale en `video/salida/presentacion.mp4`; cópialo aquí para subir la versión nueva.
 
-Vídeo de 2:00 para presentar la web a los asesores de Sherpas. Todo lo que sale en el móvil son grabaciones reales de la web, hechas por un navegador automático. El montaje (textos, posición del móvil, ficha del asesor y música) se genera con código, así que se puede rehacer cuando cambie algo.
+Vídeo de 2:01 para presentar la web a los asesores de Sherpas. Todo lo que sale en el móvil son grabaciones reales de la web, hechas por un navegador automático. El montaje (textos, posición del móvil, ficha del asesor y música) se genera con código, así que se puede rehacer cuando cambie algo.
 
 ## Qué se toca para cambiar algo
 
@@ -53,14 +53,21 @@ La grabación arranca la web en local con `scripts/serve.mjs`, así que graba la
 - Logo de Sherpas arriba a la derecha todo el vídeo y una frase de conclusión en el cierre (`CIERRE['frase']`).
 - Grabación sin tirones: `grabar.js` mete un píxel que cambia en cada fotograma para que Chrome no deje de mandarlos, y en la ruleta el giro hasta la tarjeta que se abre se ve entero.
 
-## Cambios de la versión 2:00 (v4)
+## Animaciones (versión con barra y pantalla partida)
 
-- Recortado a 2:00 y abre directamente con el móvil de la familia Weah (gancho: 300 $ al mes, ¿cuánto son intereses?).
-- **Línea de vida** abajo: los capítulos de `CAPITULOS` en `guion.py` se encienden como paradas a medida que avanza el vídeo.
-- **El dato sale del móvil**: con `cifra=dict(txt, t, y, antes, sub, color)` en una parte, la cifra real sale de la pantalla y se queda grande junto al texto (270 $, 8 años, 60/100).
-- **Colores de la pareja**: `tinte='azul'` (Timothy), `'coral'` (Melanie) o `'morado'` (juntos) tiñe el fondo; con `pase=True` y tinte, el color de Melanie se abre desde el móvil al pasarlo.
-- **Ficha del asesor**: las respuestas salen como fichas del móvil de la familia (`FICHA_ASESOR['movil']`) y rellenan la ficha una a una.
-- Subtítulos más legibles (Poppins 500, 32 px, más claros).
+- **Golpe de realidad:** en el gancho, una barra de 0 a 300 $ con las marcas de lo que creía cada uno y, tras una pausa, la cifra real contando y con un temblor (`barra=` en la parte de `guion.py`).
+- **Modo pareja en pantalla partida:** bloque `duo`: dos móviles separados por una línea; al destaparlo se juntan en uno.
+- **Dudas que vuelan:** `vuela=` lleva «Me preocupa» del móvil al cuaderno del asesor; en la ficha final cada fila llega volando.
+- **Cifras que cuentan:** escribe `{n:60}` o `{n:26-62}` dentro de un texto.
+- **Sonido:** `golpe=` en una parte pone un golpe grave (la música se aparta medio segundo antes); las marcas hacen clic y los cambios de móvil, *whoosh*. `motor.py` los apunta en `.trabajo/tiempos.json` y `musica.py` los mezcla.
+
+## Versión final (2:01): la de Alex con los colores de la pareja y las cifras que salen del móvil
+
+- **Intro:** arranca en seco con el móvil de los Weah («¿Cuánto se va en intereses?»), sigue la barra del golpe de realidad con el 270 $ y su temblor, y después una línea con el problema antes del título.
+- **Colores de la pareja:** en la pantalla partida, la mitad de Timothy se tiñe de azul y la de Melanie de coral; al juntarse, morado (`tinte=` en las partes de un bloque `movil`, y `tinte_entrada`).
+- **La cifra sale del móvil:** `cifra=dict(txt, t, y, antes, sub, color)` saca el dato real de la pantalla y lo deja grande al lado; `{n:19-8}` dentro de `txt` lo hace contar (8 años, 60/100).
+- **Ficha del asesor:** las respuestas salen del móvil de la familia (`FICHA_ASESOR['movil']`) y la rellenan una a una.
+- **Cierre con QR:** el móvil gira sobre sí mismo y su pantalla pasa a ser el QR de la demo; ya no hay enlace en texto. El QR es `demo-qr.png`; si cambia la URL de `CIERRE['qr']`, se rehace con `pip install qrcode` y `python3 -c "import qrcode; qrcode.make('URL', border=2).save('video/demo-qr.png')"`.
 
 ## Si una escena falla al grabar
 

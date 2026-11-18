@@ -85,10 +85,12 @@ MARCO, MASCARA = hacer_movil()
 def pantalla(ruta):
     return Image.open(ruta).convert('RGB').resize((SW, SH), Image.BICUBIC)
 
-def pintar_movil(cv, ruta, x, y, giro=0.0, escala=1.0, alfa=1.0):
+def pintar_movil(cv, ruta, x, y, giro=0.0, escala=1.0, alfa=1.0, ancho=1.0):
+    """ruta: fotograma de una grabación (o una imagen ya hecha). ancho < 1 estrecha el móvil, para el giro sobre sí mismo."""
     if alfa <= 0.01: return
     ph = Image.new('RGBA', (PW, PH), (0, 0, 0, 0))
-    ph.paste(pantalla(ruta), (BZ, BZ), MASCARA); ph.alpha_composite(MARCO)
+    ph.paste(ruta if isinstance(ruta, Image.Image) else pantalla(ruta), (BZ, BZ), MASCARA); ph.alpha_composite(MARCO)
+    if ancho < 0.999: ph = ph.resize((max(2, round(PW * ancho)), PH), Image.BICUBIC)
     if abs(escala - 1) > 0.002: ph = ph.resize((round(PW * escala), round(PH * escala)), Image.BICUBIC)
     if abs(giro) > 0.05: ph = ph.rotate(giro, resample=Image.BICUBIC, expand=True)
     sombra = Image.new('RGBA', (ph.width + 160, ph.height + 160), (0, 0, 0, 0))
@@ -144,8 +146,12 @@ def imagen_texto(filas, centrado=False):
         y += int(fk[2] * 1.18)
     return im
 
+def rebote(k):  # sale un poco por encima y vuelve (solo para 2-3 momentos clave)
+    k = max(0.0, min(1.0, k)); c = 1.9
+    return 1 + (c + 1) * (k - 1) ** 3 + c * (k - 1) ** 2
+
 def poner(cv, filas, x, y, t, t0, t1, centrado=False, medio=False, sube=26):
-    a = rampa(t, t0, t0 + 0.55) * (1 - rampa(t, t1 - 0.4, t1))
+    a = rampa(t, t0, t0 + 0.38) * (1 - rampa(t, t1 - 0.55, t1))
     if a <= 0.01: return
     im = imagen_texto(tuple(filas), centrado)
     dy = int((1 - rampa(t, t0, t0 + 0.7)) * sube)
@@ -172,6 +178,18 @@ def capa_tinte(color, fuerza):
 def pintar_tinte(cv, color, fuerza):
     f = int(round(fuerza * 20)) * 5  # en pasos de 5 % para poder cachear
     if f > 0: cv.alpha_composite(capa_tinte(tuple(int(v) for v in color), f))
+@functools.lru_cache(maxsize=64)
+def capa_mitad(color, fuerza, lado):
+    """Tinte solo en una mitad de la pantalla (pantalla partida del modo pareja)."""
+    m = Image.new('L', (W // 4, H // 4), 0)
+    x0 = 0 if lado == 'izq' else W // 8
+    ImageDraw.Draw(m).rectangle((x0 - (40 if lado == 'izq' else 0), -40, x0 + W // 8 + (0 if lado == 'izq' else 40), H // 4 + 40), fill=255)
+    m = m.filter(ImageFilter.GaussianBlur(14)).resize((W, H), Image.BILINEAR)
+    c = Image.new('RGBA', (W, H), color + (255,)); c.putalpha(m.point(lambda v: int(v * fuerza / 100)))
+    return c
+def pintar_mitad(cv, color, fuerza, lado):
+    f = int(round(fuerza * 20)) * 5
+    if f > 0: cv.alpha_composite(capa_mitad(tuple(int(v) for v in color), f, lado))
 def mezcla(c1, c2, k): return tuple(c1[i] + (c2[i] - c1[i]) * k for i in range(3))
 
 def barrido(cv, color, x, y, k):
@@ -182,46 +200,6 @@ def barrido(cv, color, x, y, k):
     ImageDraw.Draw(m).ellipse(((x - r) / 4, (y - r) / 4, (x + r) / 4, (y + r) / 4), fill=int(235 * a))
     capa = Image.new('RGBA', (W, H), color + (255,)); capa.putalpha(m.resize((W, H), Image.BILINEAR))
     cv.alpha_composite(capa)
-
-# ---------------------------------------------------------------- línea de vida: los capítulos como paradas del camino
-def pintar_linea(cv, T, tl):
-    caps = G.CAPITULOS
-    ini = {b.cfg.get('id'): (a, e) for a, e, b in tl}
-    if caps[0][0] not in ini: return
-    t_ini, t_fin = ini[caps[0][0]][0], ini[caps[-1][0]][1]
-    a = rampa(T, t_ini, t_ini + 0.8) * (1 - rampa(T, t_fin - 0.6, t_fin))
-    if a <= 0.01: return
-    prog = 0.0
-    for i, (cid, _) in enumerate(caps):
-        if cid in ini and T >= ini[cid][0]:
-            s, e = ini[cid]; prog = i + min(1.0, (T - s) / max(0.1, e - s))
-    x0, x1, y = 420, 1500, 1032
-    paso = (x1 - x0) / (len(caps) - 1)
-    capa = Image.new('RGBA', (W, 80), (0, 0, 0, 0)); d = ImageDraw.Draw(capa)
-    yy = 40
-    d.line((x0, yy, x1, yy), fill=(255, 255, 255, 50), width=3)
-    # el progreso avanza durante cada capítulo desde su parada hacia la siguiente
-    xp = x0 + paso * min(len(caps) - 1.0, prog)
-    cur = min(len(caps) - 1, int(prog))
-    for xx in range(int(x0), int(xp) + 1, 6):
-        k = (xx - x0) / (x1 - x0)
-        d.line((xx, yy, min(xx + 6, xp), yy), fill=tuple(int(G1[c] + (G2[c] - G1[c]) * k) for c in range(3)) + (255,), width=4)
-    f = fuente('Poppins', 600, 17)
-    for i, (cid, nombre) in enumerate(caps):
-        cx = x0 + paso * i
-        actual = i == cur
-        hecho = i < cur
-        r = 14 if actual else 11
-        if actual:
-            d.ellipse((cx - 24, yy - 24, cx + 24, yy + 24), fill=(140, 110, 255, 60))
-        d.ellipse((cx - r, yy - r, cx + r, yy + r), fill=(124, 92, 255, 255) if (hecho or actual) else (20, 16, 50, 255),
-                  outline=(255, 255, 255, 230 if (hecho or actual) else 90), width=2)
-        d.text((cx, yy), str(i + 1), font=fuente('Poppins', 700, 13 if not actual else 15), fill=(255, 255, 255, 255 if (hecho or actual) else 130), anchor='mm')
-        d.text((cx, yy - r - 8), nombre, font=f, fill=(255, 255, 255, 235 if actual else 110), anchor='mb')
-    if cur < len(caps) - 1:
-        d.ellipse((xp - 6, yy - 6, xp + 6, yy + 6), fill=(255, 255, 255, 255))
-    if a < 1: capa.putalpha(capa.getchannel('A').point(lambda v: int(v * a)))
-    cv.alpha_composite(capa, (0, y - 40))
 
 # ---------------------------------------------------------------- la cifra sale de la pantalla del móvil
 @functools.lru_cache(maxsize=32)
@@ -240,7 +218,7 @@ def pintar_cifra(cv, c, t, t1, desde, hacia):
     a = min(1.0, k * 1.6) * (1 - rampa(t, t1 - 0.4, t1))
     if a <= 0.01: return
     col = {'naranja': NARANJA, 'blanco': BLANCO, 'lila': (176, 150, 255)}[c.get('color', 'naranja')]
-    im = imagen_cifra(c['txt'], col)
+    im = imagen_cifra(contar([c['txt']], t, c['t'] - 0.15, 0.85)[0], col)   # {n:19-8} cuenta mientras vuela
     esc = 0.22 + 0.78 * k
     im = im.resize((max(1, int(im.width * esc)), max(1, int(im.height * esc))), Image.BICUBIC)
     x = desde[0] + (hacia[0] - desde[0]) * k; y = desde[1] + (hacia[1] - desde[1]) * k - 120 * math.sin(math.pi * k) * 0.5
@@ -249,10 +227,96 @@ def pintar_cifra(cv, c, t, t1, desde, hacia):
     if c.get('sub'): poner(cv, filas([c['sub']]), int(hacia[0]), int(hacia[1] + 228), t, c['t'] + 0.7, t1)
     if c.get('antes'): poner(cv, filas([c['antes']]), int(hacia[0]), int(hacia[1] - 30), t, c['t'] + 0.2, t1)
 
+# ---------------------------------------------------------------- cifras que cuentan: «{n:60}» o «{n:26-62}» en un texto
+def contar(lineas, t, t0, dur=0.9):
+    k = suave((t - t0 - 0.15) / dur)
+    def f(m):
+        a, b = (int(m.group(1)), int(m.group(2))) if m.group(2) else (0, int(m.group(1)))
+        return str(round(a + (b - a) * k))
+    return [re.sub(r'\{n:(\d+)(?:-(\d+))?\}', f, l) for l in lineas]
+
+# ---------------------------------------------------------------- piezas dibujadas
+def capa(): return Image.new('RGBA', (W, H), (0, 0, 0, 0))
+def con_alfa(im, a):
+    if a >= 0.999: return im
+    im = im.copy(); im.putalpha(im.getchannel('A').point(lambda v: int(v * a))); return im
+def pastilla(txt, f, fondo, color, pad=(22, 10)):
+    tw = f.getbbox(txt)[2]; th = f.size
+    im = Image.new('RGBA', (tw + 2 * pad[0], int(th * 1.25) + 2 * pad[1]), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    d.rounded_rectangle((0, 0, im.width - 1, im.height - 1), im.height // 2, fill=fondo)
+    d.text((pad[0], pad[1]), txt, font=f, fill=color); return im
+def avatar(letra, color, r=26):
+    im = Image.new('RGBA', (2 * r + 6, 2 * r + 6), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    d.ellipse((3, 3, 2 * r + 3, 2 * r + 3), fill=color, outline=BLANCO, width=3)
+    d.text((r + 3, r + 3), letra, font=fuente('Poppins', 700, int(r * 1.05)), fill=BLANCO, anchor='mm'); return im
+def candado(cv, x, y, a=1.0):
+    im = pastilla('En privado', fuente('Poppins', 600, 22), (255, 255, 255, 235), (60, 50, 140))
+    d = ImageDraw.Draw(im)
+    cv.alpha_composite(con_alfa(im, a), (int(x - im.width / 2), int(y - im.height / 2)))
+
+def pintar_barra(cv, t, B, x0, y0, ancho=800):
+    """Barra 0..max con las marcas de lo que creía cada uno y, tras una pausa, la real (con cuenta y temblor)."""
+    ts = B['t_real']; dx = 0
+    if ts <= t < ts + 0.45: dx = 9 * math.sin((t - ts) * 70) * (1 - (t - ts) / 0.45)
+    X = lambda v: x0 + dx + ancho * v / B['max']
+    L = capa(); d = ImageDraw.Draw(L)
+    a = rampa(t, 0.2, 0.6)
+    d.rounded_rectangle((X(0), y0 - 7, X(B['max']), y0 + 7), 7, fill=(255, 255, 255, int(46 * a)))
+    f = fuente('Poppins', 400, 24)
+    for v in range(0, B['max'] + 1, 100):
+        d.text((X(v), y0 + 30), f'{v} $', font=f, fill=SEGUNDO + (int(255 * a),), anchor='mt')
+        d.line((X(v), y0 + 10, X(v), y0 + 20), fill=(255, 255, 255, int(90 * a)), width=2)
+    # relleno naranja que crece con la cuenta
+    kr = suave((t - ts) / 0.55) if t >= ts else 0
+    if kr > 0:
+        d.rounded_rectangle((X(0), y0 - 7, X(B['real'] * kr), y0 + 7), 7, fill=NARANJA + (235,))
+    cv.alpha_composite(L)
+    for letra, nombre, v, col, tm in B['marcas']:
+        k = rampa(t, tm, tm + 0.45)
+        if k <= 0: continue
+        y = y0 - 260 * (1 - k)
+        av = avatar(letra, col); cv.alpha_composite(con_alfa(av, k), (int(X(v) - av.width / 2), int(y - av.height / 2)))
+        lab = imagen_texto(((f'{nombre} creía', ('Poppins', 400, 22), SEGUNDO), (f'{v} $', ('Poppins', 700, 30), BLANCO)), True)
+        cv.alpha_composite(con_alfa(lab, k), (int(X(v) - lab.width / 2), int(y - 34 - lab.height)))
+    if t >= ts:
+        k = rebote((t - ts) / 0.5)
+        n = round(B['real'] * suave((t - ts) / 0.55))
+        L = capa(); d = ImageDraw.Draw(L)
+        top = y0 - 70 * min(1, k)
+        d.rounded_rectangle((X(B['real']) - 4, top, X(B['real']) + 4, y0 + 18), 4, fill=NARANJA + (255,))
+        cv.alpha_composite(L)
+        im = imagen_texto(((f'{n} $', ('Poppins', 700, 58), NARANJA),), True)
+        sc = 0.6 + 0.4 * k
+        im = im.resize((max(1, int(im.width * sc)), max(1, int(im.height * sc))), Image.BICUBIC)
+        cv.alpha_composite(con_alfa(im, min(1, (t - ts) / 0.15)), (int(X(B['real']) - im.width / 2), int(top - im.height + 4)))
+
+def chip_volando(cv, txt, p0, p1, k, pequeño=0.55):
+    """Una duda que sale de un sitio y vuela en arco a otro, encogiendo."""
+    if k <= 0 or k >= 1: return
+    e = suave2(k); x = p0[0] + (p1[0] - p0[0]) * e; y = p0[1] + (p1[1] - p0[1]) * e - 160 * math.sin(math.pi * e)
+    im = pastilla(txt, fuente('Poppins', 600, 26), (255, 255, 255, 245), (90, 70, 210))
+    sc = 1 - (1 - pequeño) * e
+    im = im.resize((int(im.width * sc), int(im.height * sc)), Image.BICUBIC)
+    sh = Image.new('RGBA', (im.width + 40, im.height + 40), (0, 0, 0, 0))
+    ImageDraw.Draw(sh).rounded_rectangle((20, 26, 20 + im.width, 26 + im.height), im.height // 2, fill=(0, 0, 0, 90))
+    cv.alpha_composite(sh.filter(ImageFilter.GaussianBlur(8)), (int(x - im.width / 2 - 20), int(y - im.height / 2 - 20)))
+    cv.alpha_composite(con_alfa(im, min(1, (1 - k) / 0.12)), (int(x - im.width / 2), int(y - im.height / 2)))
+
+def cuaderno(cv, x, y, n, t_pop, t, a):
+    """Insignia «Cuaderno del asesor · n» que da un saltito cuando le llega una duda."""
+    if a <= 0.01: return
+    im = pastilla(f'Cuaderno del asesor  ·  {n}', fuente('Poppins', 600, 24), (124, 92, 255, 235), BLANCO, pad=(54, 12))
+    d = ImageDraw.Draw(im); h = im.height
+    d.rounded_rectangle((20, h // 2 - 11, 38, h // 2 + 11), 3, outline=BLANCO, width=3); d.line((25, h // 2 - 4, 33, h // 2 - 4), fill=BLANCO, width=2); d.line((25, h // 2 + 2, 33, h // 2 + 2), fill=BLANCO, width=2)
+    sc = 1 + (0.16 * math.sin(math.pi * min(1, (t - t_pop) / 0.35)) if t >= t_pop else 0)
+    if abs(sc - 1) > 0.002: im = im.resize((int(im.width * sc), int(im.height * sc)), Image.BICUBIC)
+    cv.alpha_composite(con_alfa(im, a), (int(x), int(y - im.height / 2)))
+
 # ---------------------------------------------------------------- bloques
 class Bloque:
     def __init__(self, cfg): self.cfg = cfg; self.dur = cfg.get('dur', 0)
     def pintar(self, cv, t, estado): pass
+    def efectos(self): return []   # [(segundo dentro del bloque, 'golpe' | 'tick' | 'whoosh')]
 
 class Texto(Bloque):
     def pintar(self, cv, t, e):
@@ -267,15 +331,43 @@ class Titulo(Bloque):
         poner(cv, [(T['nombre'][0], ('Poppins', 800, 110), BLANCO), (T['nombre'][1], ('Poppins', 800, 110), 'grad')], W // 2, 430, t, 0.3, self.dur, centrado=True)
         poner(cv, [(T['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 720, t, 1.0, self.dur, centrado=True)
 
+@functools.lru_cache(maxsize=1)
+def pantalla_qr():
+    """Pantalla del móvil con el QR de la demo (demo-qr.png, hecho con la librería qrcode a partir de CIERRE['qr'])."""
+    C = G.CIERRE; s = 2; w, h = SW * s, SH * s
+    im = Image.new('RGB', (w, h), (246, 244, 255)); d = ImageDraw.Draw(im)
+    d.text((w // 2, 150), 'Vuestro plan', font=fuente('Poppins', 700, 64), fill=(28, 20, 70), anchor='mm')
+    d.text((w // 2, 230), 'de futuro', font=fuente('Poppins', 700, 64), fill=(124, 92, 255), anchor='mm')
+    q = Image.open(os.path.join(AQUI, 'demo-qr.png')).convert('RGB'); qs = int(w * 0.84)
+    q = q.resize((qs, qs), Image.NEAREST); qy = (h - qs) // 2 + 20
+    d.rounded_rectangle(((w - qs) // 2 - 18, qy - 18, (w + qs) // 2 + 18, qy + qs + 18), 36, fill=(255, 255, 255), outline=(220, 214, 250), width=3)
+    im.paste(q, ((w - qs) // 2, qy))
+    d.text((w // 2, qy + qs + 100), C.get('qr_texto', ''), font=fuente('Poppins', 700, 46), fill=(28, 20, 70), anchor='mm')
+    d.text((w // 2, qy + qs + 165), 'Demo con las 4 familias del reto', font=fuente('Poppins', 500, 32), fill=(110, 100, 150), anchor='mm')
+    return im.resize((SW, SH), Image.LANCZOS)
+
 class Cierre(Bloque):
+    """Textos a la izquierda; el móvil de la familia entra, gira sobre sí mismo y su pantalla pasa a ser el QR de la demo."""
+    T_GIRO = 1.5
+    def efectos(self): return [(self.T_GIRO + 0.1, 'whoosh'), (self.T_GIRO + 0.6, 'golpe')]
     def pintar(self, cv, t, e):
-        C, T = G.CIERRE, G.TITULO; fin = self.dur + 1
-        poner(cv, [(T['nombre'][0], ('Poppins', 800, 100), BLANCO), (T['nombre'][1], ('Poppins', 800, 100), 'grad')], W // 2, 230, t, 0.2, fin, centrado=True)
-        poner(cv, [(C['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 520, t, 0.9, fin, centrado=True)
+        C, T = G.CIERRE, G.TITULO; fin = self.dur + 1; cx = 680
+        poner(cv, [(T['nombre'][0], ('Poppins', 800, 92), BLANCO), (T['nombre'][1], ('Poppins', 800, 92), 'grad')], cx, 210, t, 0.2, fin, centrado=True)
+        poner(cv, [(C['sub'], ('Poppins', 400, 32), SEGUNDO)], cx, 480, t, 0.9, fin, centrado=True)
         if C.get('frase'):
-            poner(cv, [(l, ('Poppins', 700, 46), BLANCO if i == 0 else 'grad') for i, l in enumerate(C['frase'])], W // 2, 600, t, 1.6, fin, centrado=True)
-        poner(cv, [(C['enlace'], ('Poppins', 600, 30), BLANCO)], W // 2, 800, t, 2.6, fin, centrado=True)
-        poner(cv, [(C['firma'], ('Poppins', 400, 24), LILA)], W // 2, 870, t, 2.9, fin, centrado=True)
+            k = rebote((t - 2.0) / 0.6)
+            if t > 2.0:
+                im = imagen_texto(tuple((l, ('Poppins', 700, 42), BLANCO if i == 0 else 'grad') for i, l in enumerate(C['frase'])), True)
+                sc = 0.86 + 0.14 * k; im = im.resize((int(im.width * sc), int(im.height * sc)), Image.BICUBIC)
+                cv.alpha_composite(con_alfa(im, min(1, (t - 2.0) / 0.3)), (cx - im.width // 2, 570 + int(48 * (1 - sc))))
+        poner(cv, [(C['firma'], ('Poppins', 400, 24), LILA)], cx, 860, t, 2.9, fin, centrado=True)
+        # el móvil entra desde abajo con la reunión pedida y gira hasta enseñar el QR
+        ke = suave2(t / 0.8); x, y, s = 1400, 545 + (1 - ke) * 800, 0.98
+        kg = (t - self.T_GIRO) / 0.7
+        if kg <= 0: pant, an, g = grabacion('pareja').en('pedida', 1.0), 1.0, 3 * ke
+        elif kg < 0.5: pant, an, g = grabacion('pareja').en('pedida', 1.0), math.cos(math.pi * kg), 3 * (1 - kg * 2)
+        else: pant, an, g = pantalla_qr(), -math.cos(math.pi * min(1, kg)), 0.0
+        pintar_movil(cv, pant, x, y - 30 * math.sin(math.pi * max(0, min(1, kg))), g, s, ancho=max(0.02, an))
 
 class Familias(Bloque):
     def pintar(self, cv, t, e):
@@ -359,6 +451,57 @@ def imagen_chip(txt):
     d.text((22, 10), txt, font=f, fill=(255, 255, 255, 255))
     return im
 
+Asesor.efectos = lambda self: [(1.3 + i * 0.85 + 0.7, 'tick') for i in range(len(self.filas))]
+
+class Duo(Bloque):
+    """Modo pareja en pantalla partida: cada uno en su móvil, separados por una línea; al final se juntan en uno."""
+    def __init__(self, cfg):
+        super().__init__(cfg); self.fases = []; t = 0.0
+        for f in cfg['fases']:
+            a, b, vel = f['clip'][2:]; d = (b - a) / vel
+            self.fases.append(dict(f, t0=t, t1=t + d)); t += d
+        self.t_junta = t; self.dur = t + cfg.get('junta', 1.1)
+        self.fin = POS['centro']
+    def efectos(self): return [(self.t_junta + 0.1, 'whoosh'), (0.1, 'whoosh')]
+    def pintar(self, cv, t, e):
+        PL, PR = (560, 620, -2.0, 0.74), (1360, 620, 2.0, 0.74)
+        f = next((x for x in self.fases if t < x['t1']), self.fases[-1])
+        lado = f['lado']; esc, marca, a, b, vel = f['clip']
+        vivo = grabacion(esc).en(marca, a + max(0, min(t, f['t1']) - f['t0']) * vel)
+        quieto = grabacion(f['quieto'][0]).en(f['quieto'][1], f['quieto'][2])
+        izq, der = (vivo, quieto) if lado == 'izq' else (quieto, vivo)
+        kin = suave2(t / 0.7)                                   # entran desde abajo
+        kj = suave2((t - self.t_junta) / (self.dur - self.t_junta))  # se juntan
+        if kj > 0:  # el de la derecha pasa a mostrar la revelación conjunta
+            der = grabacion(self.cfg['juntos'][0]).en(self.cfg['juntos'][1], 0.0) if kj > 0.45 else der
+        # colores de la pareja: Timothy en azul a la izquierda, Melanie en coral a la derecha; al juntarse, morado
+        ti = rampa(t, 0.0, 0.8) * (1 - kj)
+        w = rampa(t, self.fases[-1]['t0'] - 0.3, self.fases[-1]['t0'] + 0.5)   # el color «activo» pasa de un lado a otro
+        f_izq = 0.5 - 0.32 * w; f_der = 0.18 + 0.32 * w
+        pintar_mitad(cv, TINTES['azul'], f_izq * ti, 'izq'); pintar_mitad(cv, TINTES['coral'], f_der * ti, 'der')
+        if kj > 0: pintar_tinte(cv, TINTES['morado'], 0.55 * kj)
+        def mover(P, kin, kj):
+            x, y, g, s = P; cx, cy, cg, cs = self.fin
+            y += (1 - kin) * 800
+            return x + (cx - x) * kj, y + (cy - y) * kj, g + (cg - g) * kj, s + (cs - s) * kj
+        lin = (1 - kj) * rampa(t, 0.3, 0.9)
+        if lin > 0.01:
+            L = capa(); d = ImageDraw.Draw(L)
+            for yy in range(270, 1010, 26): d.line((960, yy, 960, yy + 13), fill=(255, 255, 255, int(110 * lin)), width=3)
+            cv.alpha_composite(L)
+        xl = mover(PL, kin, kj); xr = mover(PR, kin, kj)
+        act_izq = 1.0 if lado == 'izq' else 0.5; act_der = 1.0 if lado == 'der' else 0.5
+        pintar_movil(cv, izq, *xl, alfa=act_izq * (1 - kj))
+        pintar_movil(cv, der, *xr, alfa=act_der + (1 - act_der) * kj)
+        if kj < 0.3:
+            candado(cv, xl[0] if lado == 'der' else xr[0], 620, (1 - kj / 0.3) * rampa(t, 0.4, 0.8))
+        # textos arriba, en el centro
+        for i, fz in enumerate(self.fases):
+            t1 = fz['t1'] if i < len(self.fases) - 1 else self.t_junta + 0.4
+            poner(cv, etiqueta(self.cfg['etiqueta']), W // 2, 92, t, fz['t0'] + 0.1, t1, centrado=True)
+            poner(cv, filas(fz['texto'][:1]), W // 2, 128, t, fz['t0'] + 0.2, t1, centrado=True)
+            poner(cv, filas(fz['texto'][1:]), W // 2, 200, t, fz['t0'] + 0.5, t1, centrado=True)
+
 class Movil(Bloque):
     """Móvil con grabaciones. Su posición inicial es la final del bloque móvil anterior, si lo hay."""
     def __init__(self, cfg, previo, siguiente_es_movil):
@@ -371,6 +514,13 @@ class Movil(Bloque):
             self.partes.append(dict(p, t0=t, t1=t + d, dur=d, destino=pos(p['pos'])))
             t += d
         self.dur = t
+        self.ef = []
+        for p in self.partes:
+            if p.get('barra'):
+                B = p['barra']; self.ef += [(p['t0'] + m[4] + 0.42, 'tick') for m in B['marcas']] + [(p['t0'] + B['t_real'], 'golpe')]
+            if p.get('vuela'): self.ef += [(p['t0'] + p['vuela']['t'] + 0.7, 'tick')]
+            if p.get('golpe') is not None: self.ef += [(p['t0'] + p['golpe'], 'golpe')]
+            if p.get('pase'): self.ef += [(p['t0'] + 0.1, 'whoosh')]
         self.previo = previo          # posición (x, y, giro, escala) de donde viene, o None si entra
         self.sale = not siguiente_es_movil
         # bloques de texto: una parte sin «texto» alarga el bloque anterior
@@ -381,7 +531,7 @@ class Movil(Bloque):
                 # si el móvil cruza la pantalla, el texto espera a que deje libre su lado
                 cruza = antes is not None and abs(antes[0] - p['destino'][0]) > 200
                 espera = p.get('paso', 0.7) * 0.8 if cruza else 0.0
-                self.textos.append(dict(t0=p['t0'] + espera, t1=p['t1'], texto=p.get('texto', []), texto2=p.get('texto2'), destino=p['destino']))
+                self.textos.append(dict(t0=p['t0'] + espera, t1=p['t1'], texto=p.get('texto', []), texto2=p.get('texto2'), destino=p['destino'], barra=p.get('barra')))
             else:
                 self.textos[-1]['t1'] = p['t1']
             antes = p['destino']
@@ -428,9 +578,17 @@ class Movil(Bloque):
         if p.get('cifra'):
             c = p['cifra']; col = 150 if p['destino'][0] > 960 else 1020
             pintar_cifra(cv, c, t - p['t0'], p['dur'], (x - 120 * s, y - 200 * s), (col, c.get('y', 560)))
+        # una duda que sale del móvil y vuela al cuaderno del asesor
+        for q in self.partes:
+            v = q.get('vuela')
+            if not v or not (q['t0'] <= t < q['t1'] + (0 if q is self.partes[-1] else 0)): continue
+            tl = t - q['t0']; col = 150 if q['destino'][0] > 960 else 1020
+            cuaderno(cv, col, v['y'], 1 if tl >= v['t'] + 0.7 else 0, v['t'] + 0.7, tl, rampa(tl, 0.5, 0.9) * (1 - rampa(t, q['t1'] - 0.5, q['t1'])))
+            chip_volando(cv, v['txt'], (q['destino'][0] + v.get('dx', 0), q['destino'][1] + v.get('dy', 220)), (col + 170, v['y']), (tl - v['t']) / 0.7)
         for i, tb in enumerate(self.textos):
             t0 = tb['t0'] + (0.15 if i else 0.25); t1 = tb['t1'] if i < len(self.textos) - 1 else self.dur
             dx = tb['destino'][0]
+            tb = dict(tb, texto=contar(tb['texto'], t, t0), texto2=contar(tb['texto2'], t, t0 + 0.4) if tb['texto2'] else None)
             if tb['texto2'] is not None or abs(dx - 960) < 120:     # móvil en el centro: texto a los dos lados
                 izq_x, izq_w = 110, 0
                 poner(cv, etiqueta(self.cfg['etiqueta']), izq_x, 380, t, t0 - 0.1, t1)
@@ -438,6 +596,17 @@ class Movil(Bloque):
                 if tb['texto2']: poner(cv, filas(tb['texto2']), 1250, 470, t, t0 + 0.4, t1)
                 continue
             col = 150 if dx > 960 else 1020
+            if tb.get('barra'):   # titular, barra con lo que creían y lo real, y la explicación debajo
+                B = tb['barra']; tl = t - tb['t0']; a = 1 - rampa(t, t1 - 0.55, t1)
+                poner(cv, etiqueta(self.cfg['etiqueta']), col, 300, t, t0, t1)
+                poner(cv, filas([B['titulo'][0]], True), col, 345, t, t0 + 0.2, t1)
+                poner(cv, filas([B['titulo'][1]], True), col, 418, t, tb['t0'] + B['t_real'] + 0.35, t1)
+                if a > 0.01:
+                    L = capa(); pintar_barra(L, tl, B, col + 30, 730, 760); cv.alpha_composite(con_alfa(L, a))
+                yy = 840
+                for j, l in enumerate(tb['texto']):
+                    poner(cv, filas([l]), col, yy, t, tb['t0'] + B['t_real'] + 1.0 + j * 0.45, t1); yy += 46
+                continue
             if self.cfg.get('escalonado'):
                 poner(cv, etiqueta(self.cfg['etiqueta']), col, 330, t, t0, t1)
                 yy, ti = 390, t0 + 0.4
@@ -454,6 +623,8 @@ class Movil(Bloque):
             poner(cv, etiqueta(self.cfg['etiqueta']), col, 300, t, t0 - 0.1, t1)
             poner(cv, filas(tb['texto']), col, 360, t, t0, t1)
 
+Movil.efectos = lambda self: self.ef
+
 # ---------------------------------------------------------------- línea de tiempo
 def bloques():
     out, prev = [], None
@@ -464,7 +635,7 @@ def bloques():
             sig = i + 1 < len(segs) and segs[i + 1]['tipo'] == 'movil'
             b = Movil(cfg, prev, sig); prev = b.partes[-1]['destino'] if sig else None
         else:
-            b = {'texto': Texto, 'titulo': Titulo, 'familias': Familias, 'asesor': Asesor, 'cierre': Cierre}[tipo](cfg); prev = None
+            b = {'texto': Texto, 'titulo': Titulo, 'familias': Familias, 'asesor': Asesor, 'cierre': Cierre, 'duo': Duo}[tipo](cfg); prev = getattr(b, 'fin', None)
         out.append(b)
     return out
 
@@ -479,7 +650,9 @@ def main():
     os.makedirs(os.path.dirname(salida), exist_ok=True)
     tl = tiempos(bloques()); total = tl[-1][1]
     marcas = {b.cfg.get('id'): round(a, 2) for a, _, b in tl}
-    json.dump(dict(total=total, bloques=marcas), open(os.path.join(AQUI, '.trabajo', 'tiempos.json'), 'w'), indent=1)
+    efectos = sorted((round(a + te, 3), k) for a, _, b in tl for te, k in b.efectos())
+    os.makedirs(os.path.join(AQUI, '.trabajo'), exist_ok=True)
+    json.dump(dict(total=total, bloques=marcas, efectos=efectos), open(os.path.join(AQUI, '.trabajo', 'tiempos.json'), 'w'), indent=1)
     print(f'Duración: {total:.1f} s'); print('  ' + '  '.join(f'{k}@{v}' for k, v in marcas.items()))
     if '--muestras' in sys.argv:
         d = os.path.join(AQUI, '.muestras'); os.makedirs(d, exist_ok=True)
@@ -487,7 +660,7 @@ def main():
         for a, e, b in tl:
             ts = [p['t0'] + p['dur'] * f for p in b.partes for f in ((0.35, 0.8) if '--muestras2' in sys.argv else (0.6,))] if isinstance(b, Movil) else [b.dur * 0.6]
             for t in ts:
-                cv = fondo(a + t); b.pintar(cv, t, None); pintar_linea(cv, a + t, tl); poner_logo(cv, a + t); cv.convert('RGB').save(os.path.join(d, f'{n:02d}_{b.cfg.get("id")}.jpg'), quality=85); n += 1
+                cv = fondo(a + t); b.pintar(cv, t, None); poner_logo(cv, a + t); cv.convert('RGB').save(os.path.join(d, f'{n:02d}_{b.cfg.get("id")}.jpg'), quality=85); n += 1
         print('Muestras en', d); return
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
                            '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', salida], stdin=subprocess.PIPE)
@@ -496,7 +669,7 @@ def main():
         T = i / FPS
         while j < len(tl) - 1 and T >= tl[j][1]: j += 1
         a, e, b = tl[j]
-        cv = fondo(T); b.pintar(cv, T - a, None); pintar_linea(cv, T, tl); poner_logo(cv, T)
+        cv = fondo(T); b.pintar(cv, T - a, None); poner_logo(cv, T)
         ff.stdin.write(cv.convert('RGB').tobytes())
         if i % 300 == 0: print(f'  fotograma {i}/{n}', flush=True)
     ff.stdin.close(); ff.wait()
