@@ -99,6 +99,16 @@ def pintar_movil(cv, ruta, x, y, giro=0.0, escala=1.0, alfa=1.0):
     cv.alpha_composite(sombra, (int(x - sombra.width / 2), int(y - ph.height / 2 - 80)))
     cv.alpha_composite(ph, (int(x - ph.width / 2), int(y - ph.height / 2)))
 
+# ---------------------------------------------------------------- logo de Sherpas (arriba a la derecha, todo el vídeo)
+_LOGO = Image.open(os.path.join(AQUI, 'sherpas-logo.png')).convert('RGBA')
+LOGO = _LOGO.resize((round(_LOGO.width * 36 / _LOGO.height), 36), Image.LANCZOS)
+def poner_logo(cv, T):
+    a = 0.9 * rampa(T, 0.2, 0.9)
+    if a <= 0.01: return
+    im = LOGO if a >= 0.9 else LOGO
+    im = im.copy(); im.putalpha(im.getchannel('A').point(lambda v: int(v * a)))
+    cv.alpha_composite(im, (W - 72 - im.width, 52))
+
 POS = {'izq': (560, 540, -3.0, 0.94), 'der': (1360, 540, 3.0, 0.94), 'centro': (960, 560, 0.0, 0.84)}
 def pos(p): return POS[p] if isinstance(p, str) else tuple(float(v) for v in p)
 
@@ -168,10 +178,12 @@ class Titulo(Bloque):
 class Cierre(Bloque):
     def pintar(self, cv, t, e):
         C, T = G.CIERRE, G.TITULO; fin = self.dur + 1
-        poner(cv, [(T['nombre'][0], ('Poppins', 800, 100), BLANCO), (T['nombre'][1], ('Poppins', 800, 100), 'grad')], W // 2, 300, t, 0.2, fin, centrado=True)
-        poner(cv, [(C['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 590, t, 0.9, fin, centrado=True)
-        poner(cv, [(C['enlace'], ('Poppins', 600, 30), BLANCO)], W // 2, 690, t, 1.6, fin, centrado=True)
-        poner(cv, [(C['firma'], ('Poppins', 400, 24), LILA)], W // 2, 770, t, 2.0, fin, centrado=True)
+        poner(cv, [(T['nombre'][0], ('Poppins', 800, 100), BLANCO), (T['nombre'][1], ('Poppins', 800, 100), 'grad')], W // 2, 230, t, 0.2, fin, centrado=True)
+        poner(cv, [(C['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 520, t, 0.9, fin, centrado=True)
+        if C.get('frase'):
+            poner(cv, [(l, ('Poppins', 700, 46), BLANCO if i == 0 else 'grad') for i, l in enumerate(C['frase'])], W // 2, 600, t, 1.6, fin, centrado=True)
+        poner(cv, [(C['enlace'], ('Poppins', 600, 30), BLANCO)], W // 2, 800, t, 2.6, fin, centrado=True)
+        poner(cv, [(C['firma'], ('Poppins', 400, 24), LILA)], W // 2, 870, t, 2.9, fin, centrado=True)
 
 class Familias(Bloque):
     def pintar(self, cv, t, e):
@@ -290,8 +302,11 @@ class Movil(Bloque):
             if self.cfg.get('escalonado'):
                 poner(cv, etiqueta(self.cfg['etiqueta']), col, 330, t, t0, t1)
                 yy, ti = 390, t0 + 0.4
+                previa = None
                 for j, l in enumerate(tb['texto']):
                     f = filas([l], True)
+                    if previa and previa.startswith(('#', '!!')) and not l.startswith(('#', '!!')): yy += 34  # aire bajo el titular
+                    previa = l
                     poner(cv, f, col, yy, t, ti, t1)
                     ti += 0.9 if l.startswith(('#', '!!')) else 0.45  # el subtítulo entra seguido
                     yy += 80 if l.startswith('#') else 60
@@ -333,7 +348,7 @@ def main():
         for a, e, b in tl:
             ts = [p['t0'] + p['dur'] * 0.6 for p in b.partes] if isinstance(b, Movil) else [b.dur * 0.6]
             for t in ts:
-                cv = fondo(a + t); b.pintar(cv, t, None); cv.convert('RGB').save(os.path.join(d, f'{n:02d}_{b.cfg.get("id")}.jpg'), quality=85); n += 1
+                cv = fondo(a + t); b.pintar(cv, t, None); poner_logo(cv, a + t); cv.convert('RGB').save(os.path.join(d, f'{n:02d}_{b.cfg.get("id")}.jpg'), quality=85); n += 1
         print('Muestras en', d); return
     ff = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
                            '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', salida], stdin=subprocess.PIPE)
@@ -342,7 +357,7 @@ def main():
         T = i / FPS
         while j < len(tl) - 1 and T >= tl[j][1]: j += 1
         a, e, b = tl[j]
-        cv = fondo(T); b.pintar(cv, T - a, None)
+        cv = fondo(T); b.pintar(cv, T - a, None); poner_logo(cv, T)
         ff.stdin.write(cv.convert('RGB').tobytes())
         if i % 300 == 0: print(f'  fotograma {i}/{n}', flush=True)
     ff.stdin.close(); ff.wait()
