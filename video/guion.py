@@ -4,7 +4,7 @@
 #     python3 video/construir.py --sin-grabar      (no vuelve a grabar la web; tarda unos 5 minutos)
 #
 # Cada bloque es un dict con «tipo»:
-#   'texto'    Solo texto centrado sobre el fondo. Claves: dur, lineas.
+#   'texto'    Solo texto centrado sobre el fondo. Claves: dur, lineas, paso (segundos entre líneas, 0.9 por defecto).
 #   'titulo'   Nombre del producto. Claves: dur.
 #   'movil'    El móvil con una grabación de la web. Claves: etiqueta, partes.
 #   'familias' Las portadas de las 4 familias en fila. Claves: dur, titulo, sub.
@@ -24,80 +24,86 @@
 # Formato de las líneas: '# Título'  ·  '## Título en degradado'  ·  '!! Título en naranja'  ·  sin prefijo: subtítulo.
 
 SEGMENTOS = [
-    dict(tipo='texto', id='gancho', dur=3.4, lineas=[
+    dict(tipo='texto', id='problema', dur=4.0, paso=0.7, lineas=[
+        '# Muchas familias no saben',
+        '# si lo están haciendo bien…',
+        '## ni qué problemas tienen.',
+    ]),
+    dict(tipo='texto', id='gancho', dur=3.0, lineas=[
         '# Pagan 300 $ al mes a la tarjeta.',
         '## ¿Cuánto se va en intereses?',
     ]),
     dict(tipo='movil', id='gancho2', etiqueta='FAMILIA WEAH · MODO PAREJA', escalonado=True, partes=[
-        dict(clip=('pareja', 'rev_dinero', 0.8, 6.6, 1.0), pos='der', texto=[
-            '# Timothy creía 100 $.', '# Melanie, 190 $.', '!! Su plan dice: 270 $.', 'De cada 300 $, casi todo en intereses.']),
+        dict(clip=('pareja', 'rev_dinero', 0.8, 6.8, 1.0), pos='der', texto=[
+            '# Timothy creía 100 $.', '# Melanie, 190 $.', '!! Su plan dice: 270 $.',
+            'Estiman, y su propio dato les da el golpe de realidad:', 'de cada 300 $, casi todo se va en intereses.']),
     ]),
-    dict(tipo='titulo', id='titulo', dur=4.2),
+    dict(tipo='titulo', id='titulo', dur=3.0),
     dict(tipo='movil', id='reto', etiqueta='EL RETO', partes=[
-        dict(clip=('pareja', 'landing', 0.4, 3.6, 1.0), pos='izq', texto=[
+        dict(clip=('pareja', 'landing', 0.4, 3.2, 1.0), pos='izq', texto=[
             '# Un plan lleno de cifras', '# se lee una vez…', '## y se olvida.']),
         dict(clip=('pareja', 'intro', 0.0, 2.8, 1.0), pos='izq', texto=[
-            '# 5 minutos de juego', '# antes de la reunión,', '## con su propio plan.']),
+            '# Un quiz de 5 minutos', '# con su propio plan,', '## que se adapta a cada uno.']),
     ]),
     dict(tipo='movil', id='quiz', etiqueta='01 · EL QUIZ', partes=[
-        dict(clip=('michael', 'q0', 0.0, 3.8, 1.0), pos='der', texto=[
+        dict(clip=('michael', 'q0', 0.2, 3.6, 1.15), pos='der', texto=[
             '# Primero, lo que les', '## quita el sueño.', 'Con sus palabras, o con la voz.']),
-        dict(clip=('michael', 'q1', 0.3, 5.5, 1.0), pos='der', zoom=1.06, texto=[
-            '# Luego adivinan cifras', '## de su propio plan.', 'Michael cree que su efectivo cubre 6 meses…']),
-        dict(clip=('michael', 'rev1', 0.0, 6.0, 1.0), pos='izq', texto=[
-            '# Y ven el dato real,', '## con una imagen.', 'Ninguna cifra se inventa: todas salen de su plan.']),
-        dict(clip=('michael', 'rev1', 6.0, 11.4, 1.0), pos='izq', texto=[
-            '# Reaccionan, y sus dudas', '## van al cuaderno del asesor.', '«Me preocupa» también es información.']),
+        dict(clip=('michael', 'q1', 0.3, 5.5, 1.2), pos='der', zoom=1.06, texto=[
+            '# Luego estiman cifras', '## de su propio plan.', 'Michael estima que su efectivo cubre 6 meses…']),
+        dict(clip=('michael', 'rev1', 0.0, 6.0, 1.15), pos='izq', texto=[
+            '# Y ven el dato real,', '## de forma que se entiende.', 'La huella que deja en su economía, en una imagen.', 'Ninguna cifra se inventa: todas salen de su plan.']),
+        dict(clip=('michael', 'rev1', 6.0, 11.4, 1.15), pos='izq', texto=[
+            '# Reaccionan, y sus dudas', '## van al cuaderno del asesor.', '«Me preocupa» también es información:', 'llegan a la reunión sabiendo de qué hablar.']),
     ]),
     dict(tipo='movil', id='pareja', etiqueta='02 · MODO PAREJA', partes=[
-        dict(clip=('pareja', 'intro', 0.0, 1.8, 1.0), pos='izq', texto=[
-            '# Cada uno contesta', '## en privado.', 'Un solo móvil. Sin ganadores ni culpables.']),
-        dict(clip=('pareja', 't_q1', 1.8, 6.4, 1.15), pos='izq', texto=[
+        dict(clip=('pareja', 'intro', 0.0, 2.5, 1.0), pos='izq', texto=[
+            '# Cada uno contesta', '## en privado.', 'Sin que la opinión de uno influya en la del otro.']),
+        dict(clip=('pareja', 't_q1', 1.8, 6.4, 1.4), pos='izq', texto=[
             '# Timothy contesta…', '## y lo guarda en secreto.', 'Lo que le preocupa solo lo verá el asesor.']),
-        dict(clip=('pareja', 'handoff', 0.0, 2.4, 1.0), pos='der', paso=1.4, pase=True, texto=[
+        dict(clip=('pareja', 'handoff', 0.0, 2.1, 1.0), pos='der', paso=1.3, pase=True, texto=[
             '# Se pasan el móvil…']),
-        dict(clip=('pareja', 'm_q2', 0.0, 3.6, 1.1), pos='der', texto=[
-            '# …y ahora contesta Melanie.', 'Las respuestas de Timothy quedan ocultas.']),
-        dict(clip=('pareja', 'rev_riesgo', 0.0, 5.0, 1.0), pos='centro', paso=0.9, texto=[
+        dict(clip=('pareja', 'm_q2', 0.0, 3.6, 1.2), pos='der', texto=[
+            '# …y ahora contesta Melanie.', 'Las respuestas de Timothy quedan ocultas:', 'las dos visiones pesan lo mismo.']),
+        dict(clip=('pareja', 'rev_riesgo', 0.0, 5.0, 1.1), pos='centro', paso=0.9, texto=[
             '# Lo destapan', '## juntos.'], texto2=[
-            '¿Sabe cada uno qué haría', 'el otro si la bolsa cae?', 'Aquí, los dos acertaron.']),
-        dict(clip=('pareja', 'rev_hijos', 0.0, 4.6, 1.0), pos='der', texto=[
+            'Cada uno ve el dato real', 'y saca sus conclusiones.', 'Después, las ponen en común.']),
+        dict(clip=('pareja', 'rev_hijos', 0.0, 4.6, 1.2), pos='der', texto=[
             '# Creían que el seguro', '# cubría hasta los 19 años', '!! de Liam. Son 8.']),
         dict(clip=('pareja', 'rev_nota', 0.0, 3.8, 1.0), pos='izq', texto=[
             '# Y su nota de salud', '## financiera: 60 de 100.', 'Lo que más la baja: los seguros.']),
     ]),
     dict(tipo='movil', id='camino', etiqueta='03 · SU CAMINO', partes=[
-        dict(clip=('michael', 'camino', 0.0, 10.4, 1.05), pos='der', texto=[
+        dict(clip=('michael', 'camino', 0.0, 10.4, 1.3), pos='der', texto=[
             '# De hoy a la jubilación,', '## paso a paso.', 'Cada paso del plan sube su nota:', 'de 26 hoy a 62 con el plan completo.']),
         dict(clip=('michael', 'informe', 0.0, 2.6, 1.0), pos=(1360, 540, -2, 0.94), texto=[
             '# Y todo se pliega', '## en su informe.']),
     ]),
     dict(tipo='movil', id='informe', etiqueta='04 · EL INFORME', partes=[
-        dict(clip=('informe', 'top', 2.6, 9.4, 1.15), pos='izq', texto=[
-            '# 11 puntos, de lo', '## más urgente', '# a lo que está bien.', 'Urgente · Revisar pronto · Bien']),
-        dict(clip=('informe', 'tap', 0.0, 8.5, 1.1), pos='izq', zoom=1.07, texto=[
+        dict(clip=('informe', 'top', 2.6, 9.4, 1.3), pos='izq', texto=[
+            '# 11 puntos, de lo', '## más urgente', '# a lo que está bien.', 'De un informe denso a tarjetas', 'visuales que se entienden.']),
+        dict(clip=('informe', 'tap', 0.0, 8.5, 1.25), pos='izq', zoom=1.07, texto=[
             '# Cada tarjeta se toca', '## y se abre entera.', 'Sus cifras, gráficas y los pasos del plan,', 'que votan con «¿Os convence?».']),
     ]),
     dict(tipo='movil', id='ruleta', etiqueta='05 · EL RESUMEN', partes=[
-        dict(clip=('story', 'top', 1.2, 9.4, 1.25), pos='der', texto=[
+        dict(clip=('story', 'top', 1.2, 9.4, 1.4), pos='der', texto=[
             '# Su plan en una', '## ruleta de tarjetas.', 'La nota y las cinco áreas, de un vistazo.', 'Se gira con el dedo.']),
-        dict(clip=('story', 'open', 0.0, 9.0, 1.15), pos='centro', paso=0.9, texto=[
+        dict(clip=('story', 'open', 0.0, 9.0, 1.3), pos='centro', paso=0.9, texto=[
             '# Y cada tarjeta', '## lleva su detalle.'], texto2=[
             'Lo esencial, en gráfico', 'y lo que propone el plan,', 'sin tecnicismos.']),
     ]),
-    dict(tipo='familias', id='familias', dur=5.2, titulo='Funciona con cualquier plan de Sherpas.',
+    dict(tipo='familias', id='familias', dur=4.6, titulo='Funciona con cualquier plan de Sherpas.',
          sub='Probado con las 4 familias del reto: parejas, personas solas, con hijos.'),
     dict(tipo='movil', id='reunion', etiqueta='06 · LA REUNIÓN', partes=[
-        dict(clip=('pareja', 'propone', 0.2, 3.4, 1.0), pos='izq', texto=[
+        dict(clip=('pareja', 'propone', 0.2, 3.4, 1.1), pos='izq', texto=[
             '# Al final, lo que', '## propone su plan…', 'De 60 a 78 puntos, paso a paso.']),
-        dict(clip=('pareja', 'reunion', 0.0, 4.8, 1.25), pos='der', texto=[
+        dict(clip=('pareja', 'reunion', 0.0, 4.8, 1.4), pos='der', texto=[
             '# …y piden la reunión', '## con su asesor.', 'Eligen el día y lo confirman los dos.']),
         dict(clip=('pareja', 'pedida', 0.0, 1.4, 1.0), pos='der'),  # se corta antes de la lista «lo que vuestro asesor ya sabe»
     ]),
-    dict(tipo='asesor', id='asesor', dur=11.0, etiqueta='Y AL OTRO LADO…', lineas=[
+    dict(tipo='asesor', id='asesor', dur=9.2, etiqueta='Y AL OTRO LADO…', lineas=[
         '# Esto es lo que', '## recibe el asesor.',
         'La familia no ve esta ficha.', 'Llega a la reunión con lo que creían,', 'lo que les preocupa y lo que quieren', 'preguntar. Sin preparar nada.']),
-    dict(tipo='cierre', id='cierre', dur=6.0),
+    dict(tipo='cierre', id='cierre', dur=4.8),
 ]
 
 TITULO = dict(antes='AL-GORITMO  ×  SHERPAS', nombre=('Vuestro', 'plan de futuro'),

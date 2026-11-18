@@ -96,7 +96,7 @@ async function grabar(browser, nombre) {
   const web = spawn(process.execPath, [path.join(RAIZ, 'scripts', 'serve.mjs')], { env: { ...process.env, PORT: PUERTO }, stdio: 'ignore' });
   try {
     await esperarWeb(`http://localhost:${PUERTO}/app/`);
-    const browser = await chromium.launch();
+    const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH, args: ['--no-sandbox'] } : {});
     for (const n of nombres) { console.log('Grabando', n); await grabar(browser, n); }
     await browser.close();
   } finally { web.kill(); }

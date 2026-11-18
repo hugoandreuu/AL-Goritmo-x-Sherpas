@@ -18,10 +18,11 @@ FUENTES = os.path.join(AQUI, '.fuentes')
 # ---------------------------------------------------------------- fuentes (Google Fonts, se bajan una vez)
 def bajar_fuentes():
     os.makedirs(FUENTES, exist_ok=True)
-    for fam, pesos in (('Poppins', (600, 700, 800)), ('Inter', (500, 600))):
+    for fam, pesos in (('Poppins', (400, 600, 700, 800)), ('Inter', (500, 600))):
         falta = [p for p in pesos if not os.path.exists(os.path.join(FUENTES, f'{fam}-{p}.ttf'))]
         if not falta: continue
-        css = urllib.request.urlopen(f'https://fonts.googleapis.com/css2?family={fam}:wght@{";".join(map(str, pesos))}').read().decode()
+        try: css = urllib.request.urlopen(f'https://fonts.googleapis.com/css2?family={fam}:wght@{";".join(map(str, pesos))}').read().decode()
+        except Exception as e: sys.exit(f'No se han podido bajar las fuentes ({e}). Copia los .ttf de {fam} a {FUENTES} como {fam}-<peso>.ttf.')
         for peso, url in re.findall(r'font-weight: (\d+);\s*src: url\((\S+?\.ttf)\)', css):
             urllib.request.urlretrieve(url, os.path.join(FUENTES, f'{fam}-{peso}.ttf'))
 bajar_fuentes()
@@ -30,7 +31,7 @@ bajar_fuentes()
 def fuente(fam, peso, tam):
     return ImageFont.truetype(os.path.join(FUENTES, f'{fam}-{peso}.ttf'), tam)
 
-BLANCO = (255, 255, 255); SUAVE = (196, 190, 235); LILA = (150, 140, 255); NARANJA = (255, 122, 61)
+BLANCO = (255, 255, 255); SUAVE = (196, 190, 235); SEGUNDO = (178, 172, 224); LILA = (150, 140, 255); NARANJA = (255, 122, 61)
 G1, G2 = (99, 125, 255), (176, 120, 255)
 
 def suave(k):
@@ -107,7 +108,7 @@ def estilo(linea, grande=False):
     if linea.startswith('## '): return linea[3:], ('Poppins', 700, h), 'grad'
     if linea.startswith('!! '): return linea[3:], ('Poppins', 700, h), NARANJA
     if linea.startswith('# '): return linea[2:], ('Poppins', 700, h), BLANCO
-    return linea, ('Inter', 500, 30), SUAVE
+    return linea, ('Poppins', 400, 31 if grande else 29), SEGUNDO  # texto secundario: misma familia que los títulos, más fino y apagado
 
 @functools.lru_cache(maxsize=512)
 def imagen_texto(filas, centrado=False):
@@ -118,7 +119,7 @@ def imagen_texto(filas, centrado=False):
     im = Image.new('RGBA', (ancho, alto), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     y, previa = 0, None
     for t, f, fk, c, tw in medidas:
-        if previa and previa[0] == 'Poppins' and fk[0] == 'Inter' and fk[2] >= 28 and previa[2] >= 50: y += 18
+        if previa and previa[1] >= 700 and fk[1] < 600 and previa[2] >= 50: y += 18
         previa = fk
         x = (ancho - tw) // 2 if centrado else 0
         if c == 'grad':
@@ -153,29 +154,30 @@ class Bloque:
 
 class Texto(Bloque):
     def pintar(self, cv, t, e):
-        for i, l in enumerate(self.cfg['lineas']):
-            poner(cv, filas([l], True), W // 2, 440 + i * 100, t, 0.2 + i * 0.9, self.dur, centrado=True)
+        ls = self.cfg['lineas']; y0 = 490 - (len(ls) - 1) * 50; paso = self.cfg.get('paso', 0.9)
+        for i, l in enumerate(ls):
+            poner(cv, filas([l], True), W // 2, y0 + i * 100, t, 0.2 + i * paso, self.dur, centrado=True)
 
 class Titulo(Bloque):
     def pintar(self, cv, t, e):
         T = G.TITULO
         poner(cv, etiqueta(T['antes']), W // 2, 380, t, 0.1, self.dur, centrado=True)
         poner(cv, [(T['nombre'][0], ('Poppins', 800, 110), BLANCO), (T['nombre'][1], ('Poppins', 800, 110), 'grad')], W // 2, 430, t, 0.3, self.dur, centrado=True)
-        poner(cv, [(T['sub'], ('Inter', 500, 34), SUAVE)], W // 2, 720, t, 1.0, self.dur, centrado=True)
+        poner(cv, [(T['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 720, t, 1.0, self.dur, centrado=True)
 
 class Cierre(Bloque):
     def pintar(self, cv, t, e):
         C, T = G.CIERRE, G.TITULO; fin = self.dur + 1
         poner(cv, [(T['nombre'][0], ('Poppins', 800, 100), BLANCO), (T['nombre'][1], ('Poppins', 800, 100), 'grad')], W // 2, 300, t, 0.2, fin, centrado=True)
-        poner(cv, [(C['sub'], ('Inter', 500, 34), SUAVE)], W // 2, 590, t, 0.9, fin, centrado=True)
+        poner(cv, [(C['sub'], ('Poppins', 400, 33), SEGUNDO)], W // 2, 590, t, 0.9, fin, centrado=True)
         poner(cv, [(C['enlace'], ('Poppins', 600, 30), BLANCO)], W // 2, 690, t, 1.6, fin, centrado=True)
-        poner(cv, [(C['firma'], ('Inter', 500, 24), LILA)], W // 2, 770, t, 2.0, fin, centrado=True)
+        poner(cv, [(C['firma'], ('Poppins', 400, 24), LILA)], W // 2, 770, t, 2.0, fin, centrado=True)
 
 class Familias(Bloque):
     def pintar(self, cv, t, e):
         esc, marcas, seg = G.FAMILIAS
         poner(cv, [(self.cfg['titulo'], ('Poppins', 700, 52), BLANCO)], W // 2, 85, t, 0.1, self.dur, centrado=True)
-        poner(cv, [(self.cfg['sub'], ('Inter', 500, 28), SUAVE)], W // 2, 170, t, 0.5, self.dur, centrado=True)
+        poner(cv, [(self.cfg['sub'], ('Poppins', 400, 28), SEGUNDO)], W // 2, 170, t, 0.5, self.dur, centrado=True)
         fuera = 1 - rampa(t, self.dur - 0.4, self.dur)
         for i, m in enumerate(marcas):
             k = rampa(t, 0.2 + i * 0.15, 1.0 + i * 0.15)
@@ -287,10 +289,11 @@ class Movil(Bloque):
             col = 150 if dx > 960 else 1020
             if self.cfg.get('escalonado'):
                 poner(cv, etiqueta(self.cfg['etiqueta']), col, 330, t, t0, t1)
-                yy = 390
+                yy, ti = 390, t0 + 0.4
                 for j, l in enumerate(tb['texto']):
                     f = filas([l], True)
-                    poner(cv, f, col, yy, t, t0 + 0.4 + j * 0.9, t1)
+                    poner(cv, f, col, yy, t, ti, t1)
+                    ti += 0.9 if l.startswith(('#', '!!')) else 0.45  # el subtítulo entra seguido
                     yy += 80 if l.startswith('#') else 60
                     if j == 2: yy += 10
                 continue
