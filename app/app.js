@@ -371,7 +371,11 @@
     window.scrollTo(0, 0);
     const lis = app.querySelectorAll('.prep li');
     lis.forEach((li, i) => setTimeout(() => { li.classList.add('on'); document.getElementById('prepbar').style.width = ((i + 1) / lis.length * 100) + '%'; }, 450 + i * 600));
-    setTimeout(go, 450 + lis.length * 600 + 450);
+    // Fundido de salida y la pantalla del camino entra con fundido (antes cortaba de golpe).
+    setTimeout(() => {
+      const p = app.querySelector('.prep'); if (p) p.classList.add('fade-out');
+      setTimeout(() => { go(); const n = app.firstElementChild; if (n) n.classList.add('fd-in'); }, 300);
+    }, 450 + lis.length * 600 + 300);
   }
 
 
@@ -1795,7 +1799,7 @@
         setTimeout(() => {
           const turn = app.querySelector('.pj-turn') || card;
           turn.classList.add('fade-out');
-          setTimeout(pjGoFade, 430);
+          setTimeout(pjGoFade, 280);
         }, 650);
       };
     };
@@ -2107,7 +2111,7 @@
         break;
       }
       case 'noreason': S.doubts.push({ id: 'no-' + b.dataset.s + '-' + Date.now(), topic: 'otra', paso: b.dataset.s, q: `No to “${low1(paso(b.dataset.s).titulo)}”: ${v}`, covered: 'no', status: 'open' }); closeSheet(); keep(); toast('Saved for the meeting'); break;
-      case 'tema': if (S.stage === 'story' && S.rulOpen != null) { const ix = SLIDES.findIndex(x => rulKey(x) === k); if (ix >= 0) { RUL.rot = ix; S.slide = ix; } S.rulOpen = k; RUL.ovY = 0; render(); app.querySelector('.rul-full') && (app.querySelector('.rul-full').scrollTop = 0); } else abrirTema(k); break;
+      case 'tema': if (S.stage === 'story' && S.rulOpen != null) { const ix = SLIDES.findIndex(x => rulKey(x) === k); if (ix >= 0) { RUL.rot = ix; S.slide = ix; } S.rulOpen = k; RUL.ovY = 0; render(); app.querySelector('.rul-full') && (app.querySelector('.rul-full').scrollTop = 0); } else swipe(() => abrirTema(k)); break;
       case 'temaback': volverTema(v); break;
       case 'whatif': askSheet(null); break;
       case 'cat': { const veil = document.getElementById('veil'); S.cat = S.cat === v ? null : v; save(); askSheet(veil ? veil.dataset.paso : null); break; }
